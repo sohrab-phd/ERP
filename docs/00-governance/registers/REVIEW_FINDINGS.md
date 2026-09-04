@@ -3,7 +3,7 @@ id: GOV-FINDINGS-001
 title: Review Findings Register
 phase: 00-governance
 status: approved
-version: 0.7.0
+version: 0.8.1
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-04
@@ -165,6 +165,31 @@ or `superseded`. Resolution requires evidence and affected-artifact references.
   `2026-09-04T16:15:30.3016652+03:30`; the APR-002 checkpoint is pending, no
   staging or commit is claimed, implementation remains unauthorized, and
   Phase 01 remains inactive.
+
+## FIND-015 — Completed checkpoint follow-up authorization
+
+- Severity: high
+- Status: resolved
+- Finding: Completed checkpoint manifests could not initially authorize the
+  separate documentation follow-up that records their completed commit.
+- Review history: The first predicate revision admitted a mixed pending/completed
+  state; independent review caught that edge before correction approval.
+- Resolution: Checkpoint authorization now accepts exactly one of two mutually
+  exclusive forms: one pending checkpoint and no valid hash commit, or one
+  completed checkpoint paired with exactly one 40–64 hexadecimal commit. Mixed,
+  duplicate, missing, and unpaired forms fail closed.
+- Implementation-baseline validation accepts commit hashes with either paired
+  backticks or no backticks and rejects unpaired backticks.
+- Evidence: HOOK_VALIDATION.md version 0.11.0; 72-case suite, including direct
+  implementation-baseline paired/unpaired cases.
+- Independent verification: `READY_FOR_CORRECTION_APPROVAL`; no blocker remains.
+- Approval disposition: `Project Owner (explicit approval in Cursor session)`
+  approved the FIND-015 post-checkpoint correction and its follow-up checkpoint
+  at `2026-09-04T16:49:32.2914786+03:30`.
+- Follow-up checkpoint: pending; no follow-up staging or commit is claimed.
+  APR-002 and its completed checkpoint remain unchanged, Phase 01 remains
+  `ACTIVE_IN_REVIEW`, implementation remains unauthorized, and no APR-003 is
+  created.
 
 ## Downstream suspect policy
 

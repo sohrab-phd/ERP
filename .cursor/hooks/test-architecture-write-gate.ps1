@@ -293,6 +293,24 @@ Invoke-GateCase "unlisted authorized shell command denied" @'
 {"hook_event_name":"beforeShellExecution","command":"npm run build"}
 '@ "deny"
 
+$pairedBaselineContent = $approvedBaselineContent.Replace(
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "``aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa``"
+)
+Set-TestAuthorization "true" $validUnlock -BaselineContent $pairedBaselineContent
+Invoke-GateCase "implementation baseline accepts paired commit backticks" @'
+{"hook_event_name":"preToolUse","tool_name":"Write","tool_input":{"file_path":"apps/api/src/main.ts","content":"example"}}
+'@ "allow"
+
+$unpairedBaselineContent = $approvedBaselineContent.Replace(
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "``aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+)
+Set-TestAuthorization "true" $validUnlock -BaselineContent $unpairedBaselineContent
+Invoke-GateCase "implementation baseline denies unpaired commit backtick" @'
+{"hook_event_name":"preToolUse","tool_name":"Write","tool_input":{"file_path":"apps/api/src/main.ts","content":"example"}}
+'@ "deny"
+
 Clear-TestAuthorization
 
 $checkpointManifest = @'
@@ -343,6 +361,24 @@ $validCheckpoint = @{
     )
 } | ConvertTo-Json -Compress -Depth 5
 
+function Set-HashedCheckpointManifest {
+    param([string]$Content)
+
+    $bytes = [Text.Encoding]::UTF8.GetBytes($Content)
+    $algorithm = [Security.Cryptography.SHA256]::Create()
+    try {
+        $sha256 = (
+            [BitConverter]::ToString($algorithm.ComputeHash($bytes))
+        ).Replace("-", "").ToLowerInvariant()
+    } finally {
+        $algorithm.Dispose()
+    }
+    $markerObject = $validCheckpoint | ConvertFrom-Json
+    $markerObject.approvalManifestSha256 = $sha256
+    $markerObject.approvedArtifacts[0].sha256 = $sha256
+    Set-TestCheckpoint ($markerObject | ConvertTo-Json -Compress -Depth 5) $Content
+}
+
 Set-TestCheckpoint "not-json" $checkpointManifest
 Invoke-GateCase "malformed checkpoint marker denied" @'
 {"hook_event_name":"beforeShellExecution","command":"git add -A"}
@@ -385,6 +421,52 @@ Invoke-GateCase "checkpoint malformed Git blob ID denied" @'
 
 Set-TestCheckpoint $validCheckpoint ($checkpointManifest.Replace('Phase: `00-governance`', 'Phase: `01-project-assimilation`'))
 Invoke-GateCase "checkpoint phase mismatch denied" @'
+{"hook_event_name":"beforeShellExecution","command":"git add -A"}
+'@ "deny"
+
+$completedCheckpointManifest = $checkpointManifest.Replace(
+    "- Git checkpoint: pending",
+    "- Git checkpoint: completed`n- Git commit: ``540a606ef32a3cb17f7e886dff3c4dcde82ca4b1``"
+)
+$completedBytes = [Text.Encoding]::UTF8.GetBytes($completedCheckpointManifest)
+$completedHashAlgorithm = [Security.Cryptography.SHA256]::Create()
+try {
+    $completedManifestSha256 = (
+        [BitConverter]::ToString($completedHashAlgorithm.ComputeHash($completedBytes))
+    ).Replace("-", "").ToLowerInvariant()
+} finally {
+    $completedHashAlgorithm.Dispose()
+}
+$completedCheckpointObject = $validCheckpoint | ConvertFrom-Json
+$completedCheckpointObject.approvalManifestSha256 = $completedManifestSha256
+$completedCheckpointObject.approvedArtifacts[0].sha256 = $completedManifestSha256
+$completedCheckpoint = $completedCheckpointObject | ConvertTo-Json -Compress -Depth 5
+Set-TestCheckpoint $completedCheckpoint $completedCheckpointManifest
+Invoke-GateCase "completed checkpoint manifest permits follow-up record" @'
+{"hook_event_name":"beforeShellExecution","command":"git add -A"}
+'@ "allow"
+
+$conflictingCheckpointManifest = $completedCheckpointManifest + "`n- Git checkpoint: pending"
+Set-HashedCheckpointManifest $conflictingCheckpointManifest
+Invoke-GateCase "conflicting pending and completed checkpoint denied" @'
+{"hook_event_name":"beforeShellExecution","command":"git add -A"}
+'@ "deny"
+
+$missingCommitManifest = $completedCheckpointManifest.Replace(
+    "`n- Git commit: ``540a606ef32a3cb17f7e886dff3c4dcde82ca4b1``",
+    ""
+)
+Set-HashedCheckpointManifest $missingCommitManifest
+Invoke-GateCase "completed checkpoint without commit denied" @'
+{"hook_event_name":"beforeShellExecution","command":"git add -A"}
+'@ "deny"
+
+$unpairedCommitManifest = $completedCheckpointManifest.Replace(
+    "``540a606ef32a3cb17f7e886dff3c4dcde82ca4b1``",
+    "``540a606ef32a3cb17f7e886dff3c4dcde82ca4b1"
+)
+Set-HashedCheckpointManifest $unpairedCommitManifest
+Invoke-GateCase "completed checkpoint with unpaired commit backtick denied" @'
 {"hook_event_name":"beforeShellExecution","command":"git add -A"}
 '@ "deny"
 

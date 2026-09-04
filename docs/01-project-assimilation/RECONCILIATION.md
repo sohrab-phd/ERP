@@ -3,7 +3,7 @@ id: ASM-RECON-001
 title: Project Assimilation Reconciliation
 phase: 01-project-assimilation
 status: in_review
-version: 0.1.0
+version: 0.1.1
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-SOURCES-001]
 last_reviewed: 2026-09-02
@@ -71,5 +71,12 @@ proposed detailed architecture.
 
 ## Gate recommendation
 
-`BLOCKED` until Phase 00 Governance Foundation is explicitly approved and an
-independent Phase 01 review is completed.
+`READY_FOR_SELF_CHECK`. Phase 00 entry criteria are satisfied by `APR-002` and
+`CHK-0001`, so Phase 01 is active in review. The Phase 01 self-check, independent
+review, reconciliation of resulting findings, explicit approval, and checkpoint
+remain required.
+
+FIND-001 through FIND-004 and their linked open questions remain carried forward
+to their owning phases. This recommendation does not resolve those business or
+architecture questions, approve this reconciliation, or authorize
+implementation.

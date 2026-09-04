@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: approved
-version: 0.1.2
+version: 0.1.3
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-09-04
@@ -22,6 +22,7 @@ supersedes: null
 - [Documentation standard](00-governance/DOCUMENTATION_STANDARD.md)
 - [Source register](00-governance/SOURCE_REGISTER.md)
 - [Approval register](00-governance/APPROVALS.md)
+- [CHK-0001 Phase 00 checkpoint](00-governance/approved-baselines/CHK-0001-phase-00.md)
 - [APR-002 renewed corrected Governance Foundation approval](00-governance/approved-baselines/APR-002-governance.md)
 - [APR-001 superseded corrected Governance Foundation approval](00-governance/approved-baselines/APR-001-governance.md)
 - [APR-000 superseded Governance Foundation approval](00-governance/approved-baselines/APR-000-governance.md)

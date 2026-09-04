@@ -3,7 +3,7 @@ id: GOV-GATE-CHECKLIST-001
 title: Governance Foundation Gate Checklist
 phase: 00-governance
 status: approved
-version: 0.8.0
+version: 0.9.1
 owners: [chief-solution-architect, independent-reviewer]
 depends_on: [GOV-SELF-CHECK-001, GOV-INDEPENDENT-REVIEW-001, GOV-RECON-001]
 last_reviewed: 2026-09-04
@@ -43,11 +43,17 @@ supersedes: null
 - [x] Git staging/commit requires protected human approval evidence.
 - [x] Identity-bound protected controls can enter a human-approved checkpoint
   without weakening agent-write or marker protection.
-- [x] Sixty-six permission and temporary-repository integration tests pass.
+- [x] Seventy-two permission and temporary-repository integration tests pass.
 - [x] Cursor's exact fixed co-author trailer form is accepted; arbitrary trailers
   are denied.
 - [x] The marker stores Cursor's transformed commit command while the agent
   submits plain `git commit -m ...`.
+- [x] Checkpoint manifests allow exactly one pending state with no valid hash
+  commit, or exactly one completed state paired with exactly one valid 40–64
+  hexadecimal commit.
+- [x] Mixed, duplicate, missing, and unpaired checkpoint/commit forms fail.
+- [x] Implementation-baseline commit hashes accept paired or absent backticks;
+  direct paired/unpaired regression cases pass.
 
 ## Review
 
@@ -62,16 +68,29 @@ supersedes: null
 - [x] FIND-014 is resolved and independently verified.
 - [x] Final renewed explicit approval of the current corrected artifacts is
   recorded as APR-002.
+- [x] FIND-015 narrow blocked-then-ready review history is recorded.
+- [x] FIND-015 is resolved and independently verified with
+  `READY_FOR_CORRECTION_APPROVAL`.
+- [x] Explicit approval of the FIND-015 post-checkpoint correction and follow-up
+  checkpoint is recorded.
 
 ## Current gate outcome
 
-- Result: `APPROVED_CHECKPOINT_PENDING`
+- Baseline result: `APPROVED_CHECKPOINT_COMPLETED`
+- Correction result: `CORRECTION_APPROVED_CHECKPOINT_PENDING`
 - Current approval: [APR-002-governance.md](approved-baselines/APR-002-governance.md)
 - Approval timestamp: `2026-09-04T16:15:30.3016652+03:30`
+- Correction approver: Project Owner (explicit approval in Cursor session)
+- Correction approval timestamp: `2026-09-04T16:49:32.2914786+03:30`
 - Historical approval: [APR-001-governance.md](approved-baselines/APR-001-governance.md),
   superseded after no commit
-- APR-002 checkpoint: pending; no staging or commit is claimed
-- Maintenance state: `.cursor/hooks.disabled`
+- APR-002 checkpoint: completed at
+  `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`; 69 files
+- Checkpoint record: [CHK-0001-phase-00.md](approved-baselines/CHK-0001-phase-00.md);
+  the approved correction follow-up checkpoint is pending
+- FIND-015 review: `READY_FOR_CORRECTION_APPROVAL`; 72 tests pass
+- Follow-up staging/commit: none
+- New approval manifest: none; no APR-003 is created
+- Protected marker cleanup: remains a human action
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains `false`
-- Next phase: `01-project-assimilation`, inactive until a completed approved
-  checkpoint
+- Next phase: `01-project-assimilation`; `ACTIVE_IN_REVIEW`

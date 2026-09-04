@@ -3,7 +3,7 @@ id: GOV-HOOK-VALIDATION-001
 title: Architecture Write-Gate Validation
 phase: 00-governance
 status: approved
-version: 0.10.0
+version: 0.11.1
 owners: [chief-solution-architect]
 depends_on: [ADR-0005, GOV-CURRENT-001]
 last_reviewed: 2026-09-04
@@ -20,7 +20,7 @@ approved repository inspection while implementation remains locked.
 
 ## Evidence
 
-- Suite: `66` permission and temporary-repository integration cases passed.
+- Suite: `72` permission and temporary-repository integration cases passed.
 - Live Cursor `preToolUse` and `beforeShellExecution` events parsed successfully.
 - Live read-only `git status --short` completed successfully.
 - This governed Markdown update passed through the active fail-closed hook.
@@ -50,6 +50,10 @@ approved repository inspection while implementation remains locked.
   checkpoint marker references an approved manifest and exact Git commands.
 - Approval-manifest filename IDs must match frontmatter IDs, and checkpoint
   manifests must declare the marker's exact phase.
+- Checkpoint-manifest state is mutually exclusive: authorization accepts exactly
+  one pending checkpoint with no valid hash commit, or exactly one completed
+  checkpoint paired with exactly one 40–64 hexadecimal commit. Mixed, duplicate,
+  missing, and unpaired forms fail closed.
 - Checkpoint markers bind the manifest and complete approved artifact set to
   raw-file SHA-256 digests plus clean-filtered Git blob object IDs and modes.
   Changed files are checked before staging; staged paths, blob IDs, and modes are
@@ -78,7 +82,22 @@ approved repository inspection while implementation remains locked.
 - The narrow independent FIND-014 review returned
   `READY_FOR_RENEWED_HUMAN_APPROVAL` with no Critical or High blocker.
 - Final renewed explicit approval is recorded as APR-002 at
-  `2026-09-04T16:15:30.3016652+03:30`; its checkpoint remains pending.
+  `2026-09-04T16:15:30.3016652+03:30`; its checkpoint completed at
+  `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`.
+- The first post-checkpoint follow-up staging attempt failed closed because
+  checkpoint authorization accepted only pending manifests. No staging or
+  follow-up commit resulted.
+- FIND-015 corrects that constraint while preserving fail-closed behavior. The
+  first predicate revision's mixed-state edge was caught by independent review;
+  the final predicate enforces the two exact, mutually exclusive states above.
+- Implementation-baseline commit validation accepts only hashes with paired or
+  absent backticks. Direct paired/unpaired implementation cases are included in
+  the 72 passing tests.
+- The narrow FIND-015 independent review returned
+  `READY_FOR_CORRECTION_APPROVAL` with no blocker.
+- The Project Owner gave explicit approval in the Cursor session for the
+  FIND-015 post-checkpoint correction and its follow-up checkpoint at
+  `2026-09-04T16:49:32.2914786+03:30`.
 
 ## Limitations
 
@@ -92,10 +111,13 @@ approved repository inspection while implementation remains locked.
 
 ## Result
 
-`APPROVED_CHECKPOINT_PENDING`
+`CORRECTION_APPROVED_CHECKPOINT_PENDING`
 
-The 66-case suite passed and FIND-006 through FIND-014 are resolved and
-independently verified. APR-001 remains a historical approved record, but its
-checkpoint was not committed and is superseded by APR-002. The APR-002
-checkpoint is pending; no staging or commit is claimed. Implementation remains
-unauthorized and Phase 01 remains inactive.
+The 72-case suite passed. FIND-015 is resolved, independently verified, and
+explicitly approved by `Project Owner (explicit approval in Cursor session)` at
+`2026-09-04T16:49:32.2914786+03:30`. Its follow-up checkpoint is pending; no
+follow-up staging or commit is claimed. APR-002 remains the approved Phase 00
+baseline, and its checkpoint remains completed at
+`540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`. Phase 01 remains
+`ACTIVE_IN_REVIEW`. No APR-003 is created, and implementation remains
+unauthorized.

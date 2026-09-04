@@ -3,7 +3,7 @@ id: GOV-RECON-001
 title: Governance Foundation Reconciliation
 phase: 00-governance
 status: approved
-version: 0.9.0
+version: 0.10.1
 owners: [chief-solution-architect]
 depends_on: [GOV-SELF-CHECK-001, GOV-INDEPENDENT-REVIEW-001]
 last_reviewed: 2026-09-04
@@ -32,6 +32,9 @@ policy.
   weakening agent-write protection.
 - FIND-014: checkpoint authorization must account for Cursor's exact fixed
   co-author-trailer transformation without accepting arbitrary trailers.
+- FIND-015: completed checkpoint manifests must authorize their separate
+  recording follow-up without accepting mixed, duplicate, missing, or unpaired
+  checkpoint/commit states.
 
 ## Corrective actions
 
@@ -62,6 +65,19 @@ policy.
 - [x] Complete the narrow FIND-014 independent review with no Critical or High
   blocker.
 - [x] Record final renewed explicit approval as APR-002.
+- [x] Preserve APR-002 and its completed commit while treating FIND-015 as a
+  separate post-checkpoint control/documentation correction.
+- [x] Accept exactly one pending checkpoint with no valid hash commit, or one
+  completed checkpoint paired with exactly one 40–64 hexadecimal commit.
+- [x] Reject mixed, duplicate, missing, and unpaired checkpoint/commit forms.
+- [x] Accept implementation-baseline commit hashes only with paired or absent
+  backticks; cover direct paired/unpaired cases.
+- [x] Expand validation to 72 passing tests.
+- [x] Complete the narrow FIND-015 review with
+  `READY_FOR_CORRECTION_APPROVAL` and no blocker.
+- [x] Record explicit approval by `Project Owner (explicit approval in Cursor
+  session)` for the FIND-015 correction and follow-up checkpoint at
+  `2026-09-04T16:49:32.2914786+03:30`.
 
 ## Documentation clarifications
 
@@ -69,20 +85,20 @@ policy.
   Only protected Cursor policy plus a valid marker can do so.
 - Repository-relative links are required for repository artifacts. External source
   evidence may use explicit absolute source locations recorded in the Source Register.
-- Phase 01 artifacts are evidence in review, while Phase 01 itself remains planned
-  until the approved Phase 00 checkpoint activates it.
+- Phase 01 is `ACTIVE_IN_REVIEW` under the completed APR-002 checkpoint.
 - The agent submits plain `git commit -m ...`. Cursor transforms it to the fixed
   `Co-authored-by: Cursor <cursoragent@cursor.com>` trailer form before hook
   evaluation, and the checkpoint marker stores that transformed form.
 
 ## Current state
 
-`APPROVED_CHECKPOINT_PENDING`
+`CORRECTION_APPROVED_CHECKPOINT_PENDING`
 
-FIND-006 through FIND-014 are resolved. The 66-case suite passed, and FIND-014
-was independently verified. APR-001 remains a historical approved record, but
-its staging produced no commit and its checkpoint is superseded by APR-002 after
-the user-authorized index clear. Final renewed explicit approval is recorded as
-APR-002 at `2026-09-04T16:15:30.3016652+03:30`; its checkpoint is pending and no
-commit is claimed. Implementation remains unauthorized, Phase 01 remains
-inactive, and `.cursor/hooks.disabled` remains the maintenance state.
+FIND-015 is resolved and independently verified; all 72 tests pass. The Project
+Owner explicitly approved the correction and its follow-up checkpoint in the
+Cursor session at `2026-09-04T16:49:32.2914786+03:30`. The follow-up checkpoint
+is pending, and no follow-up staging or commit is claimed. APR-002 remains the
+approved Phase 00 baseline, and its checkpoint remains completed at
+`540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`. No APR-003 is created,
+implementation remains unauthorized, Phase 01 remains `ACTIVE_IN_REVIEW`, and
+`.cursor/hooks.disabled` remains the maintenance state.

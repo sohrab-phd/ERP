@@ -3,7 +3,7 @@ id: GOV-SELF-CHECK-001
 title: Governance Foundation Self-Check
 phase: 00-governance
 status: approved
-version: 0.8.0
+version: 0.9.1
 owners: [chief-solution-architect]
 depends_on: [PHASE-00, GOV-HOOK-VALIDATION-001]
 last_reviewed: 2026-09-04
@@ -50,7 +50,7 @@ supersedes: null
 - Staged Git blob object IDs and modes must match approved values; deletions,
   type changes, and staged-byte tampering are not hidden.
 - Authorization markers are Git-ignored.
-- Sixty-six permission and temporary-repository integration cases pass,
+- Seventy-two permission and temporary-repository integration cases pass,
   including acceptance of Cursor's exact fixed trailer form and denial of an
   arbitrary trailer.
 - Human-approved, identity-bound protected controls can enter the checkpoint;
@@ -58,20 +58,34 @@ supersedes: null
 - The agent submits plain `git commit -m ...`; Cursor transforms it to the exact
   fixed co-author-trailer form observed by the hook, and the marker stores that
   transformed form.
+- Completed checkpoint manifests may authorize their separate recording
+  follow-up only when exactly one completed state is paired with exactly one
+  valid 40–64 hexadecimal commit. The alternative valid state is exactly one
+  pending checkpoint and no valid hash commit.
+- Mixed, duplicate, missing, and unpaired checkpoint/commit forms fail closed.
+- Implementation-baseline commit hashes accept paired or absent backticks and
+  reject unpaired backticks; direct paired/unpaired cases pass.
 
 ## Approval state
 
 - APR-001 remains a historical approved record. Its staging succeeded, but its
   commit failed closed; the user-authorized index clear left no commit.
 - APR-001's uncommitted checkpoint is superseded by APR-002.
-- FIND-006 through FIND-014 are resolved and independently verified with no
-  Critical or High blocker; all 66 tests pass.
+- APR-002 remains the approved Phase 00 baseline, and its checkpoint completed
+  at `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`.
+- FIND-015 is resolved and independently verified with
+  `READY_FOR_CORRECTION_APPROVAL`; all 72 tests pass and no blocker remains.
 - Final renewed explicit approval is recorded as APR-002 at
-  `2026-09-04T16:15:30.3016652+03:30`; its checkpoint is pending.
+  `2026-09-04T16:15:30.3016652+03:30`; this correction does not replace it.
 - `.cursor/hooks.disabled` remains the maintenance state, the stale marker is
-  unchanged, and no staging or commit is claimed.
-- Implementation remains unauthorized, and Phase 01 remains inactive.
+  unchanged, and no follow-up staging or commit is claimed.
+- `Project Owner (explicit approval in Cursor session)` approved the FIND-015
+  correction and follow-up checkpoint at
+  `2026-09-04T16:49:32.2914786+03:30`.
+- The follow-up checkpoint remains pending; no APR-003 is created.
+- Implementation remains unauthorized, and Phase 01 remains
+  `ACTIVE_IN_REVIEW`.
 
 ## Result
 
-`APPROVED_CHECKPOINT_PENDING`
+`CORRECTION_APPROVED_CHECKPOINT_PENDING`

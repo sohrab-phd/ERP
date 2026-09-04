@@ -3,7 +3,7 @@ id: GOV-INDEPENDENT-REVIEW-001
 title: Governance Foundation Independent Review
 phase: 00-governance
 status: approved
-version: 0.6.0
+version: 0.7.1
 owners: [independent-reviewer]
 depends_on: [GOV-SELF-CHECK-001]
 last_reviewed: 2026-09-04
@@ -172,17 +172,39 @@ then perform a fresh independent gate review.
 - FIND-014 is resolved and independently verified.
 - No Critical or High blocker remains.
 
+## Follow-up review 6 — FIND-015
+
+- Follow-up review 6 initially returned `BLOCKED`: the completed APR-002
+  manifest could not authorize the separate follow-up that records its commit
+  because checkpoint validation accepted only pending manifests.
+- Review of the first predicate revision also returned `BLOCKED`: a mixed
+  pending/completed state could pass. No staging or commit was authorized.
+- Final narrow verdict: `READY_FOR_CORRECTION_APPROVAL`.
+- The corrected predicate accepts exactly one pending checkpoint with zero valid
+  hash commits, or exactly one completed checkpoint with exactly one valid
+  40–64 hexadecimal commit. Mixed, duplicate, missing, and unpaired forms fail.
+- Implementation-baseline validation accepts only paired or absent backticks
+  around the commit hash; direct paired/unpaired cases are covered.
+- All 72 tests pass, and no blocker remains.
+
 ## Current disposition
 
-- Review verdict before human action: `READY_FOR_RENEWED_HUMAN_APPROVAL`
-- Current gate: `APPROVED_CHECKPOINT_PENDING`
+- Review verdict before human action: `READY_FOR_CORRECTION_APPROVAL`
+- Current correction gate: `CORRECTION_APPROVED_CHECKPOINT_PENDING`
+- Post-checkpoint correction approver: Project Owner (explicit approval in
+  Cursor session)
+- Post-checkpoint correction approval timestamp:
+  `2026-09-04T16:49:32.2914786+03:30`
 - Current artifact approval: `APR-002`
 - Final renewed explicit approver: Project Owner (explicit approval in Cursor session)
 - Final renewed explicit approval timestamp: `2026-09-04T16:15:30.3016652+03:30`
 - APR-001 remains a historical approved record; its uncommitted checkpoint is
   superseded by APR-002, and no APR-001 commit exists.
-- FIND-006 through FIND-014 are resolved and independently verified; all 66
-  tests pass and no Critical or High blocker remains.
-- APR-002 checkpoint: pending; no staging or commit is claimed.
+- APR-002 checkpoint: completed at
+  `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`.
+- FIND-015 is resolved, independently verified, and explicitly approved for its
+  follow-up checkpoint.
+- Follow-up checkpoint: pending.
+- No follow-up staging or commit is claimed; no APR-003 is created.
 - `.cursor/hooks.disabled` remains the maintenance state.
-- Implementation authorization: none; Phase 01 remains inactive.
+- Implementation authorization: none; Phase 01 remains `ACTIVE_IN_REVIEW`.

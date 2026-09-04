@@ -176,6 +176,30 @@ function Get-CheckpointAuthorization {
     } else {
         (Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256).Hash.ToLowerInvariant()
     }
+    $pendingCheckpointCount = [regex]::Matches(
+        $manifestContent,
+        '(?m)^-\s*Git checkpoint:\s*pending\s*$'
+    ).Count
+    $completedCheckpointCount = [regex]::Matches(
+        $manifestContent,
+        '(?m)^-\s*Git checkpoint:\s*completed\s*$'
+    ).Count
+    $validCommitCount = [regex]::Matches(
+        $manifestContent,
+        '(?m)^-\s*Git commit:\s*(?:[0-9a-fA-F]{40,64}|`[0-9a-fA-F]{40,64}`)\s*$'
+    ).Count
+    $checkpointStateValid = (
+        (
+            $pendingCheckpointCount -eq 1 -and
+            $completedCheckpointCount -eq 0 -and
+            $validCommitCount -eq 0
+        ) -or
+        (
+            $pendingCheckpointCount -eq 0 -and
+            $completedCheckpointCount -eq 1 -and
+            $validCommitCount -eq 1
+        )
+    )
     if (
         [string]::IsNullOrWhiteSpace($expectedManifestId) -or
         $manifestContent -notmatch "(?m)^id:\s*$([regex]::Escape($expectedManifestId))\s*$" -or
@@ -183,7 +207,7 @@ function Get-CheckpointAuthorization {
         $manifestContent -notmatch '(?m)^-\s*Gate result:\s*`?APPROVED`?\s*$' -or
         $manifestContent -notmatch '(?m)^-\s*Explicit approver:\s*(?!pending\s*$).+\s*$' -or
         $manifestContent -notmatch $phasePattern -or
-        $manifestContent -notmatch '(?m)^-\s*Git checkpoint:\s*pending\s*$' -or
+        -not $checkpointStateValid -or
         $manifestSha256 -ne "$($marker.approvalManifestSha256)".ToLowerInvariant()
     ) {
         return [pscustomobject]@{ Authorized = $false; AllowedCommands = @() }
@@ -422,7 +446,7 @@ function Get-ImplementationAuthorization {
         $baselineContent -notmatch '(?m)^status:\s*approved\s*$' -or
         $baselineContent -notmatch '(?m)^-\s*Gate result:\s*`?APPROVED`?\s*$' -or
         $baselineContent -notmatch '(?m)^-\s*Explicit approver:\s*(?!pending\s*$).+\s*$' -or
-        $baselineContent -notmatch '(?m)^-\s*Git commit:\s*[0-9a-fA-F]{40,64}\s*$'
+        $baselineContent -notmatch '(?m)^-\s*Git commit:\s*(?:[0-9a-fA-F]{40,64}|`[0-9a-fA-F]{40,64}`)\s*$'
     ) {
         return [pscustomobject]@{ Authorized = $false; AllowedPaths = @(); Reason = "Approved baseline manifest is not authoritative." }
     }

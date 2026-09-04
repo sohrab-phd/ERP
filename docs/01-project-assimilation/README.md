@@ -2,8 +2,8 @@
 id: PHASE-01
 title: Project Assimilation
 phase: 01-project-assimilation
-status: planned
-version: 0.1.0
+status: in_review
+version: 0.1.1
 owners: [chief-solution-architect]
 depends_on: [PHASE-00]
 last_reviewed: 2026-09-02
@@ -27,7 +27,9 @@ performing detailed design or implementation.
 
 ## Entry criteria
 
-- Phase 00 is approved.
+- [x] Phase 00 is approved through `APR-002`.
+- [x] Phase 00 checkpoint is completed through `CHK-0001` at
+  `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`.
 
 ## Exit criteria
 
@@ -39,4 +41,16 @@ performing detailed design or implementation.
 
 ## Gate
 
-Current result: `PLANNED`
+Current result: `ACTIVE_IN_REVIEW`
+
+Remaining exit work:
+
+- Complete the Phase 01 self-check.
+- Complete an independent Phase 01 review.
+- Reconcile the review findings without resolving questions outside Phase 01
+  ownership.
+- Obtain explicit user approval.
+- Complete and record the approved Phase 01 checkpoint.
+
+The Phase 01 report and reconciliation remain in review. Neither is approved,
+and implementation remains unauthorized.
