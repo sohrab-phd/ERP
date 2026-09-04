@@ -1,0 +1,11 @@
+# Cursor transient artifacts
+.cursor/plans/
+.cursor/IMPLEMENTATION_UNLOCK.json
+.cursor/PHASE_CHECKPOINT_APPROVAL.json
+
+# Operating-system and editor noise
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*~

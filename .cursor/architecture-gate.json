@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "mode": "architecture-only",
+  "enforcement": "locked",
+  "implementationAuthorized": false,
+  "approvedBaseline": null,
+  "workspaceRoot": ".",
+  "unlockMarker": ".cursor/IMPLEMENTATION_UNLOCK.json",
+  "checkpointMarker": ".cursor/PHASE_CHECKPOINT_APPROVAL.json",
+  "allowedWritePathsWhileLocked": [
+    "README.md",
+    ".gitignore",
+    "docs/**/*.md",
+    ".cursor/rules/**/*.mdc",
+    ".cursor/skills/**/*.md"
+  ],
+  "protectedPaths": [
+    ".cursor/architecture-gate.json",
+    ".cursor/hooks.json",
+    ".cursor/hooks/**",
+    ".cursor/IMPLEMENTATION_UNLOCK.json",
+    ".cursor/PHASE_CHECKPOINT_APPROVAL.json"
+  ],
+  "unknownWriteOperation": "deny",
+  "deleteOrRenameWhileLocked": "deny",
+  "unlockRequirements": {
+    "version": 1,
+    "implementationAuthorized": true,
+    "requiredFields": [
+      "approvedBy",
+      "approvedAt",
+      "approvedBaseline",
+      "allowedWritePaths",
+      "allowedShellCommands"
+    ],
+    "approvedBaselinePrefix": "docs/00-governance/approved-baselines/",
+    "minimumAllowedWritePaths": 1
+  },
+  "checkpointRequirements": {
+    "version": 1,
+    "requiredFields": [
+      "approvedBy",
+      "approvedAt",
+      "expiresAt",
+      "phase",
+      "approvalManifest",
+      "approvalManifestSha256",
+      "approvedArtifacts",
+      "allowedGitCommands"
+    ],
+    "approvedArtifactRequiredFields": [
+      "path",
+      "sha256",
+      "gitMode",
+      "gitBlobOid"
+    ],
+    "approvalManifestPrefix": "docs/00-governance/approved-baselines/"
+  },
+  "notes": [
+    "This policy constrains covered Cursor agent actions, not manual editor changes.",
+    "Implementation remains locked until a human-created marker references an approved baseline and exact allowed paths."
+  ]
+}

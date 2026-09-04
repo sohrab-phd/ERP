@@ -1,0 +1,27 @@
+---
+description: Enforces architecture-first work and explicit implementation authorization
+alwaysApply: true
+---
+
+# Architecture-First Gate
+
+- Read `docs/00-governance/CURRENT_PHASE.md` before changing this project.
+- While `IMPLEMENTATION_AUTHORIZED` is `false`, work only on architecture
+  research, Markdown artifacts, reviews, registers, and approved Cursor controls.
+- Do not create application code, executable schemas/migrations, API/UI
+  implementation, package manifests, dependency installs, CI/CD, Docker, or
+  deployment implementation.
+- Node.js + TypeScript is confirmed; frameworks and packages are not confirmed
+  unless an accepted ADR says so.
+- Never resolve material business or architecture ambiguity silently. Add or
+  update an `OQ-*`, `ASM-*`, `RISK-*`, `FIND-*`, or `ADR-*` record.
+- Use canonical terms and ownership from `docs/00-governance/registers/`; phase
+  documents link to them instead of redefining them.
+- Every phase requires self-check, independent review, reconciliation, explicit
+  user approval, and a checkpoint before the next phase.
+- Git staging/commit requires a short-lived, human-created protected checkpoint
+  marker referencing the approved phase manifest and exact Git commands.
+- Discussion, a completed draft, or an AI recommendation does not authorize
+  implementation.
+- A future implementation unlock must reference the exact approved baseline and
+  narrowly authorized paths. Its absence means implementation remains locked.
