@@ -3,7 +3,7 @@ id: APR-002
 title: Renewed Corrected Governance Foundation Approval
 phase: 00-governance
 status: approved
-version: 0.1.1
+version: 0.1.2
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATE-CHECKLIST-001, GOV-RECON-001]
 last_reviewed: 2026-09-04
@@ -24,8 +24,9 @@ supersedes: APR-001
 - Git checkpoint: completed
 - Git commit: `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`
 - Baseline checkpoint result: completed successfully; 69 files recorded
-- Follow-up status: this documentation record is pending until committed in a
-  separate documentation checkpoint
+- Follow-up status: completed at
+  `25e89c2765575652aa9473922c3a09df7cc87eaf`
+- Follow-up commit subject: `docs: record phase 00 checkpoint`
 - Supersedes approval: `APR-001`
 
 ## Approved correction and evidence
@@ -60,10 +61,15 @@ are recorded.
 - The accepted limitation in `FIND-005` remains: Cursor safeguards do not cover
   every manual or operating-system write.
 - Active hooks remain active.
-- Cleanup of the protected checkpoint marker remains a human action.
+- The human confirmed deletion of `.cursor/PHASE_CHECKPOINT_APPROVAL.json`; no
+  checkpoint marker exists.
 - Phase 01 is active in review following the completed checkpoint.
-- This follow-up record does not authorize implementation and does not claim
-  that its own documentation checkpoint has been committed.
+- The Phase 00 baseline commit is
+  `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`; the approved recording follow-up
+  is committed at `25e89c2765575652aa9473922c3a09df7cc87eaf`.
+- This follow-up record does not authorize implementation.
+- Current status-document updates are Phase 01 working state for the eventual
+  Phase 01 checkpoint and do not require another Phase 00 recording follow-up.
 
 ## Reopen conditions
 

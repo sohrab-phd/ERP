@@ -3,7 +3,7 @@ id: GOV-INDEPENDENT-REVIEW-001
 title: Governance Foundation Independent Review
 phase: 00-governance
 status: approved
-version: 0.7.1
+version: 0.7.2
 owners: [independent-reviewer]
 depends_on: [GOV-SELF-CHECK-001]
 last_reviewed: 2026-09-04
@@ -190,7 +190,7 @@ then perform a fresh independent gate review.
 ## Current disposition
 
 - Review verdict before human action: `READY_FOR_CORRECTION_APPROVAL`
-- Current correction gate: `CORRECTION_APPROVED_CHECKPOINT_PENDING`
+- Current correction gate: `CORRECTION_APPROVED_CHECKPOINT_COMPLETED`
 - Post-checkpoint correction approver: Project Owner (explicit approval in
   Cursor session)
 - Post-checkpoint correction approval timestamp:
@@ -204,7 +204,12 @@ then perform a fresh independent gate review.
   `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`.
 - FIND-015 is resolved, independently verified, and explicitly approved for its
   follow-up checkpoint.
-- Follow-up checkpoint: pending.
-- No follow-up staging or commit is claimed; no APR-003 is created.
+- Follow-up checkpoint: completed at
+  `25e89c2765575652aa9473922c3a09df7cc87eaf`.
+- Follow-up commit subject: `docs: record phase 00 checkpoint`.
+- No APR-003 is created.
+- Protected checkpoint marker: human-confirmed deleted; none exists.
 - `.cursor/hooks.disabled` remains the maintenance state.
 - Implementation authorization: none; Phase 01 remains `ACTIVE_IN_REVIEW`.
+- Current status-document updates are Phase 01 working state for its eventual
+  checkpoint, not another Phase 00 recording follow-up.

@@ -3,11 +3,11 @@ id: GOV-FINDINGS-001
 title: Review Findings Register
 phase: 00-governance
 status: approved
-version: 0.8.1
+version: 0.9.2
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-04
-approval: APR-002
+approval: APR-003
 supersedes: null
 ---
 
@@ -15,6 +15,11 @@ supersedes: null
 
 Findings are append-only and may be `open`, `accepted`, `resolved`, `rejected`,
 or `superseded`. Resolution requires evidence and affected-artifact references.
+
+APR-002 approved this register's Phase 00 seed version. APR-003 approves the
+current version as accurate Phase 01 review evidence. Every finding retains its
+recorded status and downstream effect; artifact approval does not close open
+findings or their linked questions.
 
 ## FIND-001 — Portal phase conflict
 
@@ -28,11 +33,12 @@ or `superseded`. Resolution requires evidence and affected-artifact references.
 ## FIND-002 — Proposed technologies may be mistaken for approved decisions
 
 - Severity: high
-- Status: treating
+- Status: resolved
 - Finding: NestJS, Prisma, Socket.IO, React, job scheduling, test runner, and
   observability references have different maturity across source sections.
 - Treatment: ADR-0001 decides only Node.js + TypeScript; OQ-018 keeps detailed
-  platform choices open.
+  platform choices open. The assimilation report now labels detailed technology
+  references as proposed/evaluation baselines.
 
 ## FIND-003 — Partial fulfillment policies lack numeric limits
 
@@ -186,10 +192,84 @@ or `superseded`. Resolution requires evidence and affected-artifact references.
 - Approval disposition: `Project Owner (explicit approval in Cursor session)`
   approved the FIND-015 post-checkpoint correction and its follow-up checkpoint
   at `2026-09-04T16:49:32.2914786+03:30`.
-- Follow-up checkpoint: pending; no follow-up staging or commit is claimed.
-  APR-002 and its completed checkpoint remain unchanged, Phase 01 remains
-  `ACTIVE_IN_REVIEW`, implementation remains unauthorized, and no APR-003 is
-  created.
+- Follow-up checkpoint: completed at
+  `25e89c2765575652aa9473922c3a09df7cc87eaf` with subject
+  `docs: record phase 00 checkpoint`.
+- Baseline checkpoint:
+  `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`.
+- Current state: Phase 01 remains `ACTIVE_IN_REVIEW`, implementation remains
+  unauthorized, no APR-003 is created, and no checkpoint marker exists after
+  human-confirmed deletion.
+- Checkpoint-chain treatment: these current Phase 01 working-state updates enter
+  the eventual Phase 01 checkpoint rather than create another Phase 00
+  recording follow-up.
+
+## FIND-016 — Technology maturity asymmetry
+
+- Severity: high
+- Status: resolved
+- Finding: Modular Monolith, PostgreSQL, Ledger+Balance, Outbox, Docker Compose,
+  Nginx, Ubuntu, frontend, scheduler, testing, observability, and detailed
+  package references were stated with unequal maturity, allowing proposals to be
+  mistaken for accepted decisions.
+- Resolution: The Architecture Assimilation Report now labels all such choices
+  as proposed/evaluation baselines except accepted ADR-0001 (Node.js +
+  TypeScript). Proposed ADR-0006, ADR-0007, and ADR-0008 expose architecture
+  style, data platform, and MVP deployment topology as explicit candidates.
+  OQ-018 now covers the remaining architecture and platform decision set.
+- Evidence: ASM-REPORT-001 version 0.2.0; GOV-DECISIONS-001 version 0.2.0;
+  GOV-QUESTIONS-001 version 0.2.0; ASM-PROVENANCE-001
+- Residual state: wording/maturity defect resolved; every candidate decision
+  remains open until its evidence-based ADR is accepted under OQ-018.
+
+## FIND-017 — Phase 01 register lifecycle falsely attributed to APR-002
+
+- Severity: high
+- Gate: Phase 01
+- Status: resolved
+- Finding: Seven canonical registers materially expanded during Phase 01 still
+  marked their current versions `approved` with `approval: APR-002`. APR-002
+  approved the Phase 00 seed baseline, not the later Phase 01 additions.
+- Resolution: ASSUMPTIONS, BUSINESS_GLOSSARY, CANONICAL_DATA_DICTIONARY,
+  DECISIONS, OPEN_QUESTIONS, REQUIREMENTS_TRACEABILITY, and REVIEW_FINDINGS now
+  mark their current versions `in_review` with `approval: null` and preserve
+  APR-002 as historical seed provenance in their bodies.
+- Evidence: GOV-ASSUMPTIONS-001 version 0.2.1; GOV-GLOSSARY-001 version 0.2.1;
+  GOV-DATA-DICT-001 version 0.2.1; GOV-DECISIONS-001 version 0.2.1;
+  GOV-QUESTIONS-001 version 0.2.1; GOV-TRACE-001 version 0.2.1; and
+  GOV-FINDINGS-001 version 0.9.1.
+- Follow-up: A fresh independent review must verify the correction before the
+  Phase 01 gate can advance.
+- Approval disposition: The follow-up review verified this correction, and
+  APR-003 subsequently approved current versions 0.2.2 of the six affected
+  registers and version 0.9.2 of this register while preserving APR-002 seed
+  provenance.
+
+## FIND-018 — Objective source roles were stated symmetrically
+
+- Severity: medium
+- Gate: Phase 01
+- Status: resolved
+- Finding: REQ-OBJ-003 and REQ-OBJ-004 listed SRC-001 and SRC-002 as equal
+  sources, obscuring that SRC-001 supplies business/architecture content while
+  SRC-002 supplies methodology and validation support.
+- Resolution: Both objective rows now state the asymmetric source roles while
+  retaining their complete Phase 01 evidence and downstream trace chain.
+- Evidence: GOV-TRACE-001 version 0.2.1 and ASM-PROVENANCE-001.
+
+## FIND-019 — Glossary evidence map and first-use links were incomplete
+
+- Severity: medium
+- Gate: Phase 01
+- Status: resolved
+- Finding: The assimilation report's canonical evidence map omitted the
+  Business Glossary, and first authoritative uses of key canonical concepts did
+  not link to their TERM entries.
+- Resolution: The evidence map now links GOV-GLOSSARY-001, and first
+  authoritative uses of Goods Receipt, Inventory Unit, Coil, Unfulfilled
+  Demand, and Genealogy link to TERM-019, TERM-007, TERM-008, TERM-005, and
+  TERM-015 respectively without repeated overlinking.
+- Evidence: ASM-REPORT-001 version 0.2.1 and GOV-GLOSSARY-001 version 0.2.1.
 
 ## Downstream suspect policy
 

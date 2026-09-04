@@ -3,7 +3,7 @@ id: GOV-GATE-CHECKLIST-001
 title: Governance Foundation Gate Checklist
 phase: 00-governance
 status: approved
-version: 0.9.1
+version: 0.9.2
 owners: [chief-solution-architect, independent-reviewer]
 depends_on: [GOV-SELF-CHECK-001, GOV-INDEPENDENT-REVIEW-001, GOV-RECON-001]
 last_reviewed: 2026-09-04
@@ -77,7 +77,7 @@ supersedes: null
 ## Current gate outcome
 
 - Baseline result: `APPROVED_CHECKPOINT_COMPLETED`
-- Correction result: `CORRECTION_APPROVED_CHECKPOINT_PENDING`
+- Correction result: `CORRECTION_APPROVED_CHECKPOINT_COMPLETED`
 - Current approval: [APR-002-governance.md](approved-baselines/APR-002-governance.md)
 - Approval timestamp: `2026-09-04T16:15:30.3016652+03:30`
 - Correction approver: Project Owner (explicit approval in Cursor session)
@@ -87,10 +87,14 @@ supersedes: null
 - APR-002 checkpoint: completed at
   `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`; 69 files
 - Checkpoint record: [CHK-0001-phase-00.md](approved-baselines/CHK-0001-phase-00.md);
-  the approved correction follow-up checkpoint is pending
+  the approved correction follow-up completed at
+  `25e89c2765575652aa9473922c3a09df7cc87eaf`
+- Follow-up commit subject: `docs: record phase 00 checkpoint`
 - FIND-015 review: `READY_FOR_CORRECTION_APPROVAL`; 72 tests pass
-- Follow-up staging/commit: none
 - New approval manifest: none; no APR-003 is created
-- Protected marker cleanup: remains a human action
+- Protected checkpoint marker: human-confirmed deleted; none exists
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains `false`
 - Next phase: `01-project-assimilation`; `ACTIVE_IN_REVIEW`
+- Checkpoint-chain treatment: current updates are Phase 01 working-state
+  documentation for the eventual Phase 01 checkpoint, not a new Phase 00
+  recording follow-up

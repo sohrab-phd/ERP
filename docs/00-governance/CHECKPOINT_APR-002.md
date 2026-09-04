@@ -3,7 +3,7 @@ id: GOV-CHECKPOINT-APR-002
 title: APR-002 Checkpoint Procedure
 phase: 00-governance
 status: approved
-version: 0.1.3
+version: 0.1.4
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [APR-002, GOV-GATES-001]
 last_reviewed: 2026-09-04
@@ -19,13 +19,14 @@ The user gave final renewed explicit approval of corrected Phase 00 at
 `docs: approve phase 00 governance foundation`. Implementation remains
 unauthorized and Phase 01 is active in review.
 
-The completed checkpoint history is unchanged. This correction does not restore
-hooks, create or modify the protected marker, stage files, or commit. Cleanup of
-the protected checkpoint marker remains a human action.
+The baseline checkpoint history is unchanged. The approved recording follow-up
+completed at `25e89c2765575652aa9473922c3a09df7cc87eaf` with subject
+`docs: record phase 00 checkpoint`. The human confirmed deletion of
+`.cursor/PHASE_CHECKPOINT_APPROVAL.json`; no checkpoint marker exists.
 
 `Project Owner (explicit approval in Cursor session)` approved the FIND-015
 post-checkpoint correction and its follow-up checkpoint at
-`2026-09-04T16:49:32.2914786+03:30`. The follow-up checkpoint is pending.
+`2026-09-04T16:49:32.2914786+03:30`. That follow-up checkpoint is complete.
 
 ## Completed checkpoint procedure
 
@@ -70,11 +71,12 @@ set, Git modes, and blob IDs before commit.
 
 ## Post-checkpoint
 
-The baseline checkpoint is complete and Phase 01 is active in review. The human
-removes `.cursor/PHASE_CHECKPOINT_APPROVAL.json`. The separate follow-up
-documentation record is explicitly approved, and its follow-up checkpoint is
-pending; no commit containing that follow-up is claimed. Neither checkpoint
-authorizes implementation.
+The baseline checkpoint and its recording follow-up are complete, and Phase 01
+is `ACTIVE_IN_REVIEW`. The baseline is commit
+`540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`; the recording follow-up is commit
+`25e89c2765575652aa9473922c3a09df7cc87eaf`. The human removed
+`.cursor/PHASE_CHECKPOINT_APPROVAL.json`, so no checkpoint marker exists.
+Neither commit authorizes implementation.
 
 The first attempt to authorize that recording follow-up failed closed because
 checkpoint validation accepted only pending manifests. FIND-015 now supports
@@ -86,6 +88,10 @@ including direct implementation-baseline paired/unpaired backtick cases.
 
 The narrow independent review returned `READY_FOR_CORRECTION_APPROVAL` with no
 blocker. The Project Owner subsequently gave the explicit correction and
-follow-up checkpoint approval recorded above. No follow-up staging or commit is
-claimed, no APR-003 is created, and APR-002 remains the approved committed
-Phase 00 baseline.
+follow-up checkpoint approval recorded above. The follow-up is committed at the
+exact hash above, no APR-003 is created, and APR-002 remains the approved
+committed Phase 00 baseline.
+
+These current-state edits are Phase 01 working-state documentation and will
+enter the eventual Phase 01 checkpoint. They do not trigger another Phase 00
+recording follow-up or an infinite self-referential checkpoint chain.

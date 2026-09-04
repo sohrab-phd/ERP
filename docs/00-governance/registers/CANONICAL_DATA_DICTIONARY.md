@@ -3,11 +3,11 @@ id: GOV-DATA-DICT-001
 title: Canonical Data Dictionary
 phase: 00-governance
 status: approved
-version: 0.1.0
+version: 0.2.2
 owners: [data-architect, domain-leads]
 depends_on: [GOV-DOMAIN-001, GOV-GLOSSARY-001]
 last_reviewed: 2026-09-04
-approval: APR-002
+approval: APR-003
 supersedes: null
 ---
 
@@ -15,6 +15,11 @@ supersedes: null
 
 This initial dictionary controls conceptual identity only. It does not authorize
 tables, columns, keys, or database migrations.
+
+APR-002 approved this register's Phase 00 seed version. APR-003 approves the
+current version as accurate Phase 01 assimilation evidence. Concept validation
+statuses remain unchanged, and this approval does not authorize detailed data
+design, tables, columns, keys, schemas, or migrations.
 
 ## ENT-CUSTOMER
 
@@ -118,8 +123,11 @@ tables, columns, keys, or database migrations.
 ## ENT-SCRAP
 
 - Concept: TERM-013
-- Write owner: Production
-- Identity purpose: Typed material-loss/disposition fact
+- Write owners: Production owns the scrap creation/disposition fact; Inventory
+  Posting Service owns the associated stock movement and balance effect where
+  scrap changes inventory
+- Identity purpose: Typed material-loss/disposition fact linked to any required
+  Inventory posting evidence
 - Validation status: proposed
 
 ## ENT-PRODUCT-BATCH

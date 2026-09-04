@@ -3,11 +3,11 @@ id: GOV-ASSUMPTIONS-001
 title: Assumption Register
 phase: 00-governance
 status: approved
-version: 0.1.0
+version: 0.2.2
 owners: [chief-solution-architect]
 depends_on: [SRC-001, ASM-REPORT-001]
 last_reviewed: 2026-09-04
-approval: APR-002
+approval: APR-003
 supersedes: null
 ---
 
@@ -15,6 +15,11 @@ supersedes: null
 
 Every assumption requires an owner, validation method, and affected artifacts.
 None of these entries is a confirmed business decision.
+
+APR-002 approved this register's Phase 00 seed version. APR-003 approves the
+current version as accurate Phase 01 assimilation evidence. Individual
+assumptions retain their recorded validation status; this artifact approval does
+not confirm them as business facts.
 
 ## ASM-001 — Single legal entity and principal site
 
@@ -98,3 +103,17 @@ None of these entries is a confirmed business decision.
 - Owner: Project sponsor
 - Validation: delivery/support team plan
 - Affects: Modular Monolith, deployment, tooling, operational complexity
+
+## ASM-012 — Historical snapshots and correction evidence are retained
+
+- Status: proposed
+- Statement: Commercial, specification, quantity, status, and approval values
+  required to interpret a posted historical document are snapshotted, and every
+  later correction preserves the prior value, reason, actor, authority,
+  timestamp, and linked reversal/correction evidence.
+- Owner: Business control owners and Data Steward
+- Validation: representative document/correction walkthrough, legal/audit
+  retention policy, and authority matrix
+- Affects: Sales, Procurement, Inventory, Production, Quality, Shipping,
+  FinanceLite, Audit, traceability, retention
+- Related questions: OQ-005, OQ-006, OQ-007, OQ-015, OQ-016

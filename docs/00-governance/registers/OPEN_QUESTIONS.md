@@ -3,11 +3,11 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: approved
-version: 0.1.0
+version: 0.2.2
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001]
 last_reviewed: 2026-09-04
-approval: APR-002
+approval: APR-003
 supersedes: null
 ---
 
@@ -16,6 +16,11 @@ supersedes: null
 Status values: `open`, `investigating`, `answered`, `deferred`, `superseded`.
 Severity and blocking scope are independent. Answers become authoritative only
 when promoted to the owning artifact or ADR.
+
+APR-002 approved this register's Phase 00 seed version. APR-003 approves the
+current version as accurate Phase 01 assimilation evidence. OQ-001 through
+OQ-018 retain their recorded statuses and downstream blocking scopes; artifact
+approval does not answer or close them.
 
 ## OQ-001 — Authoritative UOM matrix
 
@@ -199,13 +204,22 @@ when promoted to the owning artifact or ADR.
 - Needed: Option analysis and separately authorized evidence spike
 - Status: open
 
-## OQ-018 — Node.js platform ADR set
+## OQ-018 — Architecture and Node.js platform ADR set
 
-- Question: Which Node/framework, auth, durable scheduler, decimal, validation,
-  OpenAPI, test, and observability choices satisfy approved requirements?
-- Why: These choices define implementation contracts and operational risk.
-- Domains: Application, Security, Worker, API, QA, Operations
+- Question: Which architecture style; PostgreSQL/data-platform role; Node.js
+  runtime and backend framework; frontend architecture/framework; authentication
+  and authorization packages; persistence approach; durable scheduler; exact
+  decimal and serialization; validation/OpenAPI; testing; observability; and MVP
+  deployment topology satisfy approved requirements, and what maturity/evidence
+  is required before each baseline can be accepted?
+- Why: Source references have asymmetric maturity. These choices define module,
+  data, implementation, verification, deployment, and operational contracts and
+  must not become defaults through repetition.
+- Domains: Architecture, Data, Application, Frontend, Security, Worker, API, QA,
+  Operations, Deployment
 - Severity: critical
 - Blocking scope: Phase 05 and implementation areas
-- Needed: Evidence-based ADRs, not popularity-based defaults
+- Needed: Evidence-based ADRs and comparison criteria for proposed ADR-0006
+  through ADR-0008 plus later detailed platform ADRs; no popularity-based
+  defaults
 - Status: open

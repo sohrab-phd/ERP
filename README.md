@@ -7,12 +7,14 @@ traceability, and monitoring system.
 ## Current status
 
 - Current phase: `01-project-assimilation`
-- Gate status: `ACTIVE_IN_REVIEW`
+- Gate status: `APPROVED_CHECKPOINT_PENDING`
 - Phase 00 approval: `APR-002`; checkpoint completed at
   `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`
 - FIND-006 through FIND-014: resolved and independently verified; 66 validation
   tests pass
-- Phase 01: active and in review
+- Phase 01 approval: `APR-003` at `2026-09-04T20:38:00+03:30`; checkpoint and
+  commit pending
+- Phase 02: inactive until the APR-003 checkpoint is completed and recorded
 - Implementation authorized: **No**
 - Application source code, database migrations, package setup, and deployment
   implementation are prohibited until the final architecture gate is explicitly
@@ -33,8 +35,8 @@ work authorization.
 ## Phase dashboard
 
 - `00-governance`: **approved; checkpoint completed**
-- `01-project-assimilation`: **active; in_review**
-- `02-domain-business-architecture`: planned
+- `01-project-assimilation`: **approved; checkpoint pending**
+- `02-domain-business-architecture`: **planned; inactive**
 - `03-state-machines-invariants`: planned
 - `04-database-architecture`: planned
 - `05-application-api-architecture`: planned

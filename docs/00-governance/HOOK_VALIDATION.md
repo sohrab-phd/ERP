@@ -3,7 +3,7 @@ id: GOV-HOOK-VALIDATION-001
 title: Architecture Write-Gate Validation
 phase: 00-governance
 status: approved
-version: 0.11.1
+version: 0.11.2
 owners: [chief-solution-architect]
 depends_on: [ADR-0005, GOV-CURRENT-001]
 last_reviewed: 2026-09-04
@@ -111,13 +111,15 @@ approved repository inspection while implementation remains locked.
 
 ## Result
 
-`CORRECTION_APPROVED_CHECKPOINT_PENDING`
+`CORRECTION_APPROVED_CHECKPOINT_COMPLETED`
 
 The 72-case suite passed. FIND-015 is resolved, independently verified, and
 explicitly approved by `Project Owner (explicit approval in Cursor session)` at
-`2026-09-04T16:49:32.2914786+03:30`. Its follow-up checkpoint is pending; no
-follow-up staging or commit is claimed. APR-002 remains the approved Phase 00
-baseline, and its checkpoint remains completed at
-`540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`. Phase 01 remains
-`ACTIVE_IN_REVIEW`. No APR-003 is created, and implementation remains
-unauthorized.
+`2026-09-04T16:49:32.2914786+03:30`. Its follow-up checkpoint completed at
+`25e89c2765575652aa9473922c3a09df7cc87eaf`. APR-002 remains the approved Phase
+00 baseline, and its checkpoint remains completed at
+`540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`. The human confirmed deletion of
+`.cursor/PHASE_CHECKPOINT_APPROVAL.json`; no checkpoint marker exists. Phase 01
+remains `ACTIVE_IN_REVIEW`. No APR-003 is created, and implementation remains
+unauthorized. Current status-document updates will enter the eventual Phase 01
+checkpoint rather than create another Phase 00 recording follow-up.

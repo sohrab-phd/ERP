@@ -1,11 +1,13 @@
 param(
     [string]$ApprovedBy = "Project Owner (explicit approval in Cursor session)",
-    [string]$CommitMessage = "docs: approve phase 00 governance foundation"
+    [string]$CommitMessage = "docs: approve phase 01 project assimilation",
+    [string]$Phase = "01-project-assimilation",
+    [string]$ApprovalManifest = "docs/00-governance/approved-baselines/APR-003-project-assimilation.md"
 )
 
 $ErrorActionPreference = "Stop"
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "..\.."))
-$manifestRelative = "docs/00-governance/approved-baselines/APR-002-governance.md"
+$manifestRelative = $ApprovalManifest.Replace('\', '/')
 $manifestPath = Join-Path $root $manifestRelative
 $markerPath = Join-Path $root ".cursor\PHASE_CHECKPOINT_APPROVAL.json"
 
@@ -15,6 +17,12 @@ if ([string]::IsNullOrWhiteSpace($ApprovedBy)) {
 if ($CommitMessage -notmatch '^[A-Za-z0-9 .:_-]{1,120}$') {
     throw "CommitMessage contains unsupported characters or length."
 }
+if ($Phase -notmatch '^[0-9]{2}-[a-z0-9-]+$') {
+    throw "Phase must be a canonical phase identifier."
+}
+if ($manifestRelative -notmatch '^docs/00-governance/approved-baselines/APR-[0-9]{3,}-.+\.md$') {
+    throw "ApprovalManifest must reference an APR manifest under approved-baselines."
+}
 if (-not (Test-Path (Join-Path $root ".cursor\hooks.json") -PathType Leaf)) {
     throw "Restore .cursor/hooks.json before generating the checkpoint marker."
 }
@@ -22,7 +30,7 @@ if (Test-Path (Join-Path $root ".cursor\hooks.disabled")) {
     throw "Remove the maintenance copy before generating the checkpoint marker."
 }
 if (-not (Test-Path $manifestPath -PathType Leaf)) {
-    throw "APR-002 approval manifest is missing."
+    throw "Approval manifest is missing: $manifestRelative"
 }
 
 & git -C $root diff --cached --quiet
@@ -54,7 +62,7 @@ if ($changedPaths.Count -eq 0) {
     throw "No checkpoint content was found."
 }
 if ($manifestRelative -notin $changedPaths) {
-    throw "The APR-002 manifest is not part of the checkpoint content."
+    throw "The approval manifest is not part of the checkpoint content."
 }
 
 $approvedArtifacts = foreach ($relativePath in $changedPaths) {
@@ -80,7 +88,7 @@ $marker = [ordered]@{
     approvedBy = $ApprovedBy
     approvedAt = $approvedAt.ToString("o")
     expiresAt = $approvedAt.AddHours(1).ToString("o")
-    phase = "00-governance"
+    phase = $Phase
     approvalManifest = $manifestRelative
     approvalManifestSha256 = (
         Get-FileHash -LiteralPath $manifestPath -Algorithm SHA256

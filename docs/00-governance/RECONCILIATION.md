@@ -3,7 +3,7 @@ id: GOV-RECON-001
 title: Governance Foundation Reconciliation
 phase: 00-governance
 status: approved
-version: 0.10.1
+version: 0.10.2
 owners: [chief-solution-architect]
 depends_on: [GOV-SELF-CHECK-001, GOV-INDEPENDENT-REVIEW-001]
 last_reviewed: 2026-09-04
@@ -92,13 +92,16 @@ policy.
 
 ## Current state
 
-`CORRECTION_APPROVED_CHECKPOINT_PENDING`
+`CORRECTION_APPROVED_CHECKPOINT_COMPLETED`
 
 FIND-015 is resolved and independently verified; all 72 tests pass. The Project
 Owner explicitly approved the correction and its follow-up checkpoint in the
 Cursor session at `2026-09-04T16:49:32.2914786+03:30`. The follow-up checkpoint
-is pending, and no follow-up staging or commit is claimed. APR-002 remains the
+completed at `25e89c2765575652aa9473922c3a09df7cc87eaf`. APR-002 remains the
 approved Phase 00 baseline, and its checkpoint remains completed at
 `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`. No APR-003 is created,
 implementation remains unauthorized, Phase 01 remains `ACTIVE_IN_REVIEW`, and
-`.cursor/hooks.disabled` remains the maintenance state.
+`.cursor/hooks.disabled` remains the maintenance state. The human confirmed
+deletion of `.cursor/PHASE_CHECKPOINT_APPROVAL.json`; no checkpoint marker
+exists. These current-state updates will enter the eventual Phase 01 checkpoint
+instead of creating another Phase 00 recording follow-up.

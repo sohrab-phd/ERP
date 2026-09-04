@@ -3,7 +3,7 @@ id: GOV-SELF-CHECK-001
 title: Governance Foundation Self-Check
 phase: 00-governance
 status: approved
-version: 0.9.1
+version: 0.9.2
 owners: [chief-solution-architect]
 depends_on: [PHASE-00, GOV-HOOK-VALIDATION-001]
 last_reviewed: 2026-09-04
@@ -77,15 +77,22 @@ supersedes: null
   `READY_FOR_CORRECTION_APPROVAL`; all 72 tests pass and no blocker remains.
 - Final renewed explicit approval is recorded as APR-002 at
   `2026-09-04T16:15:30.3016652+03:30`; this correction does not replace it.
-- `.cursor/hooks.disabled` remains the maintenance state, the stale marker is
-  unchanged, and no follow-up staging or commit is claimed.
+- `.cursor/hooks.disabled` remains the maintenance state. The human confirmed
+  deletion of `.cursor/PHASE_CHECKPOINT_APPROVAL.json`; no checkpoint marker
+  exists.
 - `Project Owner (explicit approval in Cursor session)` approved the FIND-015
   correction and follow-up checkpoint at
   `2026-09-04T16:49:32.2914786+03:30`.
-- The follow-up checkpoint remains pending; no APR-003 is created.
+- The follow-up checkpoint completed at
+  `25e89c2765575652aa9473922c3a09df7cc87eaf`; no APR-003 is created.
 - Implementation remains unauthorized, and Phase 01 remains
   `ACTIVE_IN_REVIEW`.
 
 ## Result
 
-`CORRECTION_APPROVED_CHECKPOINT_PENDING`
+`CORRECTION_APPROVED_CHECKPOINT_COMPLETED`
+
+The baseline checkpoint remains
+`540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`. Current status-document updates are
+Phase 01 working state for its eventual checkpoint, not another Phase 00
+recording follow-up.

@@ -3,11 +3,11 @@ id: GOV-GLOSSARY-001
 title: Business Glossary
 phase: 00-governance
 status: approved
-version: 0.1.0
+version: 0.2.2
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [SRC-001, SRC-002, ASM-REPORT-001]
 last_reviewed: 2026-09-04
-approval: APR-002
+approval: APR-003
 supersedes: null
 ---
 
@@ -15,6 +15,11 @@ supersedes: null
 
 Entries are proposed until validated in Phase 02. The English term is canonical;
 the Persian term preserves project vocabulary.
+
+APR-002 approved this register's Phase 00 seed version. APR-003 approves the
+current version as accurate Phase 01 assimilation evidence. Entries remain
+proposed until their recorded Phase 02 validation; artifact approval does not
+convert proposed terms into validated business policy.
 
 ## TERM-001 — Customer
 
@@ -47,6 +52,7 @@ the Persian term preserves project vocabulary.
 ## TERM-005 — Unfulfilled Demand
 
 - Persian: تقاضای غیرقابل‌تأمین
+- Aliases: UnfulfilledDemandCase, Lost Demand
 - Definition: Structured demand the business cannot serve, including reason,
   quantity, value, and recovery opportunity; distinct from overdue demand.
 - Owner: Sales
@@ -139,3 +145,12 @@ the Persian term preserves project vocabulary.
 - Definition: Operational invoices, payments, allocations, and balances that do
   not replace the external legal accounting system.
 - Owner: FinanceLite
+
+## TERM-019 — Goods Receipt
+
+- Persian: رسید کالا / رسید مواد
+- Aliases: GoodsReceipt, MaterialReceipt
+- Definition: Controlled record of goods physically received against a
+  purchasing or other authorized inbound reference, before or with coordinated
+  quality and Inventory posting.
+- Owner: Procurement orchestration; Inventory posting and resulting stock
