@@ -3,11 +3,11 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: approved
-version: 0.5.0
+version: 0.7.0
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-09-06
-approval: APR-004
+approval: APR-005
 supersedes: null
 ---
 
@@ -26,7 +26,9 @@ supersedes: null
 - [Approval register](00-governance/APPROVALS.md)
 - [CHK-0001 Phase 00 checkpoint](00-governance/approved-baselines/CHK-0001-phase-00.md)
 - [CHK-0002 Phase 01 checkpoint](00-governance/approved-baselines/CHK-0002-phase-01.md)
-- [APR-004 Domain and Business Architecture approval](00-governance/approved-baselines/APR-004-domain-business-architecture.md)
+- [CHK-0003 Phase 02 checkpoint](00-governance/approved-baselines/CHK-0003-phase-02.md)
+  - [APR-005 State Machines and Invariants approval](00-governance/approved-baselines/APR-005-state-machines-invariants.md)
+  - [APR-004 Domain and Business Architecture approval](00-governance/approved-baselines/APR-004-domain-business-architecture.md)
 - [APR-003 Project Assimilation approval](00-governance/approved-baselines/APR-003-project-assimilation.md)
 - [APR-002 renewed corrected Governance Foundation approval](00-governance/approved-baselines/APR-002-governance.md)
 - [APR-001 superseded corrected Governance Foundation approval](00-governance/approved-baselines/APR-001-governance.md)
@@ -73,7 +75,22 @@ supersedes: null
   - [State machine catalogue](03-state-machines-invariants/STATE_MACHINE_CATALOGUE.md)
   - [Cross-state side-effect matrix](03-state-machines-invariants/SIDE_EFFECT_MATRIX.md)
   - [Exception and correction workflows](03-state-machines-invariants/EXCEPTION_CORRECTION.md)
+  - [Transition tables](03-state-machines-invariants/TRANSITION_TABLES.md)
+  - [Event and rejection catalogue](03-state-machines-invariants/EVENT_AND_REJECTION.md)
+  - [Phase 03 Self-Check](03-state-machines-invariants/SELF_CHECK.md)
+  - [Phase 03 Independent Review](03-state-machines-invariants/INDEPENDENT_REVIEW.md)
+  - [Phase 03 Reconciliation](03-state-machines-invariants/RECONCILIATION.md)
+  - [Phase 03 Gate Checklist](03-state-machines-invariants/GATE_CHECKLIST.md)
+  - [Phase 04 handoff](03-state-machines-invariants/PHASE04_HANDOFF.md)
+  - [Cross-machine sequences](03-state-machines-invariants/CROSS_MACHINE_SEQUENCES.md)
+  - [Concurrency and interlock](03-state-machines-invariants/CONCURRENCY_AND_INTERLOCK.md)
+  - [Authorization and separation of duties](03-state-machines-invariants/AUTHORIZATION_SOD.md)
+  - [APR-005 Checkpoint Procedure](03-state-machines-invariants/CHECKPOINT_APR-005.md)
 - [04 — Database Architecture](04-database-architecture/README.md)
+  - [Logical model](04-database-architecture/LOGICAL_MODEL.md)
+  - [Posting kernel and alternatives](04-database-architecture/POSTING_KERNEL.md)
+  - [Transaction and idempotency](04-database-architecture/TRANSACTION_AND_IDEMPOTENCY.md)
+  - [Genealogy projection](04-database-architecture/GENEALOGY_PROJECTION.md)
 - [05 — Application & API Architecture](05-application-api-architecture/README.md)
 - [06 — Security, RBAC & Audit](06-security-rbac-audit/README.md)
 - [07 — Testing & Quality Architecture](07-testing-quality-architecture/README.md)
@@ -90,6 +107,8 @@ Artifact frontmatter and [CURRENT_PHASE.md](00-governance/CURRENT_PHASE.md) are
 authoritative.
 
 APR-002 approved the seed index. APR-003 approved the Phase 01 navigation
-additions. APR-004 approved Phase 02; its Git checkpoint is pending. Phase 03
-is `ACTIVE_IN_REVIEW` for structure drafting. Workshop execution remains
-blocked by OQ-019. Implementation remains unauthorized.
+additions. APR-004 approved Phase 02. CHK-0003 records the checkpoint at
+`ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`. APR-005 approved Phase 03 at
+`2026-09-06T01:18:00+03:30`, including ASM-016. The APR-005 Git checkpoint
+is pending. Phase 04 is `ACTIVE_IN_REVIEW` for logical drafting. Workshop
+execution remains blocked by OQ-019. Implementation remains unauthorized.

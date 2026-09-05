@@ -3,11 +3,11 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: approved
-version: 0.5.1
+version: 0.6.0
 owners: [chief-solution-architect]
-depends_on: [ASM-REPORT-001, ASM-014]
+depends_on: [ASM-REPORT-001, ASM-014, ASM-016, APR-005]
 last_reviewed: 2026-09-06
-approval: APR-004
+approval: APR-005
 supersedes: null
 ---
 
@@ -18,10 +18,15 @@ Status values: `open`, `investigating`, `treating`, `answered`, `deferred`,
 authoritative only when promoted to the owning artifact or ADR.
 
 APR-002 approved this register's Phase 00 seed version. APR-003 approved the
-Phase 01 assimilation version. The current version is `in_review` because Phase
-02 refined blocking scopes under ASM-014. OQ-001 through OQ-018 remain
-unanswered. Temporary placeholders permit Phase 02 design under ASM-013; they
-do not close OQ-019 or confer real owner authority.
+Phase 01 assimilation version. APR-004 accepted the Phase 02 blocking-scope
+refinements under ASM-014. The current version is approved as APR-005. Phase 03
+cites these questions as open guards under ASM-016. OQ-001 through OQ-018
+remain unanswered. Temporary placeholders confer no owner authority. OQ-019
+remains `treating`.
+
+Phase 03 structure drafts cite OQ-001 through OQ-010, OQ-012, OQ-015, OQ-017,
+and OQ-019 as open guards. Inquiry and Quotation expiry use
+`workshop-commercial-practice` (FIND-026). No question is answered or closed.
 
 The Project Owner takes unanswered questions to the team using
 [TEAM_QUESTION_PACK.md](../TEAM_QUESTION_PACK.md). That pack is refreshed after

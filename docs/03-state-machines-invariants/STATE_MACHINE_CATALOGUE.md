@@ -2,12 +2,12 @@
 id: SM-CATALOGUE-001
 title: State Machine Catalogue
 phase: 03-state-machines-invariants
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.3.0
 owners: [chief-solution-architect, domain-leads]
-depends_on: [GOV-STATES-001, SM-INV-001, DOM-ACTORS-001, APR-004]
+depends_on: [GOV-STATES-001, SM-INV-001, DOM-ACTORS-001, APR-004, APR-005]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-005
 supersedes: null
 ---
 
@@ -25,8 +25,10 @@ actors and cannot authorize a transition.
 ## Convention
 
 Each machine lists: write owner, happy path, branches, command/actor sketch,
-invariants, and open guards. Detailed per-transition effects and events will
-be filled without inventing OQ-owned values.
+invariants, and open guards. Per-transition command, actor, guard, effect,
+event, and rejection rows live in
+[TRANSITION_TABLES.md](TRANSITION_TABLES.md). Those rows do not invent
+OQ-owned values.
 
 Rejection default: if a guard fails, the source state is unchanged and the
 command is rejected with a reason. Posted states use reversal, not delete
@@ -52,11 +54,22 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Invariants: INV-014
 - Open guards: snapshot contents are proposed (ASM-012), not a signed matrix
 
+## SM-FULFILLMENT-ASSESSMENT
+
+- Concept: TERM-004 / ENT-FULFILLMENT-ASSESSMENT
+- Write owner: `BC-SALES`
+- Happy path: `DRAFT → RECORDED`
+- Outcomes on the recorded fact: `STOCK`, `PURCHASE`, `MAKE`, `NOT_FEASIBLE`
+- Commands / actors: ACT-SALES; Inventory availability is a read, not a write
+- Invariants: INV-003, INV-013
+- Open guards: none numeric; `NOT_FEASIBLE` must create SM-UNFULFILLED-DEMAND
+
 ## SM-SALES-ORDER
 
 - Seed: GOV-STATES-001
 - Write owner: `BC-SALES`
-- Happy path: `DRAFT → SUBMITTED → CONFIRMED → IN_PRODUCTION → PARTIALLY_FULFILLED → FULFILLED → CLOSED`
+- Happy path: `DRAFT → SUBMITTED → CONFIRMED → PARTIALLY_FULFILLED → FULFILLED → CLOSED`
+- MAKE-only extra state: `IN_PRODUCTION` between `CONFIRMED` and fulfillment. STOCK and PURCHASE paths do not require it.
 - Branches: `ON_HOLD`, `CANCEL_PENDING → CANCELLED`
 - Commands / actors: ACT-SALES; hold/cancel after confirm requires SalesOrderChange, not regression to Draft
 - Invariants: INV-013, INV-014
@@ -107,10 +120,31 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Seed: GOV-STATES-001
 - Write owner: `BC-INVENTORY`
 - Happy path: `PENDING_QC → AVAILABLE → RESERVED → ISSUED_TO_PRODUCTION → PARTIALLY_CONSUMED|CONSUMED`
+- MAKE path without Reservation: `AVAILABLE → ISSUED_TO_PRODUCTION` after SM-MATERIAL-ALLOCATION is `ISSUED` (INV-003)
 - Additional: `QUARANTINED`, `PACKED`, `SHIPPED`, `RETURNED`, `SCRAPPED`, `CLOSED`
 - Commands / actors: ACT-IPS writes stock; ACT-QC / ACT-SHIP / ACT-OP command only
 - Invariants: INV-001 through INV-004, INV-017
-- Open guards: UOM (OQ-001); Coil weight vs length (OQ-002); QC (OQ-005); reservation (OQ-008)
+- Open guards: UOM (OQ-001); Coil weight vs length (OQ-002); official issue point (OQ-003); QC (OQ-005); reservation (OQ-008)
+
+## SM-MATERIAL-ALLOCATION
+
+- Concept: TERM-010 / ENT-MATERIAL-ALLOCATION
+- Write owner: `BC-PRODUCTION`
+- Happy path: `PLANNED → ASSIGNED → ISSUED`
+- Branches: `RELEASED`
+- Commands / actors: ACT-PLAN assigns; ACT-IPS posts the issue
+- Invariants: INV-003
+- Open guards: official issue posting point (OQ-003)
+
+## SM-PRODUCTION-OPERATION
+
+- Concept: ENT-PRODUCTION-OPERATION
+- Write owner: `BC-PRODUCTION`
+- Happy path: `PLANNED → IN_PROGRESS → COMPLETED`
+- Branches: `SKIPPED`, `REWORK`
+- Commands / actors: ACT-PLAN plans; ACT-OP records; ACT-IPS posts stock effects
+- Invariants: INV-006, INV-007, INV-009
+- Open guards: real step list and official posting points (OQ-003)
 
 ## SM-PRODUCTION-ORDER
 
@@ -118,6 +152,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Write owner: `BC-PRODUCTION`
 - Happy path: `DRAFT → PLANNED → RELEASED → IN_PROGRESS → PARTIALLY_COMPLETED|COMPLETED → CLOSED`
 - Branches: `PAUSED`, `ON_HOLD`, `CANCELLED`, `ABORTED`
+- `PAUSED` returns to the prior live state by resume; it is not a silent skip
 - Commands / actors: ACT-PLAN plans/releases; ACT-OP records execution; ACT-IPS posts stock effects
 - Invariants: INV-006, INV-007, INV-009
 - Open guards: official posting points (OQ-003); QC gates (OQ-005); residual cutoff (OQ-009)
@@ -167,7 +202,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Happy path: `DRAFT → READY → LOADING → DISPATCHED → PARTIALLY_DELIVERED|DELIVERED → CLOSED`
 - Commands / actors: ACT-SHIP; ACT-IPS posts definitive stock exit on dispatch
 - Invariants: INV-011, INV-017
-- Open guards: partial/over-delivery (OQ-006); shipment-without-demand approver
+- Open guards: partial/over-delivery (OQ-006); shipment-without-demand named person (OQ-019)
 
 ## SM-INVOICE
 

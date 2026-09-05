@@ -3,11 +3,11 @@ id: GOV-QPACK-001
 title: Team Question Pack
 phase: 00-governance
 status: approved
-version: 0.1.2
+version: 0.3.0
 owners: [chief-solution-architect, project-sponsor]
 depends_on: [GOV-QUESTIONS-001, ASM-015]
 last_reviewed: 2026-09-06
-approval: APR-004
+approval: APR-005
 supersedes: null
 ---
 
@@ -18,12 +18,13 @@ refreshed after every phase gate package. Canonical status stays in
 [OPEN_QUESTIONS.md](registers/OPEN_QUESTIONS.md). This pack does not close
 questions, approve a phase, or authorize implementation.
 
-As of: `2026-09-06` after the Phase 02 design-gate package. The Project Owner
+As of: `2026-09-06` after Phase 03 approval (APR-005). The Project Owner
 will return answers in a few days. Architecture work continues; answers are
 not an immediate stop.
 Unanswered: `OQ-001` through `OQ-019`.
 Phase 00 and Phase 01 left **no remaining phase-owned unanswered questions**.
 Every item below was raised in Phase 01 assimilation and is still open.
+Phase 03 cites them as open guards. None are answered.
 
 ## Standing process
 
@@ -146,9 +147,10 @@ continue without them. Workshop execution and owner-signed policy may not.
 
 ## Phase 03 — state machines and invariants
 
-Ask these in the same team conversations if time allows. They are needed
-before Phase 03 can finish. They do not have to block the Phase 02
-design-gate.
+Ask these in the same team conversations. They are needed before any
+Phase 03 numeric or named guard can close. The Phase 03 *design-gate* may
+complete with them still open if you accept ASM-016. They do not have to
+block that approval.
 
 ### OQ-007 — Sales Order closure
 
@@ -166,8 +168,8 @@ design-gate.
 - Useful answer: threshold by material family, with one shop-floor example.
 
 The Phase 02 items above (OQ-001 through OQ-006, OQ-008) also feed Phase 03
-numeric guards. If the team answers them now, Phase 03 will not stall on the
-same meeting.
+numeric guards. If the team answers them now, those transition guards can
+be closed without waiting for another meeting.
 
 ---
 
@@ -266,9 +268,12 @@ continue. They are not shop-floor facts.
 
 ## Work that continues while answers are pending
 
-- Phase 02 design-gate remains `READY_FOR_HUMAN_APPROVAL`.
+- Phase 02 remains approved as APR-004 / CHK-0003.
+- Phase 03 is approved as APR-005, including ASM-016. The Git checkpoint
+  is pending. These questions stay open.
 - Temporary roster identities still have no approval authority.
-- Phase 03 is not started.
+- Phase 04 logical drafting is authorized. Physical types, executable
+  schemas, and posting-mechanism ADRs are not.
 - `IMPLEMENTATION_AUTHORIZED` remains `false`.
 - Returned answers will be written onto the matching `OQ-*` row and this
   pack will be refreshed.

@@ -3,11 +3,11 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: approved
-version: 0.5.0
+version: 0.6.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-004
+approval: APR-005
 supersedes: null
 ---
 
@@ -176,9 +176,11 @@ trigger an immediate recursive checkpoint.
 ### APR-004 — Domain and Business Architecture Gate
 
 - Phase: `02-domain-business-architecture`
-- Status: `approved`; Git checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-004-domain-business-architecture.md](approved-baselines/APR-004-domain-business-architecture.md)
+- Checkpoint record:
+  [CHK-0003-phase-02.md](approved-baselines/CHK-0003-phase-02.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-004.md](../02-domain-business-architecture/CHECKPOINT_APR-004.md)
 - Review package:
@@ -193,7 +195,11 @@ trigger an immediate recursive checkpoint.
   workshop policy, no technology ADRs beyond ADR-0001, no implementation
 - Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
   ADR-0008, FIND-001, FIND-003, FIND-004, FIND-020 residual, FIND-023
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 47 files changed
+- Git commit: `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`
+- Git commit subject: `docs: approve phase 02 domain business architecture`
+- Checkpoint marker: still present after commit; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 - Next phase: `03-state-machines-invariants`; `ACTIVE_IN_REVIEW` for
   structure drafting with open guards
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
@@ -202,3 +208,35 @@ trigger an immediate recursive checkpoint.
 Approving Phase 02 accepts ASM-014. Temporary identities still have no
 approval authority. Team answers expected in a few days will update the
 matching `OQ-*` rows when they arrive.
+
+### APR-005 — State Machines and Invariants Gate
+
+- Phase: `03-state-machines-invariants`
+- Status: `approved`; checkpoint pending
+- Approval manifest:
+  [APR-005-state-machines-invariants.md](approved-baselines/APR-005-state-machines-invariants.md)
+- Checkpoint procedure:
+  [CHECKPOINT_APR-005.md](../03-state-machines-invariants/CHECKPOINT_APR-005.md)
+- Review package:
+  [GATE_CHECKLIST.md](../03-state-machines-invariants/GATE_CHECKLIST.md)
+- Supporting evidence:
+  [SELF_CHECK.md](../03-state-machines-invariants/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](../03-state-machines-invariants/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](../03-state-machines-invariants/RECONCILIATION.md)
+- Approver: Project Owner (explicit approval in Cursor session)
+- Approval timestamp: `2026-09-06T01:18:00+03:30`
+- Approval scope: Phase 03 structure package and ASM-016; no owner-signed
+  numeric or named policy, no technology ADRs beyond ADR-0001, no
+  implementation
+- Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
+  ADR-0008, FIND-001, FIND-003, FIND-004, FIND-020 residual, FIND-023,
+  FIND-026, FIND-028
+- Git checkpoint: pending
+- Next phase: `04-database-architecture`; `ACTIVE_IN_REVIEW` for logical
+  drafting with open extensions
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+Approving Phase 03 accepts ASM-016. Temporary identities still have no
+approval authority. Team answers will update the matching `OQ-*` rows
+when they arrive.

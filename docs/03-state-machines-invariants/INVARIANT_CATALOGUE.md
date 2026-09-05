@@ -2,12 +2,12 @@
 id: SM-INV-001
 title: Canonical Invariant Catalogue
 phase: 03-state-machines-invariants
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [chief-solution-architect, domain-leads]
-depends_on: [DOM-MVP-RULES-001, DOM-P03-HANDOFF-001, APR-004]
+depends_on: [DOM-MVP-RULES-001, DOM-P03-HANDOFF-001, APR-004, APR-005]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-005
 supersedes: null
 ---
 
@@ -34,7 +34,7 @@ invented here.
 | INV-008 | BR-008 | A usable residual receives a new Inventory Unit identity linked to its parent; the parent is closed or split. | Minimum usable threshold remains OQ-009 |
 | INV-009 | BR-009 | Genealogy source facts are immutable and support supplier-to-customer and customer-to-source tracing, including merge, split, rework, and defective-lot impact. | Tracking granularity remains OQ-004 |
 | INV-010 | BR-010 | Material or product cannot become available or shippable while required QC is pending, quarantined, or rejected. Product Batch must be Released before shipment. | Plans, limits, and named releasers remain OQ-005 |
-| INV-011 | BR-011 | Shipment content belongs to the authorized customer/order and references permitted Package or Product Batch form. Shipment without demand requires explicit authority. | Over-delivery limit remains OQ-006; named authority remains workshop/OQ-005 |
+| INV-011 | BR-011 | Shipment content belongs to the authorized customer/order and references permitted Package or Product Batch form. Shipment without demand requires explicit authority. | Over-delivery limit remains OQ-006; named exceptional-shipment person remains OQ-019; QC releasers remain OQ-005 |
 | INV-012 | BR-012 | Issued invoices are immutable; void/credit/reversal preserves history. Payment allocations cannot exceed payment value or invoice open balance. | Legal-accounting boundary remains OQ-012 |
 | INV-013 | BR-013 | Unfulfilled demand is not overdue demand and may exist without a Sales Order. | Sales Order closure rule remains OQ-007 |
 | INV-014 | BR-014 | Historical commercial and specification values are snapshotted. Later master-data changes do not rewrite posted history. | none as a rule; retention numbers remain OQ-016 |

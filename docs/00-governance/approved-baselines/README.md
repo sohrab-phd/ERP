@@ -3,11 +3,11 @@ id: GOV-BASELINES-001
 title: Approved Architecture Baselines
 phase: 00-governance
 status: approved
-version: 0.2.0
+version: 0.3.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001, GOV-APPROVALS-001]
 last_reviewed: 2026-09-06
-approval: APR-004
+approval: APR-005
 supersedes: null
 ---
 
@@ -21,8 +21,13 @@ supersedes: null
   superseded by APR-002 after no commit
 - [APR-002 — Renewed Corrected Governance Foundation](APR-002-governance.md) —
   approved; checkpoint completed
+- [APR-005 — State Machines and Invariants](APR-005-state-machines-invariants.md)
+  — approved at `2026-09-06T01:18:00+03:30`; checkpoint pending
 - [APR-004 — Domain and Business Architecture](APR-004-domain-business-architecture.md)
-  — approved at `2026-09-06T00:31:00+03:30`; Git checkpoint pending
+  — approved at `2026-09-06T00:31:00+03:30`; checkpoint completed
+- [CHK-0003 — Phase 02 Domain and Business Architecture Checkpoint](CHK-0003-phase-02.md)
+  — completed at `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`; subject
+  `docs: approve phase 02 domain business architecture`; 47 files changed
 - [APR-003 — Project Assimilation](APR-003-project-assimilation.md) — approved
   at `2026-09-04T20:38:00+03:30`; checkpoint completed
 - [CHK-0002 — Phase 01 Project Assimilation Checkpoint](CHK-0002-phase-01.md) —
@@ -42,6 +47,7 @@ artifact tree.
 Corrections never overwrite a manifest. Create a superseding approval when a
 material change requires reapproval.
 
-APR-004 approves the Phase 02 design package and ASM-014. Phase 03 structure
-drafting is authorized. OQ-001 through OQ-019 remain unanswered or `treating`.
-The APR-004 Git checkpoint is pending. Implementation remains unauthorized.
+APR-005 approves the Phase 03 structure package and ASM-016. The APR-005
+Git checkpoint is pending. Phase 04 logical drafting is authorized.
+OQ-001 through OQ-019 remain unanswered or `treating`. Implementation
+remains unauthorized.

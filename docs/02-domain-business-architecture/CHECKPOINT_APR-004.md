@@ -3,7 +3,7 @@ id: DOM-CHECKPOINT-APR-004
 title: APR-004 Checkpoint Procedure
 phase: 02-domain-business-architecture
 status: approved
-version: 0.1.0
+version: 0.2.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [APR-004, GOV-GATES-001]
 last_reviewed: 2026-09-06
@@ -14,8 +14,9 @@ supersedes: null
 # APR-004 Checkpoint Procedure
 
 The Project Owner explicitly approved Phase 02 as APR-004 at
-`2026-09-06T00:31:00+03:30`. This procedure authorizes the human-created
-checkpoint marker and the later Git freeze. It does not itself stage or commit.
+`2026-09-06T00:31:00+03:30`. The human-controlled checkpoint completed
+successfully. This procedure now preserves that history. It does not authorize
+another marker, staging action, or commit.
 
 ## Intended commit
 
@@ -56,6 +57,15 @@ The generator binds SHA-256 and git blob OIDs. The agent must not create
 
 - Gate result: `APPROVED`
 - Phase 02: complete as a design baseline
-- Git checkpoint: pending
-- Next phase: `03-state-machines-invariants` authorized for structure drafting
+- Git checkpoint: completed successfully; 47 files changed
+- Git commit: `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`
+- Git commit subject: `docs: approve phase 02 domain business architecture`
+- Checkpoint record:
+  [CHK-0003](../00-governance/approved-baselines/CHK-0003-phase-02.md)
+- Checkpoint marker: still present; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
+- Next phase: `03-state-machines-invariants`; `ACTIVE_IN_REVIEW`
 - Implementation authorization: none
+
+This recording update enters a later explicitly approved checkpoint. It does
+not require or authorize an immediate recursive checkpoint.

@@ -61,8 +61,9 @@ supersedes: null
   `2026-09-06T00:31:00+03:30`
 - Approval manifest:
   [APR-004](../00-governance/approved-baselines/APR-004-domain-business-architecture.md)
-- Git checkpoint: pending
-  [CHECKPOINT_APR-004.md](CHECKPOINT_APR-004.md)
+- Git checkpoint: completed at
+  `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`
+  ([CHK-0003](../00-governance/approved-baselines/CHK-0003-phase-02.md))
 - Authorized next phase: `03-state-machines-invariants` for structure drafting
 
 This approval accepts ASM-014. It does not execute the workshop, replace

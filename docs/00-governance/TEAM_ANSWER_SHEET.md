@@ -3,11 +3,11 @@ id: GOV-QANS-001
 title: Team Answer Sheet
 phase: 00-governance
 status: approved
-version: 0.1.1
+version: 0.1.2
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-QPACK-001, GOV-QUESTIONS-001, ASM-015]
 last_reviewed: 2026-09-06
-approval: APR-004
+approval: APR-005
 supersedes: null
 ---
 
@@ -25,7 +25,8 @@ Ask text and why-it-matters live in
 [TEAM_QUESTION_PACK.md](TEAM_QUESTION_PACK.md). Who to ask lives in
 [WORKSHOP_COLLECTION_MAP.md](../02-domain-business-architecture/WORKSHOP_COLLECTION_MAP.md).
 
-As of: `2026-09-05`. All fields below are blank on purpose.
+As of: `2026-09-06` after Phase 03 approval (APR-005). All fields
+below are blank on purpose.
 
 ## Phase 02 — ask first
 

@@ -2,12 +2,12 @@
 id: SM-EXC-001
 title: Exception and Correction Workflows
 phase: 03-state-machines-invariants
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [chief-solution-architect, domain-leads]
-depends_on: [SM-CATALOGUE-001, SM-INV-001, DOM-PROCESS-001, APR-004]
+depends_on: [SM-CATALOGUE-001, SM-INV-001, DOM-PROCESS-001, APR-004, APR-005]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-005
 supersedes: null
 ---
 
@@ -29,6 +29,16 @@ as overdue demand (INV-013).
 SM-SALES-ORDER may be `PARTIALLY_FULFILLED`. SM-SHIPMENT may be
 `PARTIALLY_DELIVERED`. Allowed over-production and over-delivery amounts stay
 OQ-006. Do not invent percents.
+
+STOCK and PURCHASE Sales Orders may move `CONFIRMED → PARTIALLY_FULFILLED`
+or `CONFIRMED → FULFILLED` without `IN_PRODUCTION`. MAKE is the only path
+that uses `IN_PRODUCTION`.
+
+## Pause and resume
+
+SM-PRODUCTION-ORDER `PAUSED` returns to the prior live state by
+`ResumeProductionOrder`. Pause is not a skip and does not post stock. A QC
+hold still blocks resume.
 
 ## QC hold, reject, and conditional release
 
@@ -65,7 +75,7 @@ stays OQ-017.
 
 SM-SHIPMENT may not reach `READY` or `DISPATCHED` without an authorized
 customer/order unless explicit authority is recorded (INV-011). The named
-approver is not invented here.
+person stays OQ-019. This is not a Quality release (OQ-005).
 
 ## Idempotent retry
 

@@ -3,11 +3,11 @@ id: GOV-ASSUMPTIONS-001
 title: Assumption Register
 phase: 00-governance
 status: approved
-version: 0.5.1
+version: 0.6.0
 owners: [chief-solution-architect]
 depends_on: [SRC-001, ASM-REPORT-001]
 last_reviewed: 2026-09-06
-approval: APR-004
+approval: APR-005
 supersedes: null
 ---
 
@@ -17,10 +17,10 @@ Every assumption requires an owner, validation method, and affected artifacts.
 None of these entries is a confirmed business decision.
 
 APR-002 approved this register's Phase 00 seed version. APR-003 approved the
-Phase 01 version as assimilation evidence. The current version is `in_review`
-because Phase 02 added ASM-013 through ASM-015. Individual assumptions retain
-their recorded validation status; artifact approval does not confirm them as
-business facts.
+Phase 01 version as assimilation evidence. APR-004 accepted ASM-014 for the
+Phase 02 design-gate. The current version is approved as APR-005 because Phase 03
+added ASM-016. Individual assumptions retain their recorded validation
+status; artifact approval does not confirm them as business facts.
 
 ## ASM-001 — Single legal entity and principal site
 
@@ -162,3 +162,21 @@ business facts.
 - Validation: each later phase repeats the pack; answers update GOV-QUESTIONS-001
 - Affects: every phase gate, workshop planning, CURRENT_PHASE permitted work
 - Related questions: OQ-001 through OQ-019
+
+## ASM-016 — Phase 03 design-gate may complete with open guards
+
+- Status: proposed
+- Statement: Phase 03 structure drafting and the Phase 03 design-gate may
+  complete while OQ-owned numbers, named people, and cutoffs remain
+  unanswered, provided each such value stays an explicit open guard on the
+  matching `OQ-*` or `workshop-commercial-practice`, and any command that
+  needs that value is rejected as `GUARD_OPEN_POLICY`. No number, person, or
+  cutoff is invented as if decided.
+- Owner: Project sponsor and Chief Solution Architect
+- Validation: Project Owner accepted ASM-016 at `2026-09-06T01:13:00+03:30`
+  and approved Phase 03 as APR-005 at `2026-09-06T01:18:00+03:30`. This
+  does **not** close any `OQ-*` or authorize implementation. Later workshop
+  evidence is still required before owner-signed numeric or named policy.
+- Affects: Phase 03 exit, Phase 04 contracts, workshop, implementation lock
+- Related questions: OQ-001 through OQ-010, OQ-012, OQ-015, OQ-017, OQ-019
+- Related findings: FIND-024, FIND-025, FIND-026, FIND-028

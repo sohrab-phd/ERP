@@ -21,7 +21,9 @@ Lifecycle: `approved`
 
 Approval: `APR-004` at `2026-09-06T00:31:00+03:30`
 
-Git checkpoint: pending. See
+Git checkpoint: completed at
+`ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`
+([CHK-0003](../00-governance/approved-baselines/CHK-0003-phase-02.md)). See
 [CHECKPOINT_APR-004.md](CHECKPOINT_APR-004.md).
 
 Phase 03 is authorized for structure drafting. Team answers remain open.

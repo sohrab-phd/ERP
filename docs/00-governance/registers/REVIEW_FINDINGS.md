@@ -3,11 +3,11 @@ id: GOV-FINDINGS-001
 title: Review Findings Register
 phase: 00-governance
 status: approved
-version: 0.11.1
+version: 0.12.0
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-004
+approval: APR-005
 supersedes: null
 ---
 
@@ -16,10 +16,11 @@ supersedes: null
 Findings are append-only and may be `open`, `accepted`, `resolved`, `rejected`,
 or `superseded`. Resolution requires evidence and affected-artifact references.
 
-APR-002 approved this register's Phase 00 seed version. APR-003 approves the
-current version as accurate Phase 01 review evidence. Every finding retains its
-recorded status and downstream effect; artifact approval does not close open
-findings or their linked questions.
+APR-002 approved this register's Phase 00 seed version. APR-003 approved the
+Phase 01 review evidence. APR-004 approved FIND-020 through FIND-023. The
+current version is approved as APR-005 because Phase 03 added FIND-024 through
+FIND-028. Every finding retains its recorded status and downstream effect;
+artifact approval does not close open findings or their linked questions.
 
 ## FIND-001 — Portal phase conflict
 
@@ -341,7 +342,74 @@ findings or their linked questions.
   authorize those entities now.
 - Evidence: DOM-CAP-BC-001; GOV-DATA-DICT-001 version 0.3.0.
 - Residual: Do not invent ENT-SHIPMENT-ITEM, ENT-DISPATCH, or ENT-DELIVERY
-  before workshop or Phase 03 need.
+  before workshop or later Phase 04 need. Phase 03 used SM-SHIPMENT states
+  (`DISPATCHED`, `PARTIALLY_DELIVERED`, `DELIVERED`) and did not mint those
+  entities.
+
+## FIND-024 — Sales Order and issue paths implied production on every fulfillment
+
+- Severity: high
+- Gate: Phase 03
+- Status: resolved
+- Finding: The first Phase 03 drafts listed Sales Order happy path as always
+  passing `IN_PRODUCTION`, and Inventory Unit issue as only `RESERVED →
+  ISSUED_TO_PRODUCTION`. Phase 02 already has STOCK and PURCHASE fulfillment
+  and Material Allocation distinct from Reservation (INV-003).
+- Resolution: STOCK/PURCHASE may fulfill from `CONFIRMED` without
+  `IN_PRODUCTION`. MAKE may issue an AVAILABLE unit after
+  SM-MATERIAL-ALLOCATION is `ISSUED`.
+- Evidence: SM-CATALOGUE-001 v0.3.0; SM-TRANS-001 v0.3.0; SM-SIDE-001 v0.3.0;
+  SM-EXC-001 v0.2.0.
+
+## FIND-025 — Shipment-without-demand was bound to OQ-005
+
+- Severity: medium
+- Gate: Phase 03
+- Status: resolved
+- Finding: DraftShipment used `open: OQ-005` for exceptional shipment
+  authority. OQ-005 is Quality plans and releasers, not commercial shipment
+  without demand.
+- Resolution: INV-011 remains the rule. The named person is OQ-019. QC
+  releasers stay OQ-005. No person is invented.
+- Evidence: SM-INV-001 v0.2.0; SM-TRANS-001 v0.3.0; SM-EXC-001 v0.2.0.
+
+## FIND-026 — Inquiry and Quotation expiry have no owning OQ
+
+- Severity: medium
+- Gate: Phase 03
+- Status: accepted
+- Finding: ExpireInquiry and ExpireQuotation need a day count the registers
+  do not own. Inventing OQ-020 would expand the team pack without workshop
+  evidence that expiry is a signed policy.
+- Treatment: Both commands stay `open: workshop-commercial-practice`.
+  `GUARD_OPEN_POLICY` may cite that token. No day count is invented. This is
+  not a Phase 03 design-gate blocker under ASM-016.
+- Owner: Sales owner; workshop commercial practice
+- Required correction now: none.
+
+## FIND-027 — Production Order PAUSED had no resume transition
+
+- Severity: medium
+- Gate: Phase 03
+- Status: resolved
+- Finding: SM-PRODUCTION-ORDER listed `PAUSED` with no return path.
+- Resolution: `ResumeProductionOrder` returns to the prior live state. A QC
+  hold still blocks resume. Pause does not post stock.
+- Evidence: SM-CATALOGUE-001 v0.3.0; SM-TRANS-001 v0.3.0.
+
+## FIND-028 — Phase 03 seed required REQ-* and TEST-* on every transition
+
+- Severity: medium
+- Gate: Phase 03
+- Status: accepted
+- Finding: GOV-STATES-001 still says each transition must link requirements
+  and tests. FIND-021 forbids a false-precision REQ-* catalogue before
+  workshop evidence. TEST-* belongs to Phase 07.
+- Treatment: Phase 03 transitions link `INV-*` and `REQ-OBJ-*`. Detailed
+  `REQ-*` and `TEST-*` IDs are not minted. The seed completion sentence is
+  a later-phase obligation, not a silent close of FIND-021.
+- Owner: Requirements owner and QA architect
+- Required correction now: none.
 
 ## Downstream suspect policy
 

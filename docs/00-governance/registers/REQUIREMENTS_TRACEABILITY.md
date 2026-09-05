@@ -3,11 +3,11 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: approved
-version: 0.3.1
+version: 0.4.0
 owners: [requirements-owner, qa-architect]
-depends_on: [SRC-001, SRC-002, DOM-MVP-RULES-001]
+depends_on: [SRC-001, SRC-002, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-09-06
-approval: APR-004
+approval: APR-005
 supersedes: null
 ---
 
@@ -21,11 +21,12 @@ Traceability is bidirectional. No mandatory requirement, invariant, interface, o
 test may remain orphaned at implementation authorization.
 
 APR-002 approved this register's Phase 00 seed version. APR-003 approved the
-Phase 01 objective and evidence traceability. The current version is
-`in_review` because Phase 02 added design-artifact evidence. Objectives remain
-proposed where recorded. FIND-021 records that a false-precision REQ-*
-catalogue is not minted before workshop evidence. Proposed BR-001 through
-BR-020 in DOM-MVP-RULES-001 are Phase 02 draft rules, not yet canonical INV-*.
+Phase 01 objective and evidence traceability. APR-004 approved Phase 02
+design-artifact evidence. The current version is approved as APR-005 because Phase 03
+promoted BR-001 through BR-020 to proposed `INV-*` and linked state machines.
+Objectives remain proposed where recorded. FIND-021 and FIND-028 record that
+a false-precision REQ-* or TEST-* catalogue is not minted before workshop
+evidence and Phase 07.
 
 ## Initial objectives
 
@@ -47,6 +48,11 @@ BR-020 in DOM-MVP-RULES-001 are Phase 02 draft rules, not yet canonical INV-*.
   and
   [MVP scope and business rules](../../02-domain-business-architecture/MVP_SCOPE_AND_BUSINESS_RULES.md)
   BR-013, BR-014, BR-018, BR-020
+- Phase 03 design evidence:
+  [Invariant catalogue](../../03-state-machines-invariants/INVARIANT_CATALOGUE.md)
+  INV-013, INV-014, INV-018, INV-020;
+  [state machine catalogue](../../03-state-machines-invariants/STATE_MACHINE_CATALOGUE.md);
+  [transition tables](../../03-state-machines-invariants/TRANSITION_TABLES.md)
 - Status: proposed; detailed REQ-* decomposition remains workshop-owned
 
 ### REQ-OBJ-002 — Correct inventory under concurrency
@@ -65,7 +71,11 @@ BR-020 in DOM-MVP-RULES-001 are Phase 02 draft rules, not yet canonical INV-*.
   and
   [MVP business rules](../../02-domain-business-architecture/MVP_SCOPE_AND_BUSINESS_RULES.md)
   BR-001 through BR-004, BR-017
-- Status: proposed; invariants belong to Phase 03
+- Phase 03 design evidence:
+  INV-001 through INV-004, INV-017;
+  SM-RESERVATION, SM-INVENTORY-UNIT, SM-MATERIAL-ALLOCATION;
+  [side-effect matrix](../../03-state-machines-invariants/SIDE_EFFECT_MATRIX.md)
+- Status: proposed; numeric UOM, Coil, and reservation guards remain open
 
 ### REQ-OBJ-003 — Bidirectional material genealogy
 
@@ -84,7 +94,11 @@ BR-020 in DOM-MVP-RULES-001 are Phase 02 draft rules, not yet canonical INV-*.
   and
   [MVP business rules](../../02-domain-business-architecture/MVP_SCOPE_AND_BUSINESS_RULES.md)
   BR-006 through BR-009, BR-019
-- Status: proposed
+- Phase 03 design evidence:
+  INV-006 through INV-009, INV-019;
+  SM-PRODUCTION-ORDER, SM-PRODUCTION-OPERATION, SM-RESIDUAL, SM-SCRAP
+- Status: proposed; official posting points, tracking, and residual cutoff
+  remain open
 
 ### REQ-OBJ-004 — Controlled and auditable business lifecycles
 
@@ -103,7 +117,11 @@ BR-020 in DOM-MVP-RULES-001 are Phase 02 draft rules, not yet canonical INV-*.
   and
   [MVP business rules](../../02-domain-business-architecture/MVP_SCOPE_AND_BUSINESS_RULES.md)
   BR-005, BR-010 through BR-016
-- Status: proposed
+- Phase 03 design evidence:
+  INV-005, INV-010 through INV-016;
+  [exception workflows](../../03-state-machines-invariants/EXCEPTION_CORRECTION.md);
+  [event and rejection catalogue](../../03-state-machines-invariants/EVENT_AND_REJECTION.md)
+- Status: proposed; QC, tolerance, and Sales Order closure guards remain open
 
 ### REQ-OBJ-005 — Maintainable Node.js/TypeScript platform
 
@@ -121,7 +139,8 @@ BR-020 in DOM-MVP-RULES-001 are Phase 02 draft rules, not yet canonical INV-*.
 ## Coverage policy
 
 Phase 02 maps objectives to capabilities, ownership, processes, and proposed
-BR-* rules. It does not mint a false-precision REQ-* catalogue before workshop
-evidence (FIND-021). Phases 03–08 extend each row with canonical rules, states,
-entities, interfaces, controls, and tests. Phase 11 rejects any in-scope row
-with a missing mandatory link.
+BR-* rules. Phase 03 assigns proposed `INV-*` IDs and lifecycle structure. It
+does not mint a false-precision REQ-* catalogue before workshop evidence
+(FIND-021, FIND-028). Phases 04–08 extend each row with physical data,
+interfaces, controls, and tests. Phase 11 rejects any in-scope row with a
+missing mandatory link.

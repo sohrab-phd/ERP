@@ -26,8 +26,9 @@ supersedes: null
 - Authorized next phase: `03-state-machines-invariants`
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 47 files changed
+- Git commit: `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`
+- Git commit subject: `docs: approve phase 02 domain business architecture`
 - Supersedes approval: none
 
 ## Approval boundary
@@ -113,7 +114,8 @@ complete changed-file set at marker creation must match that marker.
 - Temporary workshop identities confer no approval authority.
 - Phase 03 may draft structure with open guards; it may not invent numeric
   policy.
-- Git checkpoint and commit remain pending.
+- Git checkpoint completed at `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`.
+  These recording edits were not part of that commit.
 
 ## Reopen conditions
 
