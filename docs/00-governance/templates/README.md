@@ -3,11 +3,11 @@ id: GOV-TEMPLATES-001
 title: Architecture Template Index
 phase: 00-governance
 status: approved
-version: 0.1.0
+version: 0.1.2
 owners: [chief-solution-architect]
 depends_on: [GOV-DOC-STD-001, GOV-GATES-001]
-last_reviewed: 2026-09-04
-approval: APR-002
+last_reviewed: 2026-09-06
+approval: APR-004
 supersedes: null
 ---
 
@@ -17,6 +17,7 @@ supersedes: null
 - [Phase README](PHASE_TEMPLATE.md)
 - [ADR](ADR_TEMPLATE.md)
 - [Open Question](OPEN_QUESTION_TEMPLATE.md)
+- [Team Question Pack](TEAM_QUESTION_PACK_TEMPLATE.md)
 - [Risk](RISK_TEMPLATE.md)
 - [Independent Review](REVIEW_TEMPLATE.md)
 - [Reconciliation](RECONCILIATION_TEMPLATE.md)

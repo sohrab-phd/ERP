@@ -3,18 +3,20 @@ id: GOV-RACI-001
 title: Stakeholder and RACI Register
 phase: 00-governance
 status: approved
-version: 0.1.0
+version: 0.2.1
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [GOV-CHARTER-001]
-last_reviewed: 2026-09-04
-approval: APR-002
+depends_on: [GOV-CHARTER-001, OQ-019, ASM-013]
+last_reviewed: 2026-09-06
+approval: APR-004
 supersedes: null
 ---
 
 # Stakeholder and RACI Register
 
-Named people are not yet supplied. Role assignments are provisional and must be
-confirmed during Phase 02.
+APR-002 approved the role-only seed. Phase 02 now records **temporary** named
+placeholders authorized by the Project Owner so design may continue. They are
+not confirmed people. The authoritative temporary roster is
+[WORKSHOP_ROSTER.md](../../02-domain-business-architecture/WORKSHOP_ROSTER.md).
 
 ## Governance roles
 
@@ -45,7 +47,14 @@ confirmed during Phase 02.
 - Application implementation authorization: Project sponsor and Chief Solution
   Architect jointly accountable after all required owner sign-offs.
 
+## Temporary named assignments
+
+All workshop roles currently map to Temporary \* (temporary) identities in
+[WORKSHOP_ROSTER.md](../../02-domain-business-architecture/WORKSHOP_ROSTER.md).
+These assignments do not confer real approval authority. Workshop execution and
+owner-signed decisions remain blocked by OQ-019 until real names replace them.
+
 ## Open action
 
-Replace role-only ownership with named people, delegates, availability, and
-approval authority before Phase 02 exits.
+Replace every `(temporary)` roster row with a real full name, delegate or
+`none`, attendance/availability, and approval scope. OQ-019 stays open.

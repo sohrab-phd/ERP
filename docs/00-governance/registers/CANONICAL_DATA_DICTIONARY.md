@@ -3,29 +3,45 @@ id: GOV-DATA-DICT-001
 title: Canonical Data Dictionary
 phase: 00-governance
 status: approved
-version: 0.2.2
+version: 0.3.1
 owners: [data-architect, domain-leads]
-depends_on: [GOV-DOMAIN-001, GOV-GLOSSARY-001]
-last_reviewed: 2026-09-04
-approval: APR-003
+depends_on: [GOV-DOMAIN-001, GOV-GLOSSARY-001, DOM-OWN-001]
+last_reviewed: 2026-09-06
+approval: APR-004
 supersedes: null
 ---
 
 # Canonical Data Dictionary
 
-This initial dictionary controls conceptual identity only. It does not authorize
-tables, columns, keys, or database migrations.
+This dictionary controls conceptual identity only. It does not authorize tables,
+columns, keys, or database migrations.
 
-APR-002 approved this register's Phase 00 seed version. APR-003 approves the
-current version as accurate Phase 01 assimilation evidence. Concept validation
-statuses remain unchanged, and this approval does not authorize detailed data
-design, tables, columns, keys, schemas, or migrations.
+APR-002 approved this register's Phase 00 seed version. APR-003 approved the
+Phase 01 assimilation version. The current version is `in_review` because Phase
+02 added missing conceptual entities used by the ownership matrix. Validation
+statuses remain proposed or workshop-pending. This update does not authorize
+detailed data design, tables, columns, keys, schemas, or migrations.
 
 ## ENT-CUSTOMER
 
 - Concept: TERM-001
 - Write owner: Sales
-- Identity purpose: Commercial and portal party
+- Identity purpose: Commercial party; any future portal channel remains pending
+  OQ-010
+- Validation status: proposed
+
+## ENT-INQUIRY
+
+- Concept: TERM-002
+- Write owner: Sales
+- Identity purpose: Demand signal that may never become a Sales Order
+- Validation status: proposed
+
+## ENT-QUOTATION
+
+- Concept: TERM-020
+- Write owner: Sales
+- Identity purpose: Snapshotted commercial offer
 - Validation status: proposed
 
 ## ENT-SALES-ORDER
@@ -55,12 +71,36 @@ design, tables, columns, keys, schemas, or migrations.
 - Identity purpose: Lost/unserved demand independent of order delay
 - Validation status: proposed
 
+## ENT-SUPPLIER
+
+- Concept: TERM-021
+- Write owner: Procurement
+- Identity purpose: Purchasing party and certificate/lot source reference
+- Validation status: proposed
+
+## ENT-PURCHASE-ORDER
+
+- Concept: TERM-022
+- Write owner: Procurement
+- Identity purpose: Purchasing commitment
+- Validation status: proposed
+
+## ENT-GOODS-RECEIPT
+
+- Concept: TERM-019
+- Write owner: Procurement for commercial/receiving orchestration; Inventory
+  Posting Service for resulting lot/unit stock
+- Identity purpose: Inbound receiving document split from stock posting
+- Validation status: Phase 02 design proposes the split; workshop confirmation
+  still required
+
 ## ENT-MATERIAL-LOT
 
 - Concept: TERM-006
 - Proposed write owner: Inventory
 - Identity purpose: Supplier/purchase/certificate origin
-- Validation status: ownership requires Phase 02 confirmation
+- Validation status: Phase 02 design proposes Inventory write ownership;
+  workshop confirmation still required
 
 ## ENT-INVENTORY-UNIT
 
@@ -93,6 +133,14 @@ design, tables, columns, keys, schemas, or migrations.
 - Concept: TERM-011
 - Write owner: Production
 - Identity purpose: Authorized production plan
+- Validation status: proposed
+
+## ENT-MATERIAL-ALLOCATION
+
+- Concept: TERM-010
+- Write owner: Production
+- Identity purpose: Production-side assignment of an Inventory Unit to a
+  Production Order or operation; distinct from Reservation
 - Validation status: proposed
 
 ## ENT-PRODUCTION-OPERATION
@@ -143,6 +191,13 @@ design, tables, columns, keys, schemas, or migrations.
 - Identity purpose: Inspection evidence and disposition
 - Validation status: open pending OQ-005
 
+## ENT-PACKAGE
+
+- Concept: TERM-023
+- Write owner: Shipping
+- Identity purpose: Packing grouping before Shipment dispatch
+- Validation status: proposed
+
 ## ENT-SHIPMENT
 
 - Concept: TERM-017
@@ -155,3 +210,18 @@ design, tables, columns, keys, schemas, or migrations.
 - Write owner: FinanceLite
 - Identity purpose: Operational receivable document
 - Validation status: proposed; legal boundary pending OQ-012
+
+## ENT-PAYMENT
+
+- Concept: TERM-024
+- Write owner: FinanceLite
+- Identity purpose: Operational receipt and allocation against Invoice
+- Validation status: proposed; legal boundary pending OQ-012
+
+## ENT-GENEALOGY-LINK
+
+- Concept: TERM-025
+- Write owner: none as independent truth; Reporting may materialize a
+  rebuildable projection
+- Identity purpose: Query projection of Genealogy source facts
+- Validation status: proposed; must remain rebuildable (RISK-005)

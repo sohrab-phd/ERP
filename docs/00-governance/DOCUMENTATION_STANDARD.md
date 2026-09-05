@@ -3,11 +3,11 @@ id: GOV-DOC-STD-001
 title: Architecture Documentation Standard
 phase: 00-governance
 status: approved
-version: 0.1.0
+version: 0.2.1
 owners: [chief-solution-architect]
-depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-04
-approval: APR-002
+depends_on: [GOV-GATES-001, ASM-015]
+last_reviewed: 2026-09-06
+approval: APR-004
 supersedes: null
 ---
 
@@ -71,6 +71,9 @@ Git history records changes, but does not replace semantic version/status data.
 - Each fact type has one canonical owning artifact.
 - Summaries link to canonical IDs; they do not copy normative definitions.
 - A question is closed only in the Open Questions Register.
+- After each phase gate package, unanswered questions are asked through
+  [TEAM_QUESTION_PACK.md](TEAM_QUESTION_PACK.md). Chat or workshop notes are
+  not answers until recorded on the matching `OQ-*` row.
 - A decision is authoritative only through an accepted ADR/register entry.
 - State transitions and invariants are maintained in their canonical catalogues.
 - Database/API/test artifacts reference canonical rules instead of redefining them.

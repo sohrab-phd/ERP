@@ -3,15 +3,18 @@ id: GOV-GATES-001
 title: Phase Gate Policy
 phase: 00-governance
 status: approved
-version: 0.2.0
+version: 0.3.1
 owners: [chief-solution-architect, project-sponsor]
-depends_on: [GOV-CHARTER-001]
-last_reviewed: 2026-09-04
-approval: APR-002
+depends_on: [GOV-CHARTER-001, ASM-015]
+last_reviewed: 2026-09-06
+approval: APR-004
 supersedes: null
 ---
 
 # Phase Gate Policy
+
+APR-002 approved the seed loop. The current version is `in_review` because the
+Project Owner made the team question-pack handoff a standing rule (ASM-015).
 
 ## Standard phase loop
 
@@ -23,12 +26,17 @@ supersedes: null
 4. **Independent review** — use a reviewer who did not author the artifact.
 5. **Reconcile** — resolve findings and update canonical registers.
 6. **Gate review** — present exact artifacts, residual risks, and blockers.
-7. **Explicit approval** — the user approves or rejects the phase.
-8. **Freeze** — record an approval manifest with exact artifact hashes; a human
+7. **Team question pack** — publish every unanswered `OQ-*` grouped by
+   related/owning phase in
+   [TEAM_QUESTION_PACK.md](TEAM_QUESTION_PACK.md) and ask the Project Owner.
+   Continue authorized work while answers are pending. Do not invent answers.
+   A question pack is not phase approval.
+8. **Explicit approval** — the user approves or rejects the phase.
+9. **Freeze** — record an approval manifest with exact artifact hashes; a human
    creates the short-lived, Git-ignored protected checkpoint marker binding that
    manifest and the complete changed-file set to SHA-256 digests; create only the
    authorized local Git checkpoint.
-9. **Advance** — authorize only the next phase.
+10. **Advance** — authorize only the next phase.
 
 ## Gate results
 

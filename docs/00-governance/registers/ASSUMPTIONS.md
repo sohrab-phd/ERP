@@ -3,11 +3,11 @@ id: GOV-ASSUMPTIONS-001
 title: Assumption Register
 phase: 00-governance
 status: approved
-version: 0.2.2
+version: 0.5.1
 owners: [chief-solution-architect]
 depends_on: [SRC-001, ASM-REPORT-001]
-last_reviewed: 2026-09-04
-approval: APR-003
+last_reviewed: 2026-09-06
+approval: APR-004
 supersedes: null
 ---
 
@@ -16,10 +16,11 @@ supersedes: null
 Every assumption requires an owner, validation method, and affected artifacts.
 None of these entries is a confirmed business decision.
 
-APR-002 approved this register's Phase 00 seed version. APR-003 approves the
-current version as accurate Phase 01 assimilation evidence. Individual
-assumptions retain their recorded validation status; this artifact approval does
-not confirm them as business facts.
+APR-002 approved this register's Phase 00 seed version. APR-003 approved the
+Phase 01 version as assimilation evidence. The current version is `in_review`
+because Phase 02 added ASM-013 through ASM-015. Individual assumptions retain
+their recorded validation status; artifact approval does not confirm them as
+business facts.
 
 ## ASM-001 — Single legal entity and principal site
 
@@ -117,3 +118,47 @@ not confirm them as business facts.
 - Affects: Sales, Procurement, Inventory, Production, Quality, Shipping,
   FinanceLite, Audit, traceability, retention
 - Related questions: OQ-005, OQ-006, OQ-007, OQ-015, OQ-016
+
+## ASM-013 — Temporary workshop roster may unblock Phase 02 design
+
+- Status: proposed
+- Statement: The Project Owner authorized filling all Phase 02 workshop roles
+  with clearly flagged `(temporary)` placeholders so domain and business
+  architecture drafting may continue without waiting for real names. Temporary
+  identities confer no approval authority, do not execute the workshop, and do
+  not close OQ-019.
+- Owner: Project sponsor
+- Validation: replace every temporary roster row with a real named assignment
+- Affects: Phase 02 entry, workshop execution, RACI, owner-signed decisions
+- Related question: OQ-019
+- Related finding: FIND-020
+
+## ASM-014 — Phase 02 design-gate may complete with critical questions scoped out
+
+- Status: proposed
+- Statement: Phase 02 design drafting and the Phase 02 design-gate may complete
+  while OQ-001 through OQ-006, OQ-008, OQ-010, and OQ-013 remain unanswered,
+  provided each is formally scoped to workshop validation and its true
+  downstream blocking phase, and no numeric UOM, routing, QC, reservation,
+  fulfillment, organization, or portal policy is invented as if decided.
+- Owner: Project sponsor and Chief Solution Architect
+- Validation: Phase 02 approved as APR-004 at `2026-09-06T00:31:00+03:30`.
+  Later workshop evidence is still required before owner-signed policy.
+- Affects: Phase 02 exit, Phase 03 invariants, workshop, portal roadmap
+- Related questions: OQ-001, OQ-002, OQ-003, OQ-004, OQ-005, OQ-006, OQ-008,
+  OQ-010, OQ-013
+- Related finding: FIND-022
+
+## ASM-015 — Team question pack after every phase
+
+- Status: proposed
+- Statement: After every phase gate package, unanswered questions are grouped
+  by related/owning phase, published in
+  [TEAM_QUESTION_PACK.md](../TEAM_QUESTION_PACK.md), and asked of the Project
+  Owner. Authorized architecture work continues while answers are pending.
+  A returned answer becomes authoritative only when recorded on the matching
+  `OQ-*` row. The pack does not approve a phase or authorize implementation.
+- Owner: Project sponsor and Chief Solution Architect
+- Validation: each later phase repeats the pack; answers update GOV-QUESTIONS-001
+- Affects: every phase gate, workshop planning, CURRENT_PHASE permitted work
+- Related questions: OQ-001 through OQ-019

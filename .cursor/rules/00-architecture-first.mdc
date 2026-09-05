@@ -15,6 +15,11 @@ alwaysApply: true
   unless an accepted ADR says so.
 - Never resolve material business or architecture ambiguity silently. Add or
   update an `OQ-*`, `ASM-*`, `RISK-*`, `FIND-*`, or `ADR-*` record.
+- After each phase gate package, refresh
+  `docs/00-governance/TEAM_QUESTION_PACK.md` and ask the user the unanswered
+  questions grouped by related phase. Continue authorized work; do not wait
+  idly or invent answers. Chat answers become authoritative only on the
+  matching `OQ-*` row.
 - Use canonical terms and ownership from `docs/00-governance/registers/`; phase
   documents link to them instead of redefining them.
 - Every phase requires self-check, independent review, reconciliation, explicit

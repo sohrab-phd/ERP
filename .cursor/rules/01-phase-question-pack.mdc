@@ -1,0 +1,18 @@
+---
+description: After every phase, ask unanswered questions by owning phase and keep going
+alwaysApply: true
+---
+
+# Phase Question Pack
+
+- After each phase gate package is complete, update
+  `docs/00-governance/TEAM_QUESTION_PACK.md` and **ask the user** the still-open
+  questions grouped by related/owning phase.
+- Do not wait idly for answers. Continue only the work authorized by
+  `docs/00-governance/CURRENT_PHASE.md`.
+- Do not invent answers, close an `OQ-*`, or treat chat discussion as a decision.
+  Record a returned answer in `docs/00-governance/registers/OPEN_QUESTIONS.md`
+  only when the user supplies it; then refresh the question pack.
+- Partial answers are allowed. Apply what arrived; leave the rest open.
+- The next phase still requires explicit approval and checkpoint. A question
+  pack is not approval and is not an implementation unlock.

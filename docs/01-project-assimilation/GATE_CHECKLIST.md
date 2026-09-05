@@ -3,7 +3,7 @@ id: ASM-GATE-CHECKLIST-001
 title: Project Assimilation Gate Checklist
 phase: 01-project-assimilation
 status: approved
-version: 0.1.1
+version: 0.1.2
 owners: [chief-solution-architect, independent-reviewer]
 depends_on: [ASM-SELF-CHECK-001, ASM-INDEPENDENT-REVIEW-001, ASM-RECON-001]
 last_reviewed: 2026-09-04
@@ -78,21 +78,24 @@ supersedes: null
   test implementation, integration implementation, deployment implementation,
   staging, commit, checkpoint marker, or implementation authorization is
   claimed by this gate.
-- [x] Phase 01 is approved with checkpoint pending, and
+- [x] Phase 01 is approved with checkpoint completed, and
   `IMPLEMENTATION_AUTHORIZED` remains false.
 
 ## Human gate and checkpoint actions
 
 - [x] Explicit human approval of the Phase 01 evidence set is recorded as
   `APR-003` at `2026-09-04T20:38:00+03:30`.
-- [ ] The separately authorized Phase 01 checkpoint is completed and recorded.
+- [x] The separately authorized Phase 01 checkpoint is completed and recorded
+  by [CHK-0002](../00-governance/approved-baselines/CHK-0002-phase-01.md) at
+  `91273e9e30ead2f19203fab2f82d5f23911ee0aa`; 34 files changed.
 
 ## Current result
 
-`APPROVED_CHECKPOINT_PENDING`
+`APPROVED_CHECKPOINT_COMPLETED`
 
 The Project Owner approved the gate as APR-003. The approval confirms accurate
 assimilation, methodology, provenance, and planned-workshop readiness; it does
 not approve detailed design or proposed technologies. OQ-001 through OQ-018 and
-proposed ADR-0006 through ADR-0008 carry forward. Checkpoint and commit remain
-pending, Phase 02 is not activated, and no implementation authority is granted.
+proposed ADR-0006 through ADR-0008 carry forward. Phase 01 is complete. OQ-019
+records the named-participant dependency that leaves Phase 02
+`ENTRY_BLOCKED`; no implementation authority is granted.

@@ -3,11 +3,11 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: approved
-version: 0.4.5
+version: 0.5.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-04
-approval: APR-003
+last_reviewed: 2026-09-06
+approval: APR-004
 supersedes: null
 ---
 
@@ -133,9 +133,11 @@ checkpoint chain.
 ### APR-003 — Project Assimilation Gate
 
 - Phase: `01-project-assimilation`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-003-project-assimilation.md](approved-baselines/APR-003-project-assimilation.md)
+- Checkpoint record:
+  [CHK-0002-phase-01.md](approved-baselines/CHK-0002-phase-01.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-003.md](../01-project-assimilation/CHECKPOINT_APR-003.md)
 - Review package:
@@ -156,13 +158,47 @@ checkpoint chain.
 - Open downstream items: OQ-001 through OQ-018, proposed ADR-0006 through
   ADR-0008, FIND-001, FIND-003, FIND-004, named workshop participants,
   delegates, approval limits, and new Phase 02 evidence
-- Git checkpoint: pending
-- Git commit: pending
-- Next phase: `02-domain-business-architecture`; inactive until the approved
-  APR-003 checkpoint is completed and recorded
+- Git checkpoint: completed successfully; 34 files changed
+- Git commit: `91273e9e30ead2f19203fab2f82d5f23911ee0aa`
+- Git commit subject: `docs: approve phase 01 project assimilation`
+- Checkpoint marker: removed; no checkpoint marker remains
+- Next phase: `02-domain-business-architecture`; `ENTRY_BLOCKED` by OQ-019
+  pending named assignments for every required workshop participant role
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
 
-No hash, checkpoint marker, staged state, or commit is claimed for APR-003.
-The marker generator must be updated during a protected maintenance window to
-reference APR-003 before a human runs it.
+Phase 01 is complete. OQ-001 through OQ-018 and proposed ADR-0006 through
+ADR-0008 carry forward unchanged; OQ-019 records the missing named-participant
+entry dependency and is not a business decision. The checkpoint-recording edits
+made after the commit enter a later explicitly approved checkpoint and do not
+trigger an immediate recursive checkpoint.
+
+### APR-004 — Domain and Business Architecture Gate
+
+- Phase: `02-domain-business-architecture`
+- Status: `approved`; Git checkpoint pending
+- Approval manifest:
+  [APR-004-domain-business-architecture.md](approved-baselines/APR-004-domain-business-architecture.md)
+- Checkpoint procedure:
+  [CHECKPOINT_APR-004.md](../02-domain-business-architecture/CHECKPOINT_APR-004.md)
+- Review package:
+  [GATE_CHECKLIST.md](../02-domain-business-architecture/GATE_CHECKLIST.md)
+- Supporting evidence:
+  [SELF_CHECK.md](../02-domain-business-architecture/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](../02-domain-business-architecture/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](../02-domain-business-architecture/RECONCILIATION.md)
+- Approver: Project Owner (explicit approval in Cursor session)
+- Approval timestamp: `2026-09-06T00:31:00+03:30`
+- Approval scope: Phase 02 design package and ASM-014; no owner-signed
+  workshop policy, no technology ADRs beyond ADR-0001, no implementation
+- Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
+  ADR-0008, FIND-001, FIND-003, FIND-004, FIND-020 residual, FIND-023
+- Git checkpoint: pending
+- Next phase: `03-state-machines-invariants`; `ACTIVE_IN_REVIEW` for
+  structure drafting with open guards
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+Approving Phase 02 accepts ASM-014. Temporary identities still have no
+approval authority. Team answers expected in a few days will update the
+matching `OQ-*` rows when they arrive.

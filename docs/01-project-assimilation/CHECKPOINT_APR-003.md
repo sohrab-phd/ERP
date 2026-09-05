@@ -3,7 +3,7 @@ id: ASM-CHECKPOINT-APR-003
 title: APR-003 Checkpoint Procedure
 phase: 01-project-assimilation
 status: approved
-version: 0.2.0
+version: 0.2.1
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [APR-003, GOV-GATES-001]
 last_reviewed: 2026-09-04
@@ -14,9 +14,9 @@ supersedes: null
 # APR-003 Checkpoint Procedure
 
 The Project Owner explicitly approved Phase 01 as APR-003 at
-`2026-09-04T20:38:00+03:30`. This procedure records future human-controlled
-checkpoint steps only. No marker, staging, commit, checkpoint, or commit hash
-exists or is claimed.
+`2026-09-04T20:38:00+03:30`. This procedure now preserves the completed
+human-controlled checkpoint history. It does not authorize another marker,
+staging action, commit, or checkpoint.
 
 ## Protected generator readiness
 
@@ -28,23 +28,11 @@ future checkpoints do not require hard-coded control edits.
 The PowerShell parser and architecture-gate regression suite validate the
 updated control before marker creation.
 
-## Human checkpoint steps
+## Completed human checkpoint steps
 
-1. Verify the working tree and index state and confirm the finalized changed
-   files exactly match the APR-003 approval scope.
-2. Verify all governed Markdown frontmatter, links, gate states, and carried
-   downstream items.
-3. Confirm Phase 02 is still inactive and
-   `IMPLEMENTATION_AUTHORIZED` remains `false`.
-4. Restore active hooks, fully reopen Cursor, and have a human run the validated
-   marker generator with its APR-003 defaults.
-5. Verify the short-lived Git-ignored marker binds the finalized APR-003
-   manifest digest, complete changed-file set, raw-file SHA-256 values,
-   clean-filtered Git blob IDs, Git modes, and exact permitted commands.
-6. Only after the marker passes all checks, provide separate authorization for
-   the exact checkpoint commands.
-7. After a successful commit, remove the expired marker and record the resulting
-   commit through the separately governed checkpoint-recording process.
+The protected procedure completed successfully. The approved 34-file set was
+committed, and the expired short-lived checkpoint marker was removed. No
+checkpoint marker remains.
 
 ## Intended checkpoint command
 
@@ -60,15 +48,22 @@ The corresponding plain command is intended to be:
 git commit -m "docs: approve phase 01 project assimilation"
 ```
 
-These lines document intent; they do not currently authorize staging or commit.
-The protected marker must contain the exact transformed command required by the
-active hooks before any checkpoint attempt.
+These lines preserve the approved command intent; they do not authorize another
+staging action or commit.
 
 ## Current state
 
 - Gate result: `APPROVED`
 - Phase: `01-project-assimilation`
-- Git checkpoint: pending
-- Git commit: pending
-- Phase 02: inactive
+- Git checkpoint: completed successfully; 34 files changed
+- Git commit: `91273e9e30ead2f19203fab2f82d5f23911ee0aa`
+- Git commit subject: `docs: approve phase 01 project assimilation`
+- Checkpoint record:
+  [CHK-0002](../00-governance/approved-baselines/CHK-0002-phase-01.md)
+- Checkpoint marker: removed; no checkpoint marker remains
+- Phase 01: complete
+- Phase 02: next, lifecycle `planned`, gate `ENTRY_BLOCKED` by OQ-019
 - Implementation authorization: none
+
+This recording update enters a later explicitly approved checkpoint. It does
+not require or authorize an immediate recursive checkpoint.

@@ -3,24 +3,29 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: approved
-version: 0.2.2
+version: 0.5.1
 owners: [chief-solution-architect]
-depends_on: [ASM-REPORT-001]
-last_reviewed: 2026-09-04
-approval: APR-003
+depends_on: [ASM-REPORT-001, ASM-014]
+last_reviewed: 2026-09-06
+approval: APR-004
 supersedes: null
 ---
 
 # Open Questions Register
 
-Status values: `open`, `investigating`, `answered`, `deferred`, `superseded`.
-Severity and blocking scope are independent. Answers become authoritative only
-when promoted to the owning artifact or ADR.
+Status values: `open`, `investigating`, `treating`, `answered`, `deferred`,
+`superseded`. Severity and blocking scope are independent. Answers become
+authoritative only when promoted to the owning artifact or ADR.
 
-APR-002 approved this register's Phase 00 seed version. APR-003 approves the
-current version as accurate Phase 01 assimilation evidence. OQ-001 through
-OQ-018 retain their recorded statuses and downstream blocking scopes; artifact
-approval does not answer or close them.
+APR-002 approved this register's Phase 00 seed version. APR-003 approved the
+Phase 01 assimilation version. The current version is `in_review` because Phase
+02 refined blocking scopes under ASM-014. OQ-001 through OQ-018 remain
+unanswered. Temporary placeholders permit Phase 02 design under ASM-013; they
+do not close OQ-019 or confer real owner authority.
+
+The Project Owner takes unanswered questions to the team using
+[TEAM_QUESTION_PACK.md](../TEAM_QUESTION_PACK.md). That pack is refreshed after
+every phase. Answers become authoritative only in this register.
 
 ## OQ-001 — Authoritative UOM matrix
 
@@ -29,8 +34,13 @@ approval does not answer or close them.
 - Why: Drives balance, pricing, mass balance, and API contracts.
 - Domains: MasterData, Inventory, Sales, Production
 - Severity: critical
-- Blocking scope: Phase 02 and downstream
+- Blocking scope: workshop-validated UOM policy, Phase 03 numeric/guard design,
+  and Phase 04 physical/API contracts. Phase 02 **design drafting and
+  design-gate** may complete with this question formally scoped out under
+  ASM-014.
 - Needed: Signed UOM/conversion matrix with examples
+- Treatment: Phase 02 records the extension point and does not invent the
+  signed matrix.
 - Status: open
 
 ## OQ-002 — Coil quantity semantics
@@ -40,8 +50,13 @@ approval does not answer or close them.
 - Why: Changes availability, posting, consumption, and tolerance rules.
 - Domains: Inventory, Production
 - Severity: critical
-- Blocking scope: Phase 02 and downstream
+- Blocking scope: workshop-validated quantity policy, Phase 03 posting/tolerance
+  design, and downstream implementation. Phase 02 **design drafting and
+  design-gate** may complete with this question formally scoped out under
+  ASM-014.
 - Needed: Current practice, equipment accuracy, representative records
+- Treatment: Phase 02 keeps Coil as an Inventory Unit kind and does not choose
+  weight-only versus weight-plus-length.
 - Status: open
 
 ## OQ-003 — Production routing and posting points
@@ -51,8 +66,12 @@ approval does not answer or close them.
 - Why: Defines operations, WIP, genealogy, and transaction boundaries.
 - Domains: Production, Inventory
 - Severity: critical
-- Blocking scope: Phase 02 and downstream
-- Needed: Validated As-Is/To-Be process maps
+- Blocking scope: workshop-validated routing, Phase 03 official posting points,
+  and downstream implementation. Phase 02 **design drafting and design-gate**
+  may complete with this question formally scoped out under ASM-014.
+- Needed: Validated As-Is/To-Be process maps and shop-floor posting evidence
+- Treatment: Phase 02 proposes Production as operation/fact owner and leaves
+  real steps and official posting points unset.
 - Status: open
 
 ## OQ-004 — Tracking granularity
@@ -61,8 +80,13 @@ approval does not answer or close them.
 - Why: Determines identities, labels, genealogy, and data volume.
 - Domains: Production, Quality, Traceability
 - Severity: critical
-- Blocking scope: Phase 02 and downstream
+- Blocking scope: workshop-validated identity matrix, Phase 03 genealogy/label
+  design, and Phase 04 volume design. Phase 02 **design drafting and
+  design-gate** may complete with this question formally scoped out under
+  ASM-014.
 - Needed: Product/customer/regulatory matrix
+- Treatment: Phase 02 keeps Product Batch and Inventory Unit as proposed
+  identities and does not choose batch versus bundle versus piece as policy.
 - Status: open
 
 ## OQ-005 — Quality plans and release authority
@@ -72,8 +96,13 @@ approval does not answer or close them.
 - Why: Availability and shipment gates depend on these rules.
 - Domains: Quality, Inventory, Shipping, Security
 - Severity: critical
-- Blocking scope: Phase 02 and downstream
+- Blocking scope: workshop-validated QC authority, Phase 03 release/hold
+  guards, and downstream implementation. Phase 02 **design drafting and
+  design-gate** may complete with this question formally scoped out under
+  ASM-014.
 - Needed: QC forms, standards, exceptions, and signed authority matrix
+- Treatment: Phase 02 records that Quality commands Inventory and that Product
+  Batch must be Released before shipment; it does not name approvers or limits.
 - Status: open
 
 ## OQ-006 — Fulfillment tolerances
@@ -83,8 +112,12 @@ approval does not answer or close them.
 - Why: Controls order, production, reservation, and shipment behavior.
 - Domains: Sales, Production, Shipping
 - Severity: high
-- Blocking scope: Phase 02 and Phase 03
+- Blocking scope: workshop-validated commercial policy and Phase 03
+  fulfillment/shipment guards. Phase 02 **design drafting and design-gate** may
+  complete with this question formally scoped out under ASM-014.
 - Needed: Approved commercial policy
+- Treatment: Phase 02 records that partial fulfillment exists and does not
+  invent numeric over-production or over-delivery limits.
 - Status: open
 
 ## OQ-007 — Sales Order closure rule
@@ -104,8 +137,13 @@ approval does not answer or close them.
 - Why: Affects fairness, concurrency, stock availability, and dead stock.
 - Domains: Sales, Inventory, Production
 - Severity: high
-- Blocking scope: Phase 02 and Phase 03
+- Blocking scope: workshop-validated reservation policy and Phase 03
+  availability/concurrency guards. Phase 02 **design drafting and design-gate**
+  may complete with this question formally scoped out under ASM-014.
 - Needed: Operational policy and conflict examples
+- Treatment: Phase 02 distinguishes Reservation from Allocation and
+  Consumption and does not invent expiry, priority, or one-Coil-to-many-orders
+  rules.
 - Status: open
 
 ## OQ-009 — Reusable residual threshold
@@ -125,9 +163,15 @@ approval does not answer or close them.
 - Why: Sources conflict; scope changes security, API, internet, and test design.
 - Domains: Portal, Sales, Security, Roadmap
 - Severity: critical
-- Blocking scope: Phase 02
+- Blocking scope: portal capability decision, customer-channel
+  security/API/internet design, and any later portal implementation. Phase 02
+  **design drafting and design-gate** may complete with Customer Portal
+  **ordering formally deferred from MVP**.
 - Needed: Sponsor decision, pilot users, price/document/request policy
-- Status: open
+- Treatment: DOM-MVP-RULES-001 and DOM-CAP-BC-001 formally defer ordering from
+  MVP. Visibility and request remain optional deferred. FIND-001 remains open.
+  This treatment does not answer whether a later portal is included.
+- Status: treating
 
 ## OQ-011 — Weighbridge integration
 
@@ -157,8 +201,13 @@ approval does not answer or close them.
 - Why: Affects numbering, tenancy, warehouses, reporting, and deployment.
 - Domains: Enterprise Architecture, MasterData
 - Severity: high
-- Blocking scope: Phase 02 and downstream
+- Blocking scope: workshop-validated organization model and later
+  tenancy/numbering/deployment design. Phase 02 **design drafting and
+  design-gate** may complete under ASM-001 / ASM-014 with the single-site
+  assumption remaining unconfirmed.
 - Needed: Approved organization/site model
+- Treatment: Phase 02 continues under the unconfirmed single-entity /
+  principal-site assumption and does not invent a multi-site model.
 - Status: open
 
 ## OQ-014 — Data and transaction volumes
@@ -223,3 +272,23 @@ approval does not answer or close them.
   through ADR-0008 plus later detailed platform ADRs; no popularity-based
   defaults
 - Status: open
+
+## OQ-019 — Named Phase 02 workshop participants
+
+- Question: Which named people will fill every participant role required by the
+  Phase 02 discovery and validation workshop?
+- Why: Evidence ownership, attendance, and approval authority must be verified
+  against real people before workshop execution and owner-signed decisions.
+- Domains: Governance, Stakeholder Management, Phase 02
+- Severity: high
+- Blocking scope: workshop execution, owner-signed business decisions, and
+  go-live sign-off. Phase 02 **design drafting** is permitted under ASM-013.
+- Classification: entry-evidence and owner-assignment dependency; not a business
+  or architecture decision
+- Treatment: The Project Owner authorized temporary placeholders flagged
+  `(temporary)` in
+  [WORKSHOP_ROSTER.md](../../02-domain-business-architecture/WORKSHOP_ROSTER.md)
+  so architecture design can continue. FIND-020 records this exception.
+- Needed: Replace every temporary row with a real full name, delegate or
+  explicit `none`, attendance/availability confirmation, and approval scope.
+- Status: treating

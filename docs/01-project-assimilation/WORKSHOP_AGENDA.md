@@ -3,7 +3,7 @@ id: ASM-WORKSHOP-001
 title: Initial Discovery and Validation Workshop Agenda
 phase: 01-project-assimilation
 status: approved
-version: 0.1.1
+version: 0.1.2
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-PROVENANCE-001, GOV-RACI-001]
 last_reviewed: 2026-09-04
@@ -206,5 +206,6 @@ APR-003 approves this agenda as ready for the planned discovery and validation
 workshop; it does not claim that the workshop occurred or approve any expected
 answer. The workshop does not authorize Phase 02, implementation, or any
 technology selection. Independent review, reconciliation, and explicit Phase 01
-approval are complete; checkpoint completion remains pending. Phase 02 stays
-inactive until that checkpoint is completed and recorded.
+approval are complete; CHK-0002 records the completed checkpoint. Phase 02 is
+next but remains `ENTRY_BLOCKED` by OQ-019 until every required participant role
+has a named assignment.

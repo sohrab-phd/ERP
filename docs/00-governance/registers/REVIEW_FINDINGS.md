@@ -3,11 +3,11 @@ id: GOV-FINDINGS-001
 title: Review Findings Register
 phase: 00-governance
 status: approved
-version: 0.9.2
+version: 0.11.1
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-04
-approval: APR-003
+last_reviewed: 2026-09-06
+approval: APR-004
 supersedes: null
 ---
 
@@ -270,6 +270,78 @@ findings or their linked questions.
   Demand, and Genealogy link to TERM-019, TERM-007, TERM-008, TERM-005, and
   TERM-015 respectively without repeated overlinking.
 - Evidence: ASM-REPORT-001 version 0.2.1 and GOV-GLOSSARY-001 version 0.2.1.
+
+## FIND-020 — Temporary workshop identities authorized to continue Phase 02
+
+- Severity: high
+- Gate: Phase 02 entry
+- Status: accepted
+- Finding: OQ-019 blocked Phase 02 entry because no real named workshop
+  participants existed. Waiting for those names would halt all remaining
+  architecture work.
+- Treatment: The Project Owner authorized filling every required role with a
+  clearly flagged `(temporary)` identity so Phase 02 design drafting may
+  continue. Temporary identities confer no approval authority, do not execute
+  the workshop, and do not close OQ-019.
+- Evidence: DOM-ROSTER-001 version 0.2.0; ASM-013; OQ-019 status `treating`
+- Residual: Real names remain required before workshop execution and
+  owner-signed decisions. Phase 02 design drafting has entered under that
+  residual.
+
+## FIND-021 — Phase 02 used concepts without canonical IDs
+
+- Severity: medium
+- Gate: Phase 02
+- Status: resolved
+- Finding: The first Phase 02 drafts used Quotation, Supplier, PurchaseOrder,
+  GoodsReceipt as an entity, Package, Payment, GenealogyLink, Inquiry as an
+  entity, and Material Allocation as ownership concepts without TERM-* or
+  ENT-* IDs, and the coverage policy said Phase 02 assigns requirement IDs.
+- Resolution: GOV-GLOSSARY-001 version 0.3.0 adds TERM-020 through TERM-025.
+  GOV-DATA-DICT-001 version 0.3.0 adds the matching conceptual entities.
+  Detailed REQ-* decomposition is not invented before workshop evidence;
+  REQ-OBJ-001 through REQ-OBJ-005 now link Phase 02 design artifacts and the
+  proposed BR-001 through BR-020 catalogue.
+- Evidence: GOV-GLOSSARY-001 v0.3.0; GOV-DATA-DICT-001 v0.3.0; GOV-TRACE-001
+  v0.3.0; DOM-MVP-RULES-001.
+- Residual: Workshop may keep, rename, or replace the promoted concepts.
+  Canonical INV-* / detailed REQ-* rows remain Phase 03+ work.
+
+## FIND-022 — Phase 02 design-gate vs residual OQ blocking scopes
+
+- Severity: high
+- Gate: Phase 02
+- Status: resolved
+- Finding: OQ-001 through OQ-006, OQ-008, OQ-010, and OQ-013 still named
+  Phase 02 as a blocking scope after the drafts claimed a design-gate could
+  proceed. Leaving those scopes unchanged would make an honest Phase 02 exit
+  impossible without silently answering the questions.
+- Resolution: ASM-014 records that the design-gate may complete when those
+  questions are formally scoped out. Each listed OQ now blocks workshop-
+  validated policy and its true downstream phase, not Phase 02 design
+  drafting. OQ-010 is `treating` with Customer Portal ordering formally
+  deferred from MVP. No question is answered or closed.
+- Evidence: ASM-014; GOV-QUESTIONS-001 version 0.5.0; DOM-MVP-RULES-001.
+- Residual: Workshop evidence and owner-signed policy remain required before
+  numeric UOM, routing, QC, reservation, fulfillment, organization, or portal
+  decisions. The Project Owner accepted ASM-014 by approving Phase 02 as
+  APR-004.
+
+## FIND-023 — Shipping lifecycle sub-concepts lack separate entity IDs
+
+- Severity: medium
+- Gate: Phase 02
+- Status: accepted
+- Finding: `BC-SHIPPING` lists Package, Shipment, ShipmentItem, Dispatch, and
+  Delivery as write-owned concepts. Package and Shipment now have TERM/ENT
+  IDs. ShipmentItem, Dispatch, and Delivery do not.
+- Treatment: For this design-gate they remain Shipment lifecycle facts under
+  TERM-017 / ENT-SHIPMENT. Phase 03 or Phase 04 may split them if workshop
+  evidence requires separately identified records. This finding does not
+  authorize those entities now.
+- Evidence: DOM-CAP-BC-001; GOV-DATA-DICT-001 version 0.3.0.
+- Residual: Do not invent ENT-SHIPMENT-ITEM, ENT-DISPATCH, or ENT-DELIVERY
+  before workshop or Phase 03 need.
 
 ## Downstream suspect policy
 

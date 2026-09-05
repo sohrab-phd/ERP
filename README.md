@@ -6,15 +6,17 @@ traceability, and monitoring system.
 
 ## Current status
 
-- Current phase: `01-project-assimilation`
-- Gate status: `APPROVED_CHECKPOINT_PENDING`
+- Completed phase: `02-domain-business-architecture` (design approved; Git
+  checkpoint pending)
+- Current phase: `03-state-machines-invariants`
+- Gate status: `ACTIVE_IN_REVIEW`
 - Phase 00 approval: `APR-002`; checkpoint completed at
   `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`
-- FIND-006 through FIND-014: resolved and independently verified; 66 validation
-  tests pass
-- Phase 01 approval: `APR-003` at `2026-09-04T20:38:00+03:30`; checkpoint and
-  commit pending
-- Phase 02: inactive until the APR-003 checkpoint is completed and recorded
+- Phase 01 approval: `APR-003`; checkpoint completed at
+  `91273e9e30ead2f19203fab2f82d5f23911ee0aa`
+- Phase 02 approval: `APR-004` at `2026-09-06T00:31:00+03:30`; Git
+  checkpoint pending. Team answers expected in a few days. OQ-019 still
+  blocks workshop execution
 - Implementation authorized: **No**
 - Application source code, database migrations, package setup, and deployment
   implementation are prohibited until the final architecture gate is explicitly
@@ -35,9 +37,9 @@ work authorization.
 ## Phase dashboard
 
 - `00-governance`: **approved; checkpoint completed**
-- `01-project-assimilation`: **approved; checkpoint pending**
-- `02-domain-business-architecture`: **planned; inactive**
-- `03-state-machines-invariants`: planned
+- `01-project-assimilation`: **approved; checkpoint completed; phase complete**
+- `02-domain-business-architecture`: **approved; checkpoint pending**
+- `03-state-machines-invariants`: **in_review; structure drafting**
 - `04-database-architecture`: planned
 - `05-application-api-architecture`: planned
 - `06-security-rbac-audit`: planned
@@ -54,3 +56,8 @@ Each phase follows:
 
 No phase may begin detailed work before its entry criteria are met. Material
 changes to approved architecture reopen affected downstream artifacts.
+
+Phase 02 is approved as APR-004. Phase 03 may draft structure with open
+guards. Temporary workshop identities cannot sign decisions. Implementation
+remains unauthorized. The APR-004 Git checkpoint is pending a human-created
+marker.

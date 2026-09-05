@@ -3,7 +3,7 @@ id: APR-003
 title: Project Assimilation Approval
 phase: 01-project-assimilation
 status: approved
-version: 0.1.0
+version: 0.1.1
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [ASM-GATE-CHECKLIST-001, ASM-RECON-001]
 last_reviewed: 2026-09-04
@@ -19,10 +19,11 @@ supersedes: null
 - Approval timestamp: `2026-09-04T20:38:00+03:30`
 - Phase: `01-project-assimilation`
 - Scope authorized: Accurate assimilation, methodology, provenance classification, and readiness of the planned discovery and validation workshop
-- Authorized next phase: `02-domain-business-architecture`, only after the approved Phase 01 checkpoint is completed and recorded
+- Authorized next phase: `02-domain-business-architecture`, subject to its entry criteria
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains `false`
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 34 files changed
+- Git commit: `91273e9e30ead2f19203fab2f82d5f23911ee0aa`
+- Git commit subject: `docs: approve phase 01 project assimilation`
 - Supersedes approval: none
 
 ## Approval boundary
@@ -37,9 +38,10 @@ data platform, framework, package, API, schema, deployment topology, or any
 other technology selection. OQ-001 through OQ-018 and proposed ADR-0006 through
 ADR-0008 carry forward to their owning phases and remain unresolved.
 
-Phase 02 is inactive until the APR-003 checkpoint is completed and recorded.
-This approval does not authorize implementation, staging, a commit, a checkpoint
-marker, or changes to Cursor controls.
+The APR-003 checkpoint is complete. Phase 02 is the next phase, but its entry is
+blocked until the required workshop roles have named participants. This
+approval does not authorize implementation, detailed Phase 02 design, another
+commit, a checkpoint marker, or changes to Cursor controls.
 
 ## Approved evidence package
 
@@ -73,16 +75,22 @@ The approval also covers the unversioned repository navigation update in
 
 ## Hash and checkpoint status
 
-No content hash, Git blob ID, Git tree, checkpoint marker, or commit hash is
-claimed here. The human-created protected checkpoint marker must bind the
-finalized manifest, complete changed-file set, exact raw-file SHA-256 values,
-clean-filtered Git blob IDs, Git modes, and exact permitted commands. Until that
-separate procedure completes, all checkpoint and commit fields remain pending.
+The approved Phase 01 checkpoint completed successfully at
+`91273e9e30ead2f19203fab2f82d5f23911ee0aa` with subject
+`docs: approve phase 01 project assimilation`; the commit records 34 changed
+files. The short-lived checkpoint marker was removed after the successful
+commit, and no checkpoint marker remains.
+
+[CHK-0002](CHK-0002-phase-01.md) is the canonical checkpoint record. This
+manifest-recording edit was not part of the approved baseline commit and will
+enter a later explicitly approved checkpoint; it does not require or authorize
+an immediate recursive checkpoint.
 
 ## Residual items
 
 - OQ-001 through OQ-018 remain open with their recorded downstream blocking
-  scopes.
+  scopes. OQ-019 now tracks the missing named workshop-participant assignments
+  that block Phase 02 entry.
 - ADR-0006 through ADR-0008 remain proposed and unaccepted.
 - FIND-001, FIND-003, and FIND-004 and their linked questions carry forward.
 - Named workshop participants, delegates, approval limits, and new evidence
@@ -93,7 +101,6 @@ separate procedure completes, all checkpoint and commit fields remain pending.
 
 Reopen APR-003 if source coverage, provenance limits, assimilation meaning,
 methodology, workshop-readiness claims, canonical register content, gate
-evidence, or the checkpoint-bound changed-file inventory changes materially.
-Any mismatch between the finalized files and the future protected marker, any
-new unresolved in-scope Critical or High finding, or any checkpoint attempt
-outside the protected procedure suspends checkpoint authorization.
+evidence, or the checkpoint-bound 34-file inventory is shown to have differed
+materially at commit `91273e9e30ead2f19203fab2f82d5f23911ee0aa`. Any new
+unresolved in-scope Critical or High finding reopens the affected gate.

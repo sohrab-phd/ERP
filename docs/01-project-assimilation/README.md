@@ -3,7 +3,7 @@ id: PHASE-01
 title: Project Assimilation
 phase: 01-project-assimilation
 status: approved
-version: 0.2.3
+version: 0.2.4
 owners: [chief-solution-architect]
 depends_on: [PHASE-00]
 last_reviewed: 2026-09-04
@@ -38,7 +38,7 @@ performing detailed design or implementation.
   `BLOCKED`; FIND-017 through FIND-019 independently verified by the follow-up
   verdict `READY_FOR_HUMAN_APPROVAL`
 - [x] [Phase 01 Gate Checklist](GATE_CHECKLIST.md) — gate approved; checkpoint
-  pending
+  completed and recorded by `CHK-0002`
 
 ## Entry criteria
 
@@ -61,16 +61,15 @@ performing detailed design or implementation.
   assimilation defect.
 - [x] The user explicitly approved Phase 01 as `APR-003` at
   `2026-09-04T20:38:00+03:30`.
-- [ ] The approved Phase 01 checkpoint is completed and recorded.
+- [x] The approved Phase 01 checkpoint is completed and recorded at
+  `91273e9e30ead2f19203fab2f82d5f23911ee0aa`.
 
 ## Gate
 
-Current result: `APPROVED_CHECKPOINT_PENDING`
+Current result: `APPROVED_CHECKPOINT_COMPLETED`
 
-Remaining exit work:
-
-- Complete and record the approved Phase 01 checkpoint using the
-  [APR-003 Checkpoint Procedure](CHECKPOINT_APR-003.md).
+Checkpoint record:
+[CHK-0002](../00-governance/approved-baselines/CHK-0002-phase-01.md).
 
 The Project Owner explicitly approved the Phase 01 evidence set as `APR-003` at
 `2026-09-04T20:38:00+03:30`. APR-002 remains the provenance authority for the
@@ -80,7 +79,7 @@ remains part of the review history, and the follow-up independent review
 verified the corrections before human approval.
 
 The workshop agenda is planned and has not been executed. Named participants,
-delegates, and approval limits remain a nonblocking Phase 01 carry-forward and a
-Phase 02 entry dependency; no names are invented here. Implementation remains
-unauthorized. The APR-003 checkpoint and commit are pending, and Phase 02
-remains inactive until that checkpoint is completed and recorded.
+delegates, and approval limits remain a nonblocking Phase 01 carry-forward.
+OQ-019 records the missing named participant assignments as a Phase 02 entry
+blocker; no names are invented here. Phase 01 is complete, Phase 02 is next but
+`ENTRY_BLOCKED`, and implementation remains unauthorized.
