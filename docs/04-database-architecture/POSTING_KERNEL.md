@@ -2,12 +2,12 @@
 id: DATA-POST-001
 title: Inventory Posting Kernel and Alternatives
 phase: 04-database-architecture
-status: in_review
+status: approved
 version: 0.1.0
 owners: [data-architect, inventory-domain-owner]
 depends_on: [SM-INV-001, SM-CONC-001, APR-005]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-006
 supersedes: null
 ---
 

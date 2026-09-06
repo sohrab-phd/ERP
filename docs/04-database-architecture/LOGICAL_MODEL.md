@@ -2,12 +2,12 @@
 id: DATA-LOGICAL-001
 title: Logical Data Model
 phase: 04-database-architecture
-status: in_review
+status: approved
 version: 0.1.0
 owners: [data-architect, domain-leads]
 depends_on: [GOV-DATA-DICT-001, DOM-OWN-001, APR-005]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-006
 supersedes: null
 ---
 
@@ -112,3 +112,10 @@ key (INV-016).
 | Ledger storage mechanism | OQ-017 |
 
 Do not invent a column type to stand in for those answers.
+
+Named attributes live in
+[LOGICAL_ATTRIBUTE_CATALOGUE.md](LOGICAL_ATTRIBUTE_CATALOGUE.md).
+Enforcement assignment lives in
+[ENFORCEMENT_ASSIGNMENT.md](ENFORCEMENT_ASSIGNMENT.md).
+Cutover and retention live in
+[RETENTION_MIGRATION_OPENING_STOCK.md](RETENTION_MIGRATION_OPENING_STOCK.md).

@@ -2,12 +2,12 @@
 id: DATA-GEN-001
 title: Genealogy Projection Design
 phase: 04-database-architecture
-status: in_review
+status: approved
 version: 0.1.0
 owners: [data-architect, domain-leads]
 depends_on: [SM-INV-001, GOV-DATA-DICT-001, APR-005]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-006
 supersedes: null
 ---
 

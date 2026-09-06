@@ -3,11 +3,11 @@ id: GOV-ASSUMPTIONS-001
 title: Assumption Register
 phase: 00-governance
 status: approved
-version: 0.6.0
+version: 0.7.0
 owners: [chief-solution-architect]
 depends_on: [SRC-001, ASM-REPORT-001]
 last_reviewed: 2026-09-06
-approval: APR-005
+approval: APR-006
 supersedes: null
 ---
 
@@ -180,3 +180,22 @@ status; artifact approval does not confirm them as business facts.
 - Affects: Phase 03 exit, Phase 04 contracts, workshop, implementation lock
 - Related questions: OQ-001 through OQ-010, OQ-012, OQ-015, OQ-017, OQ-019
 - Related findings: FIND-024, FIND-025, FIND-026, FIND-028
+
+## ASM-017 — Phase 04 logical design-gate may complete with open physical extensions
+
+- Status: proposed
+- Statement: Phase 04 logical drafting and a Phase 04 **logical**
+  design-gate may complete while UOM, Coil quantity, volumes, opening-stock
+  RACI, retention numbers, and posting mechanism remain unanswered,
+  provided each stays an explicit open extension and no executable schema,
+  SQL, ORM model, or migration is written. No physical type, index, or
+  volume is invented as if decided.
+- Owner: Project sponsor and Chief Solution Architect
+- Validation: Project Owner accepted ASM-017 and approved Phase 04 as
+  APR-006 at `2026-09-06T19:42:00+03:30`. This does **not** close any
+  `OQ-*`, choose a database product, or authorize implementation. Later
+  answers are still required before physical contracts or an OQ-017 ADR
+- Affects: Phase 04 exit, Phase 05 APIs, implementation lock
+- Related questions: OQ-001, OQ-002, OQ-013, OQ-014, OQ-015, OQ-016,
+  OQ-017, OQ-018
+- Related finding: FIND-029

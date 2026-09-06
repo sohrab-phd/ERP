@@ -7,7 +7,7 @@ version: 0.7.0
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-09-06
-approval: APR-005
+approval: APR-006
 supersedes: null
 ---
 
@@ -27,6 +27,7 @@ supersedes: null
 - [CHK-0001 Phase 00 checkpoint](00-governance/approved-baselines/CHK-0001-phase-00.md)
 - [CHK-0002 Phase 01 checkpoint](00-governance/approved-baselines/CHK-0002-phase-01.md)
 - [CHK-0003 Phase 02 checkpoint](00-governance/approved-baselines/CHK-0003-phase-02.md)
+  - [APR-006 Database Architecture approval](00-governance/approved-baselines/APR-006-database-architecture.md)
   - [APR-005 State Machines and Invariants approval](00-governance/approved-baselines/APR-005-state-machines-invariants.md)
   - [APR-004 Domain and Business Architecture approval](00-governance/approved-baselines/APR-004-domain-business-architecture.md)
 - [APR-003 Project Assimilation approval](00-governance/approved-baselines/APR-003-project-assimilation.md)
@@ -91,7 +92,20 @@ supersedes: null
   - [Posting kernel and alternatives](04-database-architecture/POSTING_KERNEL.md)
   - [Transaction and idempotency](04-database-architecture/TRANSACTION_AND_IDEMPOTENCY.md)
   - [Genealogy projection](04-database-architecture/GENEALOGY_PROJECTION.md)
+  - [Logical attribute catalogue](04-database-architecture/LOGICAL_ATTRIBUTE_CATALOGUE.md)
+  - [Retention, migration, and opening stock](04-database-architecture/RETENTION_MIGRATION_OPENING_STOCK.md)
+  - [Invariant enforcement assignment](04-database-architecture/ENFORCEMENT_ASSIGNMENT.md)
+  - [Phase 04 Self-Check](04-database-architecture/SELF_CHECK.md)
+  - [Phase 04 Independent Review](04-database-architecture/INDEPENDENT_REVIEW.md)
+  - [Phase 04 Reconciliation](04-database-architecture/RECONCILIATION.md)
+  - [Phase 04 Gate Checklist](04-database-architecture/GATE_CHECKLIST.md)
+  - [Phase 05 handoff](04-database-architecture/PHASE05_HANDOFF.md)
+  - [APR-006 Checkpoint Procedure](04-database-architecture/CHECKPOINT_APR-006.md)
 - [05 — Application & API Architecture](05-application-api-architecture/README.md)
+  - [Command catalogue](05-application-api-architecture/COMMAND_CATALOGUE.md)
+  - [Query catalogue](05-application-api-architecture/QUERY_CATALOGUE.md)
+  - [Module dependency map](05-application-api-architecture/MODULE_DEPENDENCY_MAP.md)
+  - [Orchestration and idempotency](05-application-api-architecture/ORCHESTRATION.md)
 - [06 — Security, RBAC & Audit](06-security-rbac-audit/README.md)
 - [07 — Testing & Quality Architecture](07-testing-quality-architecture/README.md)
 - [08 — Integration & Deployment](08-integration-deployment/README.md)
@@ -108,7 +122,8 @@ authoritative.
 
 APR-002 approved the seed index. APR-003 approved the Phase 01 navigation
 additions. APR-004 approved Phase 02. CHK-0003 records the checkpoint at
-`ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`. APR-005 approved Phase 03 at
-`2026-09-06T01:18:00+03:30`, including ASM-016. The APR-005 Git checkpoint
-is pending. Phase 04 is `ACTIVE_IN_REVIEW` for logical drafting. Workshop
-execution remains blocked by OQ-019. Implementation remains unauthorized.
+`ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`. APR-005 approved Phase 03.
+APR-006 approved Phase 04 at `2026-09-06T19:42:00+03:30`, including
+ASM-017. Both Git checkpoints are pending. Phase 05 is `ACTIVE_IN_REVIEW`
+for structure drafting. Workshop execution remains blocked by OQ-019.
+Implementation remains unauthorized.

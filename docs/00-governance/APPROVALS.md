@@ -3,11 +3,11 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: approved
-version: 0.6.0
+version: 0.7.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-005
+approval: APR-006
 supersedes: null
 ---
 
@@ -240,3 +240,33 @@ matching `OQ-*` rows when they arrive.
 Approving Phase 03 accepts ASM-016. Temporary identities still have no
 approval authority. Team answers will update the matching `OQ-*` rows
 when they arrive.
+
+### APR-006 — Database Architecture Gate
+
+- Phase: `04-database-architecture`
+- Status: `approved`; checkpoint pending
+- Approval manifest:
+  [APR-006-database-architecture.md](approved-baselines/APR-006-database-architecture.md)
+- Checkpoint procedure:
+  [CHECKPOINT_APR-006.md](../04-database-architecture/CHECKPOINT_APR-006.md)
+- Review package:
+  [GATE_CHECKLIST.md](../04-database-architecture/GATE_CHECKLIST.md)
+- Supporting evidence:
+  [SELF_CHECK.md](../04-database-architecture/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](../04-database-architecture/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](../04-database-architecture/RECONCILIATION.md)
+- Approver: Project Owner (explicit approval in Cursor session)
+- Approval timestamp: `2026-09-06T19:42:00+03:30`
+- Approval scope: Phase 04 logical package and ASM-017; no physical
+  schema, no technology ADRs beyond ADR-0001, no implementation
+- Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
+  ADR-0008, FIND-001, FIND-003, FIND-004, physical design, OQ-017 ADR
+- Git checkpoint: pending
+- Next phase: `05-application-api-architecture`; `ACTIVE_IN_REVIEW` for
+  structure drafting
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+Approving Phase 04 accepts ASM-017. Temporary identities still have no
+approval authority. APR-005 remains approved with its checkpoint also
+pending.

@@ -25,7 +25,7 @@ Ask text and why-it-matters live in
 [TEAM_QUESTION_PACK.md](TEAM_QUESTION_PACK.md). Who to ask lives in
 [WORKSHOP_COLLECTION_MAP.md](../02-domain-business-architecture/WORKSHOP_COLLECTION_MAP.md).
 
-As of: `2026-09-06` after Phase 03 approval (APR-005). All fields
+As of: `2026-09-06` after Phase 04 approval (APR-006). All fields
 below are blank on purpose.
 
 ## Phase 02 — ask first

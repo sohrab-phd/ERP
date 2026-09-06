@@ -7,7 +7,7 @@ version: 0.3.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001, GOV-APPROVALS-001]
 last_reviewed: 2026-09-06
-approval: APR-005
+approval: APR-006
 supersedes: null
 ---
 
@@ -21,6 +21,8 @@ supersedes: null
   superseded by APR-002 after no commit
 - [APR-002 — Renewed Corrected Governance Foundation](APR-002-governance.md) —
   approved; checkpoint completed
+- [APR-006 — Database Architecture](APR-006-database-architecture.md)
+  — approved at `2026-09-06T19:42:00+03:30`; checkpoint pending
 - [APR-005 — State Machines and Invariants](APR-005-state-machines-invariants.md)
   — approved at `2026-09-06T01:18:00+03:30`; checkpoint pending
 - [APR-004 — Domain and Business Architecture](APR-004-domain-business-architecture.md)
@@ -47,7 +49,7 @@ artifact tree.
 Corrections never overwrite a manifest. Create a superseding approval when a
 material change requires reapproval.
 
-APR-005 approves the Phase 03 structure package and ASM-016. The APR-005
-Git checkpoint is pending. Phase 04 logical drafting is authorized.
-OQ-001 through OQ-019 remain unanswered or `treating`. Implementation
-remains unauthorized.
+APR-006 approves the Phase 04 logical package and ASM-017. The APR-005
+and APR-006 Git checkpoints are pending. Phase 05 structure drafting is
+authorized. OQ-001 through OQ-019 remain unanswered or `treating`.
+Implementation remains unauthorized.

@@ -2,12 +2,12 @@
 id: DATA-TX-001
 title: Transaction and Idempotency Design
 phase: 04-database-architecture
-status: in_review
+status: approved
 version: 0.1.0
 owners: [data-architect, chief-solution-architect]
 depends_on: [SM-CONC-001, SM-EVT-001, APR-005]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-006
 supersedes: null
 ---
 

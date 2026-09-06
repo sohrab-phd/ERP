@@ -3,11 +3,11 @@ id: GOV-FINDINGS-001
 title: Review Findings Register
 phase: 00-governance
 status: approved
-version: 0.12.0
+version: 0.13.0
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-005
+approval: APR-006
 supersedes: null
 ---
 
@@ -410,6 +410,24 @@ artifact approval does not close open findings or their linked questions.
   a later-phase obligation, not a silent close of FIND-021.
 - Owner: Requirements owner and QA architect
 - Required correction now: none.
+
+## FIND-029 — Phase 04 physical contract vs logical design-gate
+
+- Severity: high
+- Gate: Phase 04
+- Status: resolved
+- Finding: The Phase 04 contract includes physical schema, types, indexes,
+  volumes, and an inventory-posting ADR. Those cannot be written without
+  OQ-001, OQ-002, OQ-014, OQ-017, and OQ-018. Stopping all architecture
+  work until those answers arrive would halt Phase 04. Writing guessed
+  types would silently close the questions.
+- Treatment: ASM-017 records that a **logical** design-gate may complete
+  with those items as explicit open extensions. No executable schema is
+  written. Idempotency acceptance is a command store, not a new ENT-*.
+- Residual: The Project Owner accepted ASM-017 by approving Phase 04 as
+  APR-006. Physical design and the OQ-017 ADR remain later work.
+- Evidence: DATA-LOGICAL-001; DATA-ATTR-001; DATA-POST-001; DATA-ENF-001;
+  DATA-CUTOVER-001.
 
 ## Downstream suspect policy
 

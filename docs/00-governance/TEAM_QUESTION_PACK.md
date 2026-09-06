@@ -7,7 +7,7 @@ version: 0.3.0
 owners: [chief-solution-architect, project-sponsor]
 depends_on: [GOV-QUESTIONS-001, ASM-015]
 last_reviewed: 2026-09-06
-approval: APR-005
+approval: APR-006
 supersedes: null
 ---
 
@@ -18,7 +18,8 @@ refreshed after every phase gate package. Canonical status stays in
 [OPEN_QUESTIONS.md](registers/OPEN_QUESTIONS.md). This pack does not close
 questions, approve a phase, or authorize implementation.
 
-As of: `2026-09-06` after Phase 03 approval (APR-005). The Project Owner
+As of: `2026-09-06` after Phase 04 approval (APR-006). Phase 03 remains
+approved as APR-005. Both Git checkpoints are pending. The Project Owner
 will return answers in a few days. Architecture work continues; answers are
 not an immediate stop.
 Unanswered: `OQ-001` through `OQ-019`.
@@ -272,8 +273,10 @@ continue. They are not shop-floor facts.
 - Phase 03 is approved as APR-005, including ASM-016. The Git checkpoint
   is pending. These questions stay open.
 - Temporary roster identities still have no approval authority.
-- Phase 04 logical drafting is authorized. Physical types, executable
-  schemas, and posting-mechanism ADRs are not.
+- Phase 04 is approved as APR-006, including ASM-017. Physical types,
+  executable schemas, and posting-mechanism ADRs are still not approved.
+- Phase 05 structure drafting is authorized. Frameworks and packages stay
+  OQ-018.
 - `IMPLEMENTATION_AUTHORIZED` remains `false`.
 - Returned answers will be written onto the matching `OQ-*` row and this
   pack will be refreshed.

@@ -1,19 +1,19 @@
 ---
 id: GOV-CURRENT-001
 title: Current Phase Authorization
-phase: 04-database-architecture
+phase: 05-application-api-architecture
 status: in_review
-version: 0.9.0
+version: 0.11.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-005, ASM-015, ASM-016]
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-006, ASM-015, ASM-016, ASM-017]
 last_reviewed: 2026-09-06
-approval: APR-005
+approval: APR-006
 supersedes: null
 ---
 
 # Current Phase Authorization
 
-CURRENT_PHASE: `04-database-architecture`
+CURRENT_PHASE: `05-application-api-architecture`
 
 CURRENT_GATE_STATUS: `ACTIVE_IN_REVIEW`
 
@@ -26,15 +26,15 @@ baseline and exact allowed paths. Neither condition currently exists.
 
 ## Permitted work
 
-- Draft Phase 04 **logical** Markdown from the approved Phase 03 baseline
+- Draft Phase 05 application and API **structure** Markdown from APR-006
   and
-  [PHASE04_HANDOFF.md](../03-state-machines-invariants/PHASE04_HANDOFF.md).
-- Leave every OQ-owned number, named person, cutoff, UOM, decimal,
-  volume, and posting mechanism as an open extension.
+  [PHASE05_HANDOFF.md](../04-database-architecture/PHASE05_HANDOFF.md).
+- Leave every OQ-owned number, JSON type that needs UOM, named person,
+  package, framework, broker, and ORM as an open extension.
 - Apply team answers onto the matching `OQ-*` row when they arrive.
 - Record and replace `(temporary)` workshop identities as real names arrive.
-- Complete the APR-005 Git checkpoint only after a human-created marker
-  exists.
+- Complete the APR-005 and APR-006 Git checkpoints only after a
+  human-created marker exists.
 - Maintain canonical registers without silently closing open questions or
   accepting unapproved ADRs.
 
@@ -42,22 +42,21 @@ baseline and exact allowed paths. Neither condition currently exists.
 
 - Application, database, API, UI, test, integration, or deployment implementation
 - Framework/package initialization or installation
-- Executable database schemas, SQL files, ORM models, or migrations
-- Physical types, indexes, and volumes stated as decided
+- Executable controllers, OpenAPI files, SQL, ORM models, or migrations
+- Accepting ADR-0006, ADR-0007, ADR-0008, NestJS, Prisma, Socket.IO, or
+  any other package as if decided
 - Inventing UOM, routing, QC, reservation, fulfillment, residual, or
   organization values
-- Accepting ADR-0006, ADR-0007, ADR-0008, or any package
 - Workshop execution or owner-signed business decisions using temporary
   identities
-- Treating `(temporary)` roster names as data stewards who can sign
 - Inventing or editing `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 
 ## Gate condition
 
-Phase 03 is approved as APR-005 at `2026-09-06T01:18:00+03:30`, including
-ASM-016. The APR-005 Git checkpoint is **pending**. Phase 04 logical
-drafting is authorized. Team answers remain required before physical
-contracts or numeric guards can close.
+Phase 04 is approved as APR-006 at `2026-09-06T19:42:00+03:30`, including
+ASM-017. Phase 03 remains approved as APR-005. Both Git checkpoints are
+**pending**. Phase 05 structure drafting is authorized. Team answers
+remain required before typed contracts or platform ADRs can close.
 
 OQ-001 through OQ-019 and proposed ADR-0006 through ADR-0008 remain unresolved.
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
