@@ -7,7 +7,7 @@ version: 0.3.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001, GOV-APPROVALS-001]
 last_reviewed: 2026-09-06
-approval: APR-008
+approval: APR-009
 supersedes: null
 ---
 
@@ -21,8 +21,13 @@ supersedes: null
   superseded by APR-002 after no commit
 - [APR-002 — Renewed Corrected Governance Foundation](APR-002-governance.md) —
   approved; checkpoint completed
+- [APR-009 — Testing and Quality Architecture](APR-009-testing-quality-architecture.md)
+  — approved at `2026-09-06T23:44:00+03:30`; checkpoint pending
 - [APR-008 — Security, RBAC and Audit](APR-008-security-rbac-audit.md)
-  — approved at `2026-09-06T22:59:00+03:30`; checkpoint pending
+  — approved at `2026-09-06T22:59:00+03:30`; checkpoint completed
+- [CHK-0007 — Phase 06 Security RBAC and Audit Checkpoint](CHK-0007-phase-06.md)
+  — completed at `167353573840ef22d23049b864636d7383c61911`; subject
+  `docs: approve phase 06 security rbac audit`; 52 files changed
 - [APR-007 — Application and API Architecture](APR-007-application-api-architecture.md)
   — approved at `2026-09-06T20:31:00+03:30`; checkpoint completed
 - [CHK-0005 — Phase 05 Application and API Architecture Checkpoint](CHK-0005-phase-05.md)
@@ -62,7 +67,7 @@ artifact tree.
 Corrections never overwrite a manifest. Create a superseding approval when a
 material change requires reapproval.
 
-APR-008 approves the Phase 06 structure package and ASM-019. The
-APR-008 Git checkpoint is pending. Phase 07 structure drafting is
+APR-009 approves the Phase 07 structure package and ASM-020. The
+APR-009 Git checkpoint is pending. Phase 08 structure drafting is
 authorized. OQ-001 through OQ-019 remain unanswered or `treating`.
 Implementation remains unauthorized.

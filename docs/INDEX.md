@@ -29,6 +29,8 @@ supersedes: null
 - [CHK-0003 Phase 02 checkpoint](00-governance/approved-baselines/CHK-0003-phase-02.md)
 - [CHK-0004 Phase 04 checkpoint](00-governance/approved-baselines/CHK-0004-phase-04.md)
 - [CHK-0005 Phase 05 checkpoint](00-governance/approved-baselines/CHK-0005-phase-05.md)
+- [CHK-0007 Phase 06 checkpoint](00-governance/approved-baselines/CHK-0007-phase-06.md)
+- [APR-009 Testing and Quality Architecture approval](00-governance/approved-baselines/APR-009-testing-quality-architecture.md)
 - [APR-008 Security RBAC and Audit approval](00-governance/approved-baselines/APR-008-security-rbac-audit.md)
 - [APR-007 Application and API Architecture approval](00-governance/approved-baselines/APR-007-application-api-architecture.md)
 - [APR-006 Database Architecture approval](00-governance/approved-baselines/APR-006-database-architecture.md)
@@ -139,7 +141,19 @@ supersedes: null
   - [Property and kernel intents](07-testing-quality-architecture/PROPERTY_AND_KERNEL_INTENTS.md)
   - [NFR, recovery, and UAT intents](07-testing-quality-architecture/NFR_AND_UAT.md)
   - [Quality gates and evidence](07-testing-quality-architecture/QUALITY_GATES.md)
+  - [Phase 07 Self-Check](07-testing-quality-architecture/SELF_CHECK.md)
+  - [Phase 07 Independent Review](07-testing-quality-architecture/INDEPENDENT_REVIEW.md)
+  - [Phase 07 Reconciliation](07-testing-quality-architecture/RECONCILIATION.md)
+  - [Phase 07 Gate Checklist](07-testing-quality-architecture/GATE_CHECKLIST.md)
+  - [Phase 08 handoff](07-testing-quality-architecture/PHASE08_HANDOFF.md)
+  - [APR-009 Checkpoint Procedure](07-testing-quality-architecture/CHECKPOINT_APR-009.md)
 - [08 — Integration & Deployment](08-integration-deployment/README.md)
+  - [Integration catalogue and adapter contracts](08-integration-deployment/INTEGRATION_CATALOGUE.md)
+  - [External system boundaries](08-integration-deployment/EXTERNAL_BOUNDARIES.md)
+  - [Deployment topology and environment labels](08-integration-deployment/DEPLOYMENT_TOPOLOGY.md)
+  - [Observability kinds](08-integration-deployment/OBSERVABILITY.md)
+  - [Backup, restore, and recovery labels](08-integration-deployment/BACKUP_AND_RECOVERY.md)
+  - [Operational runbook catalogue](08-integration-deployment/RUNBOOK_CATALOGUE.md)
 - [09 — Repository & Documentation](09-repository-documentation/README.md)
 - [10 — AI/Cursor Development Architecture](10-ai-cursor-development/README.md)
 - [11 — Architecture Validation](11-architecture-validation/README.md)
@@ -161,6 +175,9 @@ ASM-017. CHK-0004 records the checkpoint at
 at `2026-09-06T20:31:00+03:30`, including ASM-018. CHK-0005 records the
 checkpoint at `00b30a3064027fd0584c35c5f479b04d087614a6`. APR-008
 approved Phase 06 at `2026-09-06T22:59:00+03:30`, including ASM-019.
-The APR-008 Git checkpoint is pending. Phase 07 is `ACTIVE_IN_REVIEW`
-for structure drafting. Workshop execution remains blocked by OQ-019.
+CHK-0007 records the checkpoint at
+`167353573840ef22d23049b864636d7383c61911`. APR-009 approved Phase 07
+at `2026-09-06T23:44:00+03:30`, including ASM-020. The APR-009 Git
+checkpoint is pending. Phase 08 is `ACTIVE_IN_REVIEW` for structure
+drafting. Workshop execution remains blocked by OQ-019.
 Implementation remains unauthorized.

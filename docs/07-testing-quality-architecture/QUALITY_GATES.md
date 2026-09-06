@@ -2,12 +2,12 @@
 id: QA-GATE-001
 title: Quality Gates and Evidence
 phase: 07-testing-quality-architecture
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [qa-architect, chief-solution-architect]
 depends_on: [QA-STRAT-001, QA-TRACE-001, QA-SCN-001, APR-008]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-009
 supersedes: null
 ---
 
@@ -44,8 +44,9 @@ No gate here authorizes implementation. Phase 12 and a human
 
 ## Orphan rule
 
-If a later implementation adds a command not in APP-CMD-001, it must
-gain an INV/SEC/QA-SCN intent before unlock. Do not leave it unverified.
+If a later implementation adds a command not in APP-CMD-001, or splits a
+DATA-TX-001 bundle, it must gain an INV/SEC/QA-SCN intent before unlock.
+Do not leave it unverified.
 
 ## Must not decide here
 

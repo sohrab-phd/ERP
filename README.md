@@ -6,8 +6,8 @@ traceability, and monitoring system.
 
 ## Current status
 
-- Completed phase: `06-security-rbac-audit` (structure; checkpoint pending)
-- Current phase: `07-testing-quality-architecture`
+- Completed phase: `07-testing-quality-architecture` (structure; checkpoint pending)
+- Current phase: `08-integration-deployment`
 - Gate status: `ACTIVE_IN_REVIEW`
 - Phase 00 approval: `APR-002`; checkpoint completed at
   `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`
@@ -24,7 +24,10 @@ traceability, and monitoring system.
   ASM-018; checkpoint completed at
   `00b30a3064027fd0584c35c5f479b04d087614a6`
 - Phase 06 approval: `APR-008` at `2026-09-06T22:59:00+03:30`, including
-  ASM-019; Git checkpoint pending. Team answers expected in a few days.
+  ASM-019; checkpoint completed at
+  `167353573840ef22d23049b864636d7383c61911`
+- Phase 07 approval: `APR-009` at `2026-09-06T23:44:00+03:30`, including
+  ASM-020; Git checkpoint pending. Team answers expected in a few days.
   OQ-019 still blocks workshop execution
 - Implementation authorized: **No**
 - Application source code, database migrations, package setup, and deployment
@@ -51,9 +54,9 @@ work authorization.
 - `03-state-machines-invariants`: **approved; checkpoint completed**
 - `04-database-architecture`: **approved (logical); checkpoint completed**
 - `05-application-api-architecture`: **approved (structure); checkpoint completed**
-- `06-security-rbac-audit`: **approved (structure); checkpoint pending**
-- `07-testing-quality-architecture`: **in_review; structure drafting**
-- `08-integration-deployment`: planned
+- `06-security-rbac-audit`: **approved (structure); checkpoint completed**
+- `07-testing-quality-architecture`: **approved (structure); checkpoint pending**
+- `08-integration-deployment`: **in_review; structure drafting**
 - `09-repository-documentation`: planned
 - `10-ai-cursor-development`: planned
 - `11-architecture-validation`: planned
@@ -66,6 +69,6 @@ Each phase follows:
 No phase may begin detailed work before its entry criteria are met. Material
 changes to approved architecture reopen affected downstream artifacts.
 
-Phase 06 is approved as APR-008. Phase 07 may draft verification structure
-with open runner and oracle extensions. Temporary workshop identities
-cannot sign decisions. Implementation remains unauthorized.
+Phase 07 is approved as APR-009. Phase 08 may draft integration and
+deployment structure with open product extensions. Temporary workshop
+identities cannot sign decisions. Implementation remains unauthorized.

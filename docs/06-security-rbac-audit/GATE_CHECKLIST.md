@@ -58,7 +58,8 @@ supersedes: null
   at `2026-09-06T22:59:00+03:30`
 - Approval manifest:
   [APR-008](../00-governance/approved-baselines/APR-008-security-rbac-audit.md)
-- Git checkpoint: pending
+- Git checkpoint: completed at
+  `167353573840ef22d23049b864636d7383c61911` (CHK-0007)
 - Authorized next phase: `07-testing-quality-architecture` for
   verification-structure drafting
 

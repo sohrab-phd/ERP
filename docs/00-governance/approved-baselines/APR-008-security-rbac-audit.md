@@ -28,7 +28,9 @@ supersedes: null
   verification **structure** drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 52 files changed
+- Git commit: `167353573840ef22d23049b864636d7383c61911`
+- Git commit subject: `docs: approve phase 06 security rbac audit`
 - Supersedes approval: none
 
 ## Approval boundary
@@ -86,7 +88,7 @@ Exact SHA-256 digests belong in the human-created checkpoint marker.
 - OQ-001 through OQ-019 remain open or `treating`.
 - ADR-0006 through ADR-0008 remain proposed.
 - Identity-product ADRs remain later work.
-- Git checkpoint is pending a human-created marker.
+- Git checkpoint completed at `167353573840ef22d23049b864636d7383c61911`.
 
 ## Reopen conditions
 

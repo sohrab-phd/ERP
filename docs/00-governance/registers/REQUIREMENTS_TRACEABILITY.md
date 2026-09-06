@@ -3,7 +3,7 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: approved
-version: 0.4.0
+version: 0.5.0
 owners: [requirements-owner, qa-architect]
 depends_on: [SRC-001, SRC-002, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-09-06
@@ -53,6 +53,9 @@ evidence and Phase 07.
   INV-013, INV-014, INV-018, INV-020;
   [state machine catalogue](../../03-state-machines-invariants/STATE_MACHINE_CATALOGUE.md);
   [transition tables](../../03-state-machines-invariants/TRANSITION_TABLES.md)
+- Phase 07 verification intents (structure, not tests):
+  [VERIFICATION_TRACE.md](../../07-testing-quality-architecture/VERIFICATION_TRACE.md)
+  QA-SCN-STOCK, QA-SCN-PURCHASE, QA-SCN-MAKE, QA-SCN-NOT-FEASIBLE
 - Status: proposed; detailed REQ-* decomposition remains workshop-owned
 
 ### REQ-OBJ-002 — Correct inventory under concurrency
@@ -75,6 +78,8 @@ evidence and Phase 07.
   INV-001 through INV-004, INV-017;
   SM-RESERVATION, SM-INVENTORY-UNIT, SM-MATERIAL-ALLOCATION;
   [side-effect matrix](../../03-state-machines-invariants/SIDE_EFFECT_MATRIX.md)
+- Phase 07 verification intents (structure, not tests):
+  INV-001–004, INV-016–017; QA-P-NONNEG; QA-SCN-CONFLICT; QA-SCN-BUNDLE
 - Status: proposed; numeric UOM, Coil, and reservation guards remain open
 
 ### REQ-OBJ-003 — Bidirectional material genealogy
@@ -97,6 +102,8 @@ evidence and Phase 07.
 - Phase 03 design evidence:
   INV-006 through INV-009, INV-019;
   SM-PRODUCTION-ORDER, SM-PRODUCTION-OPERATION, SM-RESIDUAL, SM-SCRAP
+- Phase 07 verification intents (structure, not tests):
+  QA-SCN-MAKE; QA-P-GEN-*; QA-SCN-REJECT-GENEALOGY
 - Status: proposed; official posting points, tracking, and residual cutoff
   remain open
 
@@ -121,6 +128,8 @@ evidence and Phase 07.
   INV-005, INV-010 through INV-016;
   [exception workflows](../../03-state-machines-invariants/EXCEPTION_CORRECTION.md);
   [event and rejection catalogue](../../03-state-machines-invariants/EVENT_AND_REJECTION.md)
+- Phase 07 verification intents (structure, not tests):
+  QA-SCN-REVERSE; QA-SCN-QC-HOLD; QA-SCN-SOD; QA-SCN-SOD-GR
 - Status: proposed; QC, tolerance, and Sales Order closure guards remain open
 
 ### REQ-OBJ-005 — Maintainable Node.js/TypeScript platform
@@ -134,6 +143,8 @@ evidence and Phase 07.
   [Workshop Agenda sections 10 and 11](../../01-project-assimilation/WORKSHOP_AGENDA.md)
 - Open question: OQ-018
 - Risks: RISK-004, RISK-009, RISK-012
+- Phase 07 verification intents (structure, not tests):
+  QG-ARCH only; runner/CI stay OQ-018; no package claimed
 - Status: confirmed objective; solution undecided
 
 ## Coverage policy
@@ -141,6 +152,9 @@ evidence and Phase 07.
 Phase 02 maps objectives to capabilities, ownership, processes, and proposed
 BR-* rules. Phase 03 assigns proposed `INV-*` IDs and lifecycle structure. It
 does not mint a false-precision REQ-* catalogue before workshop evidence
-(FIND-021, FIND-028). Phases 04–08 extend each row with physical data,
-interfaces, controls, and tests. Phase 11 rejects any in-scope row with a
-missing mandatory link.
+(FIND-021, FIND-028). Phase 07 adds verification **intent** links (levels,
+`QA-SCN-*`, `QA-P-*`, SV map). It does not mint `TEST-*` IDs or choose a
+runner. Phases 04–08 extend each row with physical data, interfaces,
+controls, and later tests. Phase 11 rejects any in-scope row with a
+missing mandatory link. Phase 07 is approved as APR-009 (structure);
+these intent links are not executable tests.

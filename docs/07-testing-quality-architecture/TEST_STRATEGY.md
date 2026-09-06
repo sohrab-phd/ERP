@@ -2,12 +2,12 @@
 id: QA-STRAT-001
 title: Test Strategy and Levels
 phase: 07-testing-quality-architecture
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [qa-architect]
 depends_on: [SEC-P07-HANDOFF-001, APP-CMD-001, SM-SEQ-001, APR-008]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-009
 supersedes: null
 ---
 
@@ -28,6 +28,9 @@ forbids a false-precision `TEST-*` ID catalogue. Intents cite `INV-*`,
 3. Quantity asserts that need UOM or Coil rules stay open (OQ-001,
    OQ-002).
 4. A worker or UI test must not become a second stock writer.
+5. Every command in APP-CMD-001 inherits `L-COMMAND`: backend `ACT-*`,
+   idempotency key, and `GUARD_OPEN_POLICY` when an unanswered OQ is
+   required. That standing rule is not a `TEST-*` row per command.
 
 ## Levels (labels)
 

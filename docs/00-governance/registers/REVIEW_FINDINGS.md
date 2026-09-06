@@ -3,11 +3,11 @@ id: GOV-FINDINGS-001
 title: Review Findings Register
 phase: 00-governance
 status: in_review
-version: 0.14.0
+version: 0.16.0
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-008
+approval: APR-009
 supersedes: null
 ---
 
@@ -483,6 +483,46 @@ artifact approval does not close open findings or their linked questions.
   APR-008. Identity-product ADRs remain later work.
 - Evidence: SEC-THREAT-001; SEC-RBAC-001; SEC-ISO-001; SEC-ID-001;
   SEC-AUD-001; SEC-VER-001.
+
+## FIND-033 — Phase 07 structure vs runner/oracle/named-tester freeze
+
+- Severity: high
+- Gate: Phase 07
+- Status: resolved
+- Finding: The Phase 07 contract includes verification strategy,
+  environments, UAT, and quality gates. Those cannot be frozen as Jest,
+  Playwright, k6, GitHub Actions, a decimal oracle, volume targets,
+  RPO/RTO minutes, or named testers without OQ-018, OQ-001 / OQ-002,
+  OQ-014, OQ-016, and OQ-019. Stopping all architecture work until those
+  answers arrive would halt Phase 07. Writing guessed packages, numbers,
+  or names would silently close the questions.
+- Treatment: ASM-020 records that a **structure** design-gate may
+  complete with those items as explicit open extensions. No test code,
+  runner, or CI is written.
+- Residual: The Project Owner accepted ASM-020 by approving Phase 07 as
+  APR-009. Test-runner ADRs remain later work.
+- Evidence: QA-STRAT-001; QA-TRACE-001; QA-SCN-001; QA-PROP-001;
+  QA-NFR-001; QA-GATE-001.
+
+## FIND-034 — Phase 08 structure vs integration/deployment-product freeze
+
+- Severity: high
+- Gate: Phase 08
+- Status: treating
+- Finding: The Phase 08 contract includes adapters, topology,
+  observability, backup/recovery, and runbooks. Those cannot be frozen
+  as a weighbridge protocol, accounting product, Docker, cloud,
+  observability stack, backup vendor, or RPO/RTO minutes without
+  OQ-011, OQ-012, OQ-016, and OQ-018. Stopping all architecture work
+  until those answers arrive would halt Phase 08. Writing guessed
+  products or minutes would silently close the questions.
+- Treatment: ASM-021 records that a **structure** design-gate may
+  complete with those items as explicit open extensions. No adapter
+  code, Dockerfile, or deployment manifest is written.
+- Residual: The Project Owner must accept or reject ASM-021 at the
+  Phase 08 gate. Rejecting ASM-021 returns this gate to `BLOCKED`.
+- Evidence: INT-CAT-001; INT-EXT-001; DEP-TOPO-001; DEP-OBS-001;
+  DEP-DR-001; DEP-RUN-001.
 
 ## Downstream suspect policy
 

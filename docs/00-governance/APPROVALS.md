@@ -3,11 +3,11 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: approved
-version: 0.8.0
+version: 0.9.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-008
+approval: APR-009
 supersedes: null
 ---
 
@@ -318,9 +318,11 @@ approval authority. These recording edits enter a later checkpoint.
 ### APR-008 — Security, RBAC and Audit Gate
 
 - Phase: `06-security-rbac-audit`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-008-security-rbac-audit.md](approved-baselines/APR-008-security-rbac-audit.md)
+- Checkpoint record:
+  [CHK-0007-phase-06.md](approved-baselines/CHK-0007-phase-06.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-008.md](../06-security-rbac-audit/CHECKPOINT_APR-008.md)
 - Review package:
@@ -335,12 +337,46 @@ approval authority. These recording edits enter a later checkpoint.
   freeze, no technology ADRs beyond ADR-0001, no implementation
 - Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
   ADR-0008, identity-product ADRs
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 52 files changed
+- Git commit: `167353573840ef22d23049b864636d7383c61911`
+- Git commit subject: `docs: approve phase 06 security rbac audit`
+- Checkpoint marker: still present after commit; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 - Next phase: `07-testing-quality-architecture`; `ACTIVE_IN_REVIEW` for
   structure drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
 
 Approving Phase 06 accepts ASM-019. Temporary identities still have no
+approval authority. These recording edits enter a later checkpoint.
+
+### APR-009 — Testing and Quality Architecture Gate
+
+- Phase: `07-testing-quality-architecture`
+- Status: `approved`; checkpoint pending
+- Approval manifest:
+  [APR-009-testing-quality-architecture.md](approved-baselines/APR-009-testing-quality-architecture.md)
+- Checkpoint procedure:
+  [CHECKPOINT_APR-009.md](../07-testing-quality-architecture/CHECKPOINT_APR-009.md)
+- Review package:
+  [GATE_CHECKLIST.md](../07-testing-quality-architecture/GATE_CHECKLIST.md)
+- Supporting evidence:
+  [SELF_CHECK.md](../07-testing-quality-architecture/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](../07-testing-quality-architecture/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](../07-testing-quality-architecture/RECONCILIATION.md)
+- Approver: Project Owner (explicit approval in Cursor session)
+- Approval timestamp: `2026-09-06T23:44:00+03:30`
+- Approval scope: Phase 07 structure package and ASM-020; no Jest/
+  Playwright/CI freeze, no technology ADRs beyond ADR-0001, no
+  implementation
+- Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
+  ADR-0008, test-runner ADRs
+- Git checkpoint: pending
+- Next phase: `08-integration-deployment`; `ACTIVE_IN_REVIEW` for
+  structure drafting
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+Approving Phase 07 accepts ASM-020. Temporary identities still have no
 approval authority. Team answers will update the matching `OQ-*` rows
 when they arrive.
