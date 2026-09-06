@@ -6,8 +6,8 @@ traceability, and monitoring system.
 
 ## Current status
 
-- Completed phase: `04-database-architecture` (logical; checkpoint pending)
-- Current phase: `05-application-api-architecture`
+- Completed phase: `05-application-api-architecture` (structure; checkpoint pending)
+- Current phase: `06-security-rbac-audit`
 - Gate status: `ACTIVE_IN_REVIEW`
 - Phase 00 approval: `APR-002`; checkpoint completed at
   `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`
@@ -17,7 +17,10 @@ traceability, and monitoring system.
   `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`
 - Phase 03 approval: `APR-005`; Git checkpoint pending
 - Phase 04 approval: `APR-006` at `2026-09-06T19:42:00+03:30`, including
-  ASM-017; Git checkpoint pending. Team answers expected in a few days.
+  ASM-017; checkpoint completed at
+  `87f9f10442d58fbd224dce09f46c862eb8707e8f`
+- Phase 05 approval: `APR-007` at `2026-09-06T20:31:00+03:30`, including
+  ASM-018; Git checkpoint pending. Team answers expected in a few days.
   OQ-019 still blocks workshop execution
 - Implementation authorized: **No**
 - Application source code, database migrations, package setup, and deployment
@@ -42,9 +45,9 @@ work authorization.
 - `01-project-assimilation`: **approved; checkpoint completed; phase complete**
 - `02-domain-business-architecture`: **approved; checkpoint completed**
 - `03-state-machines-invariants`: **approved; checkpoint pending**
-- `04-database-architecture`: **approved (logical); checkpoint pending**
-- `05-application-api-architecture`: **in_review; structure drafting**
-- `06-security-rbac-audit`: planned
+- `04-database-architecture`: **approved (logical); checkpoint completed**
+- `05-application-api-architecture`: **approved (structure); checkpoint pending**
+- `06-security-rbac-audit`: **in_review; structure drafting**
 - `07-testing-quality-architecture`: planned
 - `08-integration-deployment`: planned
 - `09-repository-documentation`: planned
@@ -59,6 +62,6 @@ Each phase follows:
 No phase may begin detailed work before its entry criteria are met. Material
 changes to approved architecture reopen affected downstream artifacts.
 
-Phase 04 is approved as APR-006. Phase 05 may draft application structure
-with open package extensions. Temporary workshop identities cannot sign
-decisions. Implementation remains unauthorized.
+Phase 05 is approved as APR-007. Phase 06 may draft security structure
+with open package and named-person extensions. Temporary workshop
+identities cannot sign decisions. Implementation remains unauthorized.

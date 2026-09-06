@@ -2,12 +2,12 @@
 id: PHASE-05
 title: Application and API Architecture
 phase: 05-application-api-architecture
-status: in_review
-version: 0.2.0
+status: approved
+version: 0.4.0
 owners: [solution-architect, api-architect]
-depends_on: [PHASE-04, APR-006, DATA-P05-HANDOFF-001]
+depends_on: [PHASE-04, APR-006, APR-007, DATA-P05-HANDOFF-001, ASM-018]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-007
 supersedes: null
 ---
 
@@ -15,18 +15,17 @@ supersedes: null
 
 ## Gate
 
-Gate status: `ACTIVE_IN_REVIEW`
+Gate status: `APPROVED`
 
-Lifecycle: `in_review`
+Lifecycle: `approved`
 
-Approval: `null`
+Approval: `APR-007` at `2026-09-06T20:31:00+03:30`, including ASM-018
+(structure baseline)
 
-Phase 04 is approved as APR-006. Structure drafting is authorized. The
-APR-005 and APR-006 Git checkpoints are pending. Framework and package
-choices remain OQ-018. Node.js + TypeScript (ADR-0001) is the only
-accepted technology ADR.
+Git checkpoint: pending. See [CHECKPOINT_APR-007.md](CHECKPOINT_APR-007.md).
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Phase 06 is authorized for **structure** drafting. Team answers remain
+open. `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
 ## Purpose
 
@@ -39,29 +38,28 @@ contracts, transactional orchestration, background work, and real-time behavior.
 - [x] [Query catalogue](QUERY_CATALOGUE.md)
 - [x] [Module dependency map](MODULE_DEPENDENCY_MAP.md)
 - [x] [Orchestration and idempotency](ORCHESTRATION.md)
-- [ ] API envelope and error-shape sketch (no OpenAPI file)
-- [ ] Framework/package ADRs — **not** in this draft; OQ-018
-- [ ] Worker/Outbox/real-time designs — proposed labels only; no package
-- [ ] Self-check, independent review, reconciliation, gate checklist
+- [x] [API envelope and error-shape sketch](API_ENVELOPE.md)
+- [x] [Background work and real-time labels](BACKGROUND_AND_REALTIME.md)
+- [ ] Framework/package ADRs — **not** in this baseline; OQ-018
+- [x] [Self-check](SELF_CHECK.md)
+- [x] [Independent review](INDEPENDENT_REVIEW.md)
+- [x] [Reconciliation](RECONCILIATION.md)
+- [x] [Gate checklist](GATE_CHECKLIST.md)
+- [x] [Phase 06 handoff](PHASE06_HANDOFF.md)
+- [x] [APR-007 checkpoint procedure](CHECKPOINT_APR-007.md)
 
 ## Entry criteria
 
 - [x] Phase 04 is approved as APR-006.
-- [ ] Phase 04 Git checkpoint — pending; does not block structure drafting.
-
-## How this phase works while answers are still arriving
-
-Draft command, query, and module structure first. Leave request JSON
-types that need UOM, and every framework/package, as open extensions.
-Do not initialize NestJS, Prisma, or any other stack. Do not write
-controllers.
+- [x] Phase 04 Git checkpoint — completed at
+  `87f9f10442d58fbd224dce09f46c862eb8707e8f` (CHK-0004).
 
 ## Exit criteria
 
-- Node.js framework choices are justified rather than assumed **or**
-  still explicit open extensions with OQ-018.
+- Node.js framework choices remain explicit open extensions with OQ-018
+  (ASM-018 accepted).
 - No module bypasses canonical ownership or transaction rules.
 - API and event contracts trace to states, invariants, and authorization.
-- The user explicitly approves Phase 05.
+- The user explicitly approved Phase 05 as APR-007.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

@@ -2,12 +2,12 @@
 id: APP-CMD-001
 title: Application Command Catalogue
 phase: 05-application-api-architecture
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [solution-architect, api-architect]
-depends_on: [SM-TRANS-001, SM-EVT-001, APR-006]
+depends_on: [SM-TRANS-001, SM-EVT-001, APR-006, APR-007]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-007
 supersedes: null
 ---
 
@@ -32,7 +32,8 @@ Every command requires a caller-supplied idempotency key and a backend
 | actor_role | `ACT-*`; Temporary \* `(temporary)` → `GUARD_ACTOR` |
 | open policy | unanswered OQ needed by the command → `GUARD_OPEN_POLICY` |
 
-Transport (REST, RPC, queue) is not chosen.
+Transport (REST, RPC, queue) is not chosen. Logical request and result
+fields are in [API_ENVELOPE.md](API_ENVELOPE.md).
 
 ## Sales (`BC-SALES`)
 

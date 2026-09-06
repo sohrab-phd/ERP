@@ -2,12 +2,12 @@
 id: GOV-ASSUMPTIONS-001
 title: Assumption Register
 phase: 00-governance
-status: approved
-version: 0.7.0
+status: in_review
+version: 0.8.0
 owners: [chief-solution-architect]
 depends_on: [SRC-001, ASM-REPORT-001]
 last_reviewed: 2026-09-06
-approval: APR-006
+approval: APR-007
 supersedes: null
 ---
 
@@ -18,9 +18,9 @@ None of these entries is a confirmed business decision.
 
 APR-002 approved this register's Phase 00 seed version. APR-003 approved the
 Phase 01 version as assimilation evidence. APR-004 accepted ASM-014 for the
-Phase 02 design-gate. The current version is approved as APR-005 because Phase 03
-added ASM-016. Individual assumptions retain their recorded validation
-status; artifact approval does not confirm them as business facts.
+Phase 02 design-gate. The current version is `in_review` because Phase 05 added ASM-018.
+APR-007 accepted ASM-018. Individual assumptions retain their recorded
+validation status; artifact approval does not confirm shop-floor facts.
 
 ## ASM-001 — Single legal entity and principal site
 
@@ -199,3 +199,23 @@ status; artifact approval does not confirm them as business facts.
 - Related questions: OQ-001, OQ-002, OQ-013, OQ-014, OQ-015, OQ-016,
   OQ-017, OQ-018
 - Related finding: FIND-029
+
+## ASM-018 — Phase 05 structure design-gate may complete with open platform extensions
+
+- Status: accepted
+- Statement: Phase 05 structure drafting and a Phase 05 **structure**
+  design-gate may complete while transport, OpenAPI, framework, ORM,
+  outbox/broker, real-time library, UOM JSON types, and ADR-0006 through
+  ADR-0008 remain unanswered, provided each stays an explicit open
+  extension and no controller, OpenAPI file, package manifest, or
+  worker process is written. No HTTP contract or package is invented
+  as if decided.
+- Owner: Project sponsor and Chief Solution Architect
+- Validation: Project Owner accepted ASM-018 and approved Phase 05 as
+  APR-007 at `2026-09-06T20:31:00+03:30`. This does **not** close any
+  `OQ-*`, accept a framework, or authorize implementation. Later
+  answers are still required before typed API contracts or platform ADRs
+- Affects: Phase 05 exit, Phase 06 security contracts, implementation lock
+- Related questions: OQ-001, OQ-002, OQ-010, OQ-013, OQ-014, OQ-017,
+  OQ-018, OQ-019
+- Related finding: FIND-030

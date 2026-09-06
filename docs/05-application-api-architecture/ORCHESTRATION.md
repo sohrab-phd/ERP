@@ -2,12 +2,12 @@
 id: APP-ORCH-001
 title: Command Orchestration and Idempotency
 phase: 05-application-api-architecture
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [solution-architect]
-depends_on: [DATA-TX-001, SM-CONC-001, APP-CMD-001, APR-006]
+depends_on: [DATA-TX-001, SM-CONC-001, APP-CMD-001, APR-006, APR-007]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-007
 supersedes: null
 ---
 
@@ -50,7 +50,8 @@ How the bundle is committed stays OQ-017.
 ## Background work
 
 Retry of a failed *transport* uses the same idempotency key. A durable
-scheduler, Outbox, or Socket.IO is **not** selected. If a later ADR
+scheduler, Outbox, or Socket.IO is **not** selected. Labels only are in
+[BACKGROUND_AND_REALTIME.md](BACKGROUND_AND_REALTIME.md). If a later ADR
 needs a worker, it must still obey INV-016 and must not become a second
 stock writer.
 

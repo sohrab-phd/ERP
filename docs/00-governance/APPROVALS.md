@@ -3,11 +3,11 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: approved
-version: 0.7.0
+version: 0.8.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-006
+approval: APR-007
 supersedes: null
 ---
 
@@ -244,9 +244,11 @@ when they arrive.
 ### APR-006 — Database Architecture Gate
 
 - Phase: `04-database-architecture`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-006-database-architecture.md](approved-baselines/APR-006-database-architecture.md)
+- Checkpoint record:
+  [CHK-0004-phase-04.md](approved-baselines/CHK-0004-phase-04.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-006.md](../04-database-architecture/CHECKPOINT_APR-006.md)
 - Review package:
@@ -261,12 +263,45 @@ when they arrive.
   schema, no technology ADRs beyond ADR-0001, no implementation
 - Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
   ADR-0008, FIND-001, FIND-003, FIND-004, physical design, OQ-017 ADR
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 29 files changed
+- Git commit: `87f9f10442d58fbd224dce09f46c862eb8707e8f`
+- Git commit subject: `docs: approve phase 04 database architecture`
+- Checkpoint marker: still present after commit; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 - Next phase: `05-application-api-architecture`; `ACTIVE_IN_REVIEW` for
   structure drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
 
 Approving Phase 04 accepts ASM-017. Temporary identities still have no
-approval authority. APR-005 remains approved with its checkpoint also
-pending.
+approval authority. These recording edits enter a later checkpoint.
+
+### APR-007 — Application and API Architecture Gate
+
+- Phase: `05-application-api-architecture`
+- Status: `approved`; checkpoint pending
+- Approval manifest:
+  [APR-007-application-api-architecture.md](approved-baselines/APR-007-application-api-architecture.md)
+- Checkpoint procedure:
+  [CHECKPOINT_APR-007.md](../05-application-api-architecture/CHECKPOINT_APR-007.md)
+- Review package:
+  [GATE_CHECKLIST.md](../05-application-api-architecture/GATE_CHECKLIST.md)
+- Supporting evidence:
+  [SELF_CHECK.md](../05-application-api-architecture/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](../05-application-api-architecture/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](../05-application-api-architecture/RECONCILIATION.md)
+- Approver: Project Owner (explicit approval in Cursor session)
+- Approval timestamp: `2026-09-06T20:31:00+03:30`
+- Approval scope: Phase 05 structure package and ASM-018; no HTTP/OpenAPI
+  freeze, no technology ADRs beyond ADR-0001, no implementation
+- Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
+  ADR-0008, FIND-001, FIND-003, FIND-004, platform ADRs
+- Git checkpoint: pending
+- Next phase: `06-security-rbac-audit`; `ACTIVE_IN_REVIEW` for structure
+  drafting
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+Approving Phase 05 accepts ASM-018. Temporary identities still have no
+approval authority. Team answers will update the matching `OQ-*` rows
+when they arrive.

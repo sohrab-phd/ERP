@@ -14,9 +14,9 @@ supersedes: null
 # APR-006 Checkpoint Procedure
 
 The Project Owner explicitly approved Phase 04 as APR-006 at
-`2026-09-06T19:42:00+03:30`, including ASM-017. The Git checkpoint is
-**pending**. The APR-005 (Phase 03) checkpoint is also still pending.
-This procedure does not authorize a marker invented by the agent.
+`2026-09-06T19:42:00+03:30`, including ASM-017. The human-controlled
+checkpoint completed successfully. This procedure now preserves that
+history. It does not authorize another marker, staging action, or commit.
 
 ## Intended commit
 
@@ -55,9 +55,16 @@ The generator binds SHA-256 and git blob OIDs. The agent must not create
 ## Current state
 
 - Gate result: `APPROVED` (logical baseline)
-- Phase 04: approved as a logical baseline
-- Git checkpoint: pending
-- APR-005 Git checkpoint: still pending
-- Next phase: `05-application-api-architecture`; `ACTIVE_IN_REVIEW` for
-  structure drafting
+- Phase 04: complete as a logical baseline
+- Git checkpoint: completed successfully; 29 files changed
+- Git commit: `87f9f10442d58fbd224dce09f46c862eb8707e8f`
+- Git commit subject: `docs: approve phase 04 database architecture`
+- Checkpoint record:
+  [CHK-0004](../00-governance/approved-baselines/CHK-0004-phase-04.md)
+- Checkpoint marker: still present; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
+- Next phase: `05-application-api-architecture`; `ACTIVE_IN_REVIEW`
 - Implementation authorization: none
+
+This recording update enters a later explicitly approved checkpoint. It
+does not require or authorize an immediate recursive checkpoint.

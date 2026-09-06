@@ -27,7 +27,9 @@ supersedes: null
   drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 29 files changed
+- Git commit: `87f9f10442d58fbd224dce09f46c862eb8707e8f`
+- Git commit subject: `docs: approve phase 04 database architecture`
 - Supersedes approval: none
 
 ## Approval boundary

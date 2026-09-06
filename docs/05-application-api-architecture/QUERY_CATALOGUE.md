@@ -2,12 +2,12 @@
 id: APP-QRY-001
 title: Application Query Catalogue
 phase: 05-application-api-architecture
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [solution-architect, api-architect]
-depends_on: [APP-CMD-001, DATA-GEN-001, APR-006]
+depends_on: [APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-007
 supersedes: null
 ---
 

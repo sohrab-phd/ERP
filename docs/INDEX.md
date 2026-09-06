@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: approved
-version: 0.7.0
+version: 0.8.0
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-09-06
@@ -27,7 +27,9 @@ supersedes: null
 - [CHK-0001 Phase 00 checkpoint](00-governance/approved-baselines/CHK-0001-phase-00.md)
 - [CHK-0002 Phase 01 checkpoint](00-governance/approved-baselines/CHK-0002-phase-01.md)
 - [CHK-0003 Phase 02 checkpoint](00-governance/approved-baselines/CHK-0003-phase-02.md)
-  - [APR-006 Database Architecture approval](00-governance/approved-baselines/APR-006-database-architecture.md)
+- [CHK-0004 Phase 04 checkpoint](00-governance/approved-baselines/CHK-0004-phase-04.md)
+- [APR-007 Application and API Architecture approval](00-governance/approved-baselines/APR-007-application-api-architecture.md)
+- [APR-006 Database Architecture approval](00-governance/approved-baselines/APR-006-database-architecture.md)
   - [APR-005 State Machines and Invariants approval](00-governance/approved-baselines/APR-005-state-machines-invariants.md)
   - [APR-004 Domain and Business Architecture approval](00-governance/approved-baselines/APR-004-domain-business-architecture.md)
 - [APR-003 Project Assimilation approval](00-governance/approved-baselines/APR-003-project-assimilation.md)
@@ -106,7 +108,21 @@ supersedes: null
   - [Query catalogue](05-application-api-architecture/QUERY_CATALOGUE.md)
   - [Module dependency map](05-application-api-architecture/MODULE_DEPENDENCY_MAP.md)
   - [Orchestration and idempotency](05-application-api-architecture/ORCHESTRATION.md)
+  - [API envelope and error-shape sketch](05-application-api-architecture/API_ENVELOPE.md)
+  - [Background work and real-time labels](05-application-api-architecture/BACKGROUND_AND_REALTIME.md)
+  - [Phase 05 Self-Check](05-application-api-architecture/SELF_CHECK.md)
+  - [Phase 05 Independent Review](05-application-api-architecture/INDEPENDENT_REVIEW.md)
+  - [Phase 05 Reconciliation](05-application-api-architecture/RECONCILIATION.md)
+  - [Phase 05 Gate Checklist](05-application-api-architecture/GATE_CHECKLIST.md)
+  - [Phase 06 handoff](05-application-api-architecture/PHASE06_HANDOFF.md)
+  - [APR-007 Checkpoint Procedure](05-application-api-architecture/CHECKPOINT_APR-007.md)
 - [06 — Security, RBAC & Audit](06-security-rbac-audit/README.md)
+  - [Threat model and trust boundaries](06-security-rbac-audit/THREAT_MODEL.md)
+  - [Role permission and scope matrix](06-security-rbac-audit/ROLE_PERMISSION_MATRIX.md)
+  - [Customer isolation policy](06-security-rbac-audit/CUSTOMER_ISOLATION.md)
+  - [Session and identity policy labels](06-security-rbac-audit/SESSION_AND_IDENTITY.md)
+  - [Audit and evidence taxonomy](06-security-rbac-audit/AUDIT_TAXONOMY.md)
+  - [Security verification catalogue](06-security-rbac-audit/SECURITY_VERIFICATION.md)
 - [07 — Testing & Quality Architecture](07-testing-quality-architecture/README.md)
 - [08 — Integration & Deployment](08-integration-deployment/README.md)
 - [09 — Repository & Documentation](09-repository-documentation/README.md)
@@ -124,6 +140,9 @@ APR-002 approved the seed index. APR-003 approved the Phase 01 navigation
 additions. APR-004 approved Phase 02. CHK-0003 records the checkpoint at
 `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`. APR-005 approved Phase 03.
 APR-006 approved Phase 04 at `2026-09-06T19:42:00+03:30`, including
-ASM-017. Both Git checkpoints are pending. Phase 05 is `ACTIVE_IN_REVIEW`
-for structure drafting. Workshop execution remains blocked by OQ-019.
-Implementation remains unauthorized.
+ASM-017. CHK-0004 records the checkpoint at
+`87f9f10442d58fbd224dce09f46c862eb8707e8f`. APR-007 approved Phase 05
+at `2026-09-06T20:31:00+03:30`, including ASM-018. The APR-007 Git
+checkpoint is pending. Phase 06 is `ACTIVE_IN_REVIEW` for structure
+drafting. Workshop execution remains blocked by OQ-019. Implementation
+remains unauthorized.

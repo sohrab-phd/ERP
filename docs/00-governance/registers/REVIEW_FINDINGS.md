@@ -2,12 +2,12 @@
 id: GOV-FINDINGS-001
 title: Review Findings Register
 phase: 00-governance
-status: approved
-version: 0.13.0
+status: in_review
+version: 0.14.0
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-006
+approval: APR-007
 supersedes: null
 ---
 
@@ -428,6 +428,25 @@ artifact approval does not close open findings or their linked questions.
   APR-006. Physical design and the OQ-017 ADR remain later work.
 - Evidence: DATA-LOGICAL-001; DATA-ATTR-001; DATA-POST-001; DATA-ENF-001;
   DATA-CUTOVER-001.
+
+## FIND-030 — Phase 05 structure vs transport/package freeze
+
+- Severity: high
+- Gate: Phase 05
+- Status: resolved
+- Finding: The Phase 05 contract includes API contracts, background
+  work, and real-time behavior. Those cannot be frozen as HTTP, OpenAPI,
+  NestJS, Prisma, Outbox, or Socket.IO without OQ-018 (and UOM types
+  without OQ-001 / OQ-002). Stopping all architecture work until those
+  answers arrive would halt Phase 05. Writing guessed packages would
+  silently close the questions.
+- Treatment: ASM-018 records that a **structure** design-gate may
+  complete with those items as explicit open extensions. No controller,
+  OpenAPI file, or package is written.
+- Residual: The Project Owner accepted ASM-018 by approving Phase 05 as
+  APR-007. Platform ADRs remain later work.
+- Evidence: APP-CMD-001; APP-QRY-001; APP-MOD-001; APP-ORCH-001;
+  APP-ENV-001; APP-BG-001.
 
 ## Downstream suspect policy
 

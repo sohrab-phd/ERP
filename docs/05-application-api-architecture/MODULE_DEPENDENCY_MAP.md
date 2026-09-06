@@ -2,12 +2,12 @@
 id: APP-MOD-001
 title: Application Module Dependency Map
 phase: 05-application-api-architecture
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [solution-architect]
-depends_on: [DOM-OWN-001, APR-006]
+depends_on: [DOM-OWN-001, APR-006, APR-007]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-007
 supersedes: null
 ---
 
