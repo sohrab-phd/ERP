@@ -2,12 +2,12 @@
 id: PHASE-06
 title: Security RBAC and Audit
 phase: 06-security-rbac-audit
-status: in_review
-version: 0.2.0
+status: approved
+version: 0.4.0
 owners: [security-architect, business-control-owner]
-depends_on: [PHASE-05, APR-007, APP-P06-HANDOFF-001]
+depends_on: [PHASE-05, APR-007, APR-008, APP-P06-HANDOFF-001, ASM-019]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-008
 supersedes: null
 ---
 
@@ -15,17 +15,17 @@ supersedes: null
 
 ## Gate
 
-Gate status: `ACTIVE_IN_REVIEW`
+Gate status: `APPROVED`
 
-Lifecycle: `in_review`
+Lifecycle: `approved`
 
-Approval: `null`
+Approval: `APR-008` at `2026-09-06T22:59:00+03:30`, including ASM-019
+(structure baseline)
 
-Phase 05 is approved as APR-007. Structure drafting is authorized. The
-APR-007 Git checkpoint is pending. Auth packages, MFA products, and
-identity providers remain OQ-018. Named people remain OQ-019.
+Git checkpoint: pending. See [CHECKPOINT_APR-008.md](CHECKPOINT_APR-008.md).
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Phase 07 is authorized for **structure** drafting. Team answers remain
+open. `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
 ## Purpose
 
@@ -40,28 +40,27 @@ of duties, audit evidence, security events, and data-protection controls.
 - [x] [Session and identity policy labels](SESSION_AND_IDENTITY.md)
 - [x] [Audit and evidence taxonomy](AUDIT_TAXONOMY.md)
 - [x] [Security verification catalogue](SECURITY_VERIFICATION.md)
-- [ ] Auth/session/MFA package ADRs — **not** in this draft; OQ-018
-- [ ] Self-check, independent review, reconciliation, gate checklist
+- [ ] Auth/session/MFA package ADRs — **not** in this baseline; OQ-018
+- [x] [Self-check](SELF_CHECK.md)
+- [x] [Independent review](INDEPENDENT_REVIEW.md)
+- [x] [Reconciliation](RECONCILIATION.md)
+- [x] [Gate checklist](GATE_CHECKLIST.md)
+- [x] [Phase 07 handoff](PHASE07_HANDOFF.md)
+- [x] [APR-008 checkpoint procedure](CHECKPOINT_APR-008.md)
 
 ## Entry criteria
 
 - [x] Phase 05 application **structure** is approved as APR-007.
-- [ ] Phase 05 Git checkpoint — pending; does not block structure drafting.
-
-## How this phase works while answers are still arriving
-
-Draft role-to-command rules, isolation, and audit types first. Leave
-named people, auth packages, portal exposure, site tenancy, and
-retention days as open extensions. Do not choose JWT, Keycloak, or any
-other identity product.
+- [x] Phase 05 Git checkpoint — completed at
+  `00b30a3064027fd0584c35c5f479b04d087614a6` (CHK-0005).
 
 ## Exit criteria
 
 - Every sensitive command has an explicit authorization rule.
 - Tenant/customer isolation covers APIs, exports, files, events, and reports.
 - Audit types and correction evidence are non-conflicting.
-- Auth packages remain explicit open extensions with OQ-018 **or** an
-  accepted later ADR.
-- The user explicitly approves Phase 06.
+- Auth packages remain explicit open extensions with OQ-018 (ASM-019
+  accepted).
+- The user explicitly approved Phase 06 as APR-008.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

@@ -28,9 +28,12 @@ supersedes: null
 - [CHK-0002 Phase 01 checkpoint](00-governance/approved-baselines/CHK-0002-phase-01.md)
 - [CHK-0003 Phase 02 checkpoint](00-governance/approved-baselines/CHK-0003-phase-02.md)
 - [CHK-0004 Phase 04 checkpoint](00-governance/approved-baselines/CHK-0004-phase-04.md)
+- [CHK-0005 Phase 05 checkpoint](00-governance/approved-baselines/CHK-0005-phase-05.md)
+- [APR-008 Security RBAC and Audit approval](00-governance/approved-baselines/APR-008-security-rbac-audit.md)
 - [APR-007 Application and API Architecture approval](00-governance/approved-baselines/APR-007-application-api-architecture.md)
 - [APR-006 Database Architecture approval](00-governance/approved-baselines/APR-006-database-architecture.md)
-  - [APR-005 State Machines and Invariants approval](00-governance/approved-baselines/APR-005-state-machines-invariants.md)
+  - [CHK-0006 Phase 03 checkpoint](00-governance/approved-baselines/CHK-0006-phase-03.md)
+- [APR-005 State Machines and Invariants approval](00-governance/approved-baselines/APR-005-state-machines-invariants.md)
   - [APR-004 Domain and Business Architecture approval](00-governance/approved-baselines/APR-004-domain-business-architecture.md)
 - [APR-003 Project Assimilation approval](00-governance/approved-baselines/APR-003-project-assimilation.md)
 - [APR-002 renewed corrected Governance Foundation approval](00-governance/approved-baselines/APR-002-governance.md)
@@ -123,7 +126,19 @@ supersedes: null
   - [Session and identity policy labels](06-security-rbac-audit/SESSION_AND_IDENTITY.md)
   - [Audit and evidence taxonomy](06-security-rbac-audit/AUDIT_TAXONOMY.md)
   - [Security verification catalogue](06-security-rbac-audit/SECURITY_VERIFICATION.md)
+  - [Phase 06 Self-Check](06-security-rbac-audit/SELF_CHECK.md)
+  - [Phase 06 Independent Review](06-security-rbac-audit/INDEPENDENT_REVIEW.md)
+  - [Phase 06 Reconciliation](06-security-rbac-audit/RECONCILIATION.md)
+  - [Phase 06 Gate Checklist](06-security-rbac-audit/GATE_CHECKLIST.md)
+  - [Phase 07 handoff](06-security-rbac-audit/PHASE07_HANDOFF.md)
+  - [APR-008 Checkpoint Procedure](06-security-rbac-audit/CHECKPOINT_APR-008.md)
 - [07 — Testing & Quality Architecture](07-testing-quality-architecture/README.md)
+  - [Test strategy and levels](07-testing-quality-architecture/TEST_STRATEGY.md)
+  - [Verification trace](07-testing-quality-architecture/VERIFICATION_TRACE.md)
+  - [Scenario catalogue](07-testing-quality-architecture/SCENARIO_CATALOGUE.md)
+  - [Property and kernel intents](07-testing-quality-architecture/PROPERTY_AND_KERNEL_INTENTS.md)
+  - [NFR, recovery, and UAT intents](07-testing-quality-architecture/NFR_AND_UAT.md)
+  - [Quality gates and evidence](07-testing-quality-architecture/QUALITY_GATES.md)
 - [08 — Integration & Deployment](08-integration-deployment/README.md)
 - [09 — Repository & Documentation](09-repository-documentation/README.md)
 - [10 — AI/Cursor Development Architecture](10-ai-cursor-development/README.md)
@@ -139,10 +154,13 @@ authoritative.
 APR-002 approved the seed index. APR-003 approved the Phase 01 navigation
 additions. APR-004 approved Phase 02. CHK-0003 records the checkpoint at
 `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`. APR-005 approved Phase 03.
-APR-006 approved Phase 04 at `2026-09-06T19:42:00+03:30`, including
+CHK-0006 records the freeze at
+`bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`. APR-006 approved Phase 04 at `2026-09-06T19:42:00+03:30`, including
 ASM-017. CHK-0004 records the checkpoint at
 `87f9f10442d58fbd224dce09f46c862eb8707e8f`. APR-007 approved Phase 05
-at `2026-09-06T20:31:00+03:30`, including ASM-018. The APR-007 Git
-checkpoint is pending. Phase 06 is `ACTIVE_IN_REVIEW` for structure
-drafting. Workshop execution remains blocked by OQ-019. Implementation
-remains unauthorized.
+at `2026-09-06T20:31:00+03:30`, including ASM-018. CHK-0005 records the
+checkpoint at `00b30a3064027fd0584c35c5f479b04d087614a6`. APR-008
+approved Phase 06 at `2026-09-06T22:59:00+03:30`, including ASM-019.
+The APR-008 Git checkpoint is pending. Phase 07 is `ACTIVE_IN_REVIEW`
+for structure drafting. Workshop execution remains blocked by OQ-019.
+Implementation remains unauthorized.

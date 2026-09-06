@@ -7,7 +7,7 @@ version: 0.8.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-007
+approval: APR-008
 supersedes: null
 ---
 
@@ -212,9 +212,11 @@ matching `OQ-*` rows when they arrive.
 ### APR-005 — State Machines and Invariants Gate
 
 - Phase: `03-state-machines-invariants`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-005-state-machines-invariants.md](approved-baselines/APR-005-state-machines-invariants.md)
+- Checkpoint record:
+  [CHK-0006-phase-03.md](approved-baselines/CHK-0006-phase-03.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-005.md](../03-state-machines-invariants/CHECKPOINT_APR-005.md)
 - Review package:
@@ -231,15 +233,17 @@ matching `OQ-*` rows when they arrive.
 - Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
   ADR-0008, FIND-001, FIND-003, FIND-004, FIND-020 residual, FIND-023,
   FIND-026, FIND-028
-- Git checkpoint: pending
-- Next phase: `04-database-architecture`; `ACTIVE_IN_REVIEW` for logical
-  drafting with open extensions
+- Git checkpoint: completed (late register recording)
+- Git commit: `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`
+- Git commit subject: `docs:approve phase 03 state machine invariants`
+- Next phase: `04-database-architecture`; already approved as APR-006
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
 
 Approving Phase 03 accepts ASM-016. Temporary identities still have no
-approval authority. Team answers will update the matching `OQ-*` rows
-when they arrive.
+approval authority. CHK-0006 records the freeze that already existed at
+`bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`. That recording was omitted
+from the register until FIND-031.
 
 ### APR-006 — Database Architecture Gate
 
@@ -279,9 +283,11 @@ approval authority. These recording edits enter a later checkpoint.
 ### APR-007 — Application and API Architecture Gate
 
 - Phase: `05-application-api-architecture`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-007-application-api-architecture.md](approved-baselines/APR-007-application-api-architecture.md)
+- Checkpoint record:
+  [CHK-0005-phase-05.md](approved-baselines/CHK-0005-phase-05.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-007.md](../05-application-api-architecture/CHECKPOINT_APR-007.md)
 - Review package:
@@ -296,12 +302,45 @@ approval authority. These recording edits enter a later checkpoint.
   freeze, no technology ADRs beyond ADR-0001, no implementation
 - Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
   ADR-0008, FIND-001, FIND-003, FIND-004, platform ADRs
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 35 files changed
+- Git commit: `00b30a3064027fd0584c35c5f479b04d087614a6`
+- Git commit subject: `docs: approve phase 05 application api architecture`
+- Checkpoint marker: still present after commit; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 - Next phase: `06-security-rbac-audit`; `ACTIVE_IN_REVIEW` for structure
   drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
 
 Approving Phase 05 accepts ASM-018. Temporary identities still have no
+approval authority. These recording edits enter a later checkpoint.
+
+### APR-008 — Security, RBAC and Audit Gate
+
+- Phase: `06-security-rbac-audit`
+- Status: `approved`; checkpoint pending
+- Approval manifest:
+  [APR-008-security-rbac-audit.md](approved-baselines/APR-008-security-rbac-audit.md)
+- Checkpoint procedure:
+  [CHECKPOINT_APR-008.md](../06-security-rbac-audit/CHECKPOINT_APR-008.md)
+- Review package:
+  [GATE_CHECKLIST.md](../06-security-rbac-audit/GATE_CHECKLIST.md)
+- Supporting evidence:
+  [SELF_CHECK.md](../06-security-rbac-audit/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](../06-security-rbac-audit/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](../06-security-rbac-audit/RECONCILIATION.md)
+- Approver: Project Owner (explicit approval in Cursor session)
+- Approval timestamp: `2026-09-06T22:59:00+03:30`
+- Approval scope: Phase 06 structure package and ASM-019; no JWT/Keycloak
+  freeze, no technology ADRs beyond ADR-0001, no implementation
+- Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
+  ADR-0008, identity-product ADRs
+- Git checkpoint: pending
+- Next phase: `07-testing-quality-architecture`; `ACTIVE_IN_REVIEW` for
+  structure drafting
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+Approving Phase 06 accepts ASM-019. Temporary identities still have no
 approval authority. Team answers will update the matching `OQ-*` rows
 when they arrive.

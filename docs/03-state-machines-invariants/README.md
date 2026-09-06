@@ -21,7 +21,11 @@ Lifecycle: `approved`
 
 Approval: `APR-005` at `2026-09-06T01:18:00+03:30`, including ASM-016
 
-Git checkpoint: pending. See [CHECKPOINT_APR-005.md](CHECKPOINT_APR-005.md).
+Git checkpoint: completed at
+`bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`
+([CHK-0006](../00-governance/approved-baselines/CHK-0006-phase-03.md),
+late register recording).
+See [CHECKPOINT_APR-005.md](CHECKPOINT_APR-005.md).
 
 Phase 04 is authorized for **logical** drafting. Team answers remain open.
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

@@ -38,8 +38,9 @@ was performed. No physical type or volume was invented.
 - Logical model, attribute catalogue, posting kernel comparison,
   transaction/idempotency, genealogy projection, cutover/retention, and
   enforcement assignment exist and are `in_review`.
-- Phase 03 remains approved as APR-005. The APR-005 Git checkpoint is
-  still pending and does not block this logical draft.
+- Phase 03 remains approved as APR-005. The APR-005 Git freeze is at
+  `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c` (CHK-0006) and does not
+  block this logical draft.
 - Physical schema, indexes, and volumes are not claimed.
 
 ### Ownership and forbidden writes — PASS
@@ -78,7 +79,7 @@ was performed. No physical type or volume was invented.
 - Independent review, reconciliation, and human approval of this
   **logical** design-gate, including accept or reject of ASM-017.
 - Workshop answers before physical types, volumes, or an OQ-017 ADR.
-- APR-005 Git checkpoint when the human marker exists.
+- APR-005 Git freeze recorded as CHK-0006; do not create a second one.
 - Phase 05 after Phase 04 approval and checkpoint.
 
 ## Result
@@ -95,5 +96,6 @@ answered.
 
 The Project Owner explicitly approved Phase 04 as `APR-006` at
 `2026-09-06T19:42:00+03:30`, including ASM-017. OQ-001 through OQ-019
-remain open or `treating`. The Git checkpoint remains pending. Phase 05
-structure drafting is authorized. Implementation remains unauthorized.
+remain open or `treating`. The Git checkpoint later completed as
+CHK-0004. Phase 05 structure drafting is authorized. Implementation
+remains unauthorized.

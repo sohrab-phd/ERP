@@ -55,7 +55,7 @@ Sponsor must accept or reject ASM-018 at approval.
   above.
 - Artifacts marked suspect: none. Phase 06 is authorized after APR-007.
 - Gates requiring reopen: none. Phase 04 stays approved; CHK-0004 is
-  complete. The APR-005 Git checkpoint remains pending.
+  complete. The APR-005 Git freeze is recorded as CHK-0006.
 
 ## Remaining blockers
 

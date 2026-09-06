@@ -19,8 +19,9 @@ supersedes: null
   [README.md](README.md).
 - [x] Entry criteria for structure drafting are satisfied: Phase 04 is
   approved (APR-006 / CHK-0004); framework ADRs stay proposed.
-- [ ] Phase 03 Git checkpoint — pending; not required to present this
-  structure package.
+- [x] Phase 03 Git checkpoint — completed at
+  `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c` (CHK-0006); not required
+  to have been recorded before presenting this structure package.
 - [ ] Team answers close UOM, platform, volumes, and named people —
   **not** required for this structure gate if ASM-018 is accepted.
 - [x] ASM-018 is accepted by the Project Owner as a structure
@@ -55,7 +56,8 @@ supersedes: null
   at `2026-09-06T20:31:00+03:30`
 - Approval manifest:
   [APR-007](../00-governance/approved-baselines/APR-007-application-api-architecture.md)
-- Git checkpoint: pending
+- Git checkpoint: completed at
+  `00b30a3064027fd0584c35c5f479b04d087614a6`
 - Authorized next phase: `06-security-rbac-audit` for identity, RBAC,
   and audit structure drafting
 

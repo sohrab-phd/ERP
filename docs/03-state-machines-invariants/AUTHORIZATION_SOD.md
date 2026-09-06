@@ -83,4 +83,4 @@ by themselves require a second human.
 - QC exception names and limits (OQ-005)
 - Phase 06 control IDs — now drafted as `SEC-001`–`SEC-007` in
   [ROLE_PERMISSION_MATRIX.md](../06-security-rbac-audit/ROLE_PERMISSION_MATRIX.md);
-  not approved until the Phase 06 gate
+  approved as APR-008

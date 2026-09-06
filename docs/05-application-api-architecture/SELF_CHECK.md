@@ -40,8 +40,9 @@ deployment work was performed. No framework was initialized.
   `in_review`.
 - Framework/package ADRs are explicitly **not** in this draft (OQ-018).
 - Phase 04 remains approved as APR-006 / CHK-0004.
-- The APR-005 Git checkpoint is still pending and does not block this
-  structure draft.
+- The APR-005 Git freeze already existed at
+  `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`; CHK-0006 records it and
+  does not block this structure draft.
 
 ### Ownership and forbidden writes — PASS
 

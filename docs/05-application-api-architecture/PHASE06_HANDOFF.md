@@ -16,8 +16,8 @@ supersedes: null
 This is a Phase 05 design artifact. Phase 05 is approved as APR-007.
 Phase 06 structure drafting is authorized by
 [CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md). The APR-007 Git
-checkpoint is still pending. This handoff does not authorize application
-code or any package.
+checkpoint is complete at `00b30a3064027fd0584c35c5f479b04d087614a6`.
+This handoff does not authorize application code or any package.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 

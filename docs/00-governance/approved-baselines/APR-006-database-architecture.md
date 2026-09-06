@@ -70,8 +70,8 @@ OQ-001 through OQ-019 remain unanswered or `treating`.
 Phase 03 approved content (APR-005) and Phase 05 structure drafts started
 after this approval are **not** approved by this gate. If they exist at
 marker creation they must still be listed because the generator binds the
-complete changed-file set. APR-005 remains approved with its own
-checkpoint still pending.
+complete changed-file set. APR-005 remains approved. Its Git freeze
+already existed at `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c` (CHK-0006).
 
 Exact SHA-256 digests belong in the human-created checkpoint marker.
 
@@ -87,7 +87,10 @@ Exact SHA-256 digests belong in the human-created checkpoint marker.
 - OQ-001 through OQ-019 remain open or `treating`.
 - ADR-0006 through ADR-0008 remain proposed.
 - Physical schema and the OQ-017 ADR remain later work.
-- Git checkpoints for APR-005 and APR-006 are pending human markers.
+- Git checkpoint for APR-006 completed at
+  `87f9f10442d58fbd224dce09f46c862eb8707e8f`. The APR-005 freeze already
+  existed at `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`; CHK-0006 records
+  it.
 
 ## Reopen conditions
 

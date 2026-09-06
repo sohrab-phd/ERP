@@ -7,7 +7,7 @@ version: 0.3.0
 owners: [chief-solution-architect, project-sponsor]
 depends_on: [GOV-QUESTIONS-001, ASM-015]
 last_reviewed: 2026-09-06
-approval: APR-007
+approval: APR-008
 supersedes: null
 ---
 
@@ -18,11 +18,10 @@ refreshed after every phase gate package. Canonical status stays in
 [OPEN_QUESTIONS.md](registers/OPEN_QUESTIONS.md). This pack does not close
 questions, approve a phase, or authorize implementation.
 
-As of: `2026-09-06` after Phase 05 approval (APR-007), including ASM-018.
-Phase 03 remains approved as APR-005; its Git checkpoint is still
-pending. The APR-007 Git checkpoint is also pending. The Project Owner
-will return answers in a few days. Architecture work continues; answers
-are not an immediate stop.
+As of: `2026-09-06` after Phase 06 approval (APR-008), including ASM-019.
+The APR-008 Git checkpoint is pending. The Project Owner will return
+answers in a few days. Architecture work continues; answers are not an
+immediate stop.
 Unanswered: `OQ-001` through `OQ-019`.
 Phase 00 and Phase 01 left **no remaining phase-owned unanswered questions**.
 Every item below was raised in Phase 01 assimilation and is still open.
@@ -265,23 +264,28 @@ These are not extra questions. They ride with the OQs above. Say `keep`,
 | ASM-011 | A small team must be able to maintain the system | sponsor |
 | ASM-012 | Historical snapshots and correction evidence are kept | controls |
 
-ASM-013, ASM-014, ASM-016, ASM-017, and ASM-018 are process assumptions
-already used so design can continue. They are not shop-floor facts.
+ASM-013, ASM-014, ASM-016, ASM-017, ASM-018, and ASM-019 are process
+assumptions already used so design can continue. They are not shop-floor
+facts.
 
 ## Work that continues while answers are pending
 
 - Phase 02 remains approved as APR-004 / CHK-0003.
-- Phase 03 is approved as APR-005, including ASM-016. The Git checkpoint
-  is pending. These questions stay open.
+- Phase 03 is approved as APR-005, including ASM-016. CHK-0006 records
+  the freeze at `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`. These
+  questions stay open.
 - Temporary roster identities still have no approval authority.
 - Phase 04 is approved as APR-006, including ASM-017. CHK-0004 records
   the checkpoint at `87f9f10442d58fbd224dce09f46c862eb8707e8f`. Physical
   types, executable schemas, and posting-mechanism ADRs are still not
   approved.
-- Phase 05 is approved as APR-007, including ASM-018. The Git checkpoint
-  is pending. Frameworks and packages stay OQ-018.
-- Phase 06 structure drafting is authorized. Named people, auth
-  packages, and retention days stay open.
+- Phase 05 is approved as APR-007, including ASM-018. CHK-0005 records
+  the checkpoint at `00b30a3064027fd0584c35c5f479b04d087614a6`.
+  Frameworks and packages stay OQ-018.
+- Phase 06 is approved as APR-008, including ASM-019. The Git checkpoint
+  is pending. Named people, auth packages, and retention days stay open.
+- Phase 07 structure drafting is authorized. Test runners and quantity
+  oracles stay open.
 - `IMPLEMENTATION_AUTHORIZED` remains `false`.
 - Returned answers will be written onto the matching `OQ-*` row and this
   pack will be refreshed.

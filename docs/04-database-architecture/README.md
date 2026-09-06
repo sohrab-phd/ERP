@@ -59,7 +59,8 @@ Physical schema, indexes, and volumes remain later work under ASM-017.
 - [x] Phase 03 is approved as APR-005.
 - [x] Inventory posting alternatives are drafted as a comparison, not an
       accepted ADR (OQ-017).
-- [ ] Phase 03 Git checkpoint — pending.
+- [x] Phase 03 Git checkpoint — completed at
+  `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c` (CHK-0006).
 
 ## Exit criteria
 

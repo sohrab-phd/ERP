@@ -2,12 +2,12 @@
 id: SEC-RBAC-001
 title: Role Permission and Scope Matrix
 phase: 06-security-rbac-audit
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [security-architect, business-control-owner]
-depends_on: [DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007]
+depends_on: [DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-008
 supersedes: null
 ---
 
@@ -40,7 +40,7 @@ with the owning bounded context.
 | --- | --- | --- | --- |
 | Sales inquiry/quotation/order (non-cancel) | ACT-SALES | no | no |
 | CloseSalesOrder | ACT-SALES | no | open: OQ-007 |
-| Sales cancel / hold after confirm | ACT-SALES | no | recommended; named authority OQ-019 |
+| Sales cancel / hold after confirm | ACT-SALES | no | not a closed SoD pair; named authority stays OQ-019 if later required |
 | PortalRequestInquiry / any PortalPlaceOrder | none in MVP | no | n/a — `GUARD_PORTAL_MVP` |
 | Purchase Order draft/submit/send | ACT-PROC | no | no |
 | ApprovePurchaseOrder | ACT-PROC | no | named approver OQ-019 |
@@ -51,7 +51,7 @@ with the owning bounded context.
 | ReturnUnit after SHIPPED | commander ACT-SHIP or ACT-WH; executor ACT-IPS | ACT-IPS | different from dispatcher (OQ-019) |
 | Production plan/release/pause/resume | ACT-PLAN | no | no |
 | Shop-floor operation facts | ACT-OP records; ACT-IPS posts | ACT-IPS | no — operator does not sign policy |
-| AbortProductionOrder / post-post cancel | ACT-PLAN | ACT-IPS for reversals | residual/scrap already recorded |
+| AbortProductionOrder / post-post cancel | ACT-PLAN | ACT-IPS for reversals | residual/scrap already recorded; open: OQ-003 |
 | Quality inspection and hold/release command | ACT-QC | ACT-IPS when commanded | ConditionallyRelease named person OQ-005 |
 | Package / Shipment (with demand) | ACT-SHIP | ACT-IPS on dispatch | no |
 | DraftShipment without customer/order | ACT-SHIP | ACT-IPS if later dispatched | exceptional authority OQ-019 |

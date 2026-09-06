@@ -55,8 +55,8 @@ approval.
 - Artifacts confirmed for this logical gate: the seven Phase 04 drafts
   above.
 - Artifacts marked suspect: none. Phase 05 remains `planned`.
-- Gates requiring reopen: none. Phase 03 stays approved; its Git
-  checkpoint remains pending.
+- Gates requiring reopen: none. Phase 03 stays approved; CHK-0006
+  records its Git freeze.
 
 ## Remaining blockers
 

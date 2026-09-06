@@ -65,7 +65,9 @@ supersedes: null
   at `2026-09-06T01:18:00+03:30`
 - Approval manifest:
   [APR-005](../00-governance/approved-baselines/APR-005-state-machines-invariants.md)
-- Git checkpoint: pending
+- Git checkpoint: completed at
+  `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c` (CHK-0006, late register
+  recording)
 - Authorized next phase: `04-database-architecture` for logical drafting
 
 This approval accepts ASM-016. It does not execute the workshop, replace

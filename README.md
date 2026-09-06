@@ -6,8 +6,8 @@ traceability, and monitoring system.
 
 ## Current status
 
-- Completed phase: `05-application-api-architecture` (structure; checkpoint pending)
-- Current phase: `06-security-rbac-audit`
+- Completed phase: `06-security-rbac-audit` (structure; checkpoint pending)
+- Current phase: `07-testing-quality-architecture`
 - Gate status: `ACTIVE_IN_REVIEW`
 - Phase 00 approval: `APR-002`; checkpoint completed at
   `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`
@@ -15,12 +15,16 @@ traceability, and monitoring system.
   `91273e9e30ead2f19203fab2f82d5f23911ee0aa`
 - Phase 02 approval: `APR-004`; checkpoint completed at
   `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db`
-- Phase 03 approval: `APR-005`; Git checkpoint pending
+- Phase 03 approval: `APR-005`; checkpoint completed at
+  `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`
 - Phase 04 approval: `APR-006` at `2026-09-06T19:42:00+03:30`, including
   ASM-017; checkpoint completed at
   `87f9f10442d58fbd224dce09f46c862eb8707e8f`
 - Phase 05 approval: `APR-007` at `2026-09-06T20:31:00+03:30`, including
-  ASM-018; Git checkpoint pending. Team answers expected in a few days.
+  ASM-018; checkpoint completed at
+  `00b30a3064027fd0584c35c5f479b04d087614a6`
+- Phase 06 approval: `APR-008` at `2026-09-06T22:59:00+03:30`, including
+  ASM-019; Git checkpoint pending. Team answers expected in a few days.
   OQ-019 still blocks workshop execution
 - Implementation authorized: **No**
 - Application source code, database migrations, package setup, and deployment
@@ -44,11 +48,11 @@ work authorization.
 - `00-governance`: **approved; checkpoint completed**
 - `01-project-assimilation`: **approved; checkpoint completed; phase complete**
 - `02-domain-business-architecture`: **approved; checkpoint completed**
-- `03-state-machines-invariants`: **approved; checkpoint pending**
+- `03-state-machines-invariants`: **approved; checkpoint completed**
 - `04-database-architecture`: **approved (logical); checkpoint completed**
-- `05-application-api-architecture`: **approved (structure); checkpoint pending**
-- `06-security-rbac-audit`: **in_review; structure drafting**
-- `07-testing-quality-architecture`: planned
+- `05-application-api-architecture`: **approved (structure); checkpoint completed**
+- `06-security-rbac-audit`: **approved (structure); checkpoint pending**
+- `07-testing-quality-architecture`: **in_review; structure drafting**
 - `08-integration-deployment`: planned
 - `09-repository-documentation`: planned
 - `10-ai-cursor-development`: planned
@@ -62,6 +66,6 @@ Each phase follows:
 No phase may begin detailed work before its entry criteria are met. Material
 changes to approved architecture reopen affected downstream artifacts.
 
-Phase 05 is approved as APR-007. Phase 06 may draft security structure
-with open package and named-person extensions. Temporary workshop
-identities cannot sign decisions. Implementation remains unauthorized.
+Phase 06 is approved as APR-008. Phase 07 may draft verification structure
+with open runner and oracle extensions. Temporary workshop identities
+cannot sign decisions. Implementation remains unauthorized.

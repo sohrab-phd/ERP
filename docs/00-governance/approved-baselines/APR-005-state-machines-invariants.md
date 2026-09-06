@@ -26,7 +26,7 @@ supersedes: null
 - Authorized next phase: `04-database-architecture` for **logical** drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
+- Git checkpoint: completed at `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`
 - Supersedes approval: none
 
 ## Approval boundary
@@ -103,7 +103,9 @@ Exact SHA-256 digests belong in the human-created checkpoint marker.
 - Temporary workshop identities confer no approval authority.
 - Phase 04 may draft logical structure with open extensions; it may not
   invent numeric policy or write executable schemas.
-- Git checkpoint is pending a human-created marker.
+- Git checkpoint completed at `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`
+  (CHK-0006, late register recording). Do not create a second Phase 03
+  freeze.
 
 ## Reopen conditions
 

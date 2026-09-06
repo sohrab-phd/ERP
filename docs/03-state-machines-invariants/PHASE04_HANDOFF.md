@@ -16,8 +16,8 @@ supersedes: null
 This is a Phase 03 design artifact. Phase 03 is approved as APR-005.
 Phase 04 logical drafting is authorized by
 [CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md). The APR-005 Git
-checkpoint is still pending. This handoff does not authorize executable
-schemas or implementation.
+checkpoint is complete at `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`.
+This handoff does not authorize executable schemas or implementation.
 
 Team answers remain required before Phase 04 can freeze UOM, decimal,
 posting-mechanism, or residual-cutoff physical contracts. They are not

@@ -7,7 +7,7 @@ version: 0.3.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001, GOV-APPROVALS-001]
 last_reviewed: 2026-09-06
-approval: APR-007
+approval: APR-008
 supersedes: null
 ---
 
@@ -21,15 +21,23 @@ supersedes: null
   superseded by APR-002 after no commit
 - [APR-002 — Renewed Corrected Governance Foundation](APR-002-governance.md) —
   approved; checkpoint completed
+- [APR-008 — Security, RBAC and Audit](APR-008-security-rbac-audit.md)
+  — approved at `2026-09-06T22:59:00+03:30`; checkpoint pending
 - [APR-007 — Application and API Architecture](APR-007-application-api-architecture.md)
-  — approved at `2026-09-06T20:31:00+03:30`; checkpoint pending
+  — approved at `2026-09-06T20:31:00+03:30`; checkpoint completed
+- [CHK-0005 — Phase 05 Application and API Architecture Checkpoint](CHK-0005-phase-05.md)
+  — completed at `00b30a3064027fd0584c35c5f479b04d087614a6`; subject
+  `docs: approve phase 05 application api architecture`; 35 files changed
 - [APR-006 — Database Architecture](APR-006-database-architecture.md)
   — approved at `2026-09-06T19:42:00+03:30`; checkpoint completed
 - [CHK-0004 — Phase 04 Database Architecture Checkpoint](CHK-0004-phase-04.md)
   — completed at `87f9f10442d58fbd224dce09f46c862eb8707e8f`; subject
   `docs: approve phase 04 database architecture`; 29 files changed
 - [APR-005 — State Machines and Invariants](APR-005-state-machines-invariants.md)
-  — approved at `2026-09-06T01:18:00+03:30`; checkpoint pending
+  — approved at `2026-09-06T01:18:00+03:30`; checkpoint completed
+- [CHK-0006 — Phase 03 State Machines and Invariants Checkpoint](CHK-0006-phase-03.md)
+  — Git freeze at `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`; late
+  register recording; subject `docs:approve phase 03 state machine invariants`
 - [APR-004 — Domain and Business Architecture](APR-004-domain-business-architecture.md)
   — approved at `2026-09-06T00:31:00+03:30`; checkpoint completed
 - [CHK-0003 — Phase 02 Domain and Business Architecture Checkpoint](CHK-0003-phase-02.md)
@@ -54,7 +62,7 @@ artifact tree.
 Corrections never overwrite a manifest. Create a superseding approval when a
 material change requires reapproval.
 
-APR-007 approves the Phase 05 structure package and ASM-018. The
-APR-007 Git checkpoint is pending. Phase 06 structure drafting is
+APR-008 approves the Phase 06 structure package and ASM-019. The
+APR-008 Git checkpoint is pending. Phase 07 structure drafting is
 authorized. OQ-001 through OQ-019 remain unanswered or `treating`.
 Implementation remains unauthorized.

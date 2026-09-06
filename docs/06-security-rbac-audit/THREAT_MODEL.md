@@ -2,12 +2,12 @@
 id: SEC-THREAT-001
 title: Threat Model and Trust Boundaries
 phase: 06-security-rbac-audit
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [security-architect]
-depends_on: [APP-CMD-001, APP-MOD-001, APR-007]
+depends_on: [APP-CMD-001, APP-MOD-001, APR-007, APR-008]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-008
 supersedes: null
 ---
 
@@ -43,7 +43,7 @@ A UI check is not a trust boundary (INV-015).
 | `THR-004` | Same key posted twice / new key used to hide a retry | INV-016; first result wins | Key store product |
 | `THR-005` | Customer A reads customer B | Isolation on every query, export, event, file | Portal product (OQ-010) |
 | `THR-006` | `PortalPlaceOrder` in MVP | `GUARD_PORTAL_MVP` (INV-020) | Later portal decision |
-| `THR-007` | One human both issues and voids Invoice/Payment | SoD second role required | Named second person (OQ-019) |
+| `THR-007` | One human both issues and voids Invoice/Payment, or reverses their own Goods Receipt | SoD second role required | Named second person (OQ-019) |
 | `THR-008` | `EditGenealogy` or `AdjustBalance` | Commands do not exist | None |
 | `THR-009` | Worker becomes a second stock writer | Background kinds command, they do not post | Scheduler package (OQ-018) |
 | `THR-010` | Device posts stock without a Goods Receipt command | Device is a commander only | Weighbridge identity (OQ-011) |

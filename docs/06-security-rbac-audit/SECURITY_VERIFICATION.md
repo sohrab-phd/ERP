@@ -2,12 +2,12 @@
 id: SEC-VER-001
 title: Security Verification Catalogue
 phase: 06-security-rbac-audit
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [security-architect, qa-architect]
-depends_on: [SEC-THREAT-001, SEC-RBAC-001, SEC-ISO-001, SEC-ID-001, SEC-AUD-001, APR-007]
+depends_on: [SEC-THREAT-001, SEC-RBAC-001, SEC-ISO-001, SEC-ID-001, SEC-AUD-001, APR-007, APR-008]
 last_reviewed: 2026-09-06
-approval: null
+approval: APR-008
 supersedes: null
 ---
 
@@ -30,6 +30,7 @@ package (OQ-018).
 | `SV-005` | Customer A query cannot return customer B payload | INV-015, THR-005 |
 | `SV-006` | `PortalPlaceOrder` is rejected in MVP | INV-020, THR-006 |
 | `SV-007` | VoidInvoice / ReversePayment without a second distinct identity is rejected | SEC-006, THR-007 |
+| `SV-013` | ReverseGoodsReceipt without a different human than the original post is rejected | SM-SOD-001, OQ-015, OQ-019 |
 | `SV-008` | `EditGenealogy` and `AdjustBalance` are not callable | INV-019, THR-008 |
 | `SV-009` | A worker retry is not a second stock writer | APP-BG-001, THR-009 |
 | `SV-010` | Command that needs an unanswered OQ returns `GUARD_OPEN_POLICY` | ASM-016, THR-012 |

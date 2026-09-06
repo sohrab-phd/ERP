@@ -65,7 +65,8 @@ ASM-018. This verdict is not human approval.
   exists.
 - This reviewer cannot certify NestJS, Prisma, or a worker topology
   that OQ-018 has not chosen.
-- The APR-005 Git checkpoint is still pending.
+- The APR-005 Git freeze already existed at
+  `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c` (CHK-0006).
 
 ## Required next action
 

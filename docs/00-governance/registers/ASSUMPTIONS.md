@@ -7,7 +7,7 @@ version: 0.8.0
 owners: [chief-solution-architect]
 depends_on: [SRC-001, ASM-REPORT-001]
 last_reviewed: 2026-09-06
-approval: APR-007
+approval: APR-008
 supersedes: null
 ---
 
@@ -219,3 +219,23 @@ validation status; artifact approval does not confirm shop-floor facts.
 - Related questions: OQ-001, OQ-002, OQ-010, OQ-013, OQ-014, OQ-017,
   OQ-018, OQ-019
 - Related finding: FIND-030
+
+## ASM-019 — Phase 06 structure design-gate may complete with open identity extensions
+
+- Status: accepted
+- Statement: Phase 06 structure drafting and a Phase 06 **structure**
+  design-gate may complete while named people, auth/session/MFA
+  products, portal exposure, site tenancy, weighbridge identity, and
+  retention days remain unanswered, provided each stays an explicit
+  open extension and no identity middleware, JWT, Keycloak, or other
+  security package is written. No password day-count or MFA mandate is
+  invented as if decided.
+- Owner: Project sponsor and Chief Solution Architect
+- Validation: Project Owner accepted ASM-019 and approved Phase 06 as
+  APR-008 at `2026-09-06T22:59:00+03:30`. This does **not** close any
+  `OQ-*`, accept an identity product, or authorize implementation. Later
+  answers are still required before named-person SoD or platform auth ADRs
+- Affects: Phase 06 exit, Phase 07 verification, implementation lock
+- Related questions: OQ-005, OQ-010, OQ-011, OQ-013, OQ-015, OQ-016,
+  OQ-018, OQ-019
+- Related finding: FIND-032

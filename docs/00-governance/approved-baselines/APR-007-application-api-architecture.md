@@ -28,7 +28,9 @@ supersedes: null
   isolation, and audit **structure** drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 35 files changed
+- Git commit: `00b30a3064027fd0584c35c5f479b04d087614a6`
+- Git commit subject: `docs: approve phase 05 application api architecture`
 - Supersedes approval: none
 
 ## Approval boundary
@@ -87,8 +89,9 @@ Exact SHA-256 digests belong in the human-created checkpoint marker.
 - OQ-001 through OQ-019 remain open or `treating`.
 - ADR-0006 through ADR-0008 remain proposed.
 - Typed API contracts and platform ADRs remain later work.
-- Git checkpoint is pending a human-created marker.
-- APR-005 still has no dedicated Git checkpoint.
+- Git checkpoint completed at `00b30a3064027fd0584c35c5f479b04d087614a6`.
+- APR-005 freeze recorded as CHK-0006 at
+  `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`.
 
 ## Reopen conditions
 

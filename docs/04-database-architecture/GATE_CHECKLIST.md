@@ -19,8 +19,9 @@ supersedes: null
   [README.md](README.md).
 - [x] Entry criteria for logical drafting are satisfied: Phase 03 is
   approved (APR-005); posting alternatives are drafted, not accepted.
-- [ ] Phase 03 Git checkpoint — pending; not required to present this
-  logical package.
+- [x] Phase 03 Git checkpoint — completed at
+  `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c` (CHK-0006); not required
+  to have been recorded before presenting the logical package.
 - [ ] Team answers close UOM, volumes, cutover, and posting mechanism —
   **not** required for this logical gate if ASM-017 is accepted.
 - [x] ASM-017 is accepted by the Project Owner as a logical design-gate

@@ -139,5 +139,6 @@ approve this gate.
 The Project Owner accepted ASM-016 at `2026-09-06T01:13:00+03:30` and
 explicitly approved Phase 03 as `APR-005` at
 `2026-09-06T01:18:00+03:30`. OQ-001 through OQ-019 remain open or
-`treating`. The Git checkpoint remains pending. Phase 04 logical drafting
-is authorized. Implementation remains unauthorized.
+`treating`. The Git checkpoint later existed at
+`bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c` (CHK-0006). Phase 04 logical
+drafting is authorized. Implementation remains unauthorized.

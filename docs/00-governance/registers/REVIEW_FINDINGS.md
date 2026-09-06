@@ -7,7 +7,7 @@ version: 0.14.0
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-09-06
-approval: APR-007
+approval: APR-008
 supersedes: null
 ---
 
@@ -447,6 +447,42 @@ artifact approval does not close open findings or their linked questions.
   APR-007. Platform ADRs remain later work.
 - Evidence: APP-CMD-001; APP-QRY-001; APP-MOD-001; APP-ORCH-001;
   APP-ENV-001; APP-BG-001.
+
+## FIND-031 — Phase 03 Git freeze existed while the register said pending
+
+- Severity: medium
+- Gate: Phase 03 register hygiene
+- Status: resolved
+- Finding: APR-005 was approved at `2026-09-06T01:18:00+03:30`. Git
+  already contained `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`
+  (`docs:approve phase 03 state machine invariants`,
+  `2026-09-06T01:27:49+03:30`). Later dashboards, APR residuals, and
+  `README.md` still said the Phase 03 Git checkpoint was pending.
+  CHK-0004 and CHK-0005 were assigned before this freeze was recorded.
+- Treatment: CHK-0006 records that existing commit. No second Phase 03
+  checkpoint commit is created. The APR-005 marker generator must not be
+  run again.
+- Residual: CHK IDs remain in assignment order, not Git order.
+- Evidence: `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c`; CHK-0006;
+  APR-005.
+
+## FIND-032 — Phase 06 structure vs identity-product freeze
+
+- Severity: high
+- Gate: Phase 06
+- Status: resolved
+- Finding: The Phase 06 contract includes identity, session, MFA, and
+  named SoD people. Those cannot be frozen as JWT, Keycloak, or named
+  holders without OQ-018 and OQ-019. Stopping all architecture work
+  until those answers arrive would halt Phase 06. Writing guessed
+  packages or names would silently close the questions.
+- Treatment: ASM-019 records that a **structure** design-gate may
+  complete with those items as explicit open extensions. No identity
+  middleware or package is written.
+- Residual: The Project Owner accepted ASM-019 by approving Phase 06 as
+  APR-008. Identity-product ADRs remain later work.
+- Evidence: SEC-THREAT-001; SEC-RBAC-001; SEC-ISO-001; SEC-ID-001;
+  SEC-AUD-001; SEC-VER-001.
 
 ## Downstream suspect policy
 
