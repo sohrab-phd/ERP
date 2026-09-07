@@ -566,7 +566,7 @@ artifact approval does not close open findings or their linked questions.
 
 - Severity: high
 - Gate: Phase 11
-- Status: treating
+- Status: resolved
 - Finding: The Phase 11 contract includes integrated review,
   traceability coverage, walkthroughs, contradiction analysis, and
   risk/operability review. Those cannot freeze unanswered workshop
@@ -577,10 +577,33 @@ artifact approval does not close open findings or their linked questions.
 - Treatment: ASM-024 records that a **structure** design-gate may
   complete with those items as explicit open extensions. No application
   source, unlock file, or `TEST-*` catalogue is written.
-- Residual: The Project Owner must accept or reject ASM-024 at the
-  Phase 11 gate. Rejecting ASM-024 returns this gate to `BLOCKED`.
+- Residual: The Project Owner accepted ASM-024 by approving Phase 11 as
+  APR-013. `TEST-*`, named UAT, extra MCP, and unlock remain later work.
 - Evidence: VAL-INT-001; VAL-TRACE-001; VAL-WALK-001; VAL-XDOM-001;
-  VAL-RISK-001; VAL-CORR-001.
+  VAL-RISK-001; VAL-CORR-001; VAL-SELF-CHECK-001; VAL-INDEP-REVIEW-001;
+  VAL-RECON-001; VAL-GATE-CHECKLIST-001.
+
+## FIND-038 — Phase 12 planning vs unlock, tests, and application source
+
+- Severity: high
+- Gate: Phase 12
+- Status: treating
+- Finding: The Phase 12 contract includes a readiness checklist,
+  roadmap/slices, work items, spikes, cutover/training plans, and a
+  final implementation-authorization record. Those cannot freeze
+  unanswered workshop policy, mint a `TEST-*` catalogue, name people,
+  create `.cursor/IMPLEMENTATION_UNLOCK.json`, or write application
+  source. Stopping all planning until those answers arrive would halt
+  Phase 12. Inventing unlock paths, tests, or packages would silently
+  close the questions and the implementation lock.
+- Treatment: ASM-025 records that a **structure** planning-gate may
+  complete with those items as explicit open extensions. No application
+  source, unlock file, or `TEST-*` catalogue is written. Phase 12
+  approval is not an implementation unlock.
+- Residual: The Project Owner must accept or reject ASM-025 at the
+  Phase 12 gate. Rejecting ASM-025 returns that gate to `BLOCKED`.
+- Evidence: PLAN-READY-001; PLAN-SLICE-001; PLAN-WI-001; PLAN-SPIKE-001;
+  PLAN-CUTOVER-001; PLAN-AUTH-001.
 
 ## Downstream suspect policy
 

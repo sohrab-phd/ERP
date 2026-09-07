@@ -203,5 +203,7 @@ approved as APR-009 (structure); these intent links are not executable
 tests. Phase 08 is approved as APR-010 (structure), including ASM-021.
 Phase 09 is approved as APR-011 (structure), including ASM-022.
 Phase 10 is approved as APR-012 (structure), including ASM-023.
-Phase 11 remains unapproved until the Project Owner accepts or rejects
-ASM-024.
+Phase 11 structure coverage is reported in
+[TRACEABILITY_COVERAGE.md](../../11-architecture-validation/TRACEABILITY_COVERAGE.md).
+Phase 11 is approved as APR-013, including ASM-024. The Git checkpoint
+is pending. Missing `TEST-*` and workshop REQ-* stay open extensions.

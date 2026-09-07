@@ -53,9 +53,11 @@ marker must store the transformed form.
 
 - Gate result: `APPROVED` (structure baseline)
 - Phase 10: complete as a structure baseline
-- Git checkpoint: pending
+- Git checkpoint: completed at `1d581c4357a784f3170bd42349a47c1b38bde1e6`
+  (CHK-0011)
 - Next phase: `11-architecture-validation`; `ACTIVE_IN_REVIEW` for
   structure drafting
 - Implementation authorization: none
 
-Do not run this generator for Phase 09. CHK-0010 is already complete.
+Do not run this generator again for Phase 10. CHK-0011 is already complete.
+The Project Owner should delete `.cursor/PHASE_CHECKPOINT_APPROVAL.json`.

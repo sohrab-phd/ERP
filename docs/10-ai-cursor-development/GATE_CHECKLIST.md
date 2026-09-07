@@ -62,7 +62,8 @@ supersedes: null
 - Explicit approval statement/date: Phase 10 approved, including
   ASM-023, at `2026-09-07T21:52:00+03:30`
 - Approval manifest: [APR-012](../00-governance/approved-baselines/APR-012-ai-cursor-development.md)
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 40 files changed
+- Git commit: `1d581c4357a784f3170bd42349a47c1b38bde1e6` (CHK-0011)
 - Authorized next phase: `11-architecture-validation` for integrated
   review **structure** drafting
 

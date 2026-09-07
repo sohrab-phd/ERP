@@ -81,7 +81,8 @@ an implementation unlock.
 - This reviewer cannot certify an extra MCP server, Cursor Cloud
   runtime, or named approver that OQ-018 / OQ-019 have not chosen.
 - CHK-0010 records the APR-011 freeze at
-  `81aef0e7bc217cf5172b1f64edf13848b6242bb2`.
+  `81aef0e7bc217cf5172b1f64edf13848b6242bb2`. CHK-0011 records the
+  Phase 10 freeze at `1d581c4357a784f3170bd42349a47c1b38bde1e6`.
 
 ## Required next action
 

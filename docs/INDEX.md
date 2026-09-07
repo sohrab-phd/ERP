@@ -31,8 +31,10 @@ supersedes: null
 - [CHK-0005 Phase 05 checkpoint](00-governance/approved-baselines/CHK-0005-phase-05.md)
 - [CHK-0007 Phase 06 checkpoint](00-governance/approved-baselines/CHK-0007-phase-06.md)
 - [CHK-0008 Phase 07 checkpoint](00-governance/approved-baselines/CHK-0008-phase-07.md)
+- [CHK-0011 Phase 10 checkpoint](00-governance/approved-baselines/CHK-0011-phase-10.md)
 - [CHK-0010 Phase 09 checkpoint](00-governance/approved-baselines/CHK-0010-phase-09.md)
 - [CHK-0009 Phase 08 checkpoint](00-governance/approved-baselines/CHK-0009-phase-08.md)
+- [APR-013 Architecture Validation approval](00-governance/approved-baselines/APR-013-architecture-validation.md)
 - [APR-012 AI/Cursor Development approval](00-governance/approved-baselines/APR-012-ai-cursor-development.md)
 - [APR-011 Repository and Documentation approval](00-governance/approved-baselines/APR-011-repository-documentation.md)
 - [APR-010 Integration and Deployment approval](00-governance/approved-baselines/APR-010-integration-deployment.md)
@@ -199,8 +201,19 @@ supersedes: null
   - [Cross-domain contradiction and dependency analysis](11-architecture-validation/CROSS_DOMAIN.md)
   - [Risk, operability, security, and small-team feasibility](11-architecture-validation/RISK_OPERABILITY.md)
   - [Corrective-action and reapproval record](11-architecture-validation/CORRECTIVE_ACTIONS.md)
+  - [Phase 11 Self-Check](11-architecture-validation/SELF_CHECK.md)
+  - [Phase 11 Independent Review](11-architecture-validation/INDEPENDENT_REVIEW.md)
+  - [Phase 11 Reconciliation](11-architecture-validation/RECONCILIATION.md)
+  - [Phase 11 Gate Checklist](11-architecture-validation/GATE_CHECKLIST.md)
   - [Phase 12 handoff](11-architecture-validation/PHASE12_HANDOFF.md)
+  - [APR-013 Checkpoint Procedure](11-architecture-validation/CHECKPOINT_APR-013.md)
 - [12 — Implementation Planning](12-implementation-planning/README.md)
+  - [Implementation readiness checklist](12-implementation-planning/IMPLEMENTATION_READINESS.md)
+  - [Roadmap and vertical slices](12-implementation-planning/ROADMAP_AND_SLICES.md)
+  - [Work items linked to approved IDs](12-implementation-planning/WORK_ITEMS.md)
+  - [Authorized spike kinds and acceptance labels](12-implementation-planning/SPIKES_AND_ACCEPTANCE.md)
+  - [Cutover, training, rollout, and support labels](12-implementation-planning/CUTOVER_TRAINING_ROLLOUT.md)
+  - [Implementation-authorization record (labels only)](12-implementation-planning/AUTHORIZATION_RECORD.md)
 
 ## Status policy
 
@@ -227,6 +240,8 @@ records the checkpoint at `751035d2359abb5bd99a1b8a254715b2a5c937ae`.
 APR-011 approved Phase 09 at `2026-09-07T21:17:00+03:30`, including
 ASM-022. CHK-0010 records the checkpoint at
 `81aef0e7bc217cf5172b1f64edf13848b6242bb2`. APR-012 approved Phase 10 at `2026-09-07T21:52:00+03:30`, including
-ASM-023. The APR-012 Git checkpoint is pending. Phase 11 is
-`ACTIVE_IN_REVIEW` for structure drafting (proposed ASM-024). Workshop
+ASM-023. CHK-0011 records the checkpoint at
+`1d581c4357a784f3170bd42349a47c1b38bde1e6`. APR-013 approved Phase 11 at `2026-09-07T22:19:00+03:30`, including
+ASM-024. The APR-013 Git checkpoint is pending. Phase 12 is
+`ACTIVE_IN_REVIEW` for structure drafting (proposed ASM-025). Workshop
 execution remains blocked by OQ-019. Implementation remains unauthorized.

@@ -29,8 +29,8 @@ supersedes: null
   review **structure** drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 40 files changed
+- Git commit: `1d581c4357a784f3170bd42349a47c1b38bde1e6`
 - Git commit subject: `docs: approve phase 10 ai cursor development`
 - Supersedes approval: none
 
@@ -91,7 +91,7 @@ Exact SHA-256 digests belong in the human-created checkpoint marker.
 - OQ-001 through OQ-019 remain open or `treating`.
 - ADR-0006 through ADR-0008 remain proposed.
 - Extra-MCP and named-approver ADRs remain later work.
-- Git checkpoint pending.
+- Git checkpoint completed at `1d581c4357a784f3170bd42349a47c1b38bde1e6`.
 
 ## Reopen conditions
 

@@ -461,10 +461,11 @@ approval authority. These recording edits enter a later checkpoint.
 ### APR-012 — AI and Cursor Development Architecture Gate
 
 - Phase: `10-ai-cursor-development`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-012-ai-cursor-development.md](approved-baselines/APR-012-ai-cursor-development.md)
-- Checkpoint record: pending CHK-0011 after the Git commit
+- Checkpoint record:
+  [CHK-0011-phase-10.md](approved-baselines/CHK-0011-phase-10.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-012.md](../10-ai-cursor-development/CHECKPOINT_APR-012.md)
 - Review package:
@@ -480,13 +481,47 @@ approval authority. These recording edits enter a later checkpoint.
   implementation
 - Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
   ADR-0008, agent-tool ADRs
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 40 files changed
+- Git commit: `1d581c4357a784f3170bd42349a47c1b38bde1e6`
 - Git commit subject: `docs: approve phase 10 ai cursor development`
+- Checkpoint marker: still present after commit; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 - Next phase: `11-architecture-validation`; `ACTIVE_IN_REVIEW` for
   structure drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
 
 Approving Phase 10 accepts ASM-023. Temporary identities still have no
+approval authority. These recording edits enter a later checkpoint.
+
+### APR-013 — Architecture Validation Gate
+
+- Phase: `11-architecture-validation`
+- Status: `approved`; checkpoint pending
+- Approval manifest:
+  [APR-013-architecture-validation.md](approved-baselines/APR-013-architecture-validation.md)
+- Checkpoint record: pending (next unused ID CHK-0012)
+- Checkpoint procedure:
+  [CHECKPOINT_APR-013.md](../11-architecture-validation/CHECKPOINT_APR-013.md)
+- Review package:
+  [GATE_CHECKLIST.md](../11-architecture-validation/GATE_CHECKLIST.md)
+- Supporting evidence:
+  [SELF_CHECK.md](../11-architecture-validation/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](../11-architecture-validation/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](../11-architecture-validation/RECONCILIATION.md)
+- Approver: Project Owner (explicit approval in Cursor session)
+- Approval timestamp: `2026-09-07T22:19:00+03:30`
+- Approval scope: Phase 11 structure package and ASM-024; no `TEST-*`
+  freeze, no named UAT, no technology ADRs beyond ADR-0001, no
+  implementation
+- Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
+  ADR-0008, extra-MCP and unlock
+- Git checkpoint: pending
+- Git commit: pending
+- Next phase: `12-implementation-planning`; `ACTIVE_IN_REVIEW` for
+  structure drafting
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+Approving Phase 11 accepts ASM-024. Temporary identities still have no
 approval authority. These recording edits enter a later checkpoint.

@@ -21,8 +21,13 @@ supersedes: null
   superseded by APR-002 after no commit
 - [APR-002 — Renewed Corrected Governance Foundation](APR-002-governance.md) —
   approved; checkpoint completed
+- [APR-013 — Architecture Validation](APR-013-architecture-validation.md)
+  — approved at `2026-09-07T22:19:00+03:30`; checkpoint pending
 - [APR-012 — AI and Cursor Development Architecture](APR-012-ai-cursor-development.md)
-  — approved at `2026-09-07T21:52:00+03:30`; checkpoint pending
+  — approved at `2026-09-07T21:52:00+03:30`; checkpoint completed
+- [CHK-0011 — Phase 10 AI and Cursor Development Checkpoint](CHK-0011-phase-10.md)
+  — completed at `1d581c4357a784f3170bd42349a47c1b38bde1e6`; subject
+  `docs: approve phase 10 ai cursor development`; 40 files changed
 - [APR-011 — Repository and Documentation Architecture](APR-011-repository-documentation.md)
   — approved at `2026-09-07T21:17:00+03:30`; checkpoint completed
 - [CHK-0010 — Phase 09 Repository and Documentation Checkpoint](CHK-0010-phase-09.md)
@@ -82,7 +87,7 @@ artifact tree.
 Corrections never overwrite a manifest. Create a superseding approval when a
 material change requires reapproval.
 
-APR-012 approves the Phase 10 structure package and ASM-023. The Git
-checkpoint is pending. Phase 11 structure drafting is authorized.
-OQ-001 through OQ-019 remain unanswered or `treating`. Implementation
-remains unauthorized.
+APR-013 approves the Phase 11 structure package and ASM-024. The Git
+checkpoint is pending. Phase 12 structure drafting is authorized
+(proposed ASM-025). Phase 12 is not approved. OQ-001 through OQ-019
+remain unanswered or `treating`. Implementation remains unauthorized.
