@@ -22,7 +22,8 @@ Lifecycle: `approved`
 Approval: `APR-013` at `2026-09-07T22:19:00+03:30`, including ASM-024
 (structure baseline)
 
-Git checkpoint: pending. See
+Git checkpoint: completed at
+`57062e96c91b6eff52f233aaf3a0df65a81e9da4` (CHK-0012). See
 [CHECKPOINT_APR-013.md](CHECKPOINT_APR-013.md).
 
 Phase 12 is authorized for **structure** drafting. Team answers remain

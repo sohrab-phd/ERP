@@ -28,8 +28,9 @@ supersedes: null
   planning **structure** drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 38 files changed
+- Git commit: `57062e96c91b6eff52f233aaf3a0df65a81e9da4`
+- Git commit subject: `docs: approve phase 11 architecture validation`
 - Supersedes approval: none
 
 ## Approval boundary
@@ -88,7 +89,7 @@ Exact SHA-256 digests belong in the human-created checkpoint marker.
 - OQ-001 through OQ-019 remain open or `treating`.
 - ADR-0006 through ADR-0008 remain proposed.
 - `TEST-*` catalogue, named UAT, extra MCP, and unlock remain later work.
-- Git checkpoint pending.
+- Git checkpoint completed at `57062e96c91b6eff52f233aaf3a0df65a81e9da4`.
 
 ## Reopen conditions
 

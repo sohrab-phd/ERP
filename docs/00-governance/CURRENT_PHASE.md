@@ -2,12 +2,12 @@
 id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
-status: in_review
-version: 0.29.0
+status: approved
+version: 0.32.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025]
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025]
 last_reviewed: 2026-09-07
-approval: APR-013
+approval: APR-014
 supersedes: null
 ---
 
@@ -15,7 +15,7 @@ supersedes: null
 
 CURRENT_PHASE: `12-implementation-planning`
 
-CURRENT_GATE_STATUS: `ACTIVE_IN_REVIEW`
+CURRENT_GATE_STATUS: `APPROVED`
 
 IMPLEMENTATION_AUTHORIZED: `false`
 
@@ -24,24 +24,22 @@ the protected `.cursor/architecture-gate.json` authorization and a valid,
 human-created `.cursor/IMPLEMENTATION_UNLOCK.json` referencing an approved
 baseline and exact allowed paths. Neither condition currently exists.
 
+There is no Phase 13. Architecture phases 00–12 are approved as
+structure. Implementation still waits on a later human unlock.
+
 ## Permitted work
 
-- Draft Phase 12 implementation-planning **structure** Markdown from
-  APR-013 and
-  [PHASE12_HANDOFF.md](../11-architecture-validation/PHASE12_HANDOFF.md).
-- Leave every unanswered `OQ-*`, `TEST-*` catalogue, named person, and
-  unlock file as an open extension (proposed ASM-025).
 - Apply team answers onto the matching `OQ-*` row when they arrive.
 - Record and replace `(temporary)` workshop identities as real names arrive.
 - Do not invent or edit `.cursor/PHASE_CHECKPOINT_APPROVAL.json`. After
-  the Project Owner creates the APR-013 marker, run only the marked
+  the Project Owner creates the APR-014 marker, run only the marked
   `git add` / `git commit`.
 - Maintain canonical registers without silently closing open questions or
   accepting unapproved ADRs.
 
 ## Prohibited work
 
-- Treating “Ok, Continue” as Phase 12 approval
+- Treating Phase 12 approval as an implementation unlock
 - Creating `.cursor/IMPLEMENTATION_UNLOCK.json` (human-only; `AG-UNLOCK` never)
 - Application, database, API, UI, test, integration, or deployment implementation
 - Creating `package.json`, `tsconfig`, application source folders, Dockerfiles,
@@ -58,16 +56,16 @@ baseline and exact allowed paths. Neither condition currently exists.
 - Writing application code to “prove” the design
 - Minting a `TEST-*` catalogue
 - Installing extra MCP servers as if decided
-- Amending commit `1d581c4357a784f3170bd42349a47c1b38bde1e6`
-- Treating Phase 12 approval (when it arrives) as an implementation unlock
+- Amending commit `57062e96c91b6eff52f233aaf3a0df65a81e9da4`
+- Starting a Phase 13
 
 ## Gate condition
 
-Phase 11 is approved as APR-013 at `2026-09-07T22:19:00+03:30`, including
-ASM-024. The APR-013 Git checkpoint is pending. Phase 12 structure
-drafting is authorized. Team answers remain required before named
-people, auth packages, typed HTTP contracts, a test-runner ADR, extra
-MCP products, or deployment/repository products can close.
+Phase 12 is approved as APR-014 at `2026-09-07T23:16:00+03:30`, including
+ASM-025. The APR-014 Git checkpoint is pending. There is no next
+architecture phase. Team answers remain required before named people,
+auth packages, typed HTTP contracts, a test-runner ADR, extra MCP
+products, or deployment/repository products can close.
 
 OQ-001 through OQ-019 and proposed ADR-0006 through ADR-0008 remain unresolved.
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

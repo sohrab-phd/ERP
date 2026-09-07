@@ -205,5 +205,7 @@ Phase 09 is approved as APR-011 (structure), including ASM-022.
 Phase 10 is approved as APR-012 (structure), including ASM-023.
 Phase 11 structure coverage is reported in
 [TRACEABILITY_COVERAGE.md](../../11-architecture-validation/TRACEABILITY_COVERAGE.md).
-Phase 11 is approved as APR-013, including ASM-024. The Git checkpoint
-is pending. Missing `TEST-*` and workshop REQ-* stay open extensions.
+Phase 11 is approved as APR-013, including ASM-024. CHK-0012 records
+the checkpoint at `57062e96c91b6eff52f233aaf3a0df65a81e9da4`. Phase 12
+is approved as APR-014, including ASM-025. The Git checkpoint is
+pending. Missing `TEST-*` and workshop REQ-* stay open extensions.

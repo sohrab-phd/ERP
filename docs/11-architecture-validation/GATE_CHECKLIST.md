@@ -61,8 +61,8 @@ supersedes: null
 - Explicit approval statement/date: Phase 11 approved, including
   ASM-024, at `2026-09-07T22:19:00+03:30`
 - Approval manifest: [APR-013](../00-governance/approved-baselines/APR-013-architecture-validation.md)
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 38 files changed
+- Git commit: `57062e96c91b6eff52f233aaf3a0df65a81e9da4` (CHK-0012)
 - Authorized next phase: `12-implementation-planning` for
   implementation-planning **structure** drafting
 

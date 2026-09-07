@@ -497,10 +497,11 @@ approval authority. These recording edits enter a later checkpoint.
 ### APR-013 — Architecture Validation Gate
 
 - Phase: `11-architecture-validation`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-013-architecture-validation.md](approved-baselines/APR-013-architecture-validation.md)
-- Checkpoint record: pending (next unused ID CHK-0012)
+- Checkpoint record:
+  [CHK-0012-phase-11.md](approved-baselines/CHK-0012-phase-11.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-013.md](../11-architecture-validation/CHECKPOINT_APR-013.md)
 - Review package:
@@ -516,8 +517,11 @@ approval authority. These recording edits enter a later checkpoint.
   implementation
 - Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
   ADR-0008, extra-MCP and unlock
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 38 files changed
+- Git commit: `57062e96c91b6eff52f233aaf3a0df65a81e9da4`
+- Git commit subject: `docs: approve phase 11 architecture validation`
+- Checkpoint marker: still present after commit; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 - Next phase: `12-implementation-planning`; `ACTIVE_IN_REVIEW` for
   structure drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
@@ -525,3 +529,35 @@ approval authority. These recording edits enter a later checkpoint.
 
 Approving Phase 11 accepts ASM-024. Temporary identities still have no
 approval authority. These recording edits enter a later checkpoint.
+
+### APR-014 — Implementation Planning Gate
+
+- Phase: `12-implementation-planning`
+- Status: `approved`; checkpoint pending
+- Approval manifest:
+  [APR-014-implementation-planning.md](approved-baselines/APR-014-implementation-planning.md)
+- Checkpoint record: pending (next unused ID CHK-0013)
+- Checkpoint procedure:
+  [CHECKPOINT_APR-014.md](../12-implementation-planning/CHECKPOINT_APR-014.md)
+- Review package:
+  [GATE_CHECKLIST.md](../12-implementation-planning/GATE_CHECKLIST.md)
+- Supporting evidence:
+  [SELF_CHECK.md](../12-implementation-planning/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](../12-implementation-planning/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](../12-implementation-planning/RECONCILIATION.md)
+- Approver: Project Owner (explicit approval in Cursor session)
+- Approval timestamp: `2026-09-07T23:16:00+03:30`
+- Approval scope: Phase 12 structure package and ASM-025; no `TEST-*`
+  freeze, no named people, no unlock file, no technology ADRs beyond
+  ADR-0001, no implementation
+- Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
+  ADR-0008, extra-MCP and unlock
+- Git checkpoint: pending
+- Git commit: pending
+- Next phase: none; there is no Phase 13
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+Approving Phase 12 accepts ASM-025. It is not an implementation unlock.
+Temporary identities still have no approval authority. These recording
+edits enter a later checkpoint.

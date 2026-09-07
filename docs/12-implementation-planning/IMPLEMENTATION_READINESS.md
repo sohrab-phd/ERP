@@ -2,12 +2,12 @@
 id: PLAN-READY-001
 title: Implementation Readiness Checklist
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.3.0
 owners: [chief-solution-architect, delivery-lead]
-depends_on: [APR-013, ASM-025, CONF-UNLOCK]
+depends_on: [APR-013, APR-014, CHK-0012, ASM-025, CONF-UNLOCK]
 last_reviewed: 2026-09-07
-approval: null
+approval: APR-014
 supersedes: null
 ---
 
@@ -21,18 +21,22 @@ the unlock and not a `TEST-*` catalogue.
 ## Already true as approved structure
 
 - [x] Phases 01–11 approved as structure (APR-003 through APR-013).
+- [x] Phase 11 Git freeze CHK-0012
+      `57062e96c91b6eff52f233aaf3a0df65a81e9da4`.
 - [x] One Ledger writer (`ACT-IPS` / `mod-inventory-posting`).
-- [x] DATA-TX-001 bundles named and unsplittable.
+- [x] DATA-TX-001 six bundles named and unsplittable.
 - [x] Forbidden writes: `EditGenealogy`, `AdjustBalance`, MVP
       `PortalPlaceOrder`.
 - [x] `AG-UNLOCK` never; checkpoint markers human-only.
 - [x] Node.js + TypeScript is the only accepted technology ADR.
+- [x] Keep/reject kinds exist: `CONF-IPS`, `CONF-ADP`, `CONF-BUNDLE`,
+      `CONF-FORBID`, `CONF-ISO`, `CONF-UNLOCK`, `CONF-SECRET`,
+      `CONF-IMPORT`, `CONF-CMD`.
 
 ## Still required later (open extensions)
 
 | Ready item | Wait on |
 | --- | --- |
-| Phase 11 Git freeze | APR-013 marker / CHK-0012 |
 | Named people on SoD, UAT, cutover sign-off | OQ-019 |
 | UOM, Coil qty, routing, tracking, QC, tolerances, reservation | OQ-001–006, OQ-008 |
 | Sales Order close; residual cutoff | OQ-007, OQ-009 |
@@ -43,6 +47,8 @@ the unlock and not a `TEST-*` catalogue.
 | Package, runner, hosting, extra MCP | OQ-018 |
 | Human `.cursor/IMPLEMENTATION_UNLOCK.json` with exact paths | Project Owner after this gate |
 | `BR-IMPL` | Exists only after a valid unlock |
+
+Phase 12 approval does **not** tick the unlock or `BR-IMPL` rows.
 
 A command that still needs an unanswered OQ remains
 `GUARD_OPEN_POLICY`. Readiness does not guess the answer.

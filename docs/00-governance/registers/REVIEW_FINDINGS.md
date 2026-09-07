@@ -587,7 +587,7 @@ artifact approval does not close open findings or their linked questions.
 
 - Severity: high
 - Gate: Phase 12
-- Status: treating
+- Status: resolved
 - Finding: The Phase 12 contract includes a readiness checklist,
   roadmap/slices, work items, spikes, cutover/training plans, and a
   final implementation-authorization record. Those cannot freeze
@@ -600,10 +600,12 @@ artifact approval does not close open findings or their linked questions.
   complete with those items as explicit open extensions. No application
   source, unlock file, or `TEST-*` catalogue is written. Phase 12
   approval is not an implementation unlock.
-- Residual: The Project Owner must accept or reject ASM-025 at the
-  Phase 12 gate. Rejecting ASM-025 returns that gate to `BLOCKED`.
+- Residual: The Project Owner accepted ASM-025 by approving Phase 12 as
+  APR-014. `TEST-*`, named people, extra MCP, and unlock remain later
+  work. Phase 12 approval is not an implementation unlock.
 - Evidence: PLAN-READY-001; PLAN-SLICE-001; PLAN-WI-001; PLAN-SPIKE-001;
-  PLAN-CUTOVER-001; PLAN-AUTH-001.
+  PLAN-CUTOVER-001; PLAN-AUTH-001; PLAN-SELF-CHECK-001;
+  PLAN-INDEP-REVIEW-001; PLAN-RECON-001; PLAN-GATE-CHECKLIST-001.
 
 ## Downstream suspect policy
 

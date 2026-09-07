@@ -19,7 +19,7 @@ None of these entries is a confirmed business decision.
 APR-002 approved this register's Phase 00 seed version. APR-003 approved the
 Phase 01 version as assimilation evidence. APR-004 accepted ASM-014 for the
 Phase 02 design-gate. The current version is `in_review` because Phase 12 added ASM-025.
-APR-013 accepted ASM-024. APR-012 accepted ASM-023. APR-011 accepted ASM-022. APR-010 accepted ASM-021. Individual assumptions retain their recorded
+APR-014 accepted ASM-025. APR-013 accepted ASM-024. APR-012 accepted ASM-023. APR-011 accepted ASM-022. APR-010 accepted ASM-021. Individual assumptions retain their recorded
 validation status; artifact approval does not confirm shop-floor facts.
 
 ## ASM-001 — Single legal entity and principal site
@@ -337,7 +337,7 @@ validation status; artifact approval does not confirm shop-floor facts.
 
 ## ASM-025 — Phase 12 planning-structure gate may complete without unlock or application source
 
-- Status: in_review
+- Status: accepted
 - Statement: Phase 12 planning **structure** drafting and a Phase 12
   **structure** design-gate may complete while OQ-001 through OQ-019
   remain unanswered or `treating`, provided each stays an explicit open
@@ -347,9 +347,10 @@ validation status; artifact approval does not confirm shop-floor facts.
   unanswered OQ is closed. No package or hosting product is invented as
   if decided.
 - Owner: Project sponsor and Chief Solution Architect
-- Validation: pending Project Owner accept/reject at the Phase 12
-  structure gate. This does **not** close any `OQ-*`, mint `TEST-*`
-  IDs, create an unlock file, or set `IMPLEMENTATION_AUTHORIZED`.
+- Validation: Project Owner accepted ASM-025 and approved Phase 12 as
+  APR-014 at `2026-09-07T23:16:00+03:30`. This does **not** close any
+  `OQ-*`, mint `TEST-*` IDs, create an unlock file, or set
+  `IMPLEMENTATION_AUTHORIZED`.
 - Affects: Phase 12 exit, implementation lock
 - Related questions: OQ-001 through OQ-019
 - Related finding: FIND-038

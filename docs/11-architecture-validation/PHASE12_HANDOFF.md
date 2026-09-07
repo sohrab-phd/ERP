@@ -15,8 +15,9 @@ supersedes: null
 
 This is a Phase 11 design artifact. Phase 11 is approved as APR-013.
 Phase 12 structure drafting is authorized by
-[CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md). The APR-013 Git
-checkpoint is pending. This handoff does not authorize implementation
+[CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md). CHK-0012 records
+the freeze at `57062e96c91b6eff52f233aaf3a0df65a81e9da4`. This handoff
+does not authorize implementation
 or an unlock file.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

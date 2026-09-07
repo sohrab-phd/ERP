@@ -31,9 +31,11 @@ supersedes: null
 - [CHK-0005 Phase 05 checkpoint](00-governance/approved-baselines/CHK-0005-phase-05.md)
 - [CHK-0007 Phase 06 checkpoint](00-governance/approved-baselines/CHK-0007-phase-06.md)
 - [CHK-0008 Phase 07 checkpoint](00-governance/approved-baselines/CHK-0008-phase-07.md)
+- [CHK-0012 Phase 11 checkpoint](00-governance/approved-baselines/CHK-0012-phase-11.md)
 - [CHK-0011 Phase 10 checkpoint](00-governance/approved-baselines/CHK-0011-phase-10.md)
 - [CHK-0010 Phase 09 checkpoint](00-governance/approved-baselines/CHK-0010-phase-09.md)
 - [CHK-0009 Phase 08 checkpoint](00-governance/approved-baselines/CHK-0009-phase-08.md)
+- [APR-014 Implementation Planning approval](00-governance/approved-baselines/APR-014-implementation-planning.md)
 - [APR-013 Architecture Validation approval](00-governance/approved-baselines/APR-013-architecture-validation.md)
 - [APR-012 AI/Cursor Development approval](00-governance/approved-baselines/APR-012-ai-cursor-development.md)
 - [APR-011 Repository and Documentation approval](00-governance/approved-baselines/APR-011-repository-documentation.md)
@@ -214,6 +216,11 @@ supersedes: null
   - [Authorized spike kinds and acceptance labels](12-implementation-planning/SPIKES_AND_ACCEPTANCE.md)
   - [Cutover, training, rollout, and support labels](12-implementation-planning/CUTOVER_TRAINING_ROLLOUT.md)
   - [Implementation-authorization record (labels only)](12-implementation-planning/AUTHORIZATION_RECORD.md)
+  - [Phase 12 Self-Check](12-implementation-planning/SELF_CHECK.md)
+  - [Phase 12 Independent Review](12-implementation-planning/INDEPENDENT_REVIEW.md)
+  - [Phase 12 Reconciliation](12-implementation-planning/RECONCILIATION.md)
+  - [Phase 12 Gate Checklist](12-implementation-planning/GATE_CHECKLIST.md)
+  - [APR-014 Checkpoint Procedure](12-implementation-planning/CHECKPOINT_APR-014.md)
 
 ## Status policy
 
@@ -242,6 +249,8 @@ ASM-022. CHK-0010 records the checkpoint at
 `81aef0e7bc217cf5172b1f64edf13848b6242bb2`. APR-012 approved Phase 10 at `2026-09-07T21:52:00+03:30`, including
 ASM-023. CHK-0011 records the checkpoint at
 `1d581c4357a784f3170bd42349a47c1b38bde1e6`. APR-013 approved Phase 11 at `2026-09-07T22:19:00+03:30`, including
-ASM-024. The APR-013 Git checkpoint is pending. Phase 12 is
-`ACTIVE_IN_REVIEW` for structure drafting (proposed ASM-025). Workshop
+ASM-024. CHK-0012 records the checkpoint at
+`57062e96c91b6eff52f233aaf3a0df65a81e9da4`. APR-014 approved Phase 12 at `2026-09-07T23:16:00+03:30`, including
+ASM-025. The APR-014 Git checkpoint is pending. There is no Phase 13.
+Phase 12 approval is not an implementation unlock. Workshop
 execution remains blocked by OQ-019. Implementation remains unauthorized.

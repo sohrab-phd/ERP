@@ -84,7 +84,8 @@ not an implementation unlock and not Phase 12 application source.
 - This reviewer cannot certify a quantity oracle, named SoD person, or
   hosting product that OQ-001–019 have not chosen.
 - CHK-0011 records the APR-012 freeze at
-  `1d581c4357a784f3170bd42349a47c1b38bde1e6`.
+  `1d581c4357a784f3170bd42349a47c1b38bde1e6`. CHK-0012 records the
+  Phase 11 freeze at `57062e96c91b6eff52f233aaf3a0df65a81e9da4`.
 
 ## Required next action
 

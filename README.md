@@ -6,9 +6,9 @@ traceability, and monitoring system.
 
 ## Current status
 
-- Completed phase: `11-architecture-validation` (structure; checkpoint pending)
+- Completed phase: `12-implementation-planning` (structure; checkpoint pending)
 - Current phase: `12-implementation-planning`
-- Gate status: `ACTIVE_IN_REVIEW`
+- Gate status: `APPROVED`
 - Phase 00 approval: `APR-002`; checkpoint completed at
   `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`
 - Phase 01 approval: `APR-003`; checkpoint completed at
@@ -39,7 +39,10 @@ traceability, and monitoring system.
   ASM-023; checkpoint completed at
   `1d581c4357a784f3170bd42349a47c1b38bde1e6`
 - Phase 11 approval: `APR-013` at `2026-09-07T22:19:00+03:30`, including
-  ASM-024; Git checkpoint pending. Team answers expected in a
+  ASM-024; checkpoint completed at
+  `57062e96c91b6eff52f233aaf3a0df65a81e9da4`
+- Phase 12 approval: `APR-014` at `2026-09-07T23:16:00+03:30`, including
+  ASM-025; Git checkpoint pending. Team answers expected in a
   few days. OQ-019 still blocks workshop execution
 - Implementation authorized: **No**
 - Application source code, database migrations, package setup, and deployment
@@ -71,8 +74,8 @@ work authorization.
 - `08-integration-deployment`: **approved (structure); checkpoint completed**
 - `09-repository-documentation`: **approved (structure); checkpoint completed**
 - `10-ai-cursor-development`: **approved (structure); checkpoint completed**
-- `11-architecture-validation`: **approved (structure); checkpoint pending**
-- `12-implementation-planning`: **in_review; structure drafting**
+- `11-architecture-validation`: **approved (structure); checkpoint completed**
+- `12-implementation-planning`: **approved (structure); checkpoint pending**
 
 Each phase follows:
 
@@ -81,7 +84,6 @@ Each phase follows:
 No phase may begin detailed work before its entry criteria are met. Material
 changes to approved architecture reopen affected downstream artifacts.
 
-Phase 11 is approved as APR-013, including ASM-024. Phase 12 may draft
-planning labels with open workshop answers (proposed ASM-025). Phase 12
-approval would not unlock implementation. Temporary workshop identities
-cannot sign decisions. Implementation remains unauthorized.
+Phase 12 is approved as APR-014, including ASM-025. There is no Phase
+13. Phase 12 approval is not an implementation unlock. Temporary workshop
+identities cannot sign decisions. Implementation remains unauthorized.
