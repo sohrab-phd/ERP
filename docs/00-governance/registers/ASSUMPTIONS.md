@@ -7,7 +7,7 @@ version: 0.12.0
 owners: [chief-solution-architect]
 depends_on: [SRC-001, ASM-REPORT-001]
 last_reviewed: 2026-09-07
-approval: APR-011
+approval: APR-012
 supersedes: null
 ---
 
@@ -18,8 +18,8 @@ None of these entries is a confirmed business decision.
 
 APR-002 approved this register's Phase 00 seed version. APR-003 approved the
 Phase 01 version as assimilation evidence. APR-004 accepted ASM-014 for the
-Phase 02 design-gate. The current version is `in_review` because Phase 10 added ASM-023.
-APR-011 accepted ASM-022. APR-010 accepted ASM-021. Individual assumptions retain their recorded
+Phase 02 design-gate. The current version is `in_review` because Phase 11 added ASM-024.
+APR-012 accepted ASM-023. APR-011 accepted ASM-022. APR-010 accepted ASM-021. Individual assumptions retain their recorded
 validation status; artifact approval does not confirm shop-floor facts.
 
 ## ASM-001 — Single legal entity and principal site
@@ -300,7 +300,7 @@ validation status; artifact approval does not confirm shop-floor facts.
 
 ## ASM-023 — Phase 10 structure design-gate may complete with open agent-tool products
 
-- Status: in_review
+- Status: accepted
 - Statement: Phase 10 structure drafting and a Phase 10 **structure**
   design-gate may complete while extra MCP/tool products and named
   agent approvers remain unanswered, provided each stays an explicit
@@ -309,9 +309,28 @@ validation status; artifact approval does not confirm shop-floor facts.
   invented as if decided. Existing architecture-first Cursor controls
   remain labels, not an implementation unlock.
 - Owner: Project sponsor and Chief Solution Architect
-- Validation: pending Project Owner accept/reject at the Phase 10
-  structure gate. This does **not** close any `OQ-*`, accept an MCP
-  product, or authorize implementation.
+- Validation: Project Owner accepted ASM-023 and approved Phase 10 as
+  APR-012 at `2026-09-07T21:52:00+03:30`. This does **not** close any
+  `OQ-*`, accept an MCP product, or authorize implementation. Later
+  answers are still required before an agent-tool ADR
 - Affects: Phase 10 exit, Phase 11 validation, implementation lock
 - Related questions: OQ-018, OQ-019
 - Related finding: FIND-036
+
+## ASM-024 — Phase 11 structure design-gate may complete with open workshop and product answers
+
+- Status: in_review
+- Statement: Phase 11 structure drafting and a Phase 11 **structure**
+  design-gate may complete while OQ-001 through OQ-019 remain unanswered
+  or `treating`, provided each stays an explicit open guard
+  (`GUARD_OPEN_POLICY`) and no `TEST-*` catalogue, named UAT roster, or
+  application proof is written. No unanswered OQ is closed. No package
+  or hosting product is invented as if decided.
+- Owner: Project sponsor and Chief Solution Architect
+- Validation: pending Project Owner accept/reject at the Phase 11
+  structure gate. This does **not** close any `OQ-*`, mint `TEST-*`
+  IDs, or authorize implementation.
+- Affects: Phase 11 exit, Phase 12 implementation planning,
+  implementation lock
+- Related questions: OQ-001 through OQ-019
+- Related finding: FIND-037

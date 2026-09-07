@@ -2,12 +2,12 @@
 id: AI-REVIEW-001
 title: Human and Independent Agent Review
 phase: 10-ai-cursor-development
-status: in_review
-version: 0.2.0
+status: approved
+version: 0.4.0
 owners: [independent-reviewer]
-depends_on: [REPO-BR-001, AI-AUTH-001, APR-011]
+depends_on: [REPO-BR-001, AI-AUTH-001, APR-011, APR-012]
 last_reviewed: 2026-09-07
-approval: null
+approval: APR-012
 supersedes: null
 ---
 
@@ -27,7 +27,8 @@ Review-bot products stay open.
 | `REV-AGENT` | No | No |
 
 An agent cannot approve its own architecture change. Temporary
-identities cannot review, merge, or sign.
+identities cannot review, merge, or sign. SoD pairs (including
+SV-013 ReverseGoodsReceipt) cannot be “reviewed away” by `REV-AGENT`.
 
 ## What each kind may produce
 
@@ -41,14 +42,23 @@ Same-session adversarial review is an independence **limit**, not a
 substitute for a later named independent reviewer (OQ-019) or for
 Phase 11.
 
-## Architecture-affecting diffs
+## Architecture-affecting versus local (labels)
 
-A later application diff that changes an approved `INV-*`, `ADP-*`,
-command catalogue, `CONF-*` rule, or write-owner is a **reopen** of
-the owning `APR-*`, not a merge on `BR-IMPL`.
+A later application diff is a **reopen** of the owning `APR-*`, not a
+merge on `BR-IMPL`, when it changes any of:
 
-Generated OpenAPI, SQL, or DTOs that disagree with authored catalogues
-are rejected (`REPO-GEN-001`), not merged.
+- an approved `INV-*` or state machine
+- an `ADP-*` commander/write rule
+- a command/query catalogue ID
+- a `CONF-*` keep/reject rule
+- a write owner (`ACT-IPS` vs commander)
+- a DATA-TX-001 bundle boundary
+- customer isolation (SV-012) or SoD (SV-013)
+
+A later diff may stay local (still needs `REV-HUMAN` after unlock)
+only if it stays inside named unlock paths and does not change those
+rules. Generated OpenAPI, SQL, or DTOs that disagree with authored
+catalogues are rejected (`REPO-GEN-001`), not merged.
 
 ## Standing review rules
 

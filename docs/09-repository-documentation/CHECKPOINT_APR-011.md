@@ -53,9 +53,10 @@ marker must store the transformed form.
 
 - Gate result: `APPROVED` (structure baseline)
 - Phase 09: complete as a structure baseline
-- Git checkpoint: pending
-- Next phase: `10-ai-cursor-development`; `ACTIVE_IN_REVIEW` for
-  structure drafting
+- Git checkpoint: completed at `81aef0e7bc217cf5172b1f64edf13848b6242bb2`
+  (CHK-0010)
+- Next phase: `10-ai-cursor-development`; `READY_FOR_HUMAN_APPROVAL`
 - Implementation authorization: none
 
-Do not run this generator for Phase 08. CHK-0009 is already complete.
+Do not run this generator again for Phase 09. CHK-0010 is already complete.
+The Project Owner should delete `.cursor/PHASE_CHECKPOINT_APPROVAL.json`.

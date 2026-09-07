@@ -15,8 +15,9 @@ supersedes: null
 
 This is a Phase 09 design artifact. Phase 09 is approved as APR-011.
 Phase 10 structure drafting is authorized by
-[CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md). The APR-011 Git
-checkpoint is pending. This handoff does not authorize agent
+[CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md). CHK-0010 records
+the freeze at `81aef0e7bc217cf5172b1f64edf13848b6242bb2`. This handoff
+does not authorize agent
 implementation, application folders, or any package.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

@@ -547,7 +547,7 @@ artifact approval does not close open findings or their linked questions.
 
 - Severity: high
 - Gate: Phase 10
-- Status: treating
+- Status: resolved
 - Finding: The Phase 10 contract includes agent authority, rules,
   prompts, review, tools/MCP/hooks, and generated-code acceptance.
   Those cannot be frozen as extra MCP products or named agent
@@ -557,10 +557,30 @@ artifact approval does not close open findings or their linked questions.
 - Treatment: ASM-023 records that a **structure** design-gate may
   complete with those items as explicit open extensions. No application
   source, unlock file, or extra MCP install is written.
-- Residual: The Project Owner must accept or reject ASM-023 at the
-  Phase 10 gate. Rejecting ASM-023 returns this gate to `BLOCKED`.
+- Residual: The Project Owner accepted ASM-023 by approving Phase 10 as
+  APR-012. Extra-MCP and named-approver ADRs remain later work.
 - Evidence: AI-AUTH-001; AI-RULE-001; AI-PROMPT-001; AI-REVIEW-001;
   AI-TOOL-001; AI-ACCEPT-001.
+
+## FIND-037 — Phase 11 structure vs closing open questions and proving by code
+
+- Severity: high
+- Gate: Phase 11
+- Status: treating
+- Finding: The Phase 11 contract includes integrated review,
+  traceability coverage, walkthroughs, contradiction analysis, and
+  risk/operability review. Those cannot freeze unanswered workshop
+  policy, mint a `TEST-*` catalogue, name UAT people, or write
+  application code to prove the design. Stopping all architecture work
+  until those answers arrive would halt Phase 11. Inventing answers or
+  tests would silently close the questions.
+- Treatment: ASM-024 records that a **structure** design-gate may
+  complete with those items as explicit open extensions. No application
+  source, unlock file, or `TEST-*` catalogue is written.
+- Residual: The Project Owner must accept or reject ASM-024 at the
+  Phase 11 gate. Rejecting ASM-024 returns this gate to `BLOCKED`.
+- Evidence: VAL-INT-001; VAL-TRACE-001; VAL-WALK-001; VAL-XDOM-001;
+  VAL-RISK-001; VAL-CORR-001.
 
 ## Downstream suspect policy
 

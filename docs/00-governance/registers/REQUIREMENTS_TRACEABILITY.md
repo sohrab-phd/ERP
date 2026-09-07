@@ -93,8 +93,9 @@ evidence and Phase 07.
 - Phase 09 repository intents (structure, not products):
   `CONF-IPS`; `CONF-BUNDLE`; no Balance-only API
 - Phase 10 agent intents (structure, not products):
-  `TASK-IMPL` forbids Ledger writes outside Inventory Posting;
-  `CONF-IPS` / `CONF-BUNDLE` are keep/reject rules
+  `TASK-IMPL` forbids Ledger writes outside Inventory Posting and
+  must not split DATA-TX-001 bundles; `CONF-IPS` / `CONF-BUNDLE` are
+  keep/reject rules
 - Status: proposed; numeric UOM, Coil, and reservation guards remain open
 
 ### REQ-OBJ-003 — Bidirectional material genealogy
@@ -201,5 +202,6 @@ rejects any in-scope row with a missing mandatory link. Phase 07 is
 approved as APR-009 (structure); these intent links are not executable
 tests. Phase 08 is approved as APR-010 (structure), including ASM-021.
 Phase 09 is approved as APR-011 (structure), including ASM-022.
-Phase 10 remains unapproved until the Project Owner accepts or rejects
-ASM-023.
+Phase 10 is approved as APR-012 (structure), including ASM-023.
+Phase 11 remains unapproved until the Project Owner accepts or rejects
+ASM-024.

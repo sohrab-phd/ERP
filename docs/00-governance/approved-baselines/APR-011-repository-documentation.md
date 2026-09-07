@@ -29,8 +29,8 @@ supersedes: null
   **structure** drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 44 files changed
+- Git commit: `81aef0e7bc217cf5172b1f64edf13848b6242bb2`
 - Git commit subject: `docs: approve phase 09 repository documentation`
 - Supersedes approval: none
 
@@ -90,7 +90,7 @@ Exact SHA-256 digests belong in the human-created checkpoint marker.
 - OQ-001 through OQ-019 remain open or `treating`.
 - ADR-0006 through ADR-0008 remain proposed.
 - Package-manager, Git-hosting, and CI ADRs remain later work.
-- Git checkpoint pending.
+- Git checkpoint completed at `81aef0e7bc217cf5172b1f64edf13848b6242bb2`.
 
 ## Reopen conditions
 

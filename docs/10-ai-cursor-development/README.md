@@ -2,12 +2,12 @@
 id: PHASE-10
 title: AI and Cursor Development Architecture
 phase: 10-ai-cursor-development
-status: in_review
-version: 0.3.0
+status: approved
+version: 0.5.0
 owners: [chief-solution-architect, development-lead]
-depends_on: [PHASE-09, APR-011, REPO-P10-HANDOFF-001, ASM-023]
+depends_on: [PHASE-09, APR-011, APR-012, REPO-P10-HANDOFF-001, ASM-023]
 last_reviewed: 2026-09-07
-approval: null
+approval: APR-012
 supersedes: null
 ---
 
@@ -15,17 +15,18 @@ supersedes: null
 
 ## Gate
 
-Gate status: `READY_FOR_HUMAN_APPROVAL`
+Gate status: `APPROVED`
 
-Lifecycle: `in_review`
+Lifecycle: `approved`
 
-Approval: `null`
+Approval: `APR-012` at `2026-09-07T21:52:00+03:30`, including ASM-023
+(structure baseline)
 
-Phase 09 is approved as APR-011. This package is a **structure** gate,
-including proposed ASM-023 (extra MCP/tool products and named agent
-approvers remain open).
+Git checkpoint: pending. See
+[CHECKPOINT_APR-012.md](CHECKPOINT_APR-012.md).
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Phase 11 is authorized for **structure** drafting. Team answers remain
+open. `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
 ## Purpose
 
@@ -42,19 +43,19 @@ creating application source.
 - [x] [Human and independent review](HUMAN_AND_INDEPENDENT_REVIEW.md)
 - [x] [Tool, MCP, hook, and safety labels](TOOL_MCP_HOOK_SAFETY.md)
 - [x] [Generated-code acceptance](GENERATED_CODE_ACCEPTANCE.md)
-- [ ] Extra MCP/tool product ADRs — **not** in this draft; OQ-018
+- [ ] Extra MCP/tool product ADRs — **not** in this baseline; OQ-018
 - [x] [Self-check](SELF_CHECK.md)
 - [x] [Independent review](INDEPENDENT_REVIEW.md)
 - [x] [Reconciliation](RECONCILIATION.md)
 - [x] [Gate checklist](GATE_CHECKLIST.md)
 - [x] [Phase 11 handoff](PHASE11_HANDOFF.md)
+- [x] [APR-012 checkpoint procedure](CHECKPOINT_APR-012.md)
 
 ## Entry criteria
 
 - [x] Phase 09 is approved (APR-011).
-- [ ] Phase 09 Git checkpoint — pending APR-011 marker (CHK-0010).
-      Completing CHK-0010 is parallel work, not a content blocker for
-      this structure package.
+- [x] Phase 09 Git checkpoint — completed at
+  `81aef0e7bc217cf5172b1f64edf13848b6242bb2` (CHK-0010).
 
 ## How this phase works while answers are still arriving
 
@@ -70,6 +71,6 @@ folders. Do not choose extra MCP products.
   artifacts.
 - Tooling stays the existing architecture-first controls plus open
   extensions.
-- The user explicitly approves Phase 10.
+- The user explicitly approved Phase 10 as APR-012.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

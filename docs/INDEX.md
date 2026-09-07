@@ -31,7 +31,9 @@ supersedes: null
 - [CHK-0005 Phase 05 checkpoint](00-governance/approved-baselines/CHK-0005-phase-05.md)
 - [CHK-0007 Phase 06 checkpoint](00-governance/approved-baselines/CHK-0007-phase-06.md)
 - [CHK-0008 Phase 07 checkpoint](00-governance/approved-baselines/CHK-0008-phase-07.md)
+- [CHK-0010 Phase 09 checkpoint](00-governance/approved-baselines/CHK-0010-phase-09.md)
 - [CHK-0009 Phase 08 checkpoint](00-governance/approved-baselines/CHK-0009-phase-08.md)
+- [APR-012 AI/Cursor Development approval](00-governance/approved-baselines/APR-012-ai-cursor-development.md)
 - [APR-011 Repository and Documentation approval](00-governance/approved-baselines/APR-011-repository-documentation.md)
 - [APR-010 Integration and Deployment approval](00-governance/approved-baselines/APR-010-integration-deployment.md)
 - [APR-009 Testing and Quality Architecture approval](00-governance/approved-baselines/APR-009-testing-quality-architecture.md)
@@ -189,7 +191,15 @@ supersedes: null
   - [Phase 10 Reconciliation](10-ai-cursor-development/RECONCILIATION.md)
   - [Phase 10 Gate Checklist](10-ai-cursor-development/GATE_CHECKLIST.md)
   - [Phase 11 handoff](10-ai-cursor-development/PHASE11_HANDOFF.md)
+  - [APR-012 Checkpoint Procedure](10-ai-cursor-development/CHECKPOINT_APR-012.md)
 - [11 — Architecture Validation](11-architecture-validation/README.md)
+  - [Independent integrated review](11-architecture-validation/INTEGRATED_REVIEW.md)
+  - [Requirements and traceability coverage](11-architecture-validation/TRACEABILITY_COVERAGE.md)
+  - [End-to-end and exceptional-flow walkthroughs](11-architecture-validation/WALKTHROUGHS.md)
+  - [Cross-domain contradiction and dependency analysis](11-architecture-validation/CROSS_DOMAIN.md)
+  - [Risk, operability, security, and small-team feasibility](11-architecture-validation/RISK_OPERABILITY.md)
+  - [Corrective-action and reapproval record](11-architecture-validation/CORRECTIVE_ACTIONS.md)
+  - [Phase 12 handoff](11-architecture-validation/PHASE12_HANDOFF.md)
 - [12 — Implementation Planning](12-implementation-planning/README.md)
 
 ## Status policy
@@ -215,7 +225,8 @@ checkpoint at `29921d69e10bf6704966a08ff927d9e6ae9c0bd3`. APR-010 approved
 Phase 08 at `2026-09-07T01:28:00+03:30`, including ASM-021. CHK-0009
 records the checkpoint at `751035d2359abb5bd99a1b8a254715b2a5c937ae`.
 APR-011 approved Phase 09 at `2026-09-07T21:17:00+03:30`, including
-ASM-022. The APR-011 Git checkpoint is pending. Phase 10 is
-`READY_FOR_HUMAN_APPROVAL` as a **structure** gate, including proposed
-ASM-023. Workshop execution remains blocked by OQ-019. Implementation
-remains unauthorized.
+ASM-022. CHK-0010 records the checkpoint at
+`81aef0e7bc217cf5172b1f64edf13848b6242bb2`. APR-012 approved Phase 10 at `2026-09-07T21:52:00+03:30`, including
+ASM-023. The APR-012 Git checkpoint is pending. Phase 11 is
+`ACTIVE_IN_REVIEW` for structure drafting (proposed ASM-024). Workshop
+execution remains blocked by OQ-019. Implementation remains unauthorized.

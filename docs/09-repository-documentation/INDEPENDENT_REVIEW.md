@@ -72,7 +72,9 @@ an implementation unlock.
 - No signed maintainer roster or repository-hosting letter exists.
 - This reviewer cannot certify npm, GitHub, or GitHub Actions that
   OQ-018 / OQ-019 have not chosen.
-- CHK-0009 recording files remain uncommitted.
+- CHK-0009 is frozen in this repository at
+  `751035d2359abb5bd99a1b8a254715b2a5c937ae`. CHK-0010 records the
+  Phase 09 freeze at `81aef0e7bc217cf5172b1f64edf13848b6242bb2`.
 
 ## Required next action
 

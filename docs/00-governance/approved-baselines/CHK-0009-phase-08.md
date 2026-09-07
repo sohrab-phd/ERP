@@ -20,7 +20,8 @@ supersedes: null
 - Files changed: 37
 - Phase 08 result: complete as a **structure** baseline
 - Next phase: `09-repository-documentation`
-- Phase 09 gate: approved as APR-011 (structure); Git checkpoint pending
+- Phase 09 gate: approved as APR-011 (structure); checkpoint completed
+  at `81aef0e7bc217cf5172b1f64edf13848b6242bb2` (CHK-0010)
 - Implementation authorized: `false`
 - Checkpoint marker: still present after commit; the Project Owner should
   delete `.cursor/PHASE_CHECKPOINT_APPROVAL.json`

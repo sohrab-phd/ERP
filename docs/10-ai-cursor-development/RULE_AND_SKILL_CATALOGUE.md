@@ -2,12 +2,12 @@
 id: AI-RULE-001
 title: Rule and Skill Catalogue
 phase: 10-ai-cursor-development
-status: in_review
-version: 0.2.0
+status: approved
+version: 0.4.0
 owners: [chief-solution-architect]
-depends_on: [AI-AUTH-001, APR-011]
+depends_on: [AI-AUTH-001, APR-011, APR-012]
 last_reviewed: 2026-09-07
-approval: null
+approval: APR-012
 supersedes: null
 ---
 
@@ -23,12 +23,13 @@ does not replace the write-gate and does not authorize implementation.
 
 | Path | Role |
 | --- | --- |
+| `.cursor/architecture-gate.json` | Protected policy: architecture-only lock; checkpoint and unlock field labels |
 | `.cursor/rules/00-architecture-first.mdc` | Implementation lock; current-phase work only; Node.js + TypeScript is the only accepted tech ADR |
 | `.cursor/rules/01-phase-question-pack.mdc` | After each gate, publish unanswered `OQ-*`; do not invent answers; continue authorized work |
 | `.cursor/hooks/architecture-write-gate.ps1` | Write/shell gate: docs Markdown and approved Cursor controls only; checkpoint Git only after a valid human marker |
 | `.cursor/hooks/generate-phase-checkpoint-marker.ps1` | Human-only checkpoint marker; empty Git index required |
 
-These four paths are the Phase 10 **present** control set. They are
+These five paths are the Phase 10 **present** control set. They are
 labels of what already operates. They are not an implementation unlock
 and not a second write-gate product.
 
@@ -36,6 +37,7 @@ and not a second write-gate product.
 
 | Kind | Meaning | Open |
 | --- | --- | --- |
+| `RULE-GATE` | Protected architecture-gate policy file | Replacement product forbidden |
 | `RULE-ARCH` | Always-applied architecture-first rule | — |
 | `RULE-QPACK` | Always-applied question-pack rule | — |
 | `HOOK-WRITE` | Architecture write-gate | Replacement product forbidden |
@@ -58,6 +60,8 @@ Playwright, Docker, or a package manager as decided.
    create application source, `package.json`, Dockerfiles, or CI.
 5. The write-gate remaining closed on a blocked command is success, not
    a defect to bypass.
+6. Agents must not invent or edit the protected policy file, the
+   checkpoint marker, or the implementation unlock.
 
 ## Must not decide here
 

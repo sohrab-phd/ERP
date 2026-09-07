@@ -1,21 +1,21 @@
 ---
 id: GOV-CURRENT-001
 title: Current Phase Authorization
-phase: 10-ai-cursor-development
+phase: 11-architecture-validation
 status: in_review
-version: 0.24.0
+version: 0.26.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-011, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023]
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-012, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024]
 last_reviewed: 2026-09-07
-approval: APR-011
+approval: APR-012
 supersedes: null
 ---
 
 # Current Phase Authorization
 
-CURRENT_PHASE: `10-ai-cursor-development`
+CURRENT_PHASE: `11-architecture-validation`
 
-CURRENT_GATE_STATUS: `READY_FOR_HUMAN_APPROVAL`
+CURRENT_GATE_STATUS: `ACTIVE_IN_REVIEW`
 
 IMPLEMENTATION_AUTHORIZED: `false`
 
@@ -26,11 +26,14 @@ baseline and exact allowed paths. Neither condition currently exists.
 
 ## Permitted work
 
-- Present the Phase 10 **structure** gate, including proposed ASM-023.
-  Do not treat the package as approved until the Project Owner says so.
+- Draft Phase 11 integrated-validation **structure** Markdown from
+  APR-012 and
+  [PHASE11_HANDOFF.md](../10-ai-cursor-development/PHASE11_HANDOFF.md).
+- Leave every unanswered `OQ-*`, `TEST-*` catalogue, and named UAT
+  person as an open extension (proposed ASM-024).
 - Apply team answers onto the matching `OQ-*` row when they arrive.
 - Record and replace `(temporary)` workshop identities as real names arrive.
-- The APR-011 Git checkpoint is pending. Do not invent or edit
+- The APR-012 Git checkpoint is pending. Do not invent or edit
   `.cursor/PHASE_CHECKPOINT_APPROVAL.json`. After the Project Owner
   generates the marker, the agent may `git add -A` and the marked
   commit only.
@@ -52,17 +55,19 @@ baseline and exact allowed paths. Neither condition currently exists.
 - Workshop execution or owner-signed business decisions using temporary
   identities
 - Inventing or editing `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
-- Starting Phase 11 before explicit Phase 10 approval
+- Starting Phase 12 before explicit Phase 11 approval
+- Writing application code to “prove” the design
+- Minting a `TEST-*` catalogue
 - Installing extra MCP servers as if decided
+- Amending commit `81aef0e7bc217cf5172b1f64edf13848b6242bb2`
 
 ## Gate condition
 
-Phase 09 is approved as APR-011 at `2026-09-07T21:17:00+03:30`, including
-ASM-022. The APR-011 Git checkpoint is pending. Phase 10 is
-`READY_FOR_HUMAN_APPROVAL` as a **structure** gate, including proposed
-ASM-023. Team answers remain required before named people, auth
-packages, typed HTTP contracts, a test-runner ADR, extra MCP products,
-or deployment/repository products can close.
+Phase 10 is approved as APR-012 at `2026-09-07T21:52:00+03:30`, including
+ASM-023. The APR-012 Git checkpoint is pending. Phase 11 structure
+drafting is authorized. Team answers remain required before named
+people, auth packages, typed HTTP contracts, a test-runner ADR, extra
+MCP products, or deployment/repository products can close.
 
 OQ-001 through OQ-019 and proposed ADR-0006 through ADR-0008 remain unresolved.
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

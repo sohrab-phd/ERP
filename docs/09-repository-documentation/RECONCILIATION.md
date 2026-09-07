@@ -60,10 +60,11 @@ ASM-022 at approval.
 - Artifacts confirmed for this structure gate: the six Phase 09 drafts
   above, plus self-check, independent review, this reconciliation, the
   gate checklist, and the Phase 10 handoff.
-- Artifacts marked suspect: none. Phase 10 is `ACTIVE_IN_REVIEW` for
+- Artifacts marked suspect: none. Phase 11 is `ACTIVE_IN_REVIEW` for
   structure drafting.
 - Gates requiring reopen: none. Phase 08 stays approved; CHK-0009 is
-  complete. Phase 09 is approved as APR-011; Git checkpoint pending.
+  complete. Phase 09 is approved as APR-011; CHK-0010 records the
+  freeze at `81aef0e7bc217cf5172b1f64edf13848b6242bb2`.
 
 ## Remaining blockers
 

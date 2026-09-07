@@ -2,20 +2,22 @@
 id: AI-P11-HANDOFF-001
 title: Phase 10 to Phase 11 Handoff
 phase: 10-ai-cursor-development
-status: in_review
-version: 0.2.0
+status: approved
+version: 0.4.0
 owners: [chief-solution-architect]
-depends_on: [AI-AUTH-001, ASM-023]
+depends_on: [AI-AUTH-001, ASM-023, APR-012]
 last_reviewed: 2026-09-07
-approval: null
+approval: APR-012
 supersedes: null
 ---
 
 # Phase 10 to Phase 11 Handoff
 
-This is a Phase 10 design artifact. It does **not** start Phase 11.
-Phase 11 remains `planned` until the Project Owner approves Phase 10.
-This handoff does not authorize implementation or an unlock file.
+This is a Phase 10 design artifact. Phase 10 is approved as APR-012.
+Phase 11 structure drafting is authorized by
+[CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md). The APR-012 Git
+checkpoint is pending. This handoff does not authorize implementation
+or an unlock file.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -50,5 +52,6 @@ This handoff does not authorize implementation or an unlock file.
 - Close or answer OQ-001 through OQ-019 without a register update
 - Accept ADR-0006 through ADR-0008 or any package
 - Create application source or an unlock file
-- Start Phase 11 before explicit Phase 10 approval
+- Start Phase 12 before explicit Phase 11 approval
 - Treat `REV-AGENT` as Phase 11 independent review
+- Treat “Ok, Continue” as Phase 11 approval
