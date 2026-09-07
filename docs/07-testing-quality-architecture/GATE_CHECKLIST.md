@@ -59,7 +59,8 @@ supersedes: null
   at `2026-09-06T23:44:00+03:30`
 - Approval manifest:
   [APR-009](../00-governance/approved-baselines/APR-009-testing-quality-architecture.md)
-- Git checkpoint: pending
+- Git checkpoint: completed at
+  `29921d69e10bf6704966a08ff927d9e6ae9c0bd3` (CHK-0008)
 - Authorized next phase: `08-integration-deployment` for
   integration/deployment **structure** drafting
 

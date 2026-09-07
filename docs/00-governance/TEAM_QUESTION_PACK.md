@@ -7,7 +7,7 @@ version: 0.3.0
 owners: [chief-solution-architect, project-sponsor]
 depends_on: [GOV-QUESTIONS-001, ASM-015]
 last_reviewed: 2026-09-06
-approval: APR-009
+approval: APR-010
 supersedes: null
 ---
 
@@ -18,10 +18,12 @@ refreshed after every phase gate package. Canonical status stays in
 [OPEN_QUESTIONS.md](registers/OPEN_QUESTIONS.md). This pack does not close
 questions, approve a phase, or authorize implementation.
 
-As of: `2026-09-06` after Phase 07 approval (APR-009), including ASM-020.
-The APR-009 Git checkpoint is pending. The Project Owner will return
-answers in a few days. Architecture work continues; answers are not an
-immediate stop.
+As of: `2026-09-07` after Phase 08 approval (APR-010), including ASM-021.
+CHK-0008 remains `29921d69e10bf6704966a08ff927d9e6ae9c0bd3`. The APR-010
+Git checkpoint is pending. Phase 09 structure drafting is authorized
+(proposed ASM-022); Phase 09 is not approved. The Project Owner will
+return answers in a few days. Architecture work continues; answers are
+not an immediate stop.
 Unanswered: `OQ-001` through `OQ-019`.
 Phase 00 and Phase 01 left **no remaining phase-owned unanswered questions**.
 Every item below was raised in Phase 01 assimilation and is still open.
@@ -266,8 +268,9 @@ These are not extra questions. They ride with the OQs above. Say `keep`,
 
 ASM-013, ASM-014, ASM-016, ASM-017, ASM-018, ASM-019, and ASM-020 are
 process assumptions already used so design can continue. They are not
-shop-floor facts. ASM-021 is proposed for the Phase 08 structure gate
-and is not accepted until the Project Owner says so.
+shop-floor facts. ASM-021 is accepted by APR-010. ASM-022 is proposed
+for the Phase 09 structure gate and is not accepted until the Project
+Owner says so.
 
 ## Work that continues while answers are pending
 
@@ -286,11 +289,15 @@ and is not accepted until the Project Owner says so.
 - Phase 06 is approved as APR-008, including ASM-019. CHK-0007 records
   the checkpoint at `167353573840ef22d23049b864636d7383c61911`. Named
   people, auth packages, and retention days stay open.
-- Phase 07 is approved as APR-009, including ASM-020. The Git checkpoint
-  is pending. Test runners and quantity oracles stay open.
-- Phase 08 structure drafting is authorized. Weighbridge protocol,
-  legal accounting product, hosting, and RPO/RTO minutes stay open
-  (proposed ASM-021).
+- Phase 07 is approved as APR-009, including ASM-020. CHK-0008 records
+  the checkpoint at `29921d69e10bf6704966a08ff927d9e6ae9c0bd3`. Test
+  runners and quantity oracles stay open.
+- Phase 08 is approved as APR-010, including ASM-021. Git checkpoint
+  pending. Weighbridge protocol, legal accounting product, hosting, and
+  RPO/RTO minutes stay open.
+- Phase 09 structure drafting is authorized. Package manager, Git
+  hosting, CI product, and named maintainers stay open (proposed
+  ASM-022). Phase 10 stays `planned`.
 - `IMPLEMENTATION_AUTHORIZED` remains `false`.
 - Returned answers will be written onto the matching `OQ-*` row and this
   pack will be refreshed.

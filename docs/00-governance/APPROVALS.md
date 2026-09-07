@@ -3,11 +3,11 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: approved
-version: 0.9.0
+version: 0.10.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-06
-approval: APR-009
+last_reviewed: 2026-09-07
+approval: APR-010
 supersedes: null
 ---
 
@@ -353,9 +353,11 @@ approval authority. These recording edits enter a later checkpoint.
 ### APR-009 — Testing and Quality Architecture Gate
 
 - Phase: `07-testing-quality-architecture`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-009-testing-quality-architecture.md](approved-baselines/APR-009-testing-quality-architecture.md)
+- Checkpoint record:
+  [CHK-0008-phase-07.md](approved-baselines/CHK-0008-phase-07.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-009.md](../07-testing-quality-architecture/CHECKPOINT_APR-009.md)
 - Review package:
@@ -371,12 +373,48 @@ approval authority. These recording edits enter a later checkpoint.
   implementation
 - Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
   ADR-0008, test-runner ADRs
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 36 files changed
+- Git commit: `29921d69e10bf6704966a08ff927d9e6ae9c0bd3`
+- Git commit subject: `docs: approve phase 07 testing quality architecture`
+- Checkpoint marker: still present after commit; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 - Next phase: `08-integration-deployment`; `ACTIVE_IN_REVIEW` for
   structure drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
 
 Approving Phase 07 accepts ASM-020. Temporary identities still have no
-approval authority. Team answers will update the matching `OQ-*` rows
-when they arrive.
+approval authority. These recording edits enter a later checkpoint.
+
+### APR-010 — Integration and Deployment Architecture Gate
+
+- Phase: `08-integration-deployment`
+- Status: `approved`; checkpoint pending
+- Approval manifest:
+  [APR-010-integration-deployment.md](approved-baselines/APR-010-integration-deployment.md)
+- Checkpoint record: pending CHK-0009 after the Git commit
+- Checkpoint procedure:
+  [CHECKPOINT_APR-010.md](../08-integration-deployment/CHECKPOINT_APR-010.md)
+- Review package:
+  [GATE_CHECKLIST.md](../08-integration-deployment/GATE_CHECKLIST.md)
+- Supporting evidence:
+  [SELF_CHECK.md](../08-integration-deployment/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](../08-integration-deployment/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](../08-integration-deployment/RECONCILIATION.md)
+- Approver: Project Owner (explicit approval in Cursor session)
+- Approval timestamp: `2026-09-07T01:28:00+03:30`
+- Approval scope: Phase 08 structure package and ASM-021; no Docker/
+  protocol/GL freeze, no technology ADRs beyond ADR-0001, no
+  implementation
+- Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
+  ADR-0008, hosting and adapter-protocol ADRs
+- Git checkpoint: pending human-created marker
+- Git commit: pending
+- Git commit subject: `docs: approve phase 08 integration deployment`
+- Next phase: `09-repository-documentation`; `ACTIVE_IN_REVIEW` for
+  structure drafting
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+Approving Phase 08 accepts ASM-021. Temporary identities still have no
+approval authority. These recording edits enter a later checkpoint.

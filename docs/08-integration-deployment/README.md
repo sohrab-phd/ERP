@@ -2,12 +2,12 @@
 id: PHASE-08
 title: Integration and Deployment Architecture
 phase: 08-integration-deployment
-status: in_review
-version: 0.2.0
+status: approved
+version: 0.4.0
 owners: [integration-architect, operations-owner]
-depends_on: [PHASE-07, APR-009, QA-P08-HANDOFF-001, ASM-021]
-last_reviewed: 2026-09-06
-approval: null
+depends_on: [PHASE-07, APR-009, APR-010, QA-P08-HANDOFF-001, ASM-021]
+last_reviewed: 2026-09-07
+approval: APR-010
 supersedes: null
 ---
 
@@ -15,18 +15,18 @@ supersedes: null
 
 ## Gate
 
-Gate status: `ACTIVE_IN_REVIEW`
+Gate status: `APPROVED`
 
-Lifecycle: `in_review`
+Lifecycle: `approved`
 
-Approval: `null`
+Approval: `APR-010` at `2026-09-07T01:28:00+03:30`, including ASM-021
+(structure baseline)
 
-Phase 07 is approved as APR-009. Structure drafting is authorized.
-Proposed ASM-021 would leave weighbridge protocol, legal accounting
-product, hosting/Docker, observability product, backup vendor, RPO/RTO
-minutes, and named operators open.
+Git checkpoint: pending. See
+[CHECKPOINT_APR-010.md](CHECKPOINT_APR-010.md).
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Phase 09 is authorized for **structure** drafting. Team answers remain
+open. `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
 ## Purpose
 
@@ -42,28 +42,35 @@ extension boundaries — as **labels**, not products.
 - [x] [Observability kinds](OBSERVABILITY.md)
 - [x] [Backup, restore, and recovery labels](BACKUP_AND_RECOVERY.md)
 - [x] [Operational runbook catalogue](RUNBOOK_CATALOGUE.md)
-- [ ] Hosting/Docker/CI product ADRs — **not** in this draft; OQ-018
-- [ ] Self-check, independent review, reconciliation, gate checklist
+- [ ] Hosting/Docker/CI product ADRs — **not** in this baseline; OQ-018
+- [x] [Self-check](SELF_CHECK.md)
+- [x] [Independent review](INDEPENDENT_REVIEW.md)
+- [x] [Reconciliation](RECONCILIATION.md)
+- [x] [Gate checklist](GATE_CHECKLIST.md)
+- [x] [Phase 09 handoff](PHASE09_HANDOFF.md)
+- [x] [APR-010 checkpoint procedure](CHECKPOINT_APR-010.md)
 
 ## Entry criteria
 
 - [x] Phases 05–07 are approved (APR-007 through APR-009).
-- [ ] Phase 07 Git checkpoint — pending; does not block structure drafting.
+- [x] Phase 07 Git checkpoint — completed at
+  `29921d69e10bf6704966a08ff927d9e6ae9c0bd3` (CHK-0008).
 
 ## How this phase works while answers are still arriving
 
-Name adapters, environments, signals, and runbooks. Do not choose a
-protocol, cloud, container runtime, or recovery minute-count. Adapters
-submit core commands; they never write Ledger, Balance, or unit
-quantity.
+Name adapters, environments, zones, signals, and runbooks. Do not
+choose a protocol, cloud, container runtime, firewall, or recovery
+minute-count. Adapters submit core commands; they never write Ledger,
+Balance, or unit quantity.
 
 ## Exit criteria
 
 - Integration ownership, retries, idempotency, and failure handling are
   explicit **or** an open extension.
-- Deployment NFRs are named as labels; RPO/RTO stay OQ-016.
+- Deployment NFRs are named as labels; RPO/RTO stay OQ-016
+  (ASM-021 accepted).
 - Recovery procedures are named; accountable named operators stay
   OQ-019.
-- The user explicitly approves Phase 08.
+- The user explicitly approved Phase 08 as APR-010.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

@@ -16,8 +16,9 @@ supersedes: null
 This is a Phase 07 design artifact. Phase 07 is approved as APR-009.
 Phase 08 structure drafting is authorized by
 [CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md). The APR-009 Git
-checkpoint is still pending. This handoff does not authorize adapters,
-deployment files, or any package.
+checkpoint completed at `29921d69e10bf6704966a08ff927d9e6ae9c0bd3`
+(CHK-0008). This handoff does not authorize adapters, deployment files,
+or any package.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 

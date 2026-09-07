@@ -3,11 +3,11 @@ id: GOV-FINDINGS-001
 title: Review Findings Register
 phase: 00-governance
 status: in_review
-version: 0.16.0
+version: 0.17.0
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-06
-approval: APR-009
+last_reviewed: 2026-09-07
+approval: APR-010
 supersedes: null
 ---
 
@@ -508,7 +508,7 @@ artifact approval does not close open findings or their linked questions.
 
 - Severity: high
 - Gate: Phase 08
-- Status: treating
+- Status: resolved
 - Finding: The Phase 08 contract includes adapters, topology,
   observability, backup/recovery, and runbooks. Those cannot be frozen
   as a weighbridge protocol, accounting product, Docker, cloud,
@@ -519,10 +519,29 @@ artifact approval does not close open findings or their linked questions.
 - Treatment: ASM-021 records that a **structure** design-gate may
   complete with those items as explicit open extensions. No adapter
   code, Dockerfile, or deployment manifest is written.
-- Residual: The Project Owner must accept or reject ASM-021 at the
-  Phase 08 gate. Rejecting ASM-021 returns this gate to `BLOCKED`.
+- Residual: The Project Owner accepted ASM-021 by approving Phase 08 as
+  APR-010. Hosting and adapter-protocol ADRs remain later work.
 - Evidence: INT-CAT-001; INT-EXT-001; DEP-TOPO-001; DEP-OBS-001;
   DEP-DR-001; DEP-RUN-001.
+
+## FIND-035 — Phase 09 structure vs package-manager and CI freeze
+
+- Severity: high
+- Gate: Phase 09
+- Status: treating
+- Finding: The Phase 09 contract includes repository layout, dependency
+  rules, branching, documentation ownership, and conformance checks.
+  Those cannot be frozen as npm/pnpm, GitHub/GitLab, GitHub Actions, or
+  named maintainers without OQ-018 and OQ-019. Stopping all architecture
+  work until those answers arrive would halt Phase 09. Writing guessed
+  tools or names would silently close the questions.
+- Treatment: ASM-022 records that a **structure** design-gate may
+  complete with those items as explicit open extensions. No
+  `package.json`, application folder, or CI workflow is written.
+- Residual: The Project Owner must accept or reject ASM-022 at the
+  Phase 09 gate. Rejecting ASM-022 returns this gate to `BLOCKED`.
+- Evidence: REPO-LAY-001; REPO-DEP-001; REPO-BR-001; REPO-DOC-001;
+  REPO-GEN-001; REPO-CONF-001.
 
 ## Downstream suspect policy
 

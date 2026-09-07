@@ -3,11 +3,11 @@ id: GOV-ASSUMPTIONS-001
 title: Assumption Register
 phase: 00-governance
 status: in_review
-version: 0.10.0
+version: 0.11.0
 owners: [chief-solution-architect]
 depends_on: [SRC-001, ASM-REPORT-001]
-last_reviewed: 2026-09-06
-approval: APR-009
+last_reviewed: 2026-09-07
+approval: APR-010
 supersedes: null
 ---
 
@@ -18,8 +18,8 @@ None of these entries is a confirmed business decision.
 
 APR-002 approved this register's Phase 00 seed version. APR-003 approved the
 Phase 01 version as assimilation evidence. APR-004 accepted ASM-014 for the
-Phase 02 design-gate. The current version is `in_review` because Phase 08 added ASM-021.
-APR-009 accepted ASM-020. Individual assumptions retain their recorded
+Phase 02 design-gate. The current version is `in_review` because Phase 09 added ASM-022.
+APR-010 accepted ASM-021. APR-009 accepted ASM-020. Individual assumptions retain their recorded
 validation status; artifact approval does not confirm shop-floor facts.
 
 ## ASM-001 — Single legal entity and principal site
@@ -261,7 +261,7 @@ validation status; artifact approval does not confirm shop-floor facts.
 
 ## ASM-021 — Phase 08 structure design-gate may complete with open integration and deployment products
 
-- Status: in_review
+- Status: accepted
 - Statement: Phase 08 structure drafting and a Phase 08 **structure**
   design-gate may complete while weighbridge protocol and device key,
   legal accounting product, hosting/Docker, observability product,
@@ -270,11 +270,30 @@ validation status; artifact approval does not confirm shop-floor facts.
   adapter code, Dockerfile, CI, or deployment manifest is written. No
   protocol, cloud, or recovery minute-count is invented as if decided.
 - Owner: Project sponsor and Chief Solution Architect
-- Validation: pending Project Owner accept/reject at the Phase 08
-  structure gate. This does **not** close any `OQ-*`, accept a
-  deployment product, or authorize implementation. Later answers are
-  still required before adapter ADRs or a hosting ADR
+- Validation: Project Owner accepted ASM-021 and approved Phase 08 as
+  APR-010 at `2026-09-07T01:28:00+03:30`. This does **not** close any
+  `OQ-*`, accept a deployment product, or authorize implementation. Later
+  answers are still required before adapter ADRs or a hosting ADR
 - Affects: Phase 08 exit, Phase 09 repository, implementation lock
 - Related questions: OQ-010, OQ-011, OQ-012, OQ-013, OQ-014, OQ-015,
   OQ-016, OQ-018, OQ-019
 - Related finding: FIND-034
+
+## ASM-022 — Phase 09 structure design-gate may complete with open repository products
+
+- Status: in_review
+- Statement: Phase 09 structure drafting and a Phase 09 **structure**
+  design-gate may complete while package manager (npm/pnpm), Git hosting
+  product, CI product, and named documentation maintainers remain
+  unanswered, provided each stays an explicit open extension and no
+  `package.json`, `tsconfig`, application folder, or CI workflow is
+  written. No monorepo tool or branch-hosting product is invented as if
+  decided.
+- Owner: Project sponsor and Chief Solution Architect
+- Validation: pending Project Owner accept/reject at the Phase 09
+  structure gate. This does **not** close any `OQ-*`, accept a package
+  manager, or authorize implementation. Later answers are still required
+  before a repository-tool ADR
+- Affects: Phase 09 exit, Phase 10 AI/Cursor, implementation lock
+- Related questions: OQ-018, OQ-019
+- Related finding: FIND-035

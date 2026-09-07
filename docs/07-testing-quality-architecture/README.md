@@ -22,10 +22,13 @@ Lifecycle: `approved`
 Approval: `APR-009` at `2026-09-06T23:44:00+03:30`, including ASM-020
 (structure baseline)
 
-Git checkpoint: pending. See [CHECKPOINT_APR-009.md](CHECKPOINT_APR-009.md).
+Git checkpoint: completed at
+`29921d69e10bf6704966a08ff927d9e6ae9c0bd3` (CHK-0008). See
+[CHECKPOINT_APR-009.md](CHECKPOINT_APR-009.md).
 
-Phase 08 is authorized for **structure** drafting. Team answers remain
-open. `IMPLEMENTATION_AUTHORIZED` remains `false`.
+Phase 08 is approved as APR-010. Phase 09 is authorized for **structure**
+drafting. Team answers remain open. `IMPLEMENTATION_AUTHORIZED` remains
+`false`.
 
 ## Purpose
 
