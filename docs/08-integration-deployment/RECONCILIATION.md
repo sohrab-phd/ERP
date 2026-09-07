@@ -67,7 +67,8 @@ ASM-021 at approval.
 - Artifacts marked suspect: none. Phase 09 is `ACTIVE_IN_REVIEW` for
   structure drafting.
 - Gates requiring reopen: none. Phase 07 stays approved; CHK-0008 is
-  complete. Phase 08 is approved as APR-010; Git checkpoint pending.
+  complete. Phase 08 is approved as APR-010; CHK-0009 is complete at
+  `751035d2359abb5bd99a1b8a254715b2a5c937ae`.
 
 ## Remaining blockers
 

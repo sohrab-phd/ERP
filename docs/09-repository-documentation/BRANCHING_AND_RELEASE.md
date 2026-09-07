@@ -2,12 +2,12 @@
 id: REPO-BR-001
 title: Branching Review and Release Labels
 phase: 09-repository-documentation
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.3.0
 owners: [development-lead]
-depends_on: [GOV-GATES-001, APR-010]
+depends_on: [GOV-GATES-001, APR-010, APR-011]
 last_reviewed: 2026-09-07
-approval: null
+approval: APR-011
 supersedes: null
 ---
 
@@ -28,7 +28,9 @@ or a branching-product name.
 
 A later implementation branch may not silently change an approved
 `INV-*`, `ADP-*`, or command catalogue. That is a reopen of the owning
-approval.
+approval. Frozen checkpoint commits (`CHK-*`) are not amended.
+
+`BR-IMPL` does not exist while `IMPLEMENTATION_AUTHORIZED` is false.
 
 ## Review kinds (labels)
 

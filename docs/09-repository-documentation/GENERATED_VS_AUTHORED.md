@@ -2,12 +2,12 @@
 id: REPO-GEN-001
 title: Generated Versus Authored Artifacts
 phase: 09-repository-documentation
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.3.0
 owners: [solution-architect]
-depends_on: [APP-ENV-001, DATA-LOGICAL-001, APR-010]
+depends_on: [APP-ENV-001, DATA-LOGICAL-001, APP-BG-001, APR-010, APR-011]
 last_reviewed: 2026-09-07
-approval: null
+approval: APR-011
 supersedes: null
 ---
 
@@ -33,11 +33,15 @@ generator runs in this phase.
 | SQL/ORM artifacts | Phase 04 logical model + later ADR | Ledger rewrite rules |
 | OpenAPI files | Query/command envelope | Isolation policy |
 | Genealogy projection rebuild | Ledger facts | `EditGenealogy` |
+| Balance rebuild | Ledger facts | `AdjustBalance` |
+| Opening-stock load | Cutover command (`ADP-CUTOVER`) | Balance-only rows; OQ-015 still open |
 
 Until an implementation unlock names exact paths, none of those files
-are created.
+are created. `package.json` and Dockerfiles are not generated from
+architecture Markdown.
 
 ## Must not decide here
 
 - Prisma, TypeORM, tRPC, or OpenAPI generator products
 - Orval, GraphQL codegen, or similar
+- Fixture volumes (OQ-014)

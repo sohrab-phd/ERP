@@ -77,7 +77,7 @@ an implementation unlock.
 - This reviewer cannot certify Docker, a weighbridge vendor, an
   identity provider, or an accounting product that OQ-011 / OQ-012 /
   OQ-018 have not chosen.
-- CHK-0008 recording files remain uncommitted.
+- CHK-0009 recording files remain uncommitted.
 
 ## Required next action
 

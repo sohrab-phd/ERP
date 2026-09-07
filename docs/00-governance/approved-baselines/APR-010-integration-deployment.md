@@ -30,8 +30,8 @@ supersedes: null
   **structure** drafting
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 37 files changed
+- Git commit: `751035d2359abb5bd99a1b8a254715b2a5c937ae`
 - Git commit subject: `docs: approve phase 08 integration deployment`
 - Supersedes approval: none
 
@@ -92,7 +92,7 @@ Exact SHA-256 digests belong in the human-created checkpoint marker.
 - OQ-001 through OQ-019 remain open or `treating`.
 - ADR-0006 through ADR-0008 remain proposed.
 - Hosting, adapter-protocol, and identity-product ADRs remain later work.
-- Git checkpoint pending human marker and commit.
+- Git checkpoint completed at `751035d2359abb5bd99a1b8a254715b2a5c937ae`.
 
 ## Reopen conditions
 

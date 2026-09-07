@@ -2,21 +2,22 @@
 id: REPO-P10-HANDOFF-001
 title: Phase 09 to Phase 10 Handoff
 phase: 09-repository-documentation
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.2.0
 owners: [chief-solution-architect]
-depends_on: [REPO-LAY-001, ASM-022]
+depends_on: [REPO-LAY-001, ASM-022, APR-011]
 last_reviewed: 2026-09-07
-approval: null
+approval: APR-011
 supersedes: null
 ---
 
 # Phase 09 to Phase 10 Handoff
 
-This is a Phase 09 design artifact. It does **not** start Phase 10.
-Phase 10 remains `planned` until the Project Owner approves Phase 09.
-This handoff does not authorize agent implementation, application
-folders, or any package.
+This is a Phase 09 design artifact. Phase 09 is approved as APR-011.
+Phase 10 structure drafting is authorized by
+[CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md). The APR-011 Git
+checkpoint is pending. This handoff does not authorize agent
+implementation, application folders, or any package.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -49,4 +50,4 @@ folders, or any package.
 - Close or answer OQ-001 through OQ-019 without a register update
 - Accept ADR-0006 through ADR-0008 or any package
 - Create application source folders or manifests
-- Start Phase 10 before explicit Phase 09 approval
+- Start Phase 11 before explicit Phase 10 approval

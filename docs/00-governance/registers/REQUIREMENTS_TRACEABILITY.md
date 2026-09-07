@@ -3,7 +3,7 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: approved
-version: 0.6.0
+version: 0.7.0
 owners: [requirements-owner, qa-architect]
 depends_on: [SRC-001, SRC-002, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-09-07
@@ -58,6 +58,11 @@ evidence and Phase 07.
   QA-SCN-STOCK, QA-SCN-PURCHASE, QA-SCN-MAKE, QA-SCN-NOT-FEASIBLE
 - Phase 08 integration intents (structure, not products):
   `ADP-REPORT` / `ADP-LIVE` isolation; `TB-STOCK`; adapters command only
+- Phase 09 repository intents (structure, not products):
+  `mod-reporting` read-only; `CONF-ISO`
+- Phase 10 agent intents (structure, not products):
+  `AG-ARCH` cannot invent a second catalogue; `CONF-ISO` remains a keep
+  rule for later generated exports
 - Status: proposed; detailed REQ-* decomposition remains workshop-owned
 
 ### REQ-OBJ-002 — Correct inventory under concurrency
@@ -85,6 +90,11 @@ evidence and Phase 07.
 - Phase 08 integration intents (structure, not products):
   unsplittable DATA-TX-001 on adapter paths; `ADP-WEIGHBRIDGE` commander
   only; `DR-RESTORE` rebuilds Balance from Ledger
+- Phase 09 repository intents (structure, not products):
+  `CONF-IPS`; `CONF-BUNDLE`; no Balance-only API
+- Phase 10 agent intents (structure, not products):
+  `TASK-IMPL` forbids Ledger writes outside Inventory Posting;
+  `CONF-IPS` / `CONF-BUNDLE` are keep/reject rules
 - Status: proposed; numeric UOM, Coil, and reservation guards remain open
 
 ### REQ-OBJ-003 — Bidirectional material genealogy
@@ -111,6 +121,11 @@ evidence and Phase 07.
   QA-SCN-MAKE; QA-P-GEN-*; QA-SCN-REJECT-GENEALOGY
 - Phase 08 integration intents (structure, not products):
   `GenealogyRebuild` after restore; no adapter exposes `EditGenealogy`
+- Phase 09 repository intents (structure, not products):
+  `CONF-FORBID` (`EditGenealogy`); rebuild is generated from Ledger
+- Phase 10 agent intents (structure, not products):
+  prompts and acceptance reject `EditGenealogy`; generated genealogy
+  stays a Ledger rebuild
 - Status: proposed; official posting points, tracking, and residual cutoff
   remain open
 
@@ -140,6 +155,12 @@ evidence and Phase 07.
 - Phase 08 integration intents (structure, not products):
   `OBS-AUDIT`; `RB-SOD`; `ADP-CUTOVER` stays `GUARD_OPEN_POLICY` until
   OQ-015
+- Phase 09 repository intents (structure, not products):
+  authored catalogues stay source truth; generated OpenAPI cannot close
+  an `OQ-*`
+- Phase 10 agent intents (structure, not products):
+  `REV-AGENT` cannot approve architecture; unanswered policy is
+  `GUARD_OPEN_POLICY`
 - Status: proposed; QC, tolerance, and Sales Order closure guards remain open
 
 ### REQ-OBJ-005 — Maintainable Node.js/TypeScript platform
@@ -157,6 +178,10 @@ evidence and Phase 07.
   QG-ARCH only; runner/CI stay OQ-018; no package claimed
 - Phase 08 integration intents (structure, not products):
   `ZONE-*` / `HH-*` labels; hosting/Docker stay OQ-018
+- Phase 09 repository intents (structure, not products):
+  `mod-*` / `CONF-*` labels; npm/pnpm/CI stay OQ-018
+- Phase 10 agent intents (structure, not products):
+  existing Cursor controls only; `MCP-EXTRA` stays OQ-018
 - Status: confirmed objective; solution undecided
 
 ## Coverage policy
@@ -167,8 +192,14 @@ does not mint a false-precision REQ-* catalogue before workshop evidence
 (FIND-021, FIND-028). Phase 07 adds verification **intent** links (levels,
 `QA-SCN-*`, `QA-P-*`, SV map). It does not mint `TEST-*` IDs or choose a
 runner. Phase 08 adds adapter, zone, and recovery **labels**. It does
-not choose a protocol, Docker, or RPO/RTO. Phases 04–08 extend each
+not choose a protocol, Docker, or RPO/RTO. Phase 09 adds repository
+layout, import, and conformance **labels**. It does not choose npm,
+GitHub, or CI. Phase 10 adds agent authority, prompt, and acceptance
+**labels**. It does not choose extra MCP or named approvers. Phases 04–10 extend each
 row with physical data, interfaces, controls, and later tests. Phase 11
 rejects any in-scope row with a missing mandatory link. Phase 07 is
 approved as APR-009 (structure); these intent links are not executable
 tests. Phase 08 is approved as APR-010 (structure), including ASM-021.
+Phase 09 is approved as APR-011 (structure), including ASM-022.
+Phase 10 remains unapproved until the Project Owner accepts or rejects
+ASM-023.

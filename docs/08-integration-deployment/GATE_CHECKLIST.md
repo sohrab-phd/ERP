@@ -55,7 +55,8 @@ supersedes: null
 - Explicit approval statement/date: Phase 08 approved, including
   ASM-021, at `2026-09-07T01:28:00+03:30`
 - Approval manifest: [APR-010](../00-governance/approved-baselines/APR-010-integration-deployment.md)
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 37 files changed
+- Git commit: `751035d2359abb5bd99a1b8a254715b2a5c937ae` (CHK-0009)
 - Authorized next phase: `09-repository-documentation` for repository
   **structure** drafting
 

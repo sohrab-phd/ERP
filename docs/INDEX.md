@@ -31,6 +31,8 @@ supersedes: null
 - [CHK-0005 Phase 05 checkpoint](00-governance/approved-baselines/CHK-0005-phase-05.md)
 - [CHK-0007 Phase 06 checkpoint](00-governance/approved-baselines/CHK-0007-phase-06.md)
 - [CHK-0008 Phase 07 checkpoint](00-governance/approved-baselines/CHK-0008-phase-07.md)
+- [CHK-0009 Phase 08 checkpoint](00-governance/approved-baselines/CHK-0009-phase-08.md)
+- [APR-011 Repository and Documentation approval](00-governance/approved-baselines/APR-011-repository-documentation.md)
 - [APR-010 Integration and Deployment approval](00-governance/approved-baselines/APR-010-integration-deployment.md)
 - [APR-009 Testing and Quality Architecture approval](00-governance/approved-baselines/APR-009-testing-quality-architecture.md)
 - [APR-008 Security RBAC and Audit approval](00-governance/approved-baselines/APR-008-security-rbac-audit.md)
@@ -170,7 +172,23 @@ supersedes: null
   - [Generated versus authored artifacts](09-repository-documentation/GENERATED_VS_AUTHORED.md)
   - [Architecture conformance-check labels](09-repository-documentation/CONFORMANCE_CHECKS.md)
   - [Phase 10 handoff](09-repository-documentation/PHASE10_HANDOFF.md)
+  - [Phase 09 Self-Check](09-repository-documentation/SELF_CHECK.md)
+  - [Phase 09 Independent Review](09-repository-documentation/INDEPENDENT_REVIEW.md)
+  - [Phase 09 Reconciliation](09-repository-documentation/RECONCILIATION.md)
+  - [Phase 09 Gate Checklist](09-repository-documentation/GATE_CHECKLIST.md)
+  - [APR-011 Checkpoint Procedure](09-repository-documentation/CHECKPOINT_APR-011.md)
 - [10 — AI/Cursor Development Architecture](10-ai-cursor-development/README.md)
+  - [Agent authority and escalation](10-ai-cursor-development/AGENT_AUTHORITY.md)
+  - [Rule and skill catalogue](10-ai-cursor-development/RULE_AND_SKILL_CATALOGUE.md)
+  - [Implementation-prompt standards](10-ai-cursor-development/IMPLEMENTATION_PROMPT_STANDARDS.md)
+  - [Human and independent review](10-ai-cursor-development/HUMAN_AND_INDEPENDENT_REVIEW.md)
+  - [Tool, MCP, hook, and safety labels](10-ai-cursor-development/TOOL_MCP_HOOK_SAFETY.md)
+  - [Generated-code acceptance](10-ai-cursor-development/GENERATED_CODE_ACCEPTANCE.md)
+  - [Phase 10 Self-Check](10-ai-cursor-development/SELF_CHECK.md)
+  - [Phase 10 Independent Review](10-ai-cursor-development/INDEPENDENT_REVIEW.md)
+  - [Phase 10 Reconciliation](10-ai-cursor-development/RECONCILIATION.md)
+  - [Phase 10 Gate Checklist](10-ai-cursor-development/GATE_CHECKLIST.md)
+  - [Phase 11 handoff](10-ai-cursor-development/PHASE11_HANDOFF.md)
 - [11 — Architecture Validation](11-architecture-validation/README.md)
 - [12 — Implementation Planning](12-implementation-planning/README.md)
 
@@ -194,7 +212,10 @@ CHK-0007 records the checkpoint at
 `167353573840ef22d23049b864636d7383c61911`. APR-009 approved Phase 07
 at `2026-09-06T23:44:00+03:30`, including ASM-020. CHK-0008 records the
 checkpoint at `29921d69e10bf6704966a08ff927d9e6ae9c0bd3`. APR-010 approved
-Phase 08 at `2026-09-07T01:28:00+03:30`, including ASM-021. The APR-010
-Git checkpoint is pending. Phase 09 is `ACTIVE_IN_REVIEW` for structure
-drafting (proposed ASM-022). Workshop execution remains blocked by
-OQ-019. Implementation remains unauthorized.
+Phase 08 at `2026-09-07T01:28:00+03:30`, including ASM-021. CHK-0009
+records the checkpoint at `751035d2359abb5bd99a1b8a254715b2a5c937ae`.
+APR-011 approved Phase 09 at `2026-09-07T21:17:00+03:30`, including
+ASM-022. The APR-011 Git checkpoint is pending. Phase 10 is
+`READY_FOR_HUMAN_APPROVAL` as a **structure** gate, including proposed
+ASM-023. Workshop execution remains blocked by OQ-019. Implementation
+remains unauthorized.

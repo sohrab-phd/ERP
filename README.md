@@ -6,9 +6,9 @@ traceability, and monitoring system.
 
 ## Current status
 
-- Completed phase: `08-integration-deployment` (structure; Git checkpoint pending)
-- Current phase: `09-repository-documentation`
-- Gate status: `ACTIVE_IN_REVIEW`
+- Completed phase: `09-repository-documentation` (structure; Git checkpoint pending)
+- Current phase: `10-ai-cursor-development`
+- Gate status: `READY_FOR_HUMAN_APPROVAL`
 - Phase 00 approval: `APR-002`; checkpoint completed at
   `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1`
 - Phase 01 approval: `APR-003`; checkpoint completed at
@@ -30,7 +30,10 @@ traceability, and monitoring system.
   ASM-020; checkpoint completed at
   `29921d69e10bf6704966a08ff927d9e6ae9c0bd3`
 - Phase 08 approval: `APR-010` at `2026-09-07T01:28:00+03:30`, including
-  ASM-021; Git checkpoint pending. Team answers expected in a few days.
+  ASM-021; checkpoint completed at
+  `751035d2359abb5bd99a1b8a254715b2a5c937ae`
+- Phase 09 approval: `APR-011` at `2026-09-07T21:17:00+03:30`, including
+  ASM-022; Git checkpoint pending. Team answers expected in a few days.
   OQ-019 still blocks workshop execution
 - Implementation authorized: **No**
 - Application source code, database migrations, package setup, and deployment
@@ -59,9 +62,9 @@ work authorization.
 - `05-application-api-architecture`: **approved (structure); checkpoint completed**
 - `06-security-rbac-audit`: **approved (structure); checkpoint completed**
 - `07-testing-quality-architecture`: **approved (structure); checkpoint completed**
-- `08-integration-deployment`: **approved (structure); Git checkpoint pending**
-- `09-repository-documentation`: **in_review; structure drafting**
-- `10-ai-cursor-development`: planned
+- `08-integration-deployment`: **approved (structure); checkpoint completed**
+- `09-repository-documentation`: **approved (structure); Git checkpoint pending**
+- `10-ai-cursor-development`: **in_review; structure gate presented**
 - `11-architecture-validation`: planned
 - `12-implementation-planning`: planned
 
@@ -72,6 +75,6 @@ Each phase follows:
 No phase may begin detailed work before its entry criteria are met. Material
 changes to approved architecture reopen affected downstream artifacts.
 
-Phase 08 is approved as APR-010. Phase 09 may draft repository structure
-with open product extensions (proposed ASM-022). Temporary workshop
+Phase 09 is approved as APR-011. Phase 10 is presented for human
+approval as a **structure** gate (proposed ASM-023). Temporary workshop
 identities cannot sign decisions. Implementation remains unauthorized.

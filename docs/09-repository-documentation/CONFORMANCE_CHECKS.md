@@ -2,12 +2,12 @@
 id: REPO-CONF-001
 title: Architecture Conformance Check Labels
 phase: 09-repository-documentation
-status: in_review
-version: 0.1.0
+status: approved
+version: 0.3.0
 owners: [qa-architect, solution-architect]
-depends_on: [QA-GATE-001, REPO-DEP-001, APR-010]
+depends_on: [QA-GATE-001, REPO-DEP-001, APR-010, APR-011]
 last_reviewed: 2026-09-07
-approval: null
+approval: APR-011
 supersedes: null
 ---
 
@@ -26,6 +26,10 @@ linter product (OQ-018). It inherits `QG-*` from Phase 07.
 | `CONF-CMD` | Only catalogue commands are callable | Framework |
 | `CONF-IPS` | Only `mod-inventory-posting` writes Ledger | ORM product |
 | `CONF-ADP` | Adapters submit commands; no table writes | Adapter host |
+| `CONF-BUNDLE` | DATA-TX-001 bundles are not split | Transaction library (OQ-017) |
+| `CONF-FORBID` | `EditGenealogy`, `AdjustBalance`, `PortalPlaceOrder` are not callable | — |
+| `CONF-ISO` | Exports and live notices isolate customers (SV-012) | — |
+| `CONF-SECRET` | Secrets and `.env` are not in the tree (`HH-SECRET`) | Secret store |
 | `CONF-UNLOCK` | Application paths exist only under a valid unlock | Implementation unlock |
 | `QG-ARCH` | Design artifacts still match the approved baseline | — |
 
