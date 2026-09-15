@@ -3,10 +3,10 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: approved
-version: 0.6.0
+version: 0.8.0
 owners: [chief-solution-architect]
-depends_on: [ASM-REPORT-001, ASM-014, ASM-016, APR-005]
-last_reviewed: 2026-09-06
+depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
+last_reviewed: 2026-09-15
 approval: APR-005
 supersedes: null
 ---
@@ -14,286 +14,558 @@ supersedes: null
 # Open Questions Register
 
 Status values: `open`, `investigating`, `treating`, `answered`, `deferred`,
-`superseded`. Severity and blocking scope are independent. Answers become
-authoritative only when promoted to the owning artifact or ADR.
+`superseded`. Severity and blocking scope are independent.
 
-APR-002 approved this register's Phase 00 seed version. APR-003 approved the
-Phase 01 assimilation version. APR-004 accepted the Phase 02 blocking-scope
-refinements under ASM-014. The current version is approved as APR-005. Phase 03
-cites these questions as open guards under ASM-016. OQ-001 through OQ-018
-remain unanswered. Temporary placeholders confer no owner authority. OQ-019
-remains `treating`.
+Team answers arrived as Markdown files under
+[team-answers/](../team-answers/). They become authoritative only on the
+matching `OQ-*` row below. Chat is not a second register. Residual gaps stay
+`GUARD_OPEN_POLICY` until a later row update.
 
-Phase 03 structure drafts cite OQ-001 through OQ-010, OQ-012, OQ-015, OQ-017,
-and OQ-019 as open guards. Inquiry and Quotation expiry use
-`workshop-commercial-practice` (FIND-026). No question is answered or closed.
+Recorded: `2026-09-15` from `docs/00-governance/team-answers/OQ-001.md`
+through `OQ-019.md`. Implementation remains unauthorized. There is no
+Phase 13.
 
-The Project Owner takes unanswered questions to the team using
-[TEAM_QUESTION_PACK.md](../TEAM_QUESTION_PACK.md). That pack is refreshed after
-every phase. Answers become authoritative only in this register.
+## Snapshot after recording
+
+| ID | Status | What is now locked | Still unknown |
+| --- | --- | --- | --- |
+| OQ-001 | treating | kg is official stock UOM; one stock truth | Decimal scale, rounding, material conversion factors |
+| OQ-002 | answered | Coil quantity = measured weight in kg | Shop-floor ticket confirmation (validation, not a new choice) |
+| OQ-003 | treating | Official post at `CompleteProductionOperation` | Named routing steps; abort role name |
+| OQ-004 | answered | Unit-level Coil; hybrid finished-product rule | First-go-live product-family catalogue |
+| OQ-005 | treating | QC can block available and ship; exceptional release needs two people | Quality Plans, limits, named approvers |
+| OQ-006 | answered | Partial shipment allowed; default tolerance 0; configurable | Exact %/kg by family/customer |
+| OQ-007 | answered | Close Sales Order on fulfilled/cancelled/unfulfilled demand, not payment | Commercial exceptions if any later |
+| OQ-008 | answered | One Coil, one active reservation; confirmed SO has no timer expiry | Temporary-hold TTL if that type is added later |
+| OQ-009 | treating | Residual vs scrap is a reuse policy, not a global kg | Family min weight/dimensions |
+| OQ-010 | answered | MVP portal = visibility only; no order write | Exact document list; later price/request/order phases |
+| OQ-011 | treating | Weighbridge never writes Ledger; human ticket fallback | Make/model, protocol, device id, named operator |
+| OQ-012 | answered | Finance-Lite is not legal GL; no Legal-GL integration in MVP | Accounting product/API when a later phase needs it |
+| OQ-013 | answered | One legal entity, one principal site | Future multi-site would reopen architecture |
+| OQ-014 | treating | Modest scale: &lt;100 users, ~15–25 concurrent | 12-month transaction counts |
+| OQ-015 | treating | Opening stock = Ledger facts via `OpeningStockImport` | Source files, freeze time, named signers |
+| OQ-016 | answered | RPO 60 min, RTO 8 h, daily backup, off-site copy | Retention days; backup product |
+| OQ-017 | answered | App-owned bundle in a PostgreSQL transaction + locks | PG functions only after a later ADR + spike |
+| OQ-018 | answered | Modular Monolith + PostgreSQL; Node.js + TypeScript | NestJS, Prisma, React, Docker, auth package, extra MCP |
+| OQ-019 | treating | Role/RACI list accepted | Real names, delegates, approval scope |
+
+Inquiry/Quotation expiry remains FIND-026 (`workshop-commercial-practice`),
+not a new `OQ-*`. Extra MCP remains “none by default” under OQ-018.
+
+---
 
 ## OQ-001 — Authoritative UOM matrix
 
-- Question: Which quantity units, conversions, precision, and rounding rules
-  apply to each material and product family?
-- Why: Drives balance, pricing, mass balance, and API contracts.
-- Domains: MasterData, Inventory, Sales, Production
+- Answer owner: Data Steward / Inventory / Sales / Production
 - Severity: critical
-- Blocking scope: workshop-validated UOM policy, Phase 03 numeric/guard design,
-  and Phase 04 physical/API contracts. Phase 02 **design drafting and
-  design-gate** may complete with this question formally scoped out under
-  ASM-014.
-- Needed: Signed UOM/conversion matrix with examples
-- Treatment: Phase 02 records the extension point and does not invent the
-  signed matrix.
-- Status: open
+- Status: treating
+- Source: [OQ-001.md](../team-answers/OQ-001.md)
+- Recorded: `2026-09-15`
+
+### Recorded answer
+
+Kilogram is the authoritative stock UOM for Coil and other raw Inventory
+Units. Ledger postings use kg. Length, piece, and bundle may be stored as
+secondary/commercial quantities and must not form a second stock truth.
+Conversions must be explicit and material-specific. Exact decimal
+arithmetic is required; JavaScript `Number` is not authoritative for
+weight or money. PostgreSQL `NUMERIC` and a TypeScript decimal type are
+the intended representations.
+
+### Still unknown
+
+Decimal scale, rounding rule, and material-specific conversion factors.
+Commands that need those numbers remain `GUARD_OPEN_POLICY`.
+
+### Promoted to
+
+ASM-003 kept (weight-first). RISK-004 treatment confirmed. No signed
+conversion matrix yet.
+
+---
 
 ## OQ-002 — Coil quantity semantics
 
-- Question: Is Coil inventory authoritative by measured weight only, or by
-  weight plus measured/derived length?
-- Why: Changes availability, posting, consumption, and tolerance rules.
-- Domains: Inventory, Production
+- Answer owner: Inventory / Warehouse / Production
 - Severity: critical
-- Blocking scope: workshop-validated quantity policy, Phase 03 posting/tolerance
-  design, and downstream implementation. Phase 02 **design drafting and
-  design-gate** may complete with this question formally scoped out under
-  ASM-014.
-- Needed: Current practice, equipment accuracy, representative records
-- Treatment: Phase 02 keeps Coil as an Inventory Unit kind and does not choose
-  weight-only versus weight-plus-length.
-- Status: open
+- Status: answered
+- Source: [OQ-002.md](../team-answers/OQ-002.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+**A — Weight is authoritative.** A Coil’s inventory quantity is measured
+weight in kg. Length may be measured or calculated and must not change
+availability or Ledger. Reservation, issue, consumption, residual, scrap,
+balance, and mass-balance use weight. A Coil without length remains valid.
+
+Example recorded in the source file: Coil C-00125 at 12,480.500 kg.
+
+### Still unknown
+
+Confirmation against actual scale tickets (validation of this decision,
+not an open choice).
+
+### Promoted to
+
+ASM-003 kept. OQ-001 residual still covers scale/rounding.
+
+---
 
 ## OQ-003 — Production routing and posting points
 
-- Question: What are the real routing steps, measurement points, and official
-  material consumption/output posting points by product line?
-- Why: Defines operations, WIP, genealogy, and transaction boundaries.
-- Domains: Production, Inventory
+- Answer owner: Production / MES
 - Severity: critical
-- Blocking scope: workshop-validated routing, Phase 03 official posting points,
-  and downstream implementation. Phase 02 **design drafting and design-gate**
-  may complete with this question formally scoped out under ASM-014.
-- Needed: Validated As-Is/To-Be process maps and shop-floor posting evidence
-- Treatment: Phase 02 proposes Production as operation/fact owner and leaves
-  real steps and official posting points unset.
-- Status: open
+- Status: treating
+- Source: [OQ-003.md](../team-answers/OQ-003.md)
+- Recorded: `2026-09-15`
+
+### Recorded answer
+
+No universal hard-coded route. Official consume/output/residual/scrap post
+together at `CompleteProductionOperation` as one business transaction.
+Skip only when the approved routing version marks the step optional.
+Abort before posted inventory facts follows normal production
+authorization; after posted facts, abort needs a production-supervisor /
+production-manager role and compensating commands. Routing is versioned
+per product family.
+
+### Still unknown
+
+First-go-live step names, work centers, and the exact abort role title.
+Skip/abort that needs a missing step stays `GUARD_OPEN_POLICY`.
+
+---
 
 ## OQ-004 — Tracking granularity
 
-- Question: Which products require Batch, Bundle, or piece-level tracking?
-- Why: Determines identities, labels, genealogy, and data volume.
-- Domains: Production, Quality, Traceability
+- Answer owner: Production / Quality / Data Steward
 - Severity: critical
-- Blocking scope: workshop-validated identity matrix, Phase 03 genealogy/label
-  design, and Phase 04 volume design. Phase 02 **design drafting and
-  design-gate** may complete with this question formally scoped out under
-  ASM-014.
-- Needed: Product/customer/regulatory matrix
-- Treatment: Phase 02 keeps Product Batch and Inventory Unit as proposed
-  identities and does not choose batch versus bundle versus piece as policy.
-- Status: open
+- Status: answered
+- Source: [OQ-004.md](../team-answers/OQ-004.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+Raw Coils: unit-level `InventoryUnit`, with Material Lot as origin
+context. Finished product: unit-level when independently handled;
+batch-level when homogeneous. Packages/pallets: unit-level when
+independently moved. Scrap: quantity on the operation by default.
+Reusable residual: its own Inventory Unit. Genealogy stays
+Lot → Unit → Operation → Batch → Finished unit → Package → Shipment.
+
+### Still unknown
+
+The first-go-live product-family tracking catalogue (application of this
+rule, not a new grain).
+
+### Promoted to
+
+ASM-004 replaced: batch is not always enough for finished goods.
+
+---
 
 ## OQ-005 — Quality plans and release authority
 
-- Question: Which incoming, in-process, and final checks, limits, samples, and
-  approval roles are mandatory?
-- Why: Availability and shipment gates depend on these rules.
-- Domains: Quality, Inventory, Shipping, Security
+- Answer owner: Quality (names via OQ-019)
 - Severity: critical
-- Blocking scope: workshop-validated QC authority, Phase 03 release/hold
-  guards, and downstream implementation. Phase 02 **design drafting and
-  design-gate** may complete with this question formally scoped out under
-  ASM-014.
-- Needed: QC forms, standards, exceptions, and signed authority matrix
-- Treatment: Phase 02 records that Quality commands Inventory and that Product
-  Batch must be Released before shipment; it does not name approvers or limits.
-- Status: open
+- Status: treating
+- Source: [OQ-005.md](../team-answers/OQ-005.md)
+- Recorded: `2026-09-15`
+
+### Recorded answer
+
+Required incoming QC blocks Available. Required in-process/final QC
+blocks Ship-Eligible. Quality decides; Inventory applies state.
+Conditional Release is an explicit auditable command. Exceptional
+release needs an authorized Quality role **and** a second distinct
+person. Shipping/ordinary Inventory must not override a hold.
+
+Recommended roles: QC Inspector; Quality Engineer / QC Supervisor;
+Quality Manager (conditional/exceptional); Second Authorized Approver.
+
+### Still unknown
+
+First-go-live Quality Plans, checks, limits, sample sizes, and named
+people (OQ-019). Missing plan/limit → `GUARD_OPEN_POLICY`.
+
+---
 
 ## OQ-006 — Fulfillment tolerances
 
-- Question: Which partial-shipment, over-production, and over-delivery tolerances
-  are allowed?
-- Why: Controls order, production, reservation, and shipment behavior.
-- Domains: Sales, Production, Shipping
+- Answer owner: Sales / Production / Shipping
 - Severity: high
-- Blocking scope: workshop-validated commercial policy and Phase 03
-  fulfillment/shipment guards. Phase 02 **design drafting and design-gate** may
-  complete with this question formally scoped out under ASM-014.
-- Needed: Approved commercial policy
-- Treatment: Phase 02 records that partial fulfillment exists and does not
-  invent numeric over-production or over-delivery limits.
-- Status: open
+- Status: answered
+- Source: [OQ-006.md](../team-answers/OQ-006.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+Partial shipment is allowed when the order line allows it. Under-delivery,
+over-delivery, and over-production default to **zero** unless an explicit
+percentage or absolute tolerance exists on the line/policy. Ordered qty
+stays immutable. Outside-tolerance needs an authorized, auditable
+exception — not a silent UI bypass.
+
+### Still unknown
+
+Exact %/kg by product, customer, or order type (configuration under this
+rule).
+
+### Promoted to
+
+FIND-003 resolved.
+
+---
 
 ## OQ-007 — Sales Order closure rule
 
-- Question: Does closure require delivery, payment, or both?
-- Why: Sales and Finance lifecycles otherwise conflict.
-- Domains: Sales, FinanceLite
+- Answer owner: Sales / Finance-Lite
 - Severity: high
-- Blocking scope: Phase 03
-- Needed: Approved sales/finance policy
-- Status: open
+- Status: answered
+- Source: [OQ-007.md](../team-answers/OQ-007.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+Close the Sales Order when all demand is delivered **or** remaining
+demand is cancelled / authorized Unfulfilled. Payment does not close the
+Sales Order. An unpaid invoice may remain open after SO close. Sales
+must not write payment state to close an order.
+
+`CloseSalesOrder` is no longer `GUARD_OPEN_POLICY` for the missing rule.
+It still rejects if unresolved demand remains.
+
+---
 
 ## OQ-008 — Reservation policy
 
-- Question: What are reservation expiry, priority, release-after-under-consumption,
-  and one-Coil-to-many-orders rules?
-- Why: Affects fairness, concurrency, stock availability, and dead stock.
-- Domains: Sales, Inventory, Production
+- Answer owner: Inventory / Sales / Production
 - Severity: high
-- Blocking scope: workshop-validated reservation policy and Phase 03
-  availability/concurrency guards. Phase 02 **design drafting and design-gate**
-  may complete with this question formally scoped out under ASM-014.
-- Needed: Operational policy and conflict examples
-- Treatment: Phase 02 distinguishes Reservation from Allocation and
-  Consumption and does not invent expiry, priority, or one-Coil-to-many-orders
-  rules.
-- Status: open
+- Status: answered
+- Source: [OQ-008.md](../team-answers/OQ-008.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+One Inventory Unit, one active reservation. Earlier confirmed Sales Order
+wins; the later order does not steal the Coil. Under-consumption releases
+remainder to Available or `CreateResidualUnit`. Confirmed-order
+reservations do **not** auto-expire on a 24h/72h timer. They end on
+fulfillment, explicit release, cancel, Unfulfilled, or authorized
+exception. `ReservationExpirySweep` is cleanup for orphans/stale rows,
+not a TTL on confirmed SO reservations.
+
+### Still unknown
+
+TTL only if a later temporary planning-hold reservation type is added.
+
+---
 
 ## OQ-009 — Reusable residual threshold
 
-- Question: Which minimum dimensions/weight distinguish reusable residual from scrap?
-- Why: Split, identity, mass balance, and disposition need a deterministic rule.
-- Domains: Production, Inventory, Quality
+- Answer owner: Production / Inventory / Quality
 - Severity: high
-- Blocking scope: Phase 03 and Phase 04
-- Needed: Shop-floor thresholds by material
-- Status: open
+- Status: treating
+- Source: [OQ-009.md](../team-answers/OQ-009.md)
+- Recorded: `2026-09-15`
+
+### Recorded answer
+
+Residual vs scrap is a family-specific reuse policy. Residual = issuable
+independent Inventory Unit with genealogy. Scrap = non-reusable
+disposition via `PostScrapMovement`. No universal 50 kg / 200 mm.
+`CreateResidualUnit` is the residual command.
+
+### Still unknown
+
+Minimum weight/dimensions by family. Classification that needs a missing
+threshold stays `GUARD_OPEN_POLICY`.
+
+---
 
 ## OQ-010 — Customer Portal phase
 
-- Question: Is the portal fully deferred or partially included in MVP, and what
-  may customers see or submit?
-- Why: Sources conflict; scope changes security, API, internet, and test design.
-- Domains: Portal, Sales, Security, Roadmap
+- Answer owner: Sponsor / Sales
 - Severity: critical
-- Blocking scope: portal capability decision, customer-channel
-  security/API/internet design, and any later portal implementation. Phase 02
-  **design drafting and design-gate** may complete with Customer Portal
-  **ordering formally deferred from MVP**.
-- Needed: Sponsor decision, pilot users, price/document/request policy
-- Treatment: DOM-MVP-RULES-001 and DOM-CAP-BC-001 formally defer ordering from
-  MVP. Visibility and request remain optional deferred. FIND-001 remains open.
-  This treatment does not answer whether a later portal is included.
-- Status: treating
+- Status: answered
+- Source: [OQ-010.md](../team-answers/OQ-010.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+MVP portal = **visibility only**. Authenticated customers may see order,
+fulfillment, shipment, and authorized invoice/documents under isolation.
+No `PortalPlaceOrder`, no customer-created orders/reservations, no second
+Sales write path. Prices are not shown by default. Internal genealogy is
+not dumped to customers. Later phases may add request, prices, order, and
+safe trace views after internal purchase-to-delivery is proven.
+
+### Still unknown
+
+Exact customer-facing document list and commercial/security approval of
+that list.
+
+### Promoted to
+
+FIND-001 resolved. INV-020 / `GUARD_PORTAL_MVP` remain for order write.
+`ADP-PORTAL` may do isolated reads.
+
+---
 
 ## OQ-011 — Weighbridge integration
 
-- Question: Which device, protocol, transaction identifier, and manual fallback
-  are available?
-- Why: Determines trusted weight capture and duplicate protection.
-- Domains: Integration, Procurement, Inventory
+- Answer owner: Integration / Inventory (device facts)
 - Severity: high
-- Blocking scope: Integration implementation area
-- Needed: Equipment/network specification and samples
-- Status: open
+- Status: treating
+- Source: [OQ-011.md](../team-answers/OQ-011.md)
+- Recorded: `2026-09-15`
+
+### Recorded answer
+
+Weighbridge never writes Ledger. Path: device → adapter →
+`PostGoodsReceipt` / `WI-BUNDLE-GR`. Duplicate detection uses a stable
+device ticket/transaction id when the device supplies one. Until
+make/model/protocol exist, auto-integration stays `GUARD_OPEN_POLICY` /
+`SPIKE-DEVICE`. First-go-live fallback: human posts from the printed
+ticket using the **same** Goods Receipt command.
+
+### Still unknown
+
+Make, model, location, protocol, stable device id, named GR operator.
+
+---
 
 ## OQ-012 — Legal accounting integration
 
-- Question: Which accounting system is authoritative and what APIs/files exist?
-- Why: Defines Finance-Lite boundary and reconciliation.
-- Domains: FinanceLite, Integration
+- Answer owner: Finance / external accounting owner
 - Severity: high
-- Blocking scope: Phase 08
-- Needed: Product/version, contracts, samples, and owners
-- Status: open
+- Status: answered
+- Source: [OQ-012.md](../team-answers/OQ-012.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+MVP Finance-Lite is operational invoices/payments/allocations only, not
+statutory GL, CoA, tax, or legal statements. No Legal-GL connector in
+MVP. Do not invent a product or protocol. Keep an export/sync boundary
+for a later adapter. Inventory/Sales/Shipping/Production must not depend
+on Legal GL.
+
+### Still unknown
+
+Product, version, API/file when a later phase actually integrates.
+
+### Promoted to
+
+ASM-010 kept (external accounting remains legal authority; MVP does not
+implement that system).
+
+---
 
 ## OQ-013 — Organization and site model
 
-- Question: Are single legal-entity and single-site assumptions valid for the
-  planning horizon?
-- Why: Affects numbering, tenancy, warehouses, reporting, and deployment.
-- Domains: Enterprise Architecture, MasterData
+- Answer owner: Project Sponsor
 - Severity: high
-- Blocking scope: workshop-validated organization model and later
-  tenancy/numbering/deployment design. Phase 02 **design drafting and
-  design-gate** may complete under ASM-001 / ASM-014 with the single-site
-  assumption remaining unconfirmed.
-- Needed: Approved organization/site model
-- Treatment: Phase 02 continues under the unconfirmed single-entity /
-  principal-site assumption and does not invent a multi-site model.
-- Status: open
+- Status: answered
+- Source: [OQ-013.md](../team-answers/OQ-013.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+First go-live: **one legal entity, one principal factory site**. Multiple
+warehouses/areas on that site are allowed and are not extra companies or
+sites. Customer isolation is not multi-company tenancy. A second company
+or site is an explicit reopen (numbering, tenancy, authorization,
+accounting, reporting, deployment).
+
+### Promoted to
+
+ASM-001 kept / confirmed for first go-live.
+
+---
 
 ## OQ-014 — Data and transaction volumes
 
-- Question: What are monthly and peak receipts, units, order lines, operations,
-  ledger entries, and shipments?
-- Why: Validates capacity, indexes, retention, and deployment.
-- Domains: Data, NFR
+- Answer owner: Operations / Sponsor
 - Severity: medium
-- Blocking scope: Phase 04 physical design
-- Needed: At least 12 months of statistics or defensible estimates
-- Status: open
+- Status: treating
+- Source: [OQ-014.md](../team-answers/OQ-014.md)
+- Recorded: `2026-09-15`
+
+### Recorded answer
+
+Modest-scale planning: fewer than 100 users, about 15–25 concurrent,
+single site, PostgreSQL, Modular Monolith. Do not freeze indexes, storage,
+or hardware from invented million-row months. Monthly GR, Coil, order
+lines, operations, ledger rows, and shipments remain TBD.
+
+### Still unknown
+
+The 12-month counts (system / Excel / signed estimate).
+
+### Promoted to
+
+ASM-002 kept as planning baseline, not a measured limit.
+
+---
 
 ## OQ-015 — Opening-stock cutover
 
-- Question: What are the source, count/freeze procedure, discrepancy workflow,
-  and sign-off RACI?
-- Why: The system cannot become stock truth without controlled opening balance.
-- Domains: Migration, Inventory, Governance
+- Answer owner: Inventory / Sponsor / Security (names via OQ-019)
 - Severity: critical
-- Blocking scope: go-live
-- Needed: Source inventory, process, evidence, and accountable owners
-- Status: open
+- Status: treating
+- Source: [OQ-015.md](../team-answers/OQ-015.md)
+- Recorded: `2026-09-15`
+
+### Recorded answer
+
+Opening stock comes from a controlled physical count, optional cutover
+worksheet, and reconciliation. Excel is a cutover input, not live truth.
+Procedure: freeze → count → discrepancy list → investigation → named
+sign-off → `ADP-CUTOVER` / `OpeningStockImport` as Ledger facts →
+BalanceRebuild and GenealogyRebuild. No Balance-only row. No
+`AdjustBalance`. `ADP-CUTOVER` stays `GUARD_OPEN_POLICY` until source
+files, freeze time, and named signers exist.
+
+### Still unknown
+
+Source files, freeze date/time, discrepancy workflow details, named
+signatories.
+
+---
 
 ## OQ-016 — Recovery objectives and retention
 
-- Question: What RPO, RTO, backup retention, and off-site policy are approved?
-- Why: Current figures are proposals rather than business commitments.
-- Domains: Reliability, Security
+- Answer owner: Management / operations
 - Severity: high
-- Blocking scope: deployment
-- Needed: Management/legal approval
-- Status: open
+- Status: answered
+- Source: [OQ-016.md](../team-answers/OQ-016.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+RPO ≤ 60 minutes. RTO ≤ 8 hours. Daily PostgreSQL backups, off-site copy,
+protected storage, completion monitoring, periodic restore tests including
+Ledger/Balance/Genealogy checks. Restore the database; do not rebuild
+truth from UI caches. Retention days stay configurable (legal). This does
+not require Kubernetes, Redis, or multi-region. ADR-0008 (Docker topology)
+is **not** accepted by this row.
+
+### Still unknown
+
+Retention days and backup product/vendor.
+
+---
 
 ## OQ-017 — Inventory Posting mechanism
 
-- Question: Should authoritative posting use application transaction orchestration,
-  restricted PostgreSQL functions, or a justified hybrid?
-- Why: This is the central stock-integrity and concurrency control.
-- Domains: Database, Inventory, Backend
+- Answer owner: Architecture (team-accepted)
 - Severity: critical
-- Blocking scope: Phase 04 and implementation
-- Needed: Option analysis and separately authorized evidence spike
-- Status: open
+- Status: answered
+- Source: [OQ-017.md](../team-answers/OQ-017.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
+
+### Recorded answer
+
+Application/domain owns the business command. Each posting runs in an
+explicit PostgreSQL transaction: lock → validate → write Ledger facts →
+commit. PostgreSQL enforces FKs, uniques, checks, isolation, row locks.
+Stored functions are **not** the default posting kernel; they need a later
+ADR plus spike. Balance/Genealogy stay projections. Retryable commands
+must be idempotent. ORM must not be a second stock writer.
+
+### Promoted to
+
+FIND-004 resolved. Depends on accepted ADR-0007 (PostgreSQL) via OQ-018.
+
+---
 
 ## OQ-018 — Architecture and Node.js platform ADR set
 
-- Question: Which architecture style; PostgreSQL/data-platform role; Node.js
-  runtime and backend framework; frontend architecture/framework; authentication
-  and authorization packages; persistence approach; durable scheduler; exact
-  decimal and serialization; validation/OpenAPI; testing; observability; and MVP
-  deployment topology satisfy approved requirements, and what maturity/evidence
-  is required before each baseline can be accepted?
-- Why: Source references have asymmetric maturity. These choices define module,
-  data, implementation, verification, deployment, and operational contracts and
-  must not become defaults through repetition.
-- Domains: Architecture, Data, Application, Frontend, Security, Worker, API, QA,
-  Operations, Deployment
+- Answer owner: Sponsor constraints + architecture direction
 - Severity: critical
-- Blocking scope: Phase 05 and implementation areas
-- Needed: Evidence-based ADRs and comparison criteria for proposed ADR-0006
-  through ADR-0008 plus later detailed platform ADRs; no popularity-based
-  defaults
-- Status: open
+- Status: answered
+- Source: [OQ-018.md](../team-answers/OQ-018.md)
+- Recorded: `2026-09-15`
+- Closed by/date: Project Owner team-answer file `2026-09-15`
 
-## OQ-019 — Named Phase 02 workshop participants
+### Recorded answer
 
-- Question: Which named people will fill every participant role required by the
-  Phase 02 discovery and validation workshop?
-- Why: Evidence ownership, attendance, and approval authority must be verified
-  against real people before workshop execution and owner-signed decisions.
-- Domains: Governance, Stakeholder Management, Phase 02
+**Constraints:** small-team maintainability; Windows for development;
+Linux production; no Windows Server production dependency; on-premises
+capable; no required cloud vendor; no Kubernetes/Kafka/RabbitMQ/Redis /
+service-per-domain unless a later evidence-based approval.
+
+**Accept ADR-0006 direction:** Modular Monolith, one deployable, bounded
+modules, one Ledger writer.
+
+**Accept ADR-0007 direction:** PostgreSQL is the transactional system of
+record.
+
+**Keep:** Node.js + TypeScript (ADR-0001). Do not reintroduce .NET.
+
+**Do not freeze:** NestJS, Prisma (may be evaluated; must not be the
+posting kernel), React, Socket.IO, auth packages, test runner, Docker
+Compose/Nginx topology (ADR-0008 stays proposed). Extra MCP: **none**
+unless a named server has purpose, security boundary, and owner.
+
+### Promoted to
+
+ADR-0006 accepted. ADR-0007 accepted. ADR-0008 remains proposed.
+FIND-002 remains resolved (packages still not defaults).
+
+---
+
+## OQ-019 — Named workshop and sign-off participants
+
+- Answer owner: **Project Sponsor must supply names**
 - Severity: high
-- Blocking scope: workshop execution, owner-signed business decisions, and
-  go-live sign-off. Phase 02 **design drafting** is permitted under ASM-013.
-- Classification: entry-evidence and owner-assignment dependency; not a business
-  or architecture decision
-- Treatment: The Project Owner authorized temporary placeholders flagged
-  `(temporary)` in
-  [WORKSHOP_ROSTER.md](../../02-domain-business-architecture/WORKSHOP_ROSTER.md)
-  so architecture design can continue. FIND-020 records this exception.
-- Needed: Replace every temporary row with a real full name, delegate or
-  explicit `none`, attendance/availability confirmation, and approval scope.
 - Status: treating
+- Source: [OQ-019.md](../team-answers/OQ-019.md)
+- Recorded: `2026-09-15`
+
+### Recorded answer
+
+Role/RACI baseline accepted. Required roles: Project Sponsor; Project
+Manager / Product Owner; Operations / Factory; Inventory / Warehouse
+Manager; Production; Sales / Commercial; Procurement; Quality Manager /
+QC Supervisor; Finance; IT / Infrastructure; Security / IAM; ERP
+Architecture / Technical Lead. SoD: operator is not sole approver of
+that transaction; cutover and exceptional QC need independent
+authorization. Chat is not organizational sign-off.
+
+### Still unknown
+
+Every real full name, delegate or `none`, attendance, and approval
+scope. Temporary roster names still have **no** authority. Workshop
+execution, SV-013 second person, PO approve, and cutover sign-off stay
+blocked until names exist.
+
+Architecture will not invent names.
+
+---
+
+## Consistency after recording
+
+| Check | Result |
+| --- | --- |
+| OQ-017 vs OQ-018 | Posting style uses PostgreSQL transactions because ADR-0007 is now accepted. Functions still later. |
+| OQ-010 vs INV-020 | Visibility allowed; order write still forbidden. |
+| OQ-019 | Roles listed; names still treating. |
+| OQ-001 vs OQ-002 | kg official and weight authoritative; scale/rounding still treating on OQ-001. |
+| OQ-008 vs sweep | Confirmed SO has no invented TTL. |
+| OQ-012 vs ASM-010 | Legal books stay outside MVP; product unnamed on purpose. |
+| ADR-0008 | Not accepted. OQ-016 numbers are not a Docker freeze. |
+| NestJS / Prisma / React | Candidates only. |
+| Implementation | Still unauthorized. No unlock file. |

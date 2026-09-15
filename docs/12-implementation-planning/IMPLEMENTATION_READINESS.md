@@ -5,7 +5,7 @@ phase: 12-implementation-planning
 status: approved
 version: 0.3.0
 owners: [chief-solution-architect, delivery-lead]
-depends_on: [APR-013, APR-014, CHK-0012, ASM-025, CONF-UNLOCK]
+depends_on: [APR-013, APR-014, CHK-0012, CHK-0013, ASM-025, CONF-UNLOCK]
 last_reviewed: 2026-09-07
 approval: APR-014
 supersedes: null
@@ -20,9 +20,11 @@ the unlock and not a `TEST-*` catalogue.
 
 ## Already true as approved structure
 
-- [x] Phases 01–11 approved as structure (APR-003 through APR-013).
+- [x] Phases 01–12 approved as structure (APR-003 through APR-014).
 - [x] Phase 11 Git freeze CHK-0012
       `57062e96c91b6eff52f233aaf3a0df65a81e9da4`.
+- [x] Phase 12 Git freeze CHK-0013
+      `a6b893095af7c9d14f342371fb6e4ef9c6d833df`.
 - [x] One Ledger writer (`ACT-IPS` / `mod-inventory-posting`).
 - [x] DATA-TX-001 six bundles named and unsplittable.
 - [x] Forbidden writes: `EditGenealogy`, `AdjustBalance`, MVP

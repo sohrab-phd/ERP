@@ -22,8 +22,8 @@ Lifecycle: `approved`
 Approval: `APR-014` at `2026-09-07T23:16:00+03:30`, including ASM-025
 (structure baseline)
 
-Git checkpoint: pending. See
-[CHECKPOINT_APR-014.md](CHECKPOINT_APR-014.md).
+Git checkpoint: completed at `a6b893095af7c9d14f342371fb6e4ef9c6d833df`
+(CHK-0013). See [CHECKPOINT_APR-014.md](CHECKPOINT_APR-014.md).
 
 There is no Phase 13. Team answers remain open. Phase 12 approval is
 **not** an implementation unlock. `IMPLEMENTATION_AUTHORIZED` remains

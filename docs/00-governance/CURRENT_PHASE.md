@@ -3,10 +3,10 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: approved
-version: 0.32.0
+version: 0.35.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025]
-last_reviewed: 2026-09-07
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+last_reviewed: 2026-09-15
 approval: APR-014
 supersedes: null
 ---
@@ -25,47 +25,55 @@ human-created `.cursor/IMPLEMENTATION_UNLOCK.json` referencing an approved
 baseline and exact allowed paths. Neither condition currently exists.
 
 There is no Phase 13. Architecture phases 00–12 are approved as
-structure. Implementation still waits on a later human unlock.
+structure. Implementation still waits on a later human unlock citing an
+`APR-*` with a recorded Git commit, exact `allowedWritePaths`, exact
+`allowedShellCommands`, and matching architecture-gate policy.
 
 ## Permitted work
 
-- Apply team answers onto the matching `OQ-*` row when they arrive.
-- Record and replace `(temporary)` workshop identities as real names arrive.
-- Do not invent or edit `.cursor/PHASE_CHECKPOINT_APPROVAL.json`. After
-  the Project Owner creates the APR-014 marker, run only the marked
-  `git add` / `git commit`.
-- Maintain canonical registers without silently closing open questions or
-  accepting unapproved ADRs.
+- Apply further team answers onto the matching `OQ-*` residual when they
+  arrive (names, UOM scale, routing steps, QC plans, device, volumes,
+  cutover files).
+- Record and replace `(temporary)` workshop identities as real names arrive
+  (OQ-019 still `treating`).
+- Maintain canonical registers without silently closing remaining residuals
+  or accepting unapproved package ADRs.
 
 ## Prohibited work
 
-- Treating Phase 12 approval as an implementation unlock
+- Treating Phase 12 approval, CHK-0013, or these OQ recordings as an
+  implementation unlock
 - Creating `.cursor/IMPLEMENTATION_UNLOCK.json` (human-only; `AG-UNLOCK` never)
 - Application, database, API, UI, test, integration, or deployment implementation
 - Creating `package.json`, `tsconfig`, application source folders, Dockerfiles,
   or CI workflows
-- Accepting ADR-0006, ADR-0007, ADR-0008, NestJS, Prisma, Socket.IO,
-  JWT, Keycloak, Jest, Playwright, Docker, npm/pnpm, or any other
-  package as if decided
-- Inventing UOM, routing, QC, reservation, fulfillment, residual,
-  organization, weighbridge protocol, accounting product, or retention
-  values
+- Accepting ADR-0008, NestJS, Prisma, Socket.IO, JWT, Keycloak, Jest,
+  Playwright, Docker, npm/pnpm, or extra MCP as if decided
+- Inventing remaining UOM scale, routing step names, QC limits, residual
+  cutoffs, weighbridge protocol, accounting product, volume counts, or
+  people
 - Workshop execution or owner-signed business decisions using temporary
   identities
 - Inventing or editing `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 - Writing application code to “prove” the design
 - Minting a `TEST-*` catalogue
 - Installing extra MCP servers as if decided
-- Amending commit `57062e96c91b6eff52f233aaf3a0df65a81e9da4`
+- Amending commit `a6b893095af7c9d14f342371fb6e4ef9c6d833df`
 - Starting a Phase 13
 
 ## Gate condition
 
 Phase 12 is approved as APR-014 at `2026-09-07T23:16:00+03:30`, including
-ASM-025. The APR-014 Git checkpoint is pending. There is no next
-architecture phase. Team answers remain required before named people,
-auth packages, typed HTTP contracts, a test-runner ADR, extra MCP
-products, or deployment/repository products can close.
+ASM-025. CHK-0013 records the Git freeze at
+`a6b893095af7c9d14f342371fb6e4ef9c6d833df`. Team answers were recorded
+`2026-09-15` onto OQ-001 through OQ-019.
 
-OQ-001 through OQ-019 and proposed ADR-0006 through ADR-0008 remain unresolved.
+Accepted technology ADRs: ADR-0001 (Node.js + TypeScript), ADR-0006
+(Modular Monolith), ADR-0007 (PostgreSQL). ADR-0008 remains proposed.
+
+Still `treating`: OQ-001 (scale/rounding/factors), OQ-003 (step names),
+OQ-005 (Quality Plans and names), OQ-009 (residual cutoff numbers),
+OQ-011 (device/protocol), OQ-014 (monthly counts), OQ-015 (source files
+and signers), OQ-019 (real names).
+
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

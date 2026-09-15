@@ -206,6 +206,9 @@ Phase 10 is approved as APR-012 (structure), including ASM-023.
 Phase 11 structure coverage is reported in
 [TRACEABILITY_COVERAGE.md](../../11-architecture-validation/TRACEABILITY_COVERAGE.md).
 Phase 11 is approved as APR-013, including ASM-024. CHK-0012 records
-the checkpoint at `57062e96c91b6eff52f233aaf3a0df65a81e9da4`. Phase 12
-is approved as APR-014, including ASM-025. The Git checkpoint is
-pending. Missing `TEST-*` and workshop REQ-* stay open extensions.
+the checkpoint at `57062e96c91b6eff52f233aaf3a0df65a81e9da4`. Phase 12 is approved as APR-014, including ASM-025. CHK-0013 records
+the checkpoint at `a6b893095af7c9d14f342371fb6e4ef9c6d833df`. Command,
+adapter, query, worker, and scene homes after that freeze are in
+[SLICE_HOMES.md](SLICE_HOMES.md). Team answers recorded `2026-09-15` on
+OQ-001 through OQ-019; residuals stay `GUARD_OPEN_POLICY`. Missing
+`TEST-*` and workshop REQ-* stay open extensions.

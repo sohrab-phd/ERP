@@ -3,10 +3,10 @@ id: GOV-FINDINGS-001
 title: Review Findings Register
 phase: 00-governance
 status: in_review
-version: 0.18.0
+version: 0.19.0
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-15
 approval: APR-011
 supersedes: null
 ---
@@ -25,9 +25,12 @@ artifact approval does not close open findings or their linked questions.
 ## FIND-001 — Portal phase conflict
 
 - Severity: critical
-- Status: open
+- Status: resolved
 - Finding: Source documents disagree on whether Customer Portal capability is
   excluded from MVP or may be partially included.
+- Treatment: OQ-010 recorded `2026-09-15`: MVP portal is visibility only.
+  Order write, customer-created reservations, and `PortalPlaceOrder` remain
+  forbidden (`GUARD_PORTAL_MVP` / INV-020).
 - Affected artifacts: Phase 02 scope, Phase 05 API, Phase 06 security, Phase 08 deployment
 - Related question: OQ-010
 
@@ -44,17 +47,25 @@ artifact approval does not close open findings or their linked questions.
 ## FIND-003 — Partial fulfillment policies lack numeric limits
 
 - Severity: high
-- Status: open
+- Status: resolved
 - Finding: Partial shipment/fulfillment is expected, but over-production and
   over-delivery tolerances remain unapproved.
+- Treatment: OQ-006 recorded `2026-09-15`: partial shipment allowed when the
+  line allows it; default under/over/production tolerance is zero unless an
+  explicit policy exists. Family-specific %/kg remain configuration under
+  that rule, not an open architecture choice.
 - Related question: OQ-006
 
 ## FIND-004 — Inventory Posting architecture is unresolved
 
 - Severity: critical
-- Status: open
+- Status: resolved
 - Finding: Application-orchestrated transactions versus restricted PostgreSQL
   posting require evidence and an ADR.
+- Treatment: OQ-017 recorded `2026-09-15`: application-owned command inside
+  an explicit PostgreSQL transaction with locks and constraints. Stored
+  functions are not the default kernel and need a later ADR plus spike.
+  ADR-0007 (PostgreSQL) accepted via OQ-018.
 - Related question: OQ-017
 
 ## FIND-005 — Governance safeguards are not OS-level controls

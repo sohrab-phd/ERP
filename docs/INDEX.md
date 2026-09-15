@@ -31,6 +31,7 @@ supersedes: null
 - [CHK-0005 Phase 05 checkpoint](00-governance/approved-baselines/CHK-0005-phase-05.md)
 - [CHK-0007 Phase 06 checkpoint](00-governance/approved-baselines/CHK-0007-phase-06.md)
 - [CHK-0008 Phase 07 checkpoint](00-governance/approved-baselines/CHK-0008-phase-07.md)
+- [CHK-0013 Phase 12 checkpoint](00-governance/approved-baselines/CHK-0013-phase-12.md)
 - [CHK-0012 Phase 11 checkpoint](00-governance/approved-baselines/CHK-0012-phase-11.md)
 - [CHK-0011 Phase 10 checkpoint](00-governance/approved-baselines/CHK-0011-phase-10.md)
 - [CHK-0010 Phase 09 checkpoint](00-governance/approved-baselines/CHK-0010-phase-09.md)
@@ -59,6 +60,7 @@ supersedes: null
 - [APR-002 checkpoint procedure](00-governance/CHECKPOINT_APR-002.md)
 - [APR-001 superseded checkpoint procedure](00-governance/CHECKPOINT_APR-001.md)
 - [Canonical registers](00-governance/registers/README.md)
+- [Slice homes](00-governance/registers/SLICE_HOMES.md)
 - [Templates](00-governance/templates/README.md)
 
 ## Architecture phases
@@ -251,6 +253,8 @@ ASM-023. CHK-0011 records the checkpoint at
 `1d581c4357a784f3170bd42349a47c1b38bde1e6`. APR-013 approved Phase 11 at `2026-09-07T22:19:00+03:30`, including
 ASM-024. CHK-0012 records the checkpoint at
 `57062e96c91b6eff52f233aaf3a0df65a81e9da4`. APR-014 approved Phase 12 at `2026-09-07T23:16:00+03:30`, including
-ASM-025. The APR-014 Git checkpoint is pending. There is no Phase 13.
-Phase 12 approval is not an implementation unlock. Workshop
-execution remains blocked by OQ-019. Implementation remains unauthorized.
+ASM-025. CHK-0013 records the checkpoint at
+`a6b893095af7c9d14f342371fb6e4ef9c6d833df`. There is no Phase 13.
+Phase 12 approval is not an implementation unlock. Team answers were
+recorded `2026-09-15`. Workshop execution remains blocked by OQ-019
+names. Implementation remains unauthorized.

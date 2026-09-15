@@ -3,10 +3,10 @@ id: GOV-ASSUMPTIONS-001
 title: Assumption Register
 phase: 00-governance
 status: in_review
-version: 0.12.0
+version: 0.13.0
 owners: [chief-solution-architect]
 depends_on: [SRC-001, ASM-REPORT-001]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-15
 approval: APR-012
 supersedes: null
 ---
@@ -14,7 +14,10 @@ supersedes: null
 # Assumption Register
 
 Every assumption requires an owner, validation method, and affected artifacts.
-None of these entries is a confirmed business decision.
+None of these entries is a confirmed business decision unless a later
+`OQ-*` row records it. OQ answers recorded `2026-09-15` confirm ASM-001,
+ASM-002 (planning only), ASM-003, and ASM-010 for first go-live, and
+replace ASM-004's "batch is always enough" claim.
 
 APR-002 approved this register's Phase 00 seed version. APR-003 approved the
 Phase 01 version as assimilation evidence. APR-004 accepted ASM-014 for the
@@ -24,33 +27,40 @@ validation status; artifact approval does not confirm shop-floor facts.
 
 ## ASM-001 — Single legal entity and principal site
 
-- Status: open
+- Status: accepted
 - Owner: Project sponsor
-- Validation: organization/site workshop
+- Validation: OQ-013 recorded `2026-09-15` (one legal entity, one principal
+  site; extra warehouses on that site are allowed)
 - Affects: numbering, tenancy, warehouse, reporting, deployment
 - Related question: OQ-013
 
 ## ASM-002 — Modest user scale
 
-- Status: open
-- Statement: 15–25 concurrent and fewer than 100 total users
+- Status: accepted
+- Statement: 15–25 concurrent and fewer than 100 total users as a
+  first-go-live **planning** baseline, not a measured operational limit
 - Owner: Project sponsor
-- Validation: named user/role and growth forecast
+- Validation: OQ-014 recorded `2026-09-15`; 12-month transaction counts
+  remain TBD
 - Affects: deployment, performance, licensing
 
 ## ASM-003 — Weight is the primary inventory measure
 
-- Status: open
+- Status: accepted
 - Owner: Inventory process owner
-- Validation: UOM matrix and representative records
+- Validation: OQ-001 and OQ-002 recorded `2026-09-15` (kg official; Coil
+  quantity is measured weight). Decimal scale and conversion factors on
+  OQ-001 remain treating
 - Affects: inventory, pricing, production, API contracts
 - Related questions: OQ-001, OQ-002
 
 ## ASM-004 — Batch-level finished-product tracking is normal
 
-- Status: open
+- Status: superseded
 - Owner: Production and Quality owners
-- Validation: product/customer/regulatory matrix
+- Validation: Replaced by OQ-004 recorded `2026-09-15`: Coils are
+  unit-level; finished goods are unit-level when independently handled,
+  otherwise batch-level
 - Affects: identity, labels, genealogy, data volume
 - Related question: OQ-004
 
@@ -93,16 +103,18 @@ validation status; artifact approval does not confirm shop-floor facts.
 
 ## ASM-010 — External accounting remains legal authority
 
-- Status: open
+- Status: accepted
 - Owner: Finance owner
-- Validation: accounting-system and legal-scope confirmation
+- Validation: OQ-012 recorded `2026-09-15`: Finance-Lite is operational
+  only; Legal GL is outside MVP and unnamed until a later integration
 - Related question: OQ-012
 
 ## ASM-011 — Small-team maintainability is required
 
-- Status: proposed
+- Status: accepted
 - Owner: Project sponsor
-- Validation: delivery/support team plan
+- Validation: OQ-018 recorded `2026-09-15` (small-team constraint;
+  Modular Monolith)
 - Affects: Modular Monolith, deployment, tooling, operational complexity
 
 ## ASM-012 — Historical snapshots and correction evidence are retained

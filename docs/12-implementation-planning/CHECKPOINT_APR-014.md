@@ -15,8 +15,7 @@ supersedes: null
 
 The Project Owner explicitly approved Phase 12 as APR-014 at
 `2026-09-07T23:16:00+03:30`, including ASM-025. The Git checkpoint is
-**not** complete until a human creates the short-lived marker and the
-agent submits the exact allowed commit.
+complete.
 
 Do not invent or edit `.cursor/PHASE_CHECKPOINT_APPROVAL.json`.
 
@@ -53,7 +52,11 @@ marker must store the transformed form.
 
 - Gate result: `APPROVED` (structure baseline)
 - Phase 12: complete as a structure baseline
-- Git checkpoint: pending
+- Git checkpoint: completed at `a6b893095af7c9d14f342371fb6e4ef9c6d833df`
+  (CHK-0013)
 - Next phase: none; there is no Phase 13
 - Implementation authorization: none; a later human unlock is still
   required
+
+Do not run this generator again for Phase 12. CHK-0013 is already complete.
+The Project Owner should delete `.cursor/PHASE_CHECKPOINT_APPROVAL.json`.

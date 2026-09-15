@@ -76,6 +76,11 @@ kernel.
 A slice may contain more than one bundle. Each bundle remains one
 business transaction (mechanism stays OQ-017).
 
+Command, adapter, query, worker, and scene homes that are not a named
+bundle are in
+[SLICE_HOMES.md](../00-governance/registers/SLICE_HOMES.md). That
+register does not add a slice and does not authorize implementation.
+
 ## Must not decide here
 
 - Dates, velocity, or headcount

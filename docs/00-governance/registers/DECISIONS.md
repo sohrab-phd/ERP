@@ -3,10 +3,10 @@ id: GOV-DECISIONS-001
 title: Decision Register
 phase: 00-governance
 status: approved
-version: 0.2.2
+version: 0.3.0
 owners: [chief-solution-architect]
-depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-04
+depends_on: [GOV-GATES-001, OQ-018]
+last_reviewed: 2026-09-15
 approval: APR-003
 supersedes: null
 ---
@@ -18,8 +18,9 @@ recommendations remain proposals.
 
 APR-002 approved this register's Phase 00 seed version. APR-003 approves the
 current version as accurate Phase 01 assimilation evidence. Each ADR retains its
-own decision status; APR-003 does not accept proposed ADR-0006 through ADR-0008
-or any detailed technology selection.
+own decision status; APR-003 did not accept ADR-0006 through ADR-0008. OQ-018 team answers
+recorded `2026-09-15` accept ADR-0006 and ADR-0007. ADR-0008 and
+framework/package ADRs remain proposed.
 
 ## ADR-0001 — Backend technology family
 
@@ -62,27 +63,30 @@ or any detailed technology selection.
 
 ## ADR-0006 — Architecture style
 
-- Status: proposed
-- Candidate: Modular Monolith for the initial operational platform
-- Rationale to evaluate: small-team maintainability, one-writer ownership,
-  transactional consistency, and avoiding unjustified distributed operations
-- Alternatives required: structured monolith variants and any evidence-backed
-  distributed alternative
-- Open dependency: OQ-018
-- Not decided: module boundaries, framework, deployment units, or future split
-  criteria
+- Status: accepted
+- Decision: Modular Monolith for the initial operational platform: one
+  deployable application with bounded modules and the one-writer Inventory
+  Ledger model. Kubernetes, Kafka, RabbitMQ, Redis, and service-per-domain
+  deployment are not required for MVP unless a later evidence-based
+  approval says otherwise.
+- Authority: OQ-018 team answer recorded `2026-09-15`
+- Consequence: Module ownership stays explicit; uncontrolled cross-module
+  table access is rejected.
+- Not decided: NestJS or any other framework, deployment units, or future
+  split criteria
 
 ## ADR-0007 — PostgreSQL data platform
 
-- Status: proposed
-- Candidate: PostgreSQL as the authoritative transactional data platform
-- Rationale to evaluate: transaction integrity, concurrency control, exact
-  decimals, constraints, recursive genealogy queries, and operational maturity
-- Alternatives required: evidence-based data-platform comparison against
-  approved integrity, recovery, skill, and operating requirements
-- Open dependencies: OQ-014, OQ-016, OQ-017, OQ-018
-- Not decided: physical schema, ORM, posting mechanism, hosting, HA, backup
-  topology, or version
+- Status: accepted
+- Decision: PostgreSQL is the authoritative transactional data platform and
+  system of record, including the Inventory Ledger.
+- Authority: OQ-018 team answer recorded `2026-09-15` (OQ-017 uses explicit
+  PostgreSQL transactions and locks as the posting style)
+- Consequence: Exact decimal, constraints, locks, and rebuilds run against
+  PostgreSQL. ORM must not become a second stock writer.
+- Not decided: physical schema, ORM product, PostgreSQL version, hosting,
+  HA, backup vendor, or stored-function posting (functions need a later
+  ADR plus spike)
 
 ## ADR-0008 — MVP deployment topology
 
@@ -93,17 +97,20 @@ or any detailed technology selection.
   operational complexity
 - Alternatives required: evidence-based topology comparison against capacity,
   security, recovery, support, and availability requirements
-- Open dependencies: ASM-002, ASM-007, ASM-011, OQ-014, OQ-016, OQ-018
+- Open dependencies: ASM-002, ASM-007, ASM-011, OQ-014 residual counts,
+  OQ-016 retention product, OQ-018 (explicitly did not freeze Docker)
 - Not decided: container images, network layout, host count, cloud/on-premises
   location, HA, CI/CD, secrets, backup implementation, or deployment tooling
 
 ## Proposed decisions requiring future ADRs
 
 - NestJS and Node.js version
-- Persistence/Inventory Posting mechanism
-- Decimal representation and serialization
+- ORM / Prisma evaluation (must not be the Inventory posting kernel)
+- Decimal TypeScript representation (PostgreSQL `NUMERIC` intended)
 - Authentication/session/MFA packages
-- Frontend architecture and framework
+- Frontend architecture and framework (React/Socket.IO remain candidates)
 - Durable worker scheduler
 - Test runner, test infrastructure, and observability baseline
-- Portal MVP phase and external exposure
+- MVP portal document list and later order-write phase (OQ-010 answered
+  visibility-only; order write still deferred)
+- ADR-0008 Docker/Nginx topology

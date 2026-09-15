@@ -60,8 +60,9 @@ supersedes: null
 - Explicit approval statement/date: Phase 12 approved, including
   ASM-025, at `2026-09-07T23:16:00+03:30`
 - Approval manifest: [APR-014](../00-governance/approved-baselines/APR-014-implementation-planning.md)
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed at `a6b893095af7c9d14f342371fb6e4ef9c6d833df`
+  (CHK-0013)
+- Git commit: `a6b893095af7c9d14f342371fb6e4ef9c6d833df`
 - Authorized next phase: none; there is no Phase 13
 
 This approval accepts ASM-025. It does not close OQ-001 through OQ-019,

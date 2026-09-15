@@ -26,8 +26,9 @@ supersedes: null
 - Authorized next phase: none; there is no Phase 13
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 30 files changed
+- Git commit: `a6b893095af7c9d14f342371fb6e4ef9c6d833df`
+- Git commit subject: `docs: approve phase 12 implementation planning`
 - Supersedes approval: none
 
 ## Approval boundary
@@ -85,7 +86,8 @@ Exact SHA-256 digests belong in the human-created checkpoint marker.
 - OQ-001 through OQ-019 remain open or `treating`.
 - ADR-0006 through ADR-0008 remain proposed.
 - `TEST-*` catalogue, named people, extra MCP, and unlock remain later work.
-- Git checkpoint pending.
+- Git checkpoint completed at `a6b893095af7c9d14f342371fb6e4ef9c6d833df`
+  (CHK-0013).
 
 ## Reopen conditions
 

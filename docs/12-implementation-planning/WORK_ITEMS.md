@@ -66,6 +66,12 @@ Forbidden as work items that pass in MVP: `PortalPlaceOrder`,
 A `WI-*` is not a `TEST-*`. Verification stays `QA-SCN-*` / `SV-*`
 intents until a runner ADR (OQ-018, FIND-028).
 
+Named homes for catalogue commands, queries, adapters, workers, and
+scenes are in
+[SLICE_HOMES.md](../00-governance/registers/SLICE_HOMES.md). This file
+keeps kinds and the six bundles only. The register does not reopen
+APR-014 and does not authorize implementation.
+
 ## Must not decide here
 
 - Jira/Linear/GitHub Issues as a product

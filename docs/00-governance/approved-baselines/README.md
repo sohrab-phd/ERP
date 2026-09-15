@@ -22,7 +22,10 @@ supersedes: null
 - [APR-002 — Renewed Corrected Governance Foundation](APR-002-governance.md) —
   approved; checkpoint completed
 - [APR-014 — Implementation Planning](APR-014-implementation-planning.md)
-  — approved at `2026-09-07T23:16:00+03:30`; checkpoint pending
+  — approved at `2026-09-07T23:16:00+03:30`; checkpoint completed
+- [CHK-0013 — Phase 12 Implementation Planning Checkpoint](CHK-0013-phase-12.md)
+  — completed at `a6b893095af7c9d14f342371fb6e4ef9c6d833df`; subject
+  `docs: approve phase 12 implementation planning`; 30 files changed
 - [APR-013 — Architecture Validation](APR-013-architecture-validation.md)
   — approved at `2026-09-07T22:19:00+03:30`; checkpoint completed
 - [CHK-0012 — Phase 11 Architecture Validation Checkpoint](CHK-0012-phase-11.md)

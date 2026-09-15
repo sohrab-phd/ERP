@@ -27,6 +27,10 @@ These registers are the shared source of truth across architecture phases:
 - [Integration Catalogue](INTEGRATION_CATALOGUE.md)
 - [Stakeholders and RACI](STAKEHOLDERS_RACI.md)
 - [Review Findings](REVIEW_FINDINGS.md)
+- [Slice Homes](SLICE_HOMES.md)
+
+Team-answer evidence files (not the canonical status) live in
+[team-answers/](../team-answers/).
 
 ## Governance
 

@@ -533,10 +533,11 @@ approval authority. These recording edits enter a later checkpoint.
 ### APR-014 — Implementation Planning Gate
 
 - Phase: `12-implementation-planning`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-014-implementation-planning.md](approved-baselines/APR-014-implementation-planning.md)
-- Checkpoint record: pending (next unused ID CHK-0013)
+- Checkpoint record:
+  [CHK-0013-phase-12.md](approved-baselines/CHK-0013-phase-12.md)
 - Checkpoint procedure:
   [CHECKPOINT_APR-014.md](../12-implementation-planning/CHECKPOINT_APR-014.md)
 - Review package:
@@ -552,8 +553,11 @@ approval authority. These recording edits enter a later checkpoint.
   ADR-0001, no implementation
 - Open downstream items: OQ-001 through OQ-019, proposed ADR-0006 through
   ADR-0008, extra-MCP and unlock
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 30 files changed
+- Git commit: `a6b893095af7c9d14f342371fb6e4ef9c6d833df`
+- Git commit subject: `docs: approve phase 12 implementation planning`
+- Checkpoint marker: still present after commit; delete
+  `.cursor/PHASE_CHECKPOINT_APPROVAL.json`
 - Next phase: none; there is no Phase 13
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`

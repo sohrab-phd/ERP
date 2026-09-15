@@ -6,7 +6,7 @@ traceability, and monitoring system.
 
 ## Current status
 
-- Completed phase: `12-implementation-planning` (structure; checkpoint pending)
+- Completed phase: `12-implementation-planning` (structure; checkpoint completed)
 - Current phase: `12-implementation-planning`
 - Gate status: `APPROVED`
 - Phase 00 approval: `APR-002`; checkpoint completed at
@@ -42,12 +42,12 @@ traceability, and monitoring system.
   ASM-024; checkpoint completed at
   `57062e96c91b6eff52f233aaf3a0df65a81e9da4`
 - Phase 12 approval: `APR-014` at `2026-09-07T23:16:00+03:30`, including
-  ASM-025; Git checkpoint pending. Team answers expected in a
-  few days. OQ-019 still blocks workshop execution
+  ASM-025; checkpoint completed at
+  `a6b893095af7c9d14f342371fb6e4ef9c6d833df`. Team answers recorded
+  `2026-09-15`. OQ-019 names still block workshop execution
 - Implementation authorized: **No**
 - Application source code, database migrations, package setup, and deployment
-  implementation are prohibited until the final architecture gate is explicitly
-  approved.
+  implementation are prohibited until a later human implementation unlock.
 
 See [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) for the authoritative
 work authorization.
@@ -75,7 +75,7 @@ work authorization.
 - `09-repository-documentation`: **approved (structure); checkpoint completed**
 - `10-ai-cursor-development`: **approved (structure); checkpoint completed**
 - `11-architecture-validation`: **approved (structure); checkpoint completed**
-- `12-implementation-planning`: **approved (structure); checkpoint pending**
+- `12-implementation-planning`: **approved (structure); checkpoint completed**
 
 Each phase follows:
 
