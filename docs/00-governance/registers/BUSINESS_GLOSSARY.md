@@ -39,7 +39,9 @@ does not convert them into owner-signed business policy.
 
 - Persian: سفارش فروش
 - Definition: Approved commercial demand composed of Sales Order Items and
-  governed by fulfillment, production, shipment, and closure states.
+  governed by fulfillment, production, shipment, and closure states. Closure
+  is independent of invoice payment (OQ-007). Shipment `DELIVERED` is not a
+  close prerequisite.
 - Owner: Sales
 
 ## TERM-004 — Fulfillment Assessment
@@ -54,7 +56,10 @@ does not convert them into owner-signed business policy.
 - Persian: تقاضای غیرقابل‌تأمین
 - Aliases: UnfulfilledDemandCase, Lost Demand
 - Definition: Structured demand the business cannot serve, including reason,
-  quantity, value, and recovery opportunity; distinct from overdue demand.
+  quantity, value, and recovery opportunity; distinct from overdue, delayed,
+  awaiting-supply, quotation-rejected, and cancelled. May exist without a
+  Sales Order; an SO remainder-close must record this fact rather than
+  discard remaining demand (OQ-007, INV-013).
 - Owner: Sales
 
 ## TERM-006 — Material Lot
@@ -80,7 +85,8 @@ does not convert them into owner-signed business policy.
 
 - Persian: رزرو
 - Definition: Sales-demand claim against available stock; distinct from
-  production Allocation and actual Consumption.
+  production Allocation and actual Consumption. One Inventory Unit may have
+  at most one `ACTIVE` reservation (OQ-008).
 - Owner: Inventory
 
 ## TERM-010 — Material Allocation

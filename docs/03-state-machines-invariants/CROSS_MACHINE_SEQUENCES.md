@@ -6,7 +6,7 @@ status: approved
 version: 0.1.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-TRANS-001, SM-SIDE-001, SM-INV-001, APR-004, APR-005, ASM-016]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-005
 supersedes: null
 ---
@@ -31,8 +31,10 @@ Commands and actors are those in
 3. `DraftSalesOrder` → `SubmitSalesOrder` → `ConfirmSalesOrder`. Confirm
    commands Reservation only as already assessed.
 4. `RequestReservation` then `ActivateReservation`. If free stock is
-   insufficient: `GUARD_INVARIANT` (INV-002). If expiry or one-Coil-to-many
-   rules are required: `GUARD_OPEN_POLICY` / OQ-008.
+   insufficient, or the unit already has an `ACTIVE` reservation:
+   `GUARD_INVARIANT` (INV-002) / `GUARD_CONFLICT`. Later SO must not steal
+   (OQ-008). Partial claimed qty is not a second `ACTIVE` slot on the
+   same unit.
 5. Unit must be `AVAILABLE` or become so after QC release. Required QC
    still pending: `GUARD_INVARIANT` (INV-010) or `GUARD_OPEN_POLICY` /
    OQ-005.
@@ -44,8 +46,12 @@ Commands and actors are those in
    Invoice.
 9. `DraftInvoice` → `IssueInvoice`. `RecordPayment` → `AllocatePayment`
    (INV-012).
-10. `CloseSalesOrder` stays `open: OQ-007`. Sales must not write Invoice
-    rows.
+10. `CloseSalesOrder` after `FULFILLED` (remaining valid demand already zero
+    within OQ-006; shipment `DELIVERED` is not a close prerequisite), or
+    after `PARTIALLY_FULFILLED` with authorized Unfulfilled Demand for
+    remainder, or after `CANCELLED` (OQ-007). Payment and invoice status
+    are not guards. Sales must not write Invoice rows. Delivery /
+    `CloseInvoice` must not write the Sales Order.
 
 `IN_PRODUCTION` is not used.
 
@@ -96,17 +102,29 @@ flowchart LR
    `IssueAllocatedMaterial`. Reservation is not required (INV-003).
 5. `IssueUnitFromAllocation` moves the unit `AVAILABLE →
    ISSUED_TO_PRODUCTION`.
-6. `StartProductionOperation` → `CompleteProductionOperation`. Completion
-   is atomic: consumption, output/WIP, residual, scrap, process loss,
-   genealogy facts, and Inventory postings (INV-006). Official step names
-   stay OQ-003. Mass-balance tolerance stays OQ-006.
-7. Residual: `RecordResidualFact` then either `CreateResidualUnit`
-   (usable) or `ConvertResidualToScrap`. The cutoff stays OQ-009.
-8. Output QC as required (OQ-005) before the unit may become shippable
-   (INV-010).
-9. Continue from SEQ-STOCK step 6 through shipment and finance.
-10. `CloseProductionOrder` does not write Invoice. `CloseSalesOrder`
-    stays `open: OQ-007`.
+6. `StartProductionOperation` → `CompleteProductionOperation`. This is
+   the exclusive production posting boundary (OQ-003, INV-006). In **one**
+   business transaction: consumption, good output/WIP, leftover
+   classification (reusable residual **or** scrap for each leftover kg),
+   process loss, genealogy source facts, and Inventory Ledger postings
+   via `ACT-IPS`. Nested names (`RecordResidualFact`,
+   `CreateResidualUnit`, `ConvertResidualToScrap`, `RecordScrapFact`,
+   `PostScrapMovement`, `ConsumeUnitPartial` / `ConsumeUnitComplete`,
+   `ScrapUnit` when the parent destiny is `SCRAPPED`) run inside this
+   transaction. They are not later independent inventory postings.
+   Official step **names** stay OQ-003 treating. Mass-balance tolerance
+   stays OQ-006. Residual cutoff **numbers** stay OQ-009 treating;
+   missing cutoff when classification requires it → `GUARD_OPEN_POLICY`.
+7. After the child residual unit exists (if any): `PlaceResidualUnit`
+   and output QC as required (OQ-005) before the unit may become
+   shippable (INV-010). Placement and QC must not post residual or scrap
+   quantity again.
+8. Continue from SEQ-STOCK step 6 through shipment and finance.
+9. `CloseProductionOrder` does not write Invoice. `CloseSalesOrder`
+   follows OQ-007 and is independent of payment.
+10. Superseded reading: a sequential residual/scrap posting **after**
+    `CompleteProductionOperation` for the same leftover kg is forbidden
+    (FIND-G-001, FIND-G-002).
 
 ```mermaid
 flowchart LR
@@ -146,8 +164,6 @@ A rejected command is not this sequence. After a posted write:
 | --- | --- |
 | OQ-005 | inbound or output QC hold/release/post |
 | OQ-006 | partial/over fulfillment, mass-balance close, over-delivery |
-| OQ-007 | Sales Order close; Invoice close if that is meant to close the order |
-| OQ-008 | reservation activate/expire |
 | OQ-009 | residual versus scrap |
 | OQ-003 | production release, operation complete, allocation issue |
 | OQ-019 | Purchase Order approve; shipment without demand |

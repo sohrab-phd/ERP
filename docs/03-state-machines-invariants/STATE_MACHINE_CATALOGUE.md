@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [GOV-STATES-001, SM-INV-001, DOM-ACTORS-001, APR-004, APR-005]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-005
 supersedes: null
 ---
@@ -70,10 +70,11 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Write owner: `BC-SALES`
 - Happy path: `DRAFT → SUBMITTED → CONFIRMED → PARTIALLY_FULFILLED → FULFILLED → CLOSED`
 - MAKE-only extra state: `IN_PRODUCTION` between `CONFIRMED` and fulfillment. STOCK and PURCHASE paths do not require it.
-- Branches: `ON_HOLD`, `CANCEL_PENDING → CANCELLED`
+- Branches: `ON_HOLD`, `CANCEL_PENDING → CANCELLED` (`CANCELLED` may then `CLOSED`)
+- Closure (OQ-007): `FULFILLED → CLOSED` when remaining valid demand is already zero within OQ-006 (that is what `FULFILLED` means). Shipment `DELIVERED` is not a close guard. `PARTIALLY_FULFILLED → CLOSED` only with authorized Unfulfilled Demand for remainder; `CANCELLED → CLOSED` after confirm-cancel. Payment and invoice status are not guards.
 - Commands / actors: ACT-SALES; hold/cancel after confirm requires SalesOrderChange, not regression to Draft
 - Invariants: INV-013, INV-014
-- Open guards: partial-fulfillment limits (OQ-006); closure = delivery, payment, or both (OQ-007); reservation interaction (OQ-008)
+- Open guards: family over-delivery %/kg (OQ-006 configuration; default 0 answered)
 
 ## SM-UNFULFILLED-DEMAND
 
@@ -110,10 +111,10 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Concept: TERM-009 / ENT-RESERVATION
 - Write owner: `BC-INVENTORY`
 - Happy path: `REQUESTED → ACTIVE → CONSUMED`
-- Branches: `RELEASED`, `EXPIRED`
+- Branches: `RELEASED`, `EXPIRED` (EXPIRED is orphan/stale sweep only; not a confirmed-SO timer)
 - Commands / actors: ACT-SALES commands; ACT-IPS / Inventory writes
-- Invariants: INV-002, INV-003
-- Open guards: expiry, priority, one-Coil-to-many-orders (OQ-008)
+- Invariants: INV-002, INV-003; **one Inventory Unit → at most one ACTIVE reservation** (OQ-008)
+- Open guards: TTL only if a later temporary planning-hold type is added (OQ-008 residual)
 
 ## SM-INVENTORY-UNIT
 
@@ -124,7 +125,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Additional: `QUARANTINED`, `PACKED`, `SHIPPED`, `RETURNED`, `SCRAPPED`, `CLOSED`
 - Commands / actors: ACT-IPS writes stock; ACT-QC / ACT-SHIP / ACT-OP command only
 - Invariants: INV-001 through INV-004, INV-017
-- Open guards: UOM (OQ-001); Coil weight vs length (OQ-002); official issue point (OQ-003); QC (OQ-005); reservation (OQ-008)
+- Open guards: UOM (OQ-001); Coil weight vs length (OQ-002); official issue point (OQ-003); QC (OQ-005)
 
 ## SM-MATERIAL-ALLOCATION
 
@@ -144,7 +145,8 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Branches: `SKIPPED`, `REWORK`
 - Commands / actors: ACT-PLAN plans; ACT-OP records; ACT-IPS posts stock effects
 - Invariants: INV-006, INV-007, INV-009
-- Open guards: real step list and official posting points (OQ-003)
+- Open guards: real step list (OQ-003). Posting boundary is
+  `CompleteProductionOperation` (recorded OQ-003).
 
 ## SM-PRODUCTION-ORDER
 
@@ -155,7 +157,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - `PAUSED` returns to the prior live state by resume; it is not a silent skip
 - Commands / actors: ACT-PLAN plans/releases; ACT-OP records execution; ACT-IPS posts stock effects
 - Invariants: INV-006, INV-007, INV-009
-- Open guards: official posting points (OQ-003); QC gates (OQ-005); residual cutoff (OQ-009)
+- Open guards: routing step names (OQ-003); QC gates (OQ-005); residual cutoff numbers (OQ-009)
 
 ## SM-RESIDUAL
 
@@ -163,18 +165,22 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Write owner: Production fact; Inventory resulting unit
 - Happy path: `FACT_RECORDED → UNIT_CREATED → AVAILABLE_OR_QUARANTINE`
 - Branches: `BELOW_THRESHOLD_TO_SCRAP`
-- Commands / actors: ACT-OP records fact; ACT-IPS creates child unit
-- Invariants: INV-008
-- Open guards: threshold (OQ-009)
+- Commands / actors: ACT-OP records residual fact nested in
+  `CompleteProductionOperation`; ACT-IPS creates child unit in the same
+  transaction
+- Invariants: INV-008, INV-006
+- Open guards: threshold numbers (OQ-009). Independent residual qty after
+  completion is forbidden.
 
 ## SM-SCRAP
 
 - Concept: TERM-013 / ENT-SCRAP
 - Write owner: Production fact; Inventory Posting Service for stock movement
 - Happy path: `FACT_RECORDED → STOCK_POSTED → CLOSED`
-- Commands / actors: ACT-OP or ACT-QC command; ACT-IPS posts
+- Commands / actors: ACT-OP nested leftover, or ACT-QC/abort new scrap;
+  ACT-IPS `PostScrapMovement` posts quantity once
 - Invariants: INV-001, INV-009, INV-017
-- Open guards: none numeric beyond residual cutoff when the source is leftover (OQ-009)
+- Open guards: residual cutoff numbers when the source is leftover (OQ-009)
 
 ## SM-QUALITY-INSPECTION
 
@@ -212,7 +218,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Branches: `OVERDUE`, `VOID_PENDING → VOIDED`
 - Commands / actors: ACT-FIN
 - Invariants: INV-012, INV-014
-- Open guards: Sales Order closure vs payment (OQ-007); legal books (OQ-012)
+- Open guards: legal books (OQ-012). Sales Order closure is not an invoice guard (OQ-007).
 
 ## SM-PAYMENT
 

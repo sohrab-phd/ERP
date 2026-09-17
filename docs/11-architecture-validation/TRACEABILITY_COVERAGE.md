@@ -31,7 +31,8 @@ This structure gate reports:
   security intent (`SV-*` / `ACT-*`), verification intent
   (`QA-SCN-*` / `QA-P-*` / `QG-*`), adapter/repo/agent keep-reject
   labels.
-- **Not workshop-closed:** related `OQ-*` still open.
+- **Not workshop-closed:** related treating residuals still need numbers
+  or names (`GUARD_OPEN_POLICY`). Answered OQs are not “still open.”
 - **Not implementation-ready:** no `TEST-*` IDs, named UAT roster, or
   unlock paths. Those remain future and are explicit open extensions
   under accepted ASM-024.
@@ -43,11 +44,11 @@ not an in-scope structure hole.
 
 | Objective | Structure chain present | Still open |
 | --- | --- | --- |
-| REQ-OBJ-001 Unified operational truth | Capabilities; INV-013/014/018/020; QA-SCN-STOCK/PURCHASE/MAKE/NOT-FEASIBLE; `ADP-REPORT` / `ADP-LIVE` isolation; `mod-reporting` read-only; `CONF-ISO` | Workshop REQ-* decomposition; OQ-010 portal |
-| REQ-OBJ-002 Correct inventory | INV-001–004, INV-016–017; QA-P-NONNEG; QA-SCN-CONFLICT; QA-SCN-BUNDLE; `CONF-IPS` / `CONF-BUNDLE`; `ADP-WEIGHBRIDGE` commander; restore rebuilds Balance | OQ-001, OQ-002, OQ-008, OQ-017 |
-| REQ-OBJ-003 Bidirectional genealogy | INV-006–009, INV-019; QA-SCN-MAKE; QA-SCN-REJECT-GENEALOGY; `GenealogyRebuild`; `CONF-FORBID`; prompts reject `EditGenealogy` | OQ-003, OQ-004, OQ-009 |
-| REQ-OBJ-004 Controlled lifecycles | INV-005, INV-010–016; QA-SCN-REVERSE/QC-HOLD/SOD/SOD-GR; `OBS-AUDIT`; `ADP-CUTOVER` `GUARD_OPEN_POLICY`; `REV-AGENT` cannot approve | OQ-005, OQ-006, OQ-007, OQ-015, OQ-019 |
-| REQ-OBJ-005 Maintainable Node.js/TypeScript | ADR-0001; `ZONE-*` / `mod-*` / `AG-*` / `QG-ARCH`; existing Cursor controls | OQ-018 products; OQ-019 names |
+| REQ-OBJ-001 Unified operational truth | Capabilities; INV-013/014/018/020; QA-SCN-STOCK/PURCHASE/MAKE/NOT-FEASIBLE; `ADP-REPORT` / `ADP-LIVE` isolation; `mod-reporting` read-only; `CONF-ISO` | Workshop REQ-* decomposition; OQ-010 residual document list (visibility-only recorded) |
+| REQ-OBJ-002 Correct inventory | INV-001–004, INV-016–017; QA-P-NONNEG; QA-SCN-CONFLICT; QA-SCN-BUNDLE; `CONF-IPS` / `CONF-BUNDLE`; `ADP-WEIGHBRIDGE` commander; restore rebuilds Balance | OQ-001 residual. OQ-002 kg and OQ-008 uniqueness recorded. OQ-017 style recorded; functions later ADR. |
+| REQ-OBJ-003 Bidirectional genealogy | INV-006–009, INV-019; QA-SCN-MAKE; QA-SCN-REJECT-GENEALOGY; `GenealogyRebuild`; `CONF-FORBID`; prompts reject `EditGenealogy` | OQ-003 residual names; OQ-009 residual cutoffs. OQ-004 recorded. |
+| REQ-OBJ-004 Controlled lifecycles | INV-005, INV-010–016; QA-SCN-REVERSE/QC-HOLD/SOD/SOD-GR; `OBS-AUDIT`; `ADP-CUTOVER` `GUARD_OPEN_POLICY`; `REV-AGENT` cannot approve | OQ-005 residual; OQ-015, OQ-019. OQ-006 default 0 and OQ-007 close recorded. |
+| REQ-OBJ-005 Maintainable Node.js/TypeScript | ADR-0001, ADR-0006, ADR-0007; `ZONE-*` / `mod-*` / `AG-*` / `QG-ARCH`; existing Cursor controls | OQ-018 residual packages; ADR-0008 proposed; OQ-019 names |
 
 ## Invariant intent map (INV-001–020)
 
@@ -57,9 +58,9 @@ Every approved invariant has at least one verification **intent**
 
 | INV | Later intent labels | Open if numeric/named |
 | --- | --- | --- |
-| INV-001–004 stock/reservation | QA-P-NONNEG, QA-SCN-CONFLICT, QA-SCN-BUNDLE | OQ-001, OQ-002, OQ-008 |
-| INV-005 reversal not delete | QA-SCN-REVERSE | OQ-015, OQ-017 |
-| INV-006–009 production/genealogy | QA-SCN-MAKE, QA-P-GEN-*, QA-SCN-REJECT-GENEALOGY | OQ-003, OQ-006, OQ-009 |
+| INV-001–004 stock/reservation | QA-P-NONNEG, QA-SCN-CONFLICT, QA-SCN-BUNDLE | OQ-001 residual; uniqueness recorded (OQ-008); Coil kg recorded (OQ-002) |
+| INV-005 reversal not delete | QA-SCN-REVERSE | OQ-015 residual. OQ-017 style recorded. |
+| INV-006–009 production/genealogy | QA-SCN-MAKE, QA-P-GEN-*, QA-SCN-REJECT-GENEALOGY | OQ-003 residual names; OQ-009 residual cutoffs; OQ-006 default 0 recorded |
 | INV-010 QC hold | QA-SCN-QC-HOLD | OQ-005 |
 | INV-011 shipment needs demand | QA-SCN-SHIP-NO-DEMAND | OQ-019 |
 | INV-012 payment allocation | WALK-BUNDLE-PAY | — |
@@ -70,7 +71,7 @@ Every approved invariant has at least one verification **intent**
 | INV-017 commanders vs IPS | SV-003, QA-SCN-QC-COMMAND | — |
 | INV-018 Procurement does not write qty | WALK-PURCHASE / WALK-BUNDLE-GR | OQ-011 |
 | INV-019 genealogy rebuild-only | QA-SCN-REJECT-GENEALOGY | — |
-| INV-020 portal MVP | QA-SCN-REJECT-PORTAL, SV-006 | OQ-010 |
+| INV-020 portal MVP | QA-SCN-REJECT-PORTAL, SV-006 | OQ-010 visibility-only recorded; document list residual |
 
 ## Coverage rule
 

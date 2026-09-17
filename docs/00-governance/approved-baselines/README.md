@@ -95,7 +95,13 @@ artifact tree.
 Corrections never overwrite a manifest. Create a superseding approval when a
 material change requires reapproval.
 
-APR-014 approves the Phase 12 structure package and ASM-025. The Git
-checkpoint is pending. There is no Phase 13. Phase 12 approval is not
-an implementation unlock. OQ-001 through OQ-019 remain unanswered or
-`treating`. Implementation remains unauthorized.
+APR-014 approves the Phase 12 structure package and ASM-025. CHK-0013
+records the Git freeze. There is no Phase 13. Phase 12 approval is not
+an implementation unlock. Implementation remains unauthorized.
+
+**Later recorded (`2026-09-15`, not a re-approval of these freeze
+manifests):** team answers on OQ-001 through OQ-019. Current status is
+[OPEN_QUESTIONS.md](../registers/OPEN_QUESTIONS.md). ADR-0006 and
+ADR-0007 are accepted. ADR-0008 remains proposed. The APR/CHK files
+below remain historical evidence of the gate at which they were signed;
+they are not current OQ status.

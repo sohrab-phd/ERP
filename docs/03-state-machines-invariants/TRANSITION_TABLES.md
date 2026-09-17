@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-CATALOGUE-001, SM-INV-001, SM-SIDE-001, APR-004, APR-005]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-005
 supersedes: null
 ---
@@ -72,18 +72,45 @@ Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 | SUBMITTED | CONFIRMED | ConfirmSalesOrder | ACT-SALES | Fulfillment Assessment recorded | Sales writes Order; commands Reservation / PO / Production as assessed | SalesOrderConfirmed |
 | CONFIRMED | IN_PRODUCTION | StartOrderProduction | ACT-PLAN / ACT-SALES | production path selected | Sales writes Order; Production may release | SalesOrderInProduction |
 | CONFIRMED or IN_PRODUCTION | PARTIALLY_FULFILLED | RecordPartialFulfillment | ACT-SALES | `open: OQ-006`; STOCK/PURCHASE stay CONFIRMED; MAKE may be IN_PRODUCTION | Sales writes Order | SalesOrderPartiallyFulfilled |
-| CONFIRMED or IN_PRODUCTION or PARTIALLY_FULFILLED | FULFILLED | RecordFullFulfillment | ACT-SALES | `open: OQ-006` remaining quantity; IN_PRODUCTION is not required for STOCK/PURCHASE | Sales writes Order | SalesOrderFulfilled |
-| FULFILLED | CLOSED | CloseSalesOrder | ACT-SALES | `open: OQ-007` delivery, payment, or both | Sales writes Order; must not write Invoice | SalesOrderClosed |
+| CONFIRMED or IN_PRODUCTION or PARTIALLY_FULFILLED | FULFILLED | RecordFullFulfillment | ACT-SALES | remaining demand is zero within OQ-006 tolerance (default 0); IN_PRODUCTION is not required for STOCK/PURCHASE | Sales writes Order | SalesOrderFulfilled |
+| FULFILLED | CLOSED | CloseSalesOrder | ACT-SALES | Remaining valid demand is zero within OQ-006 tolerance (default 0). Shipment `DELIVERED` is **not** an independent close prerequisite. Payment and invoice status are **not** guards. | Sales writes Order + closure reason/qty snapshot; must not write Invoice or Payment; may command `ReleaseReservation` if any ACTIVE reservation remains | SalesOrderClosed |
+| PARTIALLY_FULFILLED | CLOSED | CloseSalesOrder | ACT-SALES | Remaining demand is covered by an authorized `RecordUnfulfilledDemand` fact (TERM-005 / INV-013). Outstanding **valid** remaining demand forbids close (OQ-007). Payment/invoice are not guards. | Sales writes Order + closure reason/fulfilled and unfulfilled qtys; must not write Invoice; commands `ReleaseReservation` for remaining ACTIVE reservations on this order | SalesOrderClosed |
+| CANCELLED | CLOSED | CloseSalesOrder | ACT-SALES | Order already `CANCELLED` via `ConfirmSalesOrderCancel`. Payment/invoice are not guards. | Sales writes closure reason/qty snapshot only; no new stock post | SalesOrderClosed |
 | CONFIRMED+ | ON_HOLD | HoldSalesOrder | ACT-SALES | SalesOrderChange, not return to Draft | Sales writes Order; may command Reservation release | SalesOrderHeld |
 | ON_HOLD | prior live state | ReleaseSalesOrderHold | ACT-SALES | change record exists | Sales writes Order | SalesOrderHoldReleased |
 | CONFIRMED+ | CANCEL_PENDING | RequestSalesOrderCancel | ACT-SALES | posted effects reverse, not delete (INV-005) | Sales writes Order | SalesOrderCancelRequested |
-| CANCEL_PENDING | CANCELLED | ConfirmSalesOrderCancel | ACT-SALES | compensating reversals posted | Sales writes Order | SalesOrderCancelled |
+| CANCEL_PENDING | CANCELLED | ConfirmSalesOrderCancel | ACT-SALES | compensating reversals posted | Sales writes Order; commands `ReleaseReservation` for remaining ACTIVE reservations | SalesOrderCancelled |
+
+### Canonical Sales Order closure (OQ-007 / FIND-G-003)
+
+`CloseSalesOrder` is **not** `GUARD_OPEN_POLICY` for the missing rule.
+
+| From | Required condition | Next | Required facts | Inventory effect | Payment / invoice |
+| --- | --- | --- | --- | --- | --- |
+| `FULFILLED` | Remaining valid demand is zero within OQ-006 (order already `FULFILLED`). Shipment `DELIVERED` is not a close prerequisite. | `CLOSED` | Closure reason + qty snapshot | May `ReleaseReservation` if any ACTIVE remains | **Not** a guard. Unpaid invoice may remain open. |
+| `PARTIALLY_FULFILLED` | Remainder is **not** still valid open demand. Remainder must be an authorized TERM-005 Unfulfilled Demand (`RecordUnfulfilledDemand` at least `RECORDED`, linked to this order's remaining qty). | `CLOSED` | Unfulfilled Demand fact + closure reason + fulfilled/unfulfilled qtys | `ReleaseReservation` for remaining ACTIVE reservations on this order | **Not** a guard. |
+| `CANCELLED` | Full-order cancel already completed | `CLOSED` | Cancel reversals already posted; closure reason/qty snapshot | None new (release already on confirm-cancel) | **Not** a guard. |
+
+Forbidden closes:
+
+- `PARTIALLY_FULFILLED` (or `CONFIRMED` / `IN_PRODUCTION`) while remaining demand is still a valid commitment → `GUARD_INVARIANT` (OQ-007).
+- Close because an invoice is `PAID` → forbidden. `CloseInvoice` / `AllocatePayment` must not write the Sales Order.
+- Close because a shipment is `DELIVERED` alone → forbidden. Delivery is a fulfillment **fact**, not a close guard. Sales records `RecordFullFulfillment` / `RecordPartialFulfillment` from remaining-demand truth, then `CloseSalesOrder` if the close predicate holds.
+- Collapse Unfulfilled Demand into overdue, delayed, awaiting-supply, or quotation-rejected. Those are different records:
+  - **Unfulfilled / lost demand:** TERM-005 / SM-UNFULFILLED-DEMAND
+  - **Overdue:** Invoice `OVERDUE` (INV-013)
+  - **Awaiting supply:** SO stays `CONFIRMED` / `IN_PRODUCTION` / `PARTIALLY_FULFILLED` on PURCHASE or MAKE
+  - **Delayed:** not an SO state
+  - **Rejected:** SM-QUOTATION `REJECTED`
+  - **Cancelled:** SM-SALES-ORDER `CANCELLED` (then optional `CLOSED`)
+
+Shipment completion does not by itself close the Sales Order.
 
 ## SM-UNFULFILLED-DEMAND
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | RECORDED | RecordUnfulfilledDemand | ACT-SALES | no Sales Order required (INV-013) | Sales writes Unfulfilled Demand | UnfulfilledDemandRecorded |
+| (none) | RECORDED | RecordUnfulfilledDemand | ACT-SALES | no Sales Order required (INV-013); **may** reference a Sales Order remainder when used for OQ-007 close | Sales writes Unfulfilled Demand | UnfulfilledDemandRecorded |
 | RECORDED | REVIEWED | ReviewUnfulfilledDemand | ACT-SALES | reason present | Sales writes record | UnfulfilledDemandReviewed |
 | REVIEWED | CLOSED | CloseUnfulfilledDemand | ACT-SALES | none numeric | Sales writes record | UnfulfilledDemandClosed |
 | REVIEWED or CLOSED | REOPENED_AS_INQUIRY | ReopenAsInquiry | ACT-SALES | new Inquiry, not an edit of history | Sales writes Inquiry | UnfulfilledDemandReopened |
@@ -117,10 +144,10 @@ Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | REQUESTED | RequestReservation | ACT-SALES | confirmed demand | command only | ReservationRequested |
-| REQUESTED | ACTIVE | ActivateReservation | ACT-IPS | available >= claim (INV-002, INV-003); `open: OQ-008` | Inventory writes Reservation | ReservationActivated |
-| ACTIVE | CONSUMED | ConsumeReservation | ACT-IPS | issue/ship path authorized | Inventory writes Reservation | ReservationConsumed |
-| ACTIVE | RELEASED | ReleaseReservation | ACT-SALES command / ACT-IPS write | none numeric | Inventory writes Reservation | ReservationReleased |
-| ACTIVE | EXPIRED | ExpireReservation | ACT-IPS | `open: OQ-008` | Inventory writes Reservation | ReservationExpired |
+| REQUESTED | ACTIVE | ActivateReservation | ACT-IPS | available >= claim (INV-002, INV-003); unit has **no** other ACTIVE reservation; later SO must not steal an existing ACTIVE; if two confirmed SOs compete for this unit, earlier `ConfirmSalesOrder` timestamp is the OQ-008 commercial winner. `REQUESTED` does not occupy the unique ACTIVE slot. `ConfirmSalesOrder` does not itself create REQUESTED (`RequestReservation` is a distinct command). | Inventory writes Reservation + unit reserved-state + reserved qty (DATA-TX-001) | ReservationActivated |
+| ACTIVE | CONSUMED | ConsumeReservation | ACT-IPS | issue/ship path authorized. Reservation is not Consumption (INV-003); Ledger consume/exit is a separate IPS post | Inventory writes Reservation | ReservationConsumed |
+| ACTIVE | RELEASED | ReleaseReservation | ACT-SALES command / ACT-IPS write | none numeric | Inventory writes Reservation; unit returns to `AVAILABLE` when no other destiny (INV-004); reserved qty released | ReservationReleased |
+| ACTIVE | EXPIRED | ExpireReservation | ACT-IPS | Confirmed-SO reservations: **not** timer expiry (OQ-008). Allowed only for orphan/stale rows whose owning commitment no longer exists (`ReservationExpirySweep`). | Inventory writes Reservation; unit eligibility same as release | ReservationExpired |
 
 ## SM-INVENTORY-UNIT
 
@@ -129,14 +156,14 @@ Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 | (none) | PENDING_QC | CreateUnitFromPosting | ACT-IPS | GoodsReceipt or output posting | Inventory writes Unit/Ledger | InventoryUnitCreated |
 | PENDING_QC | AVAILABLE | ReleaseUnit | ACT-IPS commanded by ACT-QC | INV-010; `open: OQ-005` | Inventory writes Unit | InventoryUnitAvailable |
 | PENDING_QC or AVAILABLE | QUARANTINED | QuarantineUnit | ACT-IPS commanded by ACT-QC | INV-017 | Inventory writes Unit | InventoryUnitQuarantined |
-| AVAILABLE | RESERVED | ReserveUnit | ACT-IPS | INV-002, INV-003; `open: OQ-008` | Inventory writes Unit + Reservation | InventoryUnitReserved |
+| AVAILABLE | RESERVED | ReserveUnit | ACT-IPS | Nested in `ActivateReservation` bundle; INV-002, INV-003; one ACTIVE reservation per unit (OQ-008) | Inventory writes Unit reserved-state | InventoryUnitReserved |
 | RESERVED | ISSUED_TO_PRODUCTION | IssueUnit | ACT-IPS | Production Order released; INV-004 | Inventory writes Unit/Ledger | InventoryUnitIssued |
 | AVAILABLE | ISSUED_TO_PRODUCTION | IssueUnitFromAllocation | ACT-IPS | SM-MATERIAL-ALLOCATION is ISSUED; INV-003, INV-004; `open: OQ-003` | Inventory writes Unit/Ledger | InventoryUnitIssued |
-| ISSUED_TO_PRODUCTION | PARTIALLY_CONSUMED | ConsumeUnitPartial | ACT-IPS | `open: OQ-001`, `open: OQ-002`, `open: OQ-003` | Inventory writes Unit/Ledger; Production writes consumption fact | InventoryUnitPartiallyConsumed |
-| ISSUED_TO_PRODUCTION or PARTIALLY_CONSUMED | CONSUMED | ConsumeUnitComplete | ACT-IPS | same open quantity guards | Inventory writes Unit/Ledger | InventoryUnitConsumed |
+| ISSUED_TO_PRODUCTION | PARTIALLY_CONSUMED | ConsumeUnitPartial | ACT-IPS nested inside `CompleteProductionOperation` | INV-006; independent call `GUARD_INVARIANT`; `open: OQ-001`, `open: OQ-002` | Inventory writes Unit/Ledger consume side of the completion bundle; Production writes consumption fact | InventoryUnitPartiallyConsumed |
+| ISSUED_TO_PRODUCTION or PARTIALLY_CONSUMED | CONSUMED | ConsumeUnitComplete | ACT-IPS nested inside `CompleteProductionOperation` | same; independent production consume forbidden | Inventory writes Unit/Ledger consume side of the completion bundle | InventoryUnitConsumed |
 | AVAILABLE or RESERVED | PACKED | PackUnit | ACT-IPS commanded by ACT-SHIP | INV-017; `open: OQ-004` | Inventory writes Unit | InventoryUnitPacked |
 | PACKED | SHIPPED | ShipUnit | ACT-IPS commanded by ACT-SHIP | SM-SHIPMENT dispatched; INV-011 | Inventory writes Unit/Ledger exit | InventoryUnitShipped |
-| any live | SCRAPPED | ScrapUnit | ACT-IPS commanded by ACT-OP or ACT-QC | paired SM-SCRAP fact | Inventory writes Unit/Ledger | InventoryUnitScrapped |
+| any live | SCRAPPED | ScrapUnit | ACT-IPS commanded by ACT-OP or ACT-QC | paired SM-SCRAP fact; scrap **quantity** is `PostScrapMovement` only (OQ-009) | Inventory writes Unit destiny `SCRAPPED`; does not post a second scrap qty | InventoryUnitScrapped |
 | SHIPPED | RETURNED | ReturnUnit | ACT-IPS | reversal, not delete (INV-005) | Inventory writes Unit/Ledger | InventoryUnitReturned |
 | terminal | CLOSED | CloseUnit | ACT-IPS | no remaining quantity | Inventory writes Unit | InventoryUnitClosed |
 
@@ -155,7 +182,7 @@ Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | PLANNED | PlanProductionOperation | ACT-PLAN | `open: OQ-003` real step list | Production writes Operation | ProductionOperationPlanned |
 | PLANNED | IN_PROGRESS | StartProductionOperation | ACT-OP | order is RELEASED or IN_PROGRESS | Production writes Operation | ProductionOperationStarted |
-| IN_PROGRESS | COMPLETED | CompleteProductionOperation | ACT-OP | INV-006; `open: OQ-003`, `open: OQ-006`, `open: OQ-009` | atomic facts + Inventory postings + optional QC request | ProductionOperationCompleted |
+| IN_PROGRESS | COMPLETED | CompleteProductionOperation | ACT-OP | INV-006 exclusive posting boundary; step names `open: OQ-003`; mass-balance number `open: OQ-006`; residual cutoff number `open: OQ-009` | One transaction: consume/output/leftover residual **or** scrap, process loss, genealogy source facts, nested IPS identity/qty posts; optional QC request. See DATA-TX-001. | ProductionOperationCompleted |
 | PLANNED | SKIPPED | SkipProductionOperation | ACT-PLAN | `open: OQ-003` whether skip is allowed | Production writes Operation; no silent stock change | ProductionOperationSkipped |
 | COMPLETED | REWORK | StartReworkOperation | ACT-OP | INV-005, INV-009; `open: OQ-003` | new operation/fact; prior posted facts reverse, not edit | ProductionOperationRework |
 
@@ -167,7 +194,7 @@ Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 | DRAFT | PLANNED | PlanProductionOrder | ACT-PLAN | allocation distinct from Reservation (INV-003) | Production writes PO + Allocation | ProductionOrderPlanned |
 | PLANNED | RELEASED | ReleaseProductionOrder | ACT-PLAN | `open: OQ-003` | Production writes PO; commands issue | ProductionOrderReleased |
 | RELEASED | IN_PROGRESS | StartProductionOrder | ACT-OP | issued material or allowed start | Production writes PO | ProductionOrderInProgress |
-| IN_PROGRESS | PARTIALLY_COMPLETED | CompleteOperationPartial | ACT-OP | INV-006; `open: OQ-003`, `open: OQ-006`, `open: OQ-009` | Production facts + Inventory postings + QC request | ProductionOperationCompleted |
+| IN_PROGRESS | PARTIALLY_COMPLETED | CompleteOperationPartial | ACT-OP | At least one operation `COMPLETED` via `CompleteProductionOperation`; remaining operations exist | Production writes PO state only; **no** Ledger, residual, or scrap post | ProductionOrderPartiallyCompleted |
 | IN_PROGRESS or PARTIALLY_COMPLETED | COMPLETED | CompleteProductionOrder | ACT-OP / ACT-PLAN | remaining operations done; mass balance `open: OQ-006` | Production writes PO | ProductionOrderCompleted |
 | COMPLETED | CLOSED | CloseProductionOrder | ACT-PLAN | none for stock | Production writes PO | ProductionOrderClosed |
 | live | PAUSED | PauseProductionOrder | ACT-PLAN / ACT-OP | none numeric | Production writes PO | ProductionOrderPaused |
@@ -180,17 +207,17 @@ Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | FACT_RECORDED | RecordResidualFact | ACT-OP | parent Unit known | Production writes residual fact | ResidualFactRecorded |
-| FACT_RECORDED | UNIT_CREATED | CreateResidualUnit | ACT-IPS | INV-008; `open: OQ-009` usable | Inventory creates child Unit; parent closed/split | ResidualUnitCreated |
-| FACT_RECORDED | BELOW_THRESHOLD_TO_SCRAP | ConvertResidualToScrap | ACT-OP / ACT-IPS | `open: OQ-009` | start SM-SCRAP instead | ResidualBelowThreshold |
+| (none) | FACT_RECORDED | RecordResidualFact | ACT-OP nested inside `CompleteProductionOperation` | parent Unit known; leftover of this operation is not independently postable (INV-006) | Production writes residual fact, not Ledger | ResidualFactRecorded |
+| FACT_RECORDED | UNIT_CREATED | CreateResidualUnit | ACT-IPS nested inside `CompleteProductionOperation` | INV-008; `open: OQ-009` usable; not a second qty post after completion | Inventory creates child Unit; parent closed/split; residual on-hand Ledger **once** | ResidualUnitCreated |
+| FACT_RECORDED | BELOW_THRESHOLD_TO_SCRAP | ConvertResidualToScrap | ACT-OP / ACT-IPS nested inside `CompleteProductionOperation` | `open: OQ-009`; same leftover must not also keep residual qty | start SM-SCRAP inside the same completion transaction | ResidualBelowThreshold |
 | UNIT_CREATED | AVAILABLE_OR_QUARANTINE | PlaceResidualUnit | ACT-IPS | QC if required (INV-010) | Inventory writes child Unit | ResidualUnitPlaced |
 
 ## SM-SCRAP
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | FACT_RECORDED | RecordScrapFact | ACT-OP or ACT-QC | quantity, reason, origin | Production or Quality writes scrap fact, not stock | ScrapFactRecorded |
-| FACT_RECORDED | STOCK_POSTED | PostScrapMovement | ACT-IPS | INV-001, INV-017 | Inventory posts Ledger | ScrapStockPosted |
+| (none) | FACT_RECORDED | RecordScrapFact | ACT-OP or ACT-QC | quantity, reason, origin; production leftover nested in `CompleteProductionOperation` | Production or Quality writes scrap fact, not stock | ScrapFactRecorded |
+| FACT_RECORDED | STOCK_POSTED | PostScrapMovement | ACT-IPS | INV-001, INV-017; OQ-009 authoritative scrap **qty**; one Ledger row per scrap fact | Inventory posts scrap quantity once | ScrapStockPosted |
 | STOCK_POSTED | CLOSED | CloseScrap | ACT-OP / ACT-QC | none numeric | owning fact closed | ScrapClosed |
 
 ## SM-QUALITY-INSPECTION
@@ -234,7 +261,7 @@ Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 | DRAFT | ISSUED | IssueInvoice | ACT-FIN | INV-012, INV-014 | Finance-Lite writes Invoice; not legal GL | InvoiceIssued |
 | ISSUED | PARTIALLY_PAID | AllocatePartialPayment | ACT-FIN | allocation ≤ open balance (INV-012) | Finance-Lite writes Invoice + Payment | InvoicePartiallyPaid |
 | ISSUED or PARTIALLY_PAID | PAID | AllocateFullPayment | ACT-FIN | open balance zero | Finance-Lite writes Invoice | InvoicePaid |
-| PAID | CLOSED | CloseInvoice | ACT-FIN | `open: OQ-007` if this closes the Sales Order | Finance-Lite writes Invoice | InvoiceClosed |
+| PAID | CLOSED | CloseInvoice | ACT-FIN | Invoice lifecycle only (OQ-007). Must **not** close the Sales Order. | Finance-Lite writes Invoice | InvoiceClosed |
 | ISSUED+ | OVERDUE | MarkInvoiceOverdue | ACT-FIN | overdue ≠ unfulfilled (INV-013) | Finance-Lite writes Invoice | InvoiceOverdue |
 | ISSUED+ | VOID_PENDING | RequestInvoiceVoid | ACT-FIN | INV-005 | Finance-Lite writes Invoice | InvoiceVoidRequested |
 | VOID_PENDING | VOIDED | VoidInvoice | ACT-FIN | reversing credit/void preserves history | Finance-Lite writes Invoice | InvoiceVoided |
@@ -252,12 +279,12 @@ Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 ## Still not filled on purpose
 
 - Exact decimal precision and rounding (OQ-001, OQ-002)
-- Official shop-floor posting step names (OQ-003)
+- Official shop-floor posting **step names** (OQ-003). Posting **boundary** is `CompleteProductionOperation` (recorded).
 - Batch vs piece identity on every output (OQ-004)
 - Named QC releasers and numeric limits (OQ-005)
 - Percent or weight tolerances (OQ-006)
-- Closure = delivery and/or payment (OQ-007)
-- Reservation expiry hours and preemption (OQ-008)
+- Family %/kg over-delivery (OQ-006 configuration; default 0 is answered)
+- Future temporary-hold reservation TTL (OQ-008 residual only)
 - Residual cutoff dimensions (OQ-009)
 - Named workshop approvers and exceptional-shipment person (OQ-019)
 - Inquiry and Quotation expiry day counts (`workshop-commercial-practice`)

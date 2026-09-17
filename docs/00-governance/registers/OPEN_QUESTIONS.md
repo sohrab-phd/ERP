@@ -6,7 +6,7 @@ status: approved
 version: 0.8.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
-last_reviewed: 2026-09-15
+last_reviewed: 2026-09-16
 approval: APR-005
 supersedes: null
 ---
@@ -136,6 +136,13 @@ per product family.
 First-go-live step names, work centers, and the exact abort role title.
 Skip/abort that needs a missing step stays `GUARD_OPEN_POLICY`.
 
+### Promoted to
+
+FIND-G-001 / FIND-G-002 / FIND-G-015: leftover residual identity and scrap
+quantity, and production consume primitives, are nested inside
+`CompleteProductionOperation`. They are not later independent inventory
+postings. Canonical contract: DATA-TX-001.
+
 ---
 
 ## OQ-004 — Tracking granularity
@@ -232,13 +239,20 @@ FIND-003 resolved.
 
 ### Recorded answer
 
-Close the Sales Order when all demand is delivered **or** remaining
-demand is cancelled / authorized Unfulfilled. Payment does not close the
-Sales Order. An unpaid invoice may remain open after SO close. Sales
-must not write payment state to close an order.
+Close the Sales Order when remaining valid demand is zero within the
+already-recorded OQ-006 tolerance (order is `FULFILLED`), **or** remaining
+demand is cancelled / authorized Unfulfilled. Shipment `DELIVERED` is a
+fulfillment fact, not an independent close prerequisite. Payment does
+not close the Sales Order. An unpaid invoice may remain open after SO
+close. Sales must not write payment state to close an order.
 
 `CloseSalesOrder` is no longer `GUARD_OPEN_POLICY` for the missing rule.
 It still rejects if unresolved demand remains.
+
+### Promoted to
+
+FIND-G-003 resolved. Canonical close paths:
+[TRANSITION_TABLES.md](../../03-state-machines-invariants/TRANSITION_TABLES.md).
 
 ---
 
@@ -265,6 +279,12 @@ not a TTL on confirmed SO reservations.
 
 TTL only if a later temporary planning-hold reservation type is added.
 
+### Promoted to
+
+FIND-G-005 resolved. Canonical uniqueness:
+[CONCURRENCY_AND_INTERLOCK.md](../../03-state-machines-invariants/CONCURRENCY_AND_INTERLOCK.md)
+INV-002.
+
 ---
 
 ## OQ-009 — Reusable residual threshold
@@ -286,6 +306,12 @@ disposition via `PostScrapMovement`. No universal 50 kg / 200 mm.
 
 Minimum weight/dimensions by family. Classification that needs a missing
 threshold stays `GUARD_OPEN_POLICY`.
+
+### Promoted to
+
+FIND-G-001 / FIND-G-002: `CreateResidualUnit` is residual **identity**
+nested in `CompleteProductionOperation`. `PostScrapMovement` is scrap
+**quantity**, nested for production leftover. Cutoff numbers remain treating.
 
 ---
 
@@ -440,6 +466,13 @@ files, freeze time, and named signers exist.
 
 Source files, freeze date/time, discrepancy workflow details, named
 signatories.
+
+### Promoted to
+
+FIND-G-014: After opening Ledger/Lot/Unit facts, run `BalanceRebuild`
+from Ledger and `GenealogyRebuild` from the DATA-GEN-001 source-fact
+catalogue (opening-origin facts at cutover). OQ-015 does not make Ledger
+the sole live genealogy input after consumption, output, pack, or ship.
 
 ---
 

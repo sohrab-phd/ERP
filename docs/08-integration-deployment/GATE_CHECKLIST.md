@@ -33,7 +33,7 @@ supersedes: null
 - [x] Isolation covers exports, events, live notices, and reports.
 - [x] DATA-TX-001 bundles are unsplittable on adapter paths.
 - [x] Network zones and host-hardening labels exist; no firewall product.
-- [x] Recovery rebuilds from Ledger; reversal is a new command.
+- [x] Recovery: Balance from Ledger; Genealogy from DATA-GEN-001 source facts; reversal is a new command.
 - [x] Cutover import stays `GUARD_OPEN_POLICY` until OQ-015.
 - [x] No approved artifact depends on a rejected decision.
 - [x] Hosting products and named operators are not claimed.

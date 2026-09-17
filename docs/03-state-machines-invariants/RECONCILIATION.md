@@ -105,3 +105,10 @@ reject ASM-016 at approval.
 
 This recommendation does not approve Phase 03, does not start Phase 04,
 does not execute the workshop, and does not authorize implementation.
+
+## Later composition (`2026-09-16`)
+
+Gate-time text above is historical (APR-005). FIND-G-001 / FIND-G-002 /
+FIND-G-015 later nested residual identity, scrap quantity, and
+production consume primitives inside `CompleteProductionOperation`.
+See DATA-TX-001. `IMPLEMENTATION_AUTHORIZED` remains `false`.

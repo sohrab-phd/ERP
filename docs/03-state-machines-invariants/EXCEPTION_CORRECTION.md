@@ -6,7 +6,7 @@ status: approved
 version: 0.2.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-CATALOGUE-001, SM-INV-001, DOM-PROCESS-001, APR-004, APR-005]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-005
 supersedes: null
 ---
@@ -34,6 +34,11 @@ STOCK and PURCHASE Sales Orders may move `CONFIRMED → PARTIALLY_FULFILLED`
 or `CONFIRMED → FULFILLED` without `IN_PRODUCTION`. MAKE is the only path
 that uses `IN_PRODUCTION`.
 
+Partial fulfillment with **valid remaining demand** stays
+`PARTIALLY_FULFILLED`. It does not auto-close. Closing that remainder
+requires `RecordUnfulfilledDemand` (TERM-005), not silent discard
+(OQ-007). Payment and invoice status do not close the Sales Order.
+
 ## Pause and resume
 
 SM-PRODUCTION-ORDER `PAUSED` returns to the prior live state by
@@ -48,9 +53,14 @@ an exception stays OQ-005.
 
 ## Residual versus scrap
 
-Leftover material becomes SM-RESIDUAL only if it is usable. The cutoff stays
-OQ-009. Below that cutoff, use SM-SCRAP. Production writes the fact; Inventory
-writes the resulting unit or stock movement.
+Leftover material is classified **inside** `CompleteProductionOperation`
+(INV-006, OQ-003). Reusable leftover uses nested `RecordResidualFact` +
+`CreateResidualUnit` (INV-008). Non-reusable leftover uses nested
+`RecordScrapFact` + `PostScrapMovement` (OQ-009). Family cutoff numbers
+stay OQ-009 treating; missing cutoff when classification requires it →
+`GUARD_OPEN_POLICY`. Production writes the fact; Inventory posts identity
+or scrap quantity **once**. A later independent residual or scrap post
+for the same leftover kg is forbidden.
 
 ## Rework
 

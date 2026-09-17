@@ -64,7 +64,8 @@ Temporary identities were not treated as operators.
 - `ZONE-*` and `HH-*` are labels. Firewall, VPN, and secret-store
   products stay open.
 - RPO/RTO minutes stay OQ-016. Named operators stay OQ-019.
-- Restore rebuilds Balance and Genealogy from Ledger; it does not
+- Restore: `BalanceRebuild` from Ledger; `GenealogyRebuild` from
+  DATA-GEN-001 source facts; it does not
   accept `EditGenealogy` or `AdjustBalance`.
 - QA-R-RESTORE / DEVICE / WORKER / CUTOVER map to named DR/RB labels.
 - FIND-034 records that this structure gate cannot freeze products or

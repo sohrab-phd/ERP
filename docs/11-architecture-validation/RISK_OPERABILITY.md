@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [chief-solution-architect, operations-owner]
 depends_on: [GOV-RISKS-001, APR-012, APR-013, ASM-024]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 approval: APR-013
 supersedes: null
 ---
@@ -26,12 +26,12 @@ named operators, and products stay open.
 | RISK-002 opening inventory | `ADP-CUTOVER` commands Ledger; `GUARD_OPEN_POLICY` until OQ-015 | OQ-015, OQ-019 |
 | RISK-003 concurrency | INV-002/016; QA-SCN-CONFLICT; one `ACT-IPS` writer | OQ-017 mechanism |
 | RISK-004 decimal precision | Exact-decimal ADR still proposed | OQ-001, OQ-018 |
-| RISK-005 genealogy divergence | Rebuild-only; forbidden edits; atomic CompleteProductionOperation | OQ-003, OQ-004, OQ-009 |
+| RISK-005 genealogy divergence | Rebuild-only from DATA-GEN-001 source facts; forbidden edits; atomic CompleteProductionOperation | OQ-003 names, OQ-004, OQ-009 cutoff numbers |
 | RISK-006 boundary erosion | `mod-*` / `CONF-IMPORT`; no cross-module table writes | OQ-018 layout product |
 | RISK-007 premature portal | INV-020 / `ADP-PORTAL` reject order write | OQ-010 |
 | RISK-008 customer leakage | SV-005 / SV-012 / `CONF-ISO` | Named isolation testers OQ-019 |
 | RISK-009 non-durable worker | Same-key retry; worker not commander; no broker chosen | OQ-018 |
-| RISK-010 backups cannot restore | Restore rebuilds Balance/Genealogy from Ledger | OQ-016 RPO/RTO |
+| RISK-010 backups cannot restore | Restore: Balance from Ledger; Genealogy from DATA-GEN-001 source facts | OQ-016 RPO/RTO |
 | RISK-011 Finance-Lite expansion | ASM-010; export only | OQ-012 |
 | RISK-012 small-team / single host | Labels over products; ASM-011 | OQ-018, OQ-019 |
 | RISK-013 missing data ownership | Temporary identities have no authority; RACI stays workshop | OQ-019 |

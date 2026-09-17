@@ -46,11 +46,12 @@ Site / legal-entity discriminator is **O** on every record (OQ-013).
 | ENT-QUOTATION | price / UOM / currency scale | O | OQ-001 |
 | ENT-QUOTATION | expiry instant | O | `workshop-commercial-practice` |
 | ENT-SALES-ORDER | customer ref, commercial snapshot, state | R / S | INV-014 |
-| ENT-SALES-ORDER | close predicate | O | OQ-007 |
+| ENT-SALES-ORDER | close predicate, closure reason, fulfilled/unfulfilled qty snapshot | R | OQ-007 recorded: remaining valid demand zero within OQ-006 (`FULFILLED`), cancelled, or authorized unfulfilled remainder; shipment `DELIVERED` and payment/invoice are not close predicates |
 | ENT-SALES-ORDER-ITEM | order ref, demanded qty, remaining qty | R | qty type OQ-001 |
 | ENT-SALES-ORDER-ITEM | over-delivery limit | O | OQ-006 |
 | ENT-FULFILLMENT-ASSESSMENT | demand ref, outcome (STOCK/PURCHASE/MAKE/NOT_FEASIBLE) | R | availability is a read |
 | ENT-UNFULFILLED-DEMAND | reason, demand signal ref, state | R | Sales Order not required (INV-013) |
+| ENT-UNFULFILLED-DEMAND | optional Sales Order remainder ref + remaining qty | R | Required when used to close `PARTIALLY_FULFILLED` (OQ-007); not overdue |
 
 ## Procurement and inbound
 
@@ -73,8 +74,8 @@ Site / legal-entity discriminator is **O** on every record (OQ-013).
 | ENT-INVENTORY-UNIT | on-hand qty, reserved qty | R | type OQ-001; Coil length OQ-002 |
 | ENT-INVENTORY-LEDGER | unit/lot ref, direction, qty, reason, actor role, prior-row link | R / S / C | immutable; mechanism OQ-017 |
 | ENT-INVENTORY-BALANCE | unit/lot ref, on-hand, reserved, held | R | projection of Ledger; not independently editable |
-| ENT-RESERVATION | demand ref, unit/lot ref, claimed qty, state | R | distinct from Allocation (INV-003) |
-| ENT-RESERVATION | expiry, priority, one-Coil-to-many | O | OQ-008 |
+| ENT-RESERVATION | demand ref, unit/lot ref, claimed qty, state | R | distinct from Allocation (INV-003); at most one `ACTIVE` per Inventory Unit (OQ-008); partial claimed qty is not a second slot |
+| ENT-RESERVATION | confirmed-SO timer expiry | — | **Not a required attribute.** Confirmed-SO reservations do not auto-expire (OQ-008). TTL only if a later temporary-hold type is added. |
 
 Available qty is derived: on-hand − reserved − quality hold (INV-003).
 Do not store a third independent quantity as truth.

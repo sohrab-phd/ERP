@@ -74,7 +74,9 @@ evidence and Phase 07.
   [Provenance Classification](../../01-project-assimilation/PROVENANCE_CLASSIFICATION.md),
   and
   [Workshop Agenda sections 3 and 6](../../01-project-assimilation/WORKSHOP_AGENDA.md)
-- Open questions: OQ-001, OQ-002, OQ-008, OQ-017
+- Open questions: OQ-001 residual (scale/rounding/factors). Coil qty kg
+  is recorded (OQ-002). Reservation uniqueness is recorded (OQ-008).
+  Posting style is recorded (OQ-017); stored functions later ADR.
 - Risks: RISK-003, RISK-004
 - Phase 02 design evidence:
   [Ownership matrix](../../02-domain-business-architecture/MODULE_OWNERSHIP_MATRIX.md)
@@ -96,7 +98,8 @@ evidence and Phase 07.
   `TASK-IMPL` forbids Ledger writes outside Inventory Posting and
   must not split DATA-TX-001 bundles; `CONF-IPS` / `CONF-BUNDLE` are
   keep/reject rules
-- Status: proposed; numeric UOM, Coil, and reservation guards remain open
+- Status: proposed; numeric UOM scale/rounding remain treating (OQ-001).
+  Coil kg (OQ-002) and reservation uniqueness (OQ-008) are recorded.
 
 ### REQ-OBJ-003 — Bidirectional material genealogy
 
@@ -108,7 +111,8 @@ evidence and Phase 07.
   [Provenance Classification](../../01-project-assimilation/PROVENANCE_CLASSIFICATION.md),
   and
   [Workshop Agenda section 4](../../01-project-assimilation/WORKSHOP_AGENDA.md)
-- Open questions: OQ-003, OQ-004, OQ-009
+- Open questions: OQ-003 residual (step names), OQ-009 residual (cutoff
+  numbers). OQ-004 hybrid grain is recorded.
 - Risk: RISK-005
 - Phase 02 design evidence:
   [Process maps](../../02-domain-business-architecture/PROCESS_MAPS_AS_IS_TO_BE.md)
@@ -121,14 +125,15 @@ evidence and Phase 07.
 - Phase 07 verification intents (structure, not tests):
   QA-SCN-MAKE; QA-P-GEN-*; QA-SCN-REJECT-GENEALOGY
 - Phase 08 integration intents (structure, not products):
-  `GenealogyRebuild` after restore; no adapter exposes `EditGenealogy`
+  `GenealogyRebuild` after restore from DATA-GEN-001 source facts; no adapter exposes `EditGenealogy`
 - Phase 09 repository intents (structure, not products):
-  `CONF-FORBID` (`EditGenealogy`); rebuild is generated from Ledger
+  `CONF-FORBID` (`EditGenealogy`); rebuild is generated from DATA-GEN-001 source facts
 - Phase 10 agent intents (structure, not products):
   prompts and acceptance reject `EditGenealogy`; generated genealogy
-  stays a Ledger rebuild
-- Status: proposed; official posting points, tracking, and residual cutoff
-  remain open
+  stays a DATA-GEN-001 source-fact rebuild
+- Status: proposed; routing **step names** remain treating (OQ-003).
+  Tracking grain is recorded (OQ-004). Residual cutoff **numbers** remain
+  treating (OQ-009). Posting boundary is `CompleteProductionOperation`.
 
 ### REQ-OBJ-004 — Controlled and auditable business lifecycles
 
@@ -140,7 +145,8 @@ evidence and Phase 07.
   [Multi-Agent Method](../../01-project-assimilation/MULTI_AGENT_METHOD.md),
   and
   [Workshop Agenda sections 5, 7, and 8](../../01-project-assimilation/WORKSHOP_AGENDA.md)
-- Open questions: OQ-005, OQ-006, OQ-007
+- Open questions: OQ-005 residual (plans/names), OQ-006 family %
+  configuration. Default tolerance 0 and Sales Order close are recorded.
 - Risks: RISK-006, RISK-008
 - Phase 02 design evidence:
   [Actor catalogue](../../02-domain-business-architecture/ACTOR_RESPONSIBILITY_CATALOGUE.md)
@@ -162,18 +168,21 @@ evidence and Phase 07.
 - Phase 10 agent intents (structure, not products):
   `REV-AGENT` cannot approve architecture; unanswered policy is
   `GUARD_OPEN_POLICY`
-- Status: proposed; QC, tolerance, and Sales Order closure guards remain open
+- Status: proposed; QC plans/names remain treating (OQ-005). Default
+  tolerance 0 and Sales Order closure are recorded.
 
 ### REQ-OBJ-005 — Maintainable Node.js/TypeScript platform
 
 - Source: Explicit technology override
-- Decision: ADR-0001
+- Decision: ADR-0001; ADR-0006 Modular Monolith and ADR-0007 PostgreSQL
+  are also accepted (OQ-018).
 - Phase 01 evidence:
   [Assimilation Report sections 3, 9, and 10](../../01-project-assimilation/ARCHITECTURE_ASSIMILATION_REPORT.md),
   [Provenance Classification](../../01-project-assimilation/PROVENANCE_CLASSIFICATION.md),
   and
   [Workshop Agenda sections 10 and 11](../../01-project-assimilation/WORKSHOP_AGENDA.md)
-- Open question: OQ-018
+- Open question: OQ-018 residual packages (NestJS, Prisma, React, Docker,
+  auth, extra MCP). ADR-0008 remains proposed.
 - Risks: RISK-004, RISK-009, RISK-012
 - Phase 07 verification intents (structure, not tests):
   QG-ARCH only; runner/CI stay OQ-018; no package claimed
@@ -183,7 +192,7 @@ evidence and Phase 07.
   `mod-*` / `CONF-*` labels; npm/pnpm/CI stay OQ-018
 - Phase 10 agent intents (structure, not products):
   existing Cursor controls only; `MCP-EXTRA` stays OQ-018
-- Status: confirmed objective; solution undecided
+- Status: confirmed objective; packages and ADR-0008 remain residual/proposed
 
 ## Coverage policy
 

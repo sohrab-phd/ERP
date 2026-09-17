@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [operations-owner]
 depends_on: [QA-NFR-001, DATA-CUTOVER-001, APP-BG-001, APR-009, APR-010]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 approval: APR-010
 supersedes: null
 ---
@@ -23,7 +23,7 @@ RACI stays OQ-015.
 | ID | Statement | Open |
 | --- | --- | --- |
 | `DR-BACKUP` | Durable copy of posted facts and audit | Retention days, off-site (OQ-016) |
-| `DR-RESTORE` | Restore then rebuild Balance and Genealogy from Ledger | RPO/RTO minutes (OQ-016) |
+| `DR-RESTORE` | Restore durable posted facts; `BalanceRebuild` from Ledger; `GenealogyRebuild` from DATA-GEN-001 source facts (not Ledger-only) | RPO/RTO minutes (OQ-016) |
 | `DR-ROLLBACK` | Compensating commands, not delete-in-place | INV-005 |
 | `DR-CUTOVER` | Opening stock is a Ledger fact with named sign-off (`ADP-CUTOVER`) | OQ-015, OQ-019 |
 | `DR-DEVICE` | Weighbridge down → human command | OQ-011 |
@@ -33,6 +33,9 @@ A restore that only reloads Balance is not acceptable (QA-P-BALANCE).
 A restore that accepts `EditGenealogy` is not acceptable (INV-019).
 After `DR-RESTORE`, `BalanceRebuild` and `GenealogyRebuild` run as
 worker kinds, not as `AdjustBalance` or `EditGenealogy`.
+`BalanceRebuild` uses Ledger. `GenealogyRebuild` uses the source facts
+in [GENEALOGY_PROJECTION.md](../04-database-architecture/GENEALOGY_PROJECTION.md)
+(FIND-G-014).
 
 ## Map from Phase 07 recovery intents
 
@@ -48,8 +51,11 @@ Until OQ-015 is answered, `DR-CUTOVER` / `ADP-CUTOVER` reject as
 
 ## What is source truth after restore
 
-Posted commercial documents, Ledger rows, and `AUD-CMD-*`. Balance and
-Genealogy Link are rebuilt.
+Posted commercial documents, Inventory Ledger rows, Production
+consumption/output/residual/scrap facts, Shipping package/shipment
+facts, and `AUD-CMD-*`. Balance is rebuilt from Ledger. Genealogy Link
+is rebuilt from the DATA-GEN-001 source-fact catalogue. Neither
+projection is independently editable.
 
 ## Must not decide here
 

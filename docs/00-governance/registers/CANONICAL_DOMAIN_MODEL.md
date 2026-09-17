@@ -6,7 +6,7 @@ status: approved
 version: 0.2.1
 owners: [chief-solution-architect, domain-leads]
 depends_on: [ASM-REPORT-001, GOV-GLOSSARY-001, DOM-CAP-BC-001, DOM-OWN-001]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-004
 supersedes: null
 ---
@@ -88,5 +88,5 @@ movement; Goods Receipt orchestration vs Inventory posting.
 | Portal boundary and MVP phase | Ordering formally deferred from MVP; no confirmed `BC-PORTAL` | OQ-010, FIND-001 |
 | Goods Receipt / Material Lot ownership | Procurement orchestrates receipt; Inventory writes lot/unit stock | workshop confirmation; OQ-015, OQ-017 |
 | Product / Material / UOM variants | Master-data owned; signed matrix not invented | OQ-001, OQ-002 |
-| Real production routing and tracking | Production owns operations and facts; posting points unset | OQ-003, OQ-004 |
+| Real production routing and tracking | Production owns operations and facts; posting boundary is `CompleteProductionOperation` (OQ-003 recorded); leftover residual/scrap nested in that transaction | OQ-003 step names; OQ-004 family catalogue |
 | Finance-Lite / external accounting | Finance-Lite is operational only | OQ-012, ASM-010 |

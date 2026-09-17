@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [delivery-lead]
 depends_on: [PLAN-SLICE-001, AI-PROMPT-001, APR-013, APR-014, ASM-025]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 approval: APR-014
 supersedes: null
 ---
@@ -57,8 +57,8 @@ ID.
 | `WI-BUNDLE-DISPATCH` | DispatchShipment + stock exit | `SLICE-STOCK` |
 | `WI-BUNDLE-PAY` | AllocatePayment + invoice open-balance reduction | `SLICE-STOCK` |
 | `WI-BUNDLE-GR` | PostGoodsReceipt + Lot/Unit/Ledger | `SLICE-PURCHASE` |
-| `WI-BUNDLE-COMPLETE-OP` | CompleteProductionOperation + consume/output/residual/scrap | `SLICE-MAKE` |
-| `WI-BUNDLE-RESIDUAL` | CreateResidualUnit + parent close/split | `SLICE-MAKE` |
+| `WI-BUNDLE-COMPLETE-OP` | CompleteProductionOperation + consume/output/residual/scrap, including nested residual identity | `SLICE-MAKE` |
+| `WI-BUNDLE-RESIDUAL` | Nested **inside** `WI-BUNDLE-COMPLETE-OP`: CreateResidualUnit + parent close/split. Not a later commit. | `SLICE-MAKE` |
 
 Forbidden as work items that pass in MVP: `PortalPlaceOrder`,
 `EditGenealogy`, `AdjustBalance`, Quality/Shipping writing Ledger.
@@ -69,8 +69,10 @@ intents until a runner ADR (OQ-018, FIND-028).
 Named homes for catalogue commands, queries, adapters, workers, and
 scenes are in
 [SLICE_HOMES.md](../00-governance/registers/SLICE_HOMES.md). This file
-keeps kinds and the six bundles only. The register does not reopen
-APR-014 and does not authorize implementation.
+keeps kinds and the six named bundle IDs. `WI-BUNDLE-RESIDUAL` is nested
+inside `WI-BUNDLE-COMPLETE-OP` (FIND-G-001), not a sequential commit.
+The register does not reopen APR-014 and does not authorize
+implementation.
 
 ## Must not decide here
 

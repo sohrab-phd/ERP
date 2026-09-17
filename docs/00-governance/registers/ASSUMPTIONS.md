@@ -156,6 +156,9 @@ validation status; artifact approval does not confirm shop-floor facts.
 - Owner: Project sponsor and Chief Solution Architect
 - Validation: Phase 02 approved as APR-004 at `2026-09-06T00:31:00+03:30`.
   Later workshop evidence is still required before owner-signed policy.
+  **Later note (Gate 2):** OQ-008 uniqueness and confirmed-SO non-expiry
+  were recorded `2026-09-15`. This ASM remains the Phase 02 scoping
+  record; it is not current reservation policy.
 - Affects: Phase 02 exit, Phase 03 invariants, workshop, portal roadmap
 - Related questions: OQ-001, OQ-002, OQ-003, OQ-004, OQ-005, OQ-006, OQ-008,
   OQ-010, OQ-013

@@ -6,7 +6,7 @@ status: approved
 version: 0.4.0
 owners: [qa-architect, development-lead]
 depends_on: [REPO-GEN-001, REPO-CONF-001, APP-ORCH-001, AI-PROMPT-001, APR-011, APR-012]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 approval: APR-012
 supersedes: null
 ---
@@ -37,8 +37,8 @@ Generated application code may be kept only if:
    the commander
 
 Generated OpenAPI or SQL must not become source truth over `docs/`.
-Genealogy and Balance rebuilds remain projections from Ledger. They
-are not `EditGenealogy` or `AdjustBalance`.
+Genealogy remains a projection from DATA-GEN-001 source facts. Balance
+rebuilds from Ledger. They are not `EditGenealogy` or `AdjustBalance`.
 
 ## Later reject rules (labels)
 

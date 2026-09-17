@@ -6,7 +6,7 @@ status: approved
 version: 0.2.0
 owners: [qa-architect, requirements-owner]
 depends_on: [GOV-TRACE-001, SM-INV-001, SEC-VER-001, APR-008]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-009
 supersedes: null
 ---
@@ -25,7 +25,7 @@ FIND-028). Canonical objective rows stay in
 | Invariant | Primary level | Intent | Open |
 | --- | --- | --- | --- |
 | INV-001 | L-BUNDLE, L-PROPERTY | One posting path; immutable Ledger row | OQ-017 |
-| INV-002 | L-COMMAND, L-PROPERTY | No negative on-hand/reserved/available | OQ-008 expiry |
+| INV-002 | L-COMMAND, L-PROPERTY | No negative on-hand/reserved/available; one `ACTIVE` reservation per Inventory Unit | OQ-008 residual TTL |
 | INV-003 | L-COMMAND | Availability = on-hand − reserved − hold | none as a rule |
 | INV-004 | L-COMMAND | One unit, one location; incompatible states reject | ASM-005 |
 | INV-005 | L-COMMAND | Reversal is a new accepted command | OQ-015 authority |
@@ -36,7 +36,7 @@ FIND-028). Canonical objective rows stay in
 | INV-010 | L-COMMAND | QC pending blocks available/ship | OQ-005 |
 | INV-011 | L-SEQUENCE | Shipment belongs to authorized demand | OQ-006, OQ-019 |
 | INV-012 | L-BUNDLE | Payment allocation cannot exceed open balance | OQ-012 |
-| INV-013 | L-COMMAND | Unfulfilled demand is not overdue | OQ-007 |
+| INV-013 | L-COMMAND | Unfulfilled demand is not overdue; remainder-close uses that fact | none for OQ-007 close rule |
 | INV-014 | L-COMMAND | Posted snapshots do not rewrite | OQ-016 days |
 | INV-015 | L-SECURITY | Backend auth, SoD, customer isolation | OQ-010, OQ-019 |
 | INV-016 | L-COMMAND, L-PROPERTY | Same key does not double-post | none |
@@ -73,7 +73,7 @@ an OQ remains. Named scenarios (where one exists) are in
 
 | Sequence | Scenario | Open stops stay on the SEQ row |
 | --- | --- | --- |
-| SEQ-STOCK | `QA-SCN-STOCK` | OQ-007, OQ-006 |
+| SEQ-STOCK | `QA-SCN-STOCK` | OQ-006 |
 | SEQ-PURCHASE | `QA-SCN-PURCHASE` | OQ-019, OQ-005 |
 | SEQ-MAKE | `QA-SCN-MAKE` | OQ-003, OQ-009, OQ-006 |
 | SEQ-NOT-FEASIBLE | `QA-SCN-NOT-FEASIBLE` | none as a path |
@@ -86,12 +86,12 @@ split-failure intent. Mechanism stays OQ-017.
 
 | Bundle | Invariant |
 | --- | --- |
-| CompleteProductionOperation + consume/output/residual/scrap | INV-006 |
+| CompleteProductionOperation + consume/output/residual/scrap (nested residual identity) | INV-006 |
 | DispatchShipment + stock exit | INV-011, INV-017 |
 | PostGoodsReceipt + Lot/Unit/Ledger | INV-001, INV-018 |
-| ActivateReservation + reserved state + reserved qty | INV-002, INV-003 |
+| ActivateReservation + reserved state + reserved qty | INV-002, INV-003; one `ACTIVE` per unit |
 | AllocatePayment + invoice open-balance reduction | INV-012 |
-| CreateResidualUnit + parent close/split | INV-008 |
+| CreateResidualUnit + parent close/split (nested in complete-op) | INV-008 / INV-006 |
 
 ## SM-SOD-001 pairs without a dedicated passing scenario
 

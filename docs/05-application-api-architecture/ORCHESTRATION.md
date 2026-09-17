@@ -6,7 +6,7 @@ status: approved
 version: 0.2.0
 owners: [solution-architect]
 depends_on: [DATA-TX-001, SM-CONC-001, APP-CMD-001, APR-006, APR-007]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-007
 supersedes: null
 ---
@@ -39,13 +39,26 @@ as commanders.
 ## Bundles that must not be split
 
 - CompleteProductionOperation + consume/output/residual/scrap postings
+  (nested `CreateResidualUnit` / parent close/split when leftover is
+  reusable; nested `PostScrapMovement` when leftover is scrap). See
+  the canonical contract in
+  [TRANSACTION_AND_IDEMPOTENCY.md](../04-database-architecture/TRANSACTION_AND_IDEMPOTENCY.md).
 - DispatchShipment + stock exit
 - PostGoodsReceipt + Lot/Unit/Ledger
 - ActivateReservation + Unit reserved-state + Balance reserved qty
 - AllocatePayment + Invoice open-balance reduction
-- CreateResidualUnit + parent close/split
+- Quality- or abort-commanded scrap that is **not** leftover of a
+  completed operation: `RecordScrapFact` + `PostScrapMovement`
+
+`CreateResidualUnit` is not a later independently committable bundle
+after `CompleteProductionOperation`. Splitting residual identity onto
+a second commit is a split of INV-006.
 
 How the bundle is committed stays OQ-017.
+
+Independent `ConsumeUnitPartial` / `ConsumeUnitComplete` for production
+is rejected (`GUARD_INVARIANT` INV-006). Those names are nested IPS
+unit-state primitives inside `CompleteProductionOperation` only.
 
 ## Background work
 

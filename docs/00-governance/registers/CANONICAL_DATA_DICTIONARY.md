@@ -49,6 +49,11 @@ detailed data design, tables, columns, keys, schemas, or migrations.
 - Concept: TERM-003
 - Write owner: Sales
 - Identity purpose: Approved customer demand and commercial snapshot
+- Closure (OQ-007): `CLOSED` from `FULFILLED` (remaining valid demand already
+  zero within OQ-006; shipment `DELIVERED` is not a close predicate), or from
+  `PARTIALLY_FULFILLED` with authorized Unfulfilled Demand covering remainder,
+  or from `CANCELLED`. Payment and invoice status are not close predicates.
+  Closure retains reason and fulfilled/unfulfilled qty snapshot.
 - Validation status: proposed
 
 ## ENT-SALES-ORDER-ITEM
@@ -69,6 +74,10 @@ detailed data design, tables, columns, keys, schemas, or migrations.
 - Concept: TERM-005
 - Write owner: Sales
 - Identity purpose: Lost/unserved demand independent of order delay
+- Distinct from: Invoice overdue, delayed shipment, awaiting supply,
+  quotation rejected, and Sales Order cancelled. A Sales Order is not
+  required. An SO remainder-close (OQ-007) **may** reference this record
+  for remaining qty; remaining demand is not silently discarded.
 - Validation status: proposed
 
 ## ENT-SUPPLIER
@@ -126,6 +135,11 @@ detailed data design, tables, columns, keys, schemas, or migrations.
 - Concept: TERM-009
 - Write owner: Inventory
 - Identity purpose: Demand claim against available stock
+- Active uniqueness (OQ-008): one Inventory Unit → at most one reservation
+  in state `ACTIVE`. Identity of that live slot is the Inventory Unit.
+  `REQUESTED` / `RELEASED` / `CONSUMED` / `EXPIRED` rows do not occupy it.
+  Claimed qty may be partial; remaining kg on the same unit is not a
+  second reservation. Distinct from Allocation (TERM-010) and Consumption.
 - Validation status: proposed
 
 ## ENT-PRODUCTION-ORDER
@@ -210,6 +224,8 @@ detailed data design, tables, columns, keys, schemas, or migrations.
 - Write owner: FinanceLite
 - Identity purpose: Operational receivable document
 - Validation status: proposed; legal boundary pending OQ-012
+- Must not close ENT-SALES-ORDER (OQ-007). Invoice `PAID` / `CLOSED` is
+  independent of Sales Order `CLOSED`.
 
 ## ENT-PAYMENT
 

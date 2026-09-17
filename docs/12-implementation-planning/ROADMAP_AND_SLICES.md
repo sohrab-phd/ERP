@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [SM-SEQ-001, APP-ORCH-001, REPO-LAY-001, APR-013, APR-014, ASM-025]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 approval: APR-014
 supersedes: null
 ---
@@ -47,13 +47,13 @@ kernel.
 
 | Slice | Walks / commands | Host / module labels | Must not | Open |
 | --- | --- | --- | --- | --- |
-| `SLICE-ENVELOPE` | Command/query envelope, idempotency key, rejection families, `AUD-CMD-*` | `kern-command`, `host-backend`, `mod-identity-audit` | Write Ledger; choose NestJS/Prisma | OQ-018 |
-| `SLICE-IPS` | Inventory Posting kernel commanded by others | `mod-inventory-posting` | Second writer; Balance-only API | OQ-017, OQ-001 |
-| `SLICE-STOCK` | SEQ-STOCK: `ActivateReservation` bundle → pack → `DispatchShipment` bundle → invoice → `AllocatePayment` bundle | `mod-sales`, `mod-shipping`, `mod-finance-lite`, commands IPS | Guess CloseSalesOrder; split any named bundle | OQ-007, OQ-006, OQ-008 |
+| `SLICE-ENVELOPE` | Command/query envelope, idempotency key, rejection families, `AUD-CMD-*` | `kern-command`, `host-backend`, `mod-identity-audit` | Write Ledger; choose NestJS/Prisma | OQ-018 residual packages |
+| `SLICE-IPS` | Inventory Posting kernel commanded by others | `mod-inventory-posting` | Second writer; Balance-only API | OQ-001 residual; OQ-017 functions later ADR |
+| `SLICE-STOCK` | SEQ-STOCK: `ActivateReservation` bundle → pack → `DispatchShipment` bundle → invoice → `AllocatePayment` bundle; `CloseSalesOrder` per OQ-007 | `mod-sales`, `mod-shipping`, `mod-finance-lite`, commands IPS | Steal an `ACTIVE` reservation; split any named bundle; close SO because invoice is paid | OQ-006 |
 | `SLICE-PURCHASE` | SEQ-PURCHASE: PO → `PostGoodsReceipt` bundle; `ADP-WEIGHBRIDGE` commander | `mod-procurement`, `host-adapter`, IPS posts | Device writes quantity | OQ-011, OQ-005, OQ-019 |
-| `SLICE-MAKE` | SEQ-MAKE: allocation issue → `CompleteProductionOperation` bundle → `CreateResidualUnit` bundle | `mod-production`, `mod-quality` commands IPS | Guess routing or residual cutoff; split either bundle | OQ-003, OQ-009, OQ-006 |
+| `SLICE-MAKE` | SEQ-MAKE: allocation issue → `CompleteProductionOperation` bundle (nested residual identity / scrap qty) | `mod-production`, `mod-quality` commands IPS | Guess routing or residual cutoff; split the complete-op bundle or post leftover after commit | OQ-003 names, OQ-009 cutoff numbers, OQ-006 |
 | `SLICE-REVERSE` | SEQ-REVERSE compensating commands; SV-013 on ReverseGoodsReceipt | owning BC commands; IPS on stock reverse | Device replay; `REV-AGENT` waiving SoD | OQ-015, OQ-019 |
-| `SLICE-RESTORE` | Restore rebuilds Balance/Genealogy from Ledger | `host-worker` rebuild kinds | `AdjustBalance` / `EditGenealogy` | OQ-016 |
+| `SLICE-RESTORE` | Restore: `BalanceRebuild` from Ledger; `GenealogyRebuild` from DATA-GEN-001 source facts | `host-worker` rebuild kinds | `AdjustBalance` / `EditGenealogy`; Ledger-only genealogy | OQ-016 residual retention/product. RPO/RTO recorded. |
 | `SLICE-CUTOVER` | `ADP-CUTOVER` / `OpeningStockImport` | `host-adapter` | Bypass OQ-015; post Balance-only | OQ-015, OQ-019 |
 
 `SLICE-NOT-FEASIBLE` rides inside `SLICE-STOCK` as `RecordUnfulfilledDemand`
@@ -70,11 +70,13 @@ kernel.
 | DispatchShipment + stock exit | `SLICE-STOCK` |
 | AllocatePayment + invoice open-balance reduction | `SLICE-STOCK` |
 | PostGoodsReceipt + Lot/Unit/Ledger | `SLICE-PURCHASE` |
-| CompleteProductionOperation + consume/output/residual/scrap | `SLICE-MAKE` |
-| CreateResidualUnit + parent close/split | `SLICE-MAKE` |
+| CompleteProductionOperation + consume/output/residual/scrap (nested residual identity) | `SLICE-MAKE` |
+| CreateResidualUnit + parent close/split (nested in complete-op; not a later commit) | `SLICE-MAKE` |
 
 A slice may contain more than one bundle. Each bundle remains one
-business transaction (mechanism stays OQ-017).
+business transaction (mechanism stays OQ-017). Residual identity for
+production leftover must not become a second commit after
+`CompleteProductionOperation`.
 
 Command, adapter, query, worker, and scene homes that are not a named
 bundle are in

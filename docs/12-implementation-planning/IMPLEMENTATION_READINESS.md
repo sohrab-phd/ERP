@@ -30,7 +30,8 @@ the unlock and not a `TEST-*` catalogue.
 - [x] Forbidden writes: `EditGenealogy`, `AdjustBalance`, MVP
       `PortalPlaceOrder`.
 - [x] `AG-UNLOCK` never; checkpoint markers human-only.
-- [x] Node.js + TypeScript is the only accepted technology ADR.
+- [x] Node.js + TypeScript (ADR-0001), Modular Monolith (ADR-0006), and
+      PostgreSQL (ADR-0007) are accepted. ADR-0008 remains proposed.
 - [x] Keep/reject kinds exist: `CONF-IPS`, `CONF-ADP`, `CONF-BUNDLE`,
       `CONF-FORBID`, `CONF-ISO`, `CONF-UNLOCK`, `CONF-SECRET`,
       `CONF-IMPORT`, `CONF-CMD`.
@@ -39,14 +40,15 @@ the unlock and not a `TEST-*` catalogue.
 
 | Ready item | Wait on |
 | --- | --- |
-| Named people on SoD, UAT, cutover sign-off | OQ-019 |
-| UOM, Coil qty, routing, tracking, QC, tolerances, reservation | OQ-001–006, OQ-008 |
-| Sales Order close; residual cutoff | OQ-007, OQ-009 |
-| Portal MVP action set | OQ-010 |
-| Weighbridge protocol; legal GL product | OQ-011, OQ-012 |
-| Org/site; volumes; posting mechanism | OQ-013, OQ-014, OQ-017 |
-| Opening-stock cutover RACI; RPO/RTO | OQ-015, OQ-016 |
-| Package, runner, hosting, extra MCP | OQ-018 |
+| Named people on SoD, UAT, cutover sign-off | OQ-019 residual |
+| UOM decimal scale / rounding / conversion factors; QC plans/names; routing step names | OQ-001, OQ-003, OQ-005 residuals. OQ-002 coil kg and OQ-006 default 0 are recorded. |
+| Residual cutoff numbers | OQ-009 residual |
+| Portal document list (visibility-only MVP is recorded) | OQ-010 residual |
+| Weighbridge make/model/protocol | OQ-011 residual. OQ-012: no Legal-GL in MVP. |
+| Monthly volume counts | OQ-014 residual. OQ-013 one entity/site is recorded. |
+| Opening-stock source files and named signers | OQ-015 residual |
+| Backup product and retention days | OQ-016 residual. RPO 60 min / RTO 8 h / daily / offsite are recorded. |
+| PostgreSQL functions ADR + spike; ORM/package choices | OQ-017 residual (functions); OQ-018 residual (packages). Posting style and PostgreSQL are recorded. |
 | Human `.cursor/IMPLEMENTATION_UNLOCK.json` with exact paths | Project Owner after this gate |
 | `BR-IMPL` | Exists only after a valid unlock |
 

@@ -21,9 +21,11 @@ who may command. This matrix refines
 [DOM-CAP-BC-001](CAPABILITY_BOUNDED_CONTEXT_MAP.md). It does not authorize
 tables, columns, keys, schemas, or migrations.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`. Node.js + TypeScript (ADR-0001) is
-the only accepted technology ADR; persistence mechanism remains open (OQ-017,
-OQ-018).
+`IMPLEMENTATION_AUTHORIZED` remains `false`. Node.js + TypeScript
+(ADR-0001), Modular Monolith (ADR-0006), and PostgreSQL (ADR-0007) are
+accepted. ADR-0008 remains proposed. Packages are not frozen (OQ-018
+residual). Posting style is the recorded OQ-017 application-owned
+PostgreSQL transaction; stored functions need a later ADR.
 
 ## Scope
 
@@ -162,9 +164,11 @@ would fork GOV-DATA-DICT-001.
 
 ## Open items
 
-- Questions: OQ-001, OQ-002, OQ-003, OQ-004, OQ-005, OQ-008, OQ-009, OQ-010,
-  OQ-012, OQ-015, OQ-017 remain open among others. OQ-001 through OQ-018 are
-  not closed by this matrix. OQ-010 and OQ-019 remain `treating`.
+- Questions: Current status is
+  [OPEN_QUESTIONS.md](../00-governance/registers/OPEN_QUESTIONS.md).
+  Answered: OQ-002, OQ-004, OQ-006, OQ-007, OQ-008, OQ-010, OQ-012,
+  OQ-013, OQ-016, OQ-017, OQ-018. Still treating residuals: OQ-001,
+  OQ-003, OQ-005, OQ-009, OQ-011, OQ-014, OQ-015, OQ-019.
 - Assumptions: ASM-003, ASM-004, ASM-005, ASM-006, ASM-010, ASM-012, ASM-014
   unconfirmed.
 

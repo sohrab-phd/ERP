@@ -6,7 +6,7 @@ status: approved
 version: 0.1.0
 owners: [data-architect, domain-leads]
 depends_on: [SM-INV-001, GOV-DATA-DICT-001, APR-005]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-006
 supersedes: null
 ---
@@ -17,6 +17,25 @@ Genealogy Link (TERM-025 / ENT-GENEALOGY-LINK) is a rebuildable query
 projection (INV-019). It is not independently editable source truth.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+## Rebuild source (FIND-G-014)
+
+**Canonical rebuild inputs are the source-fact table below**, not Ledger
+rows alone.
+
+- **BalanceRebuild** always uses Inventory Ledger (INV-001).
+- **GenealogyRebuild** uses the writable source facts in this document
+  (INV-009, INV-019). Those include Production consumption/output/
+  residual/scrap facts and Shipping package/shipment facts. Ledger does
+  not carry customer/order package edges required for INV-009 traces.
+- Opening-stock cutover (OQ-015) runs GenealogyRebuild after opening
+  Ledger/Lot/Unit facts exist. At that moment those inventory-origin
+  facts are the available genealogy inputs. OQ-015 does not replace this
+  catalogue for live operations after consumption, output, pack, or ship.
+
+Recovery labels that say “rebuild Genealogy from Ledger” mean: restore
+durable posted facts, then run `GenealogyRebuild` from this catalogue.
+They must not be read as Ledger-only genealogy.
 
 ## Source facts (writable)
 

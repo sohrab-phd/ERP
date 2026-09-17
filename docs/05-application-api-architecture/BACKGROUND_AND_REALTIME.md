@@ -6,7 +6,7 @@ status: approved
 version: 0.2.0
 owners: [solution-architect]
 depends_on: [APP-ORCH-001, APP-ENV-001, DATA-TX-001, APR-006, APR-007]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-007
 supersedes: null
 ---
@@ -37,14 +37,16 @@ do not choose the OQ-017 posting mechanism.
 | --- | --- | --- |
 | `CommandRetry` | Re-present the same command and key after transport failure | Create a second Goods Receipt, dispatch, payment, or operation completion |
 | `EventNotice` | Tell a subscriber that an accepted event exists | Become source truth for stock or genealogy |
-| `GenealogyRebuild` | Rebuild the projection when stale (INV-019) | Accept `EditGenealogy` |
+| `GenealogyRebuild` | Rebuild the projection from DATA-GEN-001 source facts when stale (INV-019, FIND-G-014) | Accept `EditGenealogy`; treat Ledger rows as the only genealogy input |
 | `BalanceRebuild` | Recompute Balance from Ledger | Accept `AdjustBalance` |
-| `ReservationExpirySweep` | Propose `ExpireReservation` when policy exists | Invent expiry hours (OQ-008) |
+| `ReservationExpirySweep` | Propose `ExpireReservation` only for orphan/stale rows whose owning commitment no longer exists | Invent a TTL on confirmed Sales Order reservations (OQ-008) |
 | `InquiryQuotationExpirySweep` | Propose expire commands under `workshop-commercial-practice` | Invent a day count (FIND-026) |
 | `OpeningStockImport` | Later cutover loader of Ledger facts | Bypass OQ-015 RACI or post Balance-only rows |
 
-Sweeps that need an unanswered policy reject the proposed command as
-`GUARD_OPEN_POLICY`. They do not invent the missing number.
+`InquiryQuotationExpirySweep` that needs an unanswered day-count rejects
+the proposed command as `GUARD_OPEN_POLICY`. It does not invent the
+missing number. `ReservationExpirySweep` must not invent a confirmed-SO
+TTL (OQ-008).
 
 ## Outbox (label only)
 

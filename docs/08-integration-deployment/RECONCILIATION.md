@@ -35,7 +35,8 @@ supersedes: null
 - Environments, zones, hardening, signals, and runbooks are labels.
   Docker, cloud, firewall, identity provider, and observability
   products remain open.
-- Restore rebuilds projections from Ledger. RPO/RTO minutes stay
+- Restore: Balance from Ledger; Genealogy from DATA-GEN-001 source
+  facts. RPO/RTO minutes stay
   OQ-016.
 - No application, adapter, or deployment code is part of this package.
 

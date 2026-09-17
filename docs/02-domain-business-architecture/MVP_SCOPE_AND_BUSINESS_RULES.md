@@ -66,6 +66,17 @@ sign-off, and not implementation authorization.
   infrastructure.
 - Automatic high availability.
 
+## Recorded later (OQ-007 / OQ-008)
+
+These are **not** still-open closure/reservation policy:
+
+- OQ-007: a Sales Order may `CLOSED` when fulfilled, cancelled, or an
+  authorized Unfulfilled Demand covers remaining demand. Payment is not a
+  prerequisite. Unfulfilled versus overdue remains TERM-005 / BR-013.
+- OQ-008: one Inventory Unit → one `ACTIVE` reservation. Confirmed-SO
+  reservations do not timer-expire. Partial claimed qty is not a second
+  slot on the same unit.
+
 ## Open items that still bind MVP design
 
 These stay open. MVP architecture must leave explicit extension points rather
@@ -77,9 +88,6 @@ than inventing values.
 - OQ-004 finished-product identity (batch vs unit)
 - OQ-005 quality-plan and exceptional-release authority
 - OQ-006 over-production / over-delivery tolerances
-- OQ-007 Sales Order closure: delivery, payment, or both. Unfulfilled versus
-  overdue demand remains a distinct TERM-005 / BR-013 rule, not this question.
-- OQ-008 reservation expiry and preemption
 - OQ-009 residual usability threshold
 - OQ-010 portal phase (`treating`; ordering formally deferred from MVP; does
   not block the internal purchase-to-delivery cycle)
@@ -102,7 +110,8 @@ identities cannot approve them.
 | ID | Rule | Owner BC | Related |
 | --- | --- | --- | --- |
 | BR-001 | Every stock change has exactly one authorized posting path and immutable evidence. | BC-INVENTORY | OQ-017 |
-| BR-002 | On-hand, reserved, and available quantities cannot become negative; active reservations cannot exceed free stock under concurrency. | BC-INVENTORY | OQ-008 |
+| BR-002 | On-hand, reserved, and available quantities cannot become negative; active reservations cannot exceed free stock under concurrency; at most one `ACTIVE` reservation per Inventory Unit. | BC-INVENTORY | OQ-008 recorded uniqueness; residual TTL only |
+| BR-003 | Availability is on-hand minus reservations and quality hold. Reservation, Allocation, and Consumption are distinct. | BC-INVENTORY, BC-PRODUCTION | TERM-009, TERM-010 |
 | BR-003 | Availability is on-hand minus reservations and quality hold. Reservation, Allocation, and Consumption are distinct. | BC-INVENTORY, BC-PRODUCTION | TERM-009, TERM-010 |
 | BR-004 | One Inventory Unit has one active physical location and cannot be simultaneously issued, shipped, quarantined, or consumed incompatibly. | BC-INVENTORY | ASM-005 |
 | BR-005 | Posted operational and financial records are not physically deleted; corrections use reversal with reason, actor, authority, and audit. | cross-cutting | ASM-006, ASM-012, OQ-015 |
@@ -113,7 +122,7 @@ identities cannot approve them.
 | BR-010 | Material/product cannot become available or shippable while required QC is pending, quarantined, or rejected. Product Batch must be Released before shipment. | BC-QUALITY, BC-SHIPPING | OQ-005, TERM-016 |
 | BR-011 | Shipment content belongs to the authorized customer/order and references permitted Package or Product Batch form. Shipment without demand requires explicit authority. | BC-SHIPPING | OQ-006 |
 | BR-012 | Issued invoices are immutable; void/credit/reversal preserves history. Payment allocations cannot exceed payment value or invoice open balance. | BC-FINANCE-LITE | OQ-012 |
-| BR-013 | Unfulfilled demand is not overdue demand and may exist without a Sales Order; both remain separately reportable. | BC-SALES | OQ-007, TERM-005 |
+| BR-013 | Unfulfilled demand is not overdue demand and may exist without a Sales Order; both remain separately reportable. Remainder-close of a Sales Order uses this record (OQ-007). | BC-SALES | OQ-007 recorded, TERM-005 |
 | BR-014 | Historical commercial and specification values are snapshotted; later master-data changes do not rewrite posted history. | cross-cutting | ASM-012 |
 | BR-015 | Authorization is enforced on the backend. Sensitive adjustments use separation of duties. Customer isolation applies to reads, exports, notifications, and documents. | BC-IDENTITY | FIND-001 / OQ-010 |
 | BR-016 | Retryable commands and external submissions are idempotent; a retry must not duplicate receipt, posting, shipment, payment, or completion. | cross-cutting | INT catalogue |
@@ -125,8 +134,9 @@ identities cannot approve them.
 ## Success criterion for this MVP
 
 A real purchase-to-delivery cycle can run without parallel Excel, and balances,
-audit trail, and genealogy reconcile. Numeric UOM, routing, QC, reservation, and
-fulfillment limits remain workshop-owned and are not invented here.
+audit trail, and genealogy reconcile. Numeric UOM, routing, QC, and
+fulfillment-limit **numbers** remain workshop-owned. Sales Order close and
+reservation uniqueness are recorded (OQ-007, OQ-008).
 
 ## Formal scoping for the Phase 02 design-gate
 
@@ -139,12 +149,14 @@ downstream phases.
 | OQ-001, OQ-002 | Extension points only; no signed UOM or Coil quantity rule |
 | OQ-003, OQ-004 | Production owns facts; routing and tracking granularity unset |
 | OQ-005 | Quality commands Inventory; no named approvers or limits |
-| OQ-006, OQ-008 | Partial fulfillment and Reservation exist; no numeric or expiry policy |
+| OQ-006 | Partial fulfillment exists; default over-delivery 0; family % is configuration |
+| OQ-008 | Originally scoped out of this Phase 02 gate; recorded 2026-09-15: one `ACTIVE` per Inventory Unit; no confirmed-SO timer |
 | OQ-010 | Ordering formally deferred from MVP; visibility/request optional deferred |
 | OQ-013 | Single-site assumption remains unconfirmed |
 
-OQ-007, OQ-009, and OQ-011 through OQ-018 were already downstream of this
-design-gate. OQ-019 remains `treating` and still blocks workshop execution.
+OQ-007 is recorded (close independent of payment). OQ-009, and OQ-011 through
+OQ-018 were already downstream of this design-gate. OQ-019 remains `treating`
+and still blocks workshop execution.
 
 ## Traceability
 

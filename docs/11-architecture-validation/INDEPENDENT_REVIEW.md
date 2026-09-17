@@ -52,7 +52,8 @@ not an implementation unlock and not Phase 12 application source.
   without minting `TEST-*` or workshop REQ-*.
 - SV-001–013 intents are walked or cited. SV-013 SoD is not waived.
   Sales cancel/hold is not silently paired.
-- Restore rebuilds projections from Ledger. `ADP-CUTOVER` stays
+- Restore: `BalanceRebuild` from Ledger; `GenealogyRebuild` from
+  DATA-GEN-001 source facts. `ADP-CUTOVER` stays
   `GUARD_OPEN_POLICY`.
 - `AG-UNLOCK` never. Checkpoint markers remain human-only. Phase 12
   stays `planned`.

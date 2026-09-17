@@ -6,7 +6,7 @@ status: in_review
 version: 0.1.0
 owners: [chief-solution-architect]
 depends_on: [PLAN-SLICE-001, PLAN-WI-001, APP-CMD-001, APP-QRY-001, INT-CAT-001, QA-SCN-001, APR-014, CHK-0013, ASM-025]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 approval: null
 supersedes: null
 ---
@@ -51,8 +51,8 @@ are not extra SEQ-STOCK steps and they must not write Ledger.
 | DispatchShipment + stock exit | `WI-BUNDLE-DISPATCH` | `SLICE-STOCK` |
 | AllocatePayment + invoice open-balance reduction | `WI-BUNDLE-PAY` | `SLICE-STOCK` |
 | PostGoodsReceipt + Lot/Unit/Ledger | `WI-BUNDLE-GR` | `SLICE-PURCHASE` |
-| CompleteProductionOperation + consume/output/residual/scrap | `WI-BUNDLE-COMPLETE-OP` | `SLICE-MAKE` |
-| CreateResidualUnit + parent close/split | `WI-BUNDLE-RESIDUAL` | `SLICE-MAKE` |
+| CompleteProductionOperation + consume/output/residual/scrap (nested residual identity) | `WI-BUNDLE-COMPLETE-OP` | `SLICE-MAKE` |
+| CreateResidualUnit + parent close/split (**nested in** `WI-BUNDLE-COMPLETE-OP`, not a later commit) | `WI-BUNDLE-RESIDUAL` | `SLICE-MAKE` |
 
 `AllocatePartialPayment` and `AllocateFullPayment` are the same pay
 bundle family. They must not become a second posting path.
@@ -74,10 +74,14 @@ executor of `WI-BUNDLE-GR`), ReverseGoodsReceipt (executor of reverse),
 RequestReservation (commanded), ActivateReservation (executor of
 `WI-BUNDLE-RESERVE`), ConsumeReservation, ReleaseReservation,
 ExpireReservation, CreateUnitFromPosting, ReleaseUnit, QuarantineUnit,
-ReserveUnit, IssueUnit, IssueUnitFromAllocation, ConsumeUnitPartial,
-ConsumeUnitComplete, PackUnit, ShipUnit, ScrapUnit, ReturnUnit,
-CloseUnit, CreateResidualUnit (executor of `WI-BUNDLE-RESIDUAL`),
-PlaceResidualUnit, PostScrapMovement.
+ReserveUnit, IssueUnit, IssueUnitFromAllocation, ConsumeUnitPartial
+(nested in complete-op; independent production consume forbidden),
+ConsumeUnitComplete (nested; independent forbidden), PackUnit, ShipUnit,
+ScrapUnit (unit destiny; qty is `PostScrapMovement`), ReturnUnit,
+CloseUnit, CreateResidualUnit (nested executor of `WI-BUNDLE-RESIDUAL`
+inside `WI-BUNDLE-COMPLETE-OP`),
+PlaceResidualUnit (no second residual qty), PostScrapMovement
+(authoritative scrap qty; nested for production leftover).
 
 Open: OQ-017, OQ-001, OQ-002. Must not: second writer; Balance-only API.
 
@@ -92,10 +96,11 @@ RecordFulfillmentNotFeasible, RecordUnfulfilledDemand,
 ReviewUnfulfilledDemand, CloseUnfulfilledDemand, ReopenAsInquiry,
 DraftSalesOrder, SubmitSalesOrder, ConfirmSalesOrder,
 StartOrderProduction, RecordPartialFulfillment, RecordFullFulfillment,
-HoldSalesOrder, ReleaseSalesOrderHold, RequestSalesOrderCancel,
+CloseSalesOrder, HoldSalesOrder, ReleaseSalesOrderHold, RequestSalesOrderCancel,
 ConfirmSalesOrderCancel.
 
-`CloseSalesOrder` stays `GUARD_OPEN_POLICY` until OQ-007. Sales must
+`CloseSalesOrder` follows OQ-007 (fulfilled, cancelled, or authorized
+unfulfilled remainder). Payment is not a guard. Sales must
 not write Invoice, Ledger, or Balance.
 
 `PortalRequestInquiry` and `PortalPlaceOrder` reject
@@ -115,8 +120,9 @@ AllocatePartialPayment, AllocateFullPayment, AllocatePayment
 (`WI-BUNDLE-PAY`), CloseInvoice, MarkInvoiceOverdue, RecordPayment,
 LeavePaymentUnallocated, ClosePayment.
 
-Open: OQ-007, OQ-006, OQ-008. Exceptional shipment-without-demand
-person: OQ-019. Over-delivery: OQ-006.
+Open: OQ-006 (family over-delivery %). Exceptional shipment-without-demand
+person: OQ-019. Reservation uniqueness is recorded (OQ-008). Sales Order
+close is recorded (OQ-007).
 
 ### `SLICE-PURCHASE`
 
@@ -137,13 +143,17 @@ OQ-019.
 PlanMaterialAllocation, AssignMaterialAllocation, IssueAllocatedMaterial
 (IPS posts), ReleaseMaterialAllocation, PlanProductionOperation,
 StartProductionOperation, `CompleteProductionOperation` as
-`WI-BUNDLE-COMPLETE-OP`, SkipProductionOperation, StartReworkOperation,
+`WI-BUNDLE-COMPLETE-OP` (exclusive INV-006 posting; nested residual/
+scrap/consume primitives), SkipProductionOperation, StartReworkOperation,
 DraftProductionOrder, PlanProductionOrder, ReleaseProductionOrder,
-StartProductionOrder, CompleteOperationPartial, CompleteProductionOrder,
+StartProductionOrder, CompleteOperationPartial (order state only; no
+Ledger), CompleteProductionOrder,
 CloseProductionOrder, PauseProductionOrder, ResumeProductionOrder,
 HoldProductionOrder, CancelProductionOrder, AbortProductionOrder
-(routing still OQ-003), RecordResidualFact, ConvertResidualToScrap,
-RecordScrapFact, `CreateResidualUnit` as `WI-BUNDLE-RESIDUAL`.
+(routing names still OQ-003), RecordResidualFact (nested),
+ConvertResidualToScrap (nested),
+RecordScrapFact (nested leftover **or** later Quality/abort scrap),
+`CreateResidualUnit` nested as `WI-BUNDLE-RESIDUAL`.
 In-process QC commanders use the same Quality commands as purchase;
 they still do not write stock.
 
@@ -159,7 +169,8 @@ device replay; `REV-AGENT` waiving SoD.
 
 ### `SLICE-RESTORE`
 
-`BalanceRebuild` and `GenealogyRebuild` only. Must not:
+`BalanceRebuild` (from Ledger) and `GenealogyRebuild` (from DATA-GEN-001
+source facts, FIND-G-014) only. Must not:
 `AdjustBalance`, `EditGenealogy`. Open: OQ-016.
 
 ### `SLICE-CUTOVER`
@@ -219,7 +230,7 @@ kernel. Transport and cache package stay OQ-018.
 | `CommandRetry` | Same slice as the original command | New key; worker as commander (SV-009) |
 | `EventNotice` / `LiveNotice` | `SLICE-ENVELOPE` via `ADP-LIVE` | Stock write; isolation leak |
 | `GenealogyRebuild` / `BalanceRebuild` | `SLICE-RESTORE` | `EditGenealogy` / `AdjustBalance` |
-| `ReservationExpirySweep` | `SLICE-STOCK` / `SLICE-IPS` | Invent a TTL on confirmed Sales Order reservations (OQ-008) |
+| `ReservationExpirySweep` | `SLICE-STOCK` / `SLICE-IPS` | Invent a TTL on confirmed Sales Order reservations (OQ-008). Sweep is orphan/stale cleanup only. |
 | `InquiryQuotationExpirySweep` | `SLICE-STOCK` | Invent a day count (FIND-026) |
 | `OpeningStockImport` | `SLICE-CUTOVER` | Bypass OQ-015 |
 
@@ -260,7 +271,7 @@ kernel. Transport and cache package stay OQ-018.
 | OQ-004 | Answered: hybrid grain; catalogue is configuration |
 | OQ-005 residual | Quality Plans/limits/names on `SLICE-PURCHASE` / `SLICE-MAKE` |
 | OQ-006 | Answered: default tolerance 0; family % is configuration |
-| OQ-007 | Answered: close SO on fulfillment, not payment |
+| OQ-007 | Answered: close SO on fulfilled, cancelled, or authorized unfulfilled remainder; not payment |
 | OQ-008 | Answered: one Coil one reservation; no confirmed-SO timer |
 | OQ-009 residual | Residual cutoff numbers on `SLICE-MAKE` |
 | OQ-010 | Answered: visibility-only portal; no order-write slice |

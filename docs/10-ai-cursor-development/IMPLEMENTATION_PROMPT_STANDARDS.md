@@ -6,7 +6,7 @@ status: approved
 version: 0.4.0
 owners: [development-lead]
 depends_on: [REPO-LAY-001, REPO-CONF-001, APP-ORCH-001, AI-AUTH-001, APR-011, APR-012]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 approval: APR-012
 supersedes: null
 ---
@@ -58,12 +58,12 @@ in one business transaction (mechanism stays OQ-017):
 
 | Bundle | Must not split |
 | --- | --- |
-| CompleteProductionOperation + consume/output/residual/scrap | INV-006 |
+| CompleteProductionOperation + consume/output/residual/scrap (nested residual identity) | INV-006 |
 | DispatchShipment + stock exit | INV-011, INV-017 |
 | PostGoodsReceipt + Lot/Unit/Ledger | INV-001, INV-018 |
-| ActivateReservation + reserved state + reserved qty | INV-002, INV-003 |
+| ActivateReservation + reserved state + reserved qty | INV-002, INV-003; one `ACTIVE` per Inventory Unit |
 | AllocatePayment + invoice open-balance reduction | INV-012 |
-| CreateResidualUnit + parent close/split | INV-008 |
+| CreateResidualUnit + parent close/split | Nested in INV-006 for production leftover; not a later commit |
 
 Adapters (`ADP-*`) submit the owning command. They do not post the
 bundle themselves (`CONF-ADP`).

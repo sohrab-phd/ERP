@@ -70,3 +70,10 @@ approval.
 
 This recommendation does not approve Phase 04, does not start Phase 05,
 and does not authorize implementation.
+
+## Later composition (`2026-09-16`)
+
+Gate-time “six independently listed bundles” is historical (APR-006).
+`CreateResidualUnit` for production leftover is nested in
+`CompleteProductionOperation`. Genealogy rebuild source is DATA-GEN-001
+(FIND-G-014), not Ledger-only. See DATA-TX-001.

@@ -88,8 +88,8 @@ ERP Architecture / Technical Lead |  |  |  |
 
 ### OQ-007
 
-- Recorded: close SO on fulfillment, not payment.
-- Still unknown: none required.
+- Recorded: close SO on fulfilled, cancelled, or authorized unfulfilled remainder; not payment.
+- Still unknown: commercial exceptions if any later.
 
 ### OQ-009
 

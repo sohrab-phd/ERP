@@ -164,10 +164,10 @@ falsely close OQ-019.
 
 ## Open items
 
-- Questions: OQ-005 (QC and exceptional authority), OQ-007 (closure), OQ-010
+- Questions: OQ-005 (QC and exceptional authority), OQ-010
   (`treating`; portal party actions), OQ-012 (finance vs legal accounting),
-  OQ-015 (cutover RACI), OQ-019 (`treating`). OQ-001 through OQ-018 remain
-  unanswered.
+  OQ-015 (cutover RACI), OQ-019 (`treating`). OQ-007 Sales Order close is
+  recorded. Remaining treating/unanswered IDs are those in OPEN_QUESTIONS.md.
 - Assumptions: ASM-013 and ASM-014 proposed; temporary roster is not validation
   of ASM-001 through ASM-012.
 

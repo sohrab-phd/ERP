@@ -19,6 +19,11 @@ does not replace
 [WORKSHOP_AGENDA.md](../01-project-assimilation/WORKSHOP_AGENDA.md), and does
 not invent answers.
 
+**Later recorded:** OQ-007 and OQ-008 were answered `2026-09-15`. Rows below
+that still list them as workshop-open are the original collection plan, not
+current policy. Authority:
+[OPEN_QUESTIONS.md](../00-governance/registers/OPEN_QUESTIONS.md).
+
 Temporary roster names have **no** approval authority. Use the role, not the
 `(temporary)` person, until OQ-019 is replaced with real names.
 

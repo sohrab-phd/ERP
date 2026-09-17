@@ -39,7 +39,7 @@ with the owning bounded context.
 | Family | May present | Executes stock if any | Second human |
 | --- | --- | --- | --- |
 | Sales inquiry/quotation/order (non-cancel) | ACT-SALES | no | no |
-| CloseSalesOrder | ACT-SALES | no | open: OQ-007 |
+| CloseSalesOrder | ACT-SALES | no | no — OQ-007 recorded; payment is not a second-human guard |
 | Sales cancel / hold after confirm | ACT-SALES | no | not a closed SoD pair; named authority stays OQ-019 if later required |
 | PortalRequestInquiry / any PortalPlaceOrder | none in MVP | no | n/a — `GUARD_PORTAL_MVP` |
 | Purchase Order draft/submit/send | ACT-PROC | no | no |

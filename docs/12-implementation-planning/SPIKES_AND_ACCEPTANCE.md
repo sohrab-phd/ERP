@@ -24,10 +24,10 @@ bundle.
 
 | Kind | Question | Allowed later evidence | Must not |
 | --- | --- | --- | --- |
-| `SPIKE-POSTING` | OQ-017 posting style | Compare transaction vs restricted function vs hybrid against INV-001–004, DATA-TX-001 | Pick Prisma/Postgres as decided; write production data; split a bundle |
+| `SPIKE-POSTING` | Later PostgreSQL-functions ADR (OQ-017 residual) | Compare restricted functions against INV-001–004, DATA-TX-001 without replacing the recorded app-owned transaction style | Invent SQL kernel now; pick Prisma as stock writer |
 | `SPIKE-DECIMAL` | RISK-004 exact decimal | Show why JS Number is unsafe for weight/money | Freeze a library |
 | `SPIKE-IDEM` | INV-016 key store | Same key returns first result | Invent a broker |
-| `SPIKE-RESTORE` | RISK-010 / OQ-016 | Restore then rebuild Balance/Genealogy from Ledger | `AdjustBalance` |
+| `SPIKE-RESTORE` | RISK-010 / OQ-016 | Restore then `BalanceRebuild` from Ledger and `GenealogyRebuild` from DATA-GEN-001 | `AdjustBalance`; Ledger-only genealogy |
 | `SPIKE-DEVICE` | OQ-011 weighbridge identity | Protocol remains `GUARD_OPEN_POLICY` until answered | Invent a device key or write Ledger |
 
 A spike that needs an unanswered named person, device protocol, or
@@ -45,5 +45,5 @@ with authored catalogues is rejected (`REPO-GEN-001`).
 ## Must not decide here
 
 - Running a spike in this repository now
-- ADR-0006 through ADR-0008
+- ADR-0008 or any package ADR (ADR-0006 and ADR-0007 are already accepted)
 - Jest, Playwright, or a CI product

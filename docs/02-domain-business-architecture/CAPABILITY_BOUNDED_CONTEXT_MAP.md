@@ -22,17 +22,19 @@ non-ownership. This artifact refines
 02 review. It does not accept ADRs, close open questions, or authorize
 implementation.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`. Node.js + TypeScript (ADR-0001) is
-the only accepted technology decision. Bounded contexts here are business
+`IMPLEMENTATION_AUTHORIZED` remains `false`. Node.js + TypeScript
+(ADR-0001), Modular Monolith (ADR-0006), and PostgreSQL (ADR-0007) are
+accepted. ADR-0008 remains proposed. Bounded contexts here are business
 boundaries, not framework or package choices.
 
 ## Scope
 
 - In scope: capability-to-context mapping for the confirmed BC IDs from
   GOV-DOMAIN-001; write-owned concepts; forbidden writes; inbound/outbound
-  relationships; a proposed/deferred portal treatment pending OQ-010.
+  relationships; portal MVP is visibility-only (OQ-010 recorded).
 - Out of scope: physical schemas, APIs, packages, deployment, workshop
-  execution, owner-signed policy, and closing OQ-001 through OQ-018.
+  execution, owner-signed policy. OQ status lives in OPEN_QUESTIONS.md;
+  this map does not close or reopen those rows.
 
 ## Sources and dependencies
 
@@ -317,7 +319,7 @@ references or read projections.
 - Write-owned: operational Invoice, Payment, allocation, operational customer
   balance.
 - Must not write: general ledger / legal books, stock tables, Sales Order
-  closure policy (closure rule open: OQ-007), Shipment workflow.
+  lifecycle (OQ-007: Finance-Lite must not close the Sales Order), Shipment workflow.
 
 #### BC-REPORTING
 
@@ -390,33 +392,37 @@ decision.
 
 ### Validation needed (linked to open questions)
 
-These items remain open. This artifact does not answer or close them.
+Status follows
+[OPEN_QUESTIONS.md](../00-governance/registers/OPEN_QUESTIONS.md).
+Answered rows are recorded policy, not still-open architecture.
 
 | Validation needed | Linked records |
 | --- | --- |
-| Authoritative UOM, conversion, precision, rounding by family | OQ-001, ASM-003 |
-| Coil quantity: weight only vs weight plus length | OQ-002 |
-| Real routing, measurement, and official posting points | OQ-003 |
-| Batch / bundle / piece tracking granularity | OQ-004, ASM-004 |
-| Quality plans, limits, samples, release authority | OQ-005 |
-| Partial-shipment / over-production / over-delivery tolerances | OQ-006, FIND-003 |
-| Sales Order closure: delivery, payment, or both | OQ-007 |
-| Reservation expiry, priority, one-Coil-to-many-orders | OQ-008 |
-| Residual vs scrap threshold | OQ-009 |
-| Customer Portal phase and allowed customer actions | OQ-010 `treating`, FIND-001, RISK-007; ordering formally deferred from MVP |
-| Weighbridge device, protocol, fallback | OQ-011 |
-| Legal accounting system and Finance-Lite boundary | OQ-012, ASM-010 |
-| Organization and site model | OQ-013, ASM-001 |
-| Volumes for later physical design | OQ-014 |
-| Opening-stock cutover RACI and freeze | OQ-015, RISK-002 |
-| Recovery/retention commitments | OQ-016 |
-| Inventory Posting mechanism | OQ-017, FIND-004 |
-| Detailed platform ADRs beyond ADR-0001 | OQ-018 |
+| Authoritative UOM, conversion, precision, rounding by family | OQ-001 residual, ASM-003. Official stock UOM is kg (OQ-001/OQ-002 recorded). |
+| Coil quantity: weight is authoritative kg | OQ-002 answered |
+| Real routing, measurement, and official posting points | OQ-003 residual names. Posting boundary is `CompleteProductionOperation` (recorded). |
+| Batch / bundle / piece tracking granularity | OQ-004 answered; first-go-live family catalogue remains configuration |
+| Quality plans, limits, samples, release authority | OQ-005 residual. QC can block; exceptional release is two-person. |
+| Partial-shipment / over-production / over-delivery tolerances | OQ-006 answered default 0; family % is configuration |
+| Sales Order closure: fulfilled, cancelled, or authorized unfulfilled remainder; not payment | OQ-007 answered |
+| Reservation: one Inventory Unit → one `ACTIVE`; no confirmed-SO timer | OQ-008 answered |
+| Residual vs scrap threshold | OQ-009 residual numbers. Residual vs scrap composition is recorded. |
+| Customer Portal phase and allowed customer actions | OQ-010 answered visibility-only; document list residual; FIND-001, RISK-007 |
+| Weighbridge device, protocol, fallback | OQ-011 residual. Adapter/commander only; never Ledger writer. |
+| Legal accounting system and Finance-Lite boundary | OQ-012 answered: Finance-Lite is not legal GL; no Legal-GL in MVP |
+| Organization and site model | OQ-013 answered: one legal entity, one principal site |
+| Volumes for later physical design | OQ-014 residual |
+| Opening-stock cutover RACI and freeze | OQ-015 residual, RISK-002 |
+| Recovery/retention commitments | OQ-016 answered RPO 60 / RTO 8 / daily / offsite; retention product residual |
+| Inventory Posting mechanism | OQ-017 answered: app-owned PostgreSQL transaction + locks; functions later ADR |
+| Detailed platform ADRs beyond ADR-0001 / 0006 / 0007 | OQ-018 residual packages; ADR-0008 proposed |
 | Named workshop participants and owner-signed decisions | OQ-019 `treating`, ASM-013, FIND-020 |
 | GoodsReceipt / Material Lot ownership confirmation | GOV-DOMAIN-001 validation list; TERM-019 split above |
 
-- Questions: OQ-001 through OQ-018 remain unanswered. OQ-010 and OQ-019 remain
-  `treating`. ASM-014 scopes the listed questions out of the design-gate.
+- Questions: Current status is
+  [OPEN_QUESTIONS.md](../00-governance/registers/OPEN_QUESTIONS.md).
+  This map does not reopen answered rows. Treating residuals remain
+  OQ-001, OQ-003, OQ-005, OQ-009, OQ-011, OQ-014, OQ-015, OQ-019.
 - Assumptions: ASM-001 through ASM-014 remain unconfirmed as business facts.
 
 ## Review evidence

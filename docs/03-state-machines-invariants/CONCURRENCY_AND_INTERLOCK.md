@@ -6,7 +6,7 @@ status: approved
 version: 0.1.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-INV-001, SM-TRANS-001, SM-EVT-001, APR-004, APR-005, ASM-016]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-17
 approval: APR-005
 supersedes: null
 ---
@@ -15,8 +15,8 @@ supersedes: null
 
 Which commands cannot both succeed against the same unit, reservation, order,
 or payment. This is a conflict catalogue, not a lock-algorithm design.
-Posting mechanism remains OQ-017. Reservation expiry and preemption remain
-OQ-008. No isolation level, database product, or package is chosen.
+Posting mechanism remains OQ-017. Confirmed-SO reservation uniqueness and
+no-steal are recorded (OQ-008). No isolation level or package is chosen.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -45,15 +45,17 @@ incompatible destinies at once.
 
 | First accepted | Second against the same unit | Reject the second as |
 | --- | --- | --- |
-| `ActivateReservation` | `ActivateReservation` that would exceed free stock | `GUARD_INVARIANT` INV-002; preemption stays OQ-008 |
+| `ActivateReservation` | `ActivateReservation` on the same unit while another reservation is `ACTIVE`, or that would exceed free stock | `GUARD_INVARIANT` INV-002 or `GUARD_CONFLICT`; later SO must not steal (OQ-008) |
 | `ActivateReservation` | `QuarantineUnit` / `HoldInboundForQc` | `GUARD_CONFLICT` or `GUARD_STATE` |
 | `QuarantineUnit` | `ReserveUnit` / `PackUnit` / `ShipUnit` | `GUARD_INVARIANT` INV-010 |
 | `ReserveUnit` | `IssueUnitFromAllocation` | `GUARD_CONFLICT` — Reservation and Allocation are distinct; one destiny |
 | `IssueUnit` or `IssueUnitFromAllocation` | `PackUnit` / `ShipUnit` | `GUARD_STATE` |
 | `PackUnit` | `IssueUnit` | `GUARD_STATE` |
 | `DispatchShipment` (unit `SHIPPED`) | `PackUnit` / `UnpackPackage` | `GUARD_STATE` |
-| `ConsumeUnitComplete` | any further consume/issue | `GUARD_STATE` |
+| `ConsumeUnitComplete` nested in completion | any further consume/issue of that consumed qty | `GUARD_STATE` |
+| Independent `ConsumeUnitComplete` | — | `GUARD_INVARIANT` INV-006 |
 | `ScrapUnit` | any further stock destiny | `GUARD_STATE` |
+| `PostScrapMovement` for a scrap fact already posted | second scrap qty | `GUARD_IDEMPOTENT_DUP` / `GUARD_INVARIANT` |
 
 `IssueUnitFromAllocation` is allowed from `AVAILABLE` only. It must not
 run on a unit that is already `RESERVED` for a different demand.
@@ -67,27 +69,62 @@ Reservation, Allocation, and Consumption are three facts.
   required.
 - The same unit must not be `ACTIVE` reserved for order A and `ISSUED`
   allocated to order B.
-- Consumption posts only through ACT-IPS, usually inside operation
-  completion (INV-006).
+- Consumption posts only through ACT-IPS, **inside** operation
+  completion (INV-006 / OQ-003). Independent `ConsumeUnitPartial` /
+  `ConsumeUnitComplete` is `GUARD_INVARIANT`.
 
-Who wins when two orders want the same Coil stays OQ-008. Until that
-answer, the second `ActivateReservation` that needs a preemption or
-split rule is `GUARD_OPEN_POLICY` / OQ-008.
+### One-active-reservation concurrency (OQ-008 / FIND-G-005)
+
+Logical enforcement (not SQL):
+
+1. The Inventory Unit is the protected resource for `ActivateReservation`
+   (same business transaction as reserved-state + reserved qty, DATA-TX-001).
+2. The invariant checked: no other `ENT-RESERVATION` for that unit is
+   `ACTIVE` (INV-002); claimed qty ≤ available (INV-002, INV-003).
+3. An existing `ACTIVE` reservation is never stolen or silently split.
+   The later Sales Order is rejected; it does not displace the holder.
+4. OQ-008 conflict resolution (authoritative): if two confirmed Sales
+   Orders compete for the same Inventory Unit, the reservation belongs
+   to the earlier `ConfirmSalesOrder` timestamp. That rule assigns who
+   may hold `ACTIVE`. It is **not** a second uniqueness slot on
+   `REQUESTED`. `ConfirmSalesOrder` commands reservation only as already
+   assessed; `RequestReservation` is a distinct command (guard: confirmed
+   demand) and is not an automatic confirm side-effect. If the later
+   order cannot be fulfilled from another available unit, record
+   Unfulfilled Demand / Must-Buy-or-Make (existing feasibility path).
+5. Two simultaneous `ActivateReservation` commands: at most one is
+   accepted. The loser is `GUARD_CONFLICT` or `GUARD_INVARIANT`. The
+   loser's source state does not change.
+6. Same idempotency key returns the first result (INV-016). A new key is
+   a fresh evaluation and may lose.
+7. `ReleaseReservation`, `ConsumeReservation`, or allowed
+   `ExpireReservation` (orphan sweep only) frees the `ACTIVE` slot. The
+   unit returns to `AVAILABLE` when it has no other destiny, and may be
+   reserved again. Confirmed-SO reservations do not expire by timer.
+
+Partial qty on one `ACTIVE` reservation is allowed. A second `ACTIVE`
+row on the same unit is not.
 
 ## Operation completion (INV-006, INV-007)
 
 `CompleteProductionOperation` and the stock effects it commands
-(consume, output, residual, scrap) are one business transaction.
+(consume, output, residual **or** scrap leftover, process loss) are one
+business transaction. Nested `CreateResidualUnit` is identity + parent
+close/split inside that transaction, not a later commit. Nested
+`PostScrapMovement` is the only scrap **quantity** post for that leftover.
 
 | Split that is forbidden | Why |
 | --- | --- |
 | Accept consumption without output/WIP/residual/scrap/loss facts | INV-006 |
 | Accept the Production Operation `COMPLETED` while Inventory posting failed | INV-006, INV-001 |
 | Accept a second `CompleteProductionOperation` with a new key for the same operation | INV-016 |
+| Independent `ConsumeUnitPartial` / `ConsumeUnitComplete` | INV-006 / OQ-003 |
+| Residual qty posted at completion **and** again via later `CreateResidualUnit` | INV-001, FIND-G-001 |
+| Scrap qty posted at completion **and** again via later `PostScrapMovement` / `ScrapUnit` | INV-001, FIND-G-002 |
 | Close the Production Order while mass balance needs a number you do not have | `GUARD_OPEN_POLICY` / OQ-006 |
 
-Official posting-step names stay OQ-003. Do not invent the shop-floor
-moment.
+Official posting-step **names** stay OQ-003. Do not invent the shop-floor
+moment. Residual cutoff **numbers** stay OQ-009.
 
 ## Goods receipt and opening stock
 
@@ -109,8 +146,9 @@ Procurement never posts quantity (INV-018).
   balance: `GUARD_INVARIANT` INV-012.
 - `VoidInvoice` and `AllocatePayment` against the same issued invoice:
   at most one succeeds; the other is `GUARD_STATE` or `GUARD_CONFLICT`.
-- Sales Order close versus Invoice close remains OQ-007. Neither machine
-  writes the other machine’s rows.
+- Sales Order close and Invoice close are independent machines (OQ-007).
+  Neither writes the other machine’s rows. Payment does not close the
+  Sales Order. `CloseInvoice` must not close the Sales Order.
 
 ## Quality
 
@@ -124,5 +162,5 @@ Procurement never posts quantity (INV-018).
 
 - Database isolation level, row locks, or application mutexes (OQ-017)
 - Decimal precision and rounding races (OQ-001, OQ-002)
-- Reservation expiry timer (OQ-008)
+- Reservation TTL, except a later temporary planning-hold type (OQ-008 residual)
 - A broker, outbox, or job scheduler (OQ-018)

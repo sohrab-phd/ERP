@@ -6,7 +6,7 @@ status: in_review
 version: 0.19.0
 owners: [independent-reviewer, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-15
+last_reviewed: 2026-09-16
 approval: APR-011
 supersedes: null
 ---
@@ -617,6 +617,98 @@ artifact approval does not close open findings or their linked questions.
 - Evidence: PLAN-READY-001; PLAN-SLICE-001; PLAN-WI-001; PLAN-SPIKE-001;
   PLAN-CUTOVER-001; PLAN-AUTH-001; PLAN-SELF-CHECK-001;
   PLAN-INDEP-REVIEW-001; PLAN-RECON-001; PLAN-GATE-CHECKLIST-001.
+
+## FIND-G-001 — Residual posting composition
+
+- Severity: critical
+- Status: resolved
+- Finding: Residual quantity could be read as posted both inside
+  `CompleteProductionOperation` and again via `WI-BUNDLE-RESIDUAL` /
+  SEQ-MAKE step 7.
+- Treatment: Residual **quantity and identity** post once, nested in
+  `CompleteProductionOperation` (OQ-003, INV-006, INV-008).
+  `CreateResidualUnit` is identity + parent close/split, not a later
+  Ledger qty. `PlaceResidualUnit` is follow-on placement only.
+  Canonical contract: DATA-TX-001 `2026-09-16`.
+- Evidence: OQ-003 recorded invariant; OQ-009 `CreateResidualUnit`;
+  INV-006; INV-008; DATA-TX-001; APP-ORCH-001; SM-SEQ-001.
+
+## FIND-G-002 — Scrap posting composition
+
+- Severity: critical
+- Status: resolved
+- Finding: `ScrapUnit`, `PostScrapMovement`, and complete-op scrap could
+  each be read as posting scrap quantity.
+- Treatment: `PostScrapMovement` is the only scrap **quantity** Ledger
+  post (OQ-009). For production leftover it is nested in
+  `CompleteProductionOperation`. `ScrapUnit` is unit destiny `SCRAPPED`
+  with a paired scrap fact; it does not post a second qty. Quality/abort
+  scrap uses a new key and a new fact, not a replay of the leftover.
+- Evidence: OQ-009; INV-001; SM-SCRAP; DATA-TX-001; APP-CMD-001.
+
+## FIND-G-014 — Genealogy rebuild source
+
+- Severity: critical
+- Status: resolved
+- Finding: DATA-GEN-001 rebuilds Genealogy from operational source facts;
+  recovery labels and OQ-015 cutover text said “from Ledger”.
+- Treatment: `BalanceRebuild` is always from Ledger. `GenealogyRebuild`
+  uses the DATA-GEN-001 source-fact catalogue (INV-009/019). Ledger does
+  not carry package/shipment customer edges. OQ-015 cutover runs
+  GenealogyRebuild after opening Ledger/Lot/Unit facts; that does not
+  replace the catalogue for live operations. Recovery shorthand must not
+  be read as Ledger-only genealogy.
+- Evidence: DATA-GEN-001; INV-009; INV-019; DEP-DR-001 `2026-09-16`;
+  OQ-015 scoped to opening-stock procedure.
+
+## FIND-G-015 — Standalone production consumption
+
+- Severity: high
+- Status: resolved
+- Finding: `ConsumeUnitPartial` / `ConsumeUnitComplete` existed as
+  catalogue commands while OQ-003 / INV-006 forbid independent
+  production consume posts.
+- Treatment: Those names are nested IPS unit-state primitives inside
+  `CompleteProductionOperation` only. An independent production consume
+  is `GUARD_INVARIANT` INV-006. No non-production use was found in the
+  catalogue; none was invented. `CompleteOperationPartial` is Production
+  Order state only and does not post stock.
+- Evidence: OQ-003; INV-006; SM-TRANS-001; APP-CMD-001; DATA-TX-001.
+
+## FIND-G-003 — Sales Order closure semantics
+
+- Severity: high
+- Status: resolved
+- Finding: Frozen state-machine text still described `FULFILLED → CLOSED`
+  only and treated OQ-007 as an open close-guard, while OQ-007 is
+  answered: close on fulfilled, cancelled, or authorized unfulfilled
+  remainder; payment is not a prerequisite.
+- Treatment: `CloseSalesOrder` from `FULFILLED` (remaining valid demand
+  already zero within OQ-006; shipment `DELIVERED` is not a close
+  prerequisite), from `PARTIALLY_FULFILLED` only with TERM-005
+  Unfulfilled Demand covering remaining qty, or from `CANCELLED`. Valid
+  remaining demand stays `PARTIALLY_FULFILLED`. Invoice `PAID` /
+  `CLOSED` do not close the Sales Order. Remainder is not discarded.
+- Evidence: OQ-007; INV-013; SM-TRANS-001; APP-CMD-001; TERM-005.
+
+## FIND-G-005 — Reservation uniqueness and concurrency
+
+- Severity: high
+- Status: resolved
+- Finding: OQ-008 (one Inventory Unit → one `ACTIVE` reservation; no
+  confirmed-SO timer; no steal) was answered, but logical uniqueness and
+  race handling were still written as open preemption.
+- Treatment: INV-002 includes the one-`ACTIVE` slot. Partial claimed qty
+  is not a second reservation. An existing `ACTIVE` cannot be stolen.
+  Concurrent `ActivateReservation` is serialized: at most one succeeds;
+  loser `GUARD_CONFLICT` / `GUARD_INVARIANT`; same idempotency key
+  returns the first result. OQ-008 also assigns `ACTIVE` to the earlier
+  `ConfirmSalesOrder` timestamp when two confirmed SOs compete for the
+  same unit. That is not a uniqueness slot on `REQUESTED`.
+  `ConfirmSalesOrder` does not itself create `REQUESTED`.
+  `RELEASED` / `CONSUMED` / `EXPIRED` do not occupy the `ACTIVE` slot.
+  `ReservationExpirySweep` is orphan cleanup only.
+- Evidence: OQ-008; INV-002; INV-003; SM-CONC-001; DATA-ENF-001; DATA-TX-001.
 
 ## Downstream suspect policy
 

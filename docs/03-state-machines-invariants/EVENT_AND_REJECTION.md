@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-TRANS-001, SM-INV-001, APR-004, APR-005]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-005
 supersedes: null
 ---
@@ -16,7 +16,8 @@ supersedes: null
 Shared rules for every command in
 [TRANSITION_TABLES.md](TRANSITION_TABLES.md). Event names are proposed labels
 for later API/integration work. They are not accepted protocols and do not
-select a broker or package (OQ-018 remains open).
+select a broker or package (OQ-018 packages remain residual; Modular
+Monolith and PostgreSQL are accepted).
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -35,7 +36,7 @@ Common reason families (proposed):
 | Family | When |
 | --- | --- |
 | `GUARD_OPEN_POLICY` | The guard is an unanswered OQ or recorded `workshop-commercial-practice`, and the command needs that value |
-| `GUARD_INVARIANT` | A closed INV-* failed (negative stock, QC gate, one location) |
+| `GUARD_INVARIANT` | A closed INV-* failed (negative stock, QC gate, one location, independent production consume/leftover post) |
 | `GUARD_ACTOR` | Actor is not the allowed role, or is a temporary identity |
 | `GUARD_STATE` | Command is illegal in the current state |
 | `GUARD_IDEMPOTENT_DUP` | The same command was already accepted (INV-016) |
@@ -64,7 +65,8 @@ Proposed key scope (logical, not a storage design):
 | Inquiry / Quotation / Sales Order drafts | caller + document identity being created |
 | `PostGoodsReceipt` / `ReverseGoodsReceipt` | physical receipt identity + direction |
 | `ActivateReservation` / `ConsumeReservation` | reservation identity + command name |
-| `CompleteProductionOperation` | operation identity + completion attempt |
+| `CompleteProductionOperation` | operation identity + completion attempt. Nested consume/residual/scrap primitives share this transaction; they are not separately keyed posts |
+| Independent `ConsumeUnitPartial` / `ConsumeUnitComplete` / leftover `CreateResidualUnit` | Rejected (`GUARD_INVARIANT` INV-006); not a second key space |
 | `DispatchShipment` | shipment identity + dispatch |
 | `RecordPayment` / `AllocatePayment` / `ReversePayment` | payment identity + command name |
 

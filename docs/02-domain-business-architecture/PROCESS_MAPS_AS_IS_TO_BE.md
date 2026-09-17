@@ -127,7 +127,10 @@ Proposed sequence:
 10. Pack; create Shipment whose items belong to the authorized demand/customer;
     dispatch requests definitive stock exit through Inventory.
 11. Confirm delivery; issue operational Invoice; allocate Payment
-    (Finance-Lite). Sales Order closure rule remains open (OQ-007).
+    (Finance-Lite). Sales Order close is independent of payment (OQ-007):
+    remaining valid demand already zero (`FULFILLED`), authorized unfulfilled
+    remainder, or `CANCELLED`. Shipment `DELIVERED` is not an independent
+    close prerequisite.
 
 Customer Portal **ordering is formally deferred from MVP** as proposed scope
 pending OQ-010. Visibility and request remain optional deferred and are **not**
@@ -276,24 +279,24 @@ are specifically evidence-gated and must not be treated as confirmed:
 | --- | --- | --- |
 | Entire As-Is Excel/paper picture | Field study, forms, sample records | RISK-001; workshop agenda §2 |
 | Named owners, delegates, approval limits | Real roster replacement | OQ-019, ASM-013, FIND-020 |
-| UOM, weight vs length, rounding | Signed UOM matrix | OQ-001, OQ-002 |
-| Official consumption/output posting points and routing | Shop-floor maps | OQ-003 |
-| Tracking granularity and labels | Product/customer/regulatory matrix | OQ-004 |
-| QC plans, hold/reject authority, exceptional release | Signed QC authority | OQ-005 |
-| Partial fulfillment / over-delivery numeric limits | Commercial policy | OQ-006, FIND-003 |
-| Sales Order closure vs payment | Sales/finance policy | OQ-007 |
-| Reservation expiry, priority, one Coil to many orders | Operational policy | OQ-008 |
-| Residual vs scrap threshold | Shop-floor thresholds | OQ-009 |
-| Portal visibility, request, ordering | Sponsor decision | OQ-010, FIND-001 |
-| Weighbridge identity and fallback | Equipment evidence | OQ-011 |
-| Invoice/payment vs legal accounting handoff | Accounting contracts | OQ-012 |
-| Single-site / legal-entity assumption | Organization model | OQ-013, ASM-001 |
-| Opening stock freeze and discrepancy workflow | Cutover RACI | OQ-015 |
+| UOM, weight vs length, rounding | Signed conversion/scale matrix (kg already recorded) | OQ-001 residual; OQ-002 answered |
+| Official consumption/output posting **step names** and routing | Shop-floor maps | OQ-003 residual names. Boundary is `CompleteProductionOperation`. |
+| Tracking granularity and labels | First-go-live family catalogue | OQ-004 answered hybrid |
+| QC plans, hold/reject authority, exceptional release | Signed QC authority | OQ-005 residual. Block + two-person exceptional release recorded. |
+| Partial fulfillment / over-delivery numeric limits | Family/customer % | OQ-006 answered default 0 |
+| Sales Order closure vs payment | Recorded policy | OQ-007 answered |
+| Reservation uniqueness and confirmed-SO expiry | Recorded policy | OQ-008 answered |
+| Residual vs scrap cutoff numbers | Shop-floor thresholds | OQ-009 residual |
+| Portal visibility document list | Sponsor residual list | OQ-010 answered visibility-only; no `PortalPlaceOrder` |
+| Weighbridge identity and fallback | Equipment evidence | OQ-011 residual. Commander only. |
+| Invoice/payment vs legal accounting handoff | Accounting product when a later phase needs it | OQ-012 answered: no Legal-GL in MVP |
+| Single-site / legal-entity assumption | — | OQ-013 answered |
+| Opening stock freeze and discrepancy workflow | Cutover files and named signers | OQ-015 residual |
 | State guards, customer-visible status mappings | Lifecycle walkthrough | GOV-STATES-001; workshop agenda §5 |
 | Shipment-without-demand approver | Authority matrix | ASM-REPORT-001 invariant; OQ-005 |
 
-Customer Portal ordering is **not** drawn on the happy path. Visibility/request
-are optional deferred and are workshop-unvalidated pending OQ-010.
+Customer Portal ordering is **not** drawn on the happy path. Visibility-only
+MVP is recorded (OQ-010). Exact document list remains residual.
 
 ## Alternatives and consequences
 
@@ -314,8 +317,10 @@ demand with overdue demand (REQ-OBJ-001 / ASM-REPORT-001).
 
 ## Open items
 
-- Questions: OQ-001 through OQ-018 remain unanswered. OQ-010 and OQ-019 remain
-  `treating`. ASM-014 scopes the listed questions out of the design-gate.
+- Questions: Current status is
+  [OPEN_QUESTIONS.md](../00-governance/registers/OPEN_QUESTIONS.md).
+  This map does not reopen answered rows. Treating residuals remain
+  OQ-001, OQ-003, OQ-005, OQ-009, OQ-011, OQ-014, OQ-015, OQ-019.
 - Assumptions: ASM-001 through ASM-014 are not confirmed by these maps.
 
 ## Review evidence

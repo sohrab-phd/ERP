@@ -23,9 +23,9 @@ scripts and not a `TEST-*` ID set.
 
 | ID | Sequence | Stops open |
 | --- | --- | --- |
-| `QA-SCN-STOCK` | SEQ-STOCK sell available stock through invoice/payment | CloseSalesOrder OQ-007; over-delivery OQ-006 |
+| `QA-SCN-STOCK` | SEQ-STOCK sell available stock through invoice/payment | Over-delivery OQ-006; CloseSalesOrder uses OQ-007 (not payment) |
 | `QA-SCN-PURCHASE` | SEQ-PURCHASE buy then fulfill | ApprovePurchaseOrder OQ-019; inbound QC OQ-005 |
-| `QA-SCN-MAKE` | SEQ-MAKE allocate, produce, residual/scrap, then ship | Routing OQ-003; residual cutoff OQ-009; mass balance OQ-006 |
+| `QA-SCN-MAKE` | SEQ-MAKE allocate, produce (`CompleteProductionOperation` exclusive post including leftover residual/scrap), then ship | Routing names OQ-003; residual cutoff numbers OQ-009; mass balance OQ-006 |
 | `QA-SCN-NOT-FEASIBLE` | SEQ-NOT-FEASIBLE demand without an order | none as a path; not overdue |
 | `QA-SCN-REVERSE` | SEQ-REVERSE compensating command; original posted row stays | OQ-015 authority; OQ-017 mechanism |
 
@@ -45,7 +45,7 @@ A step whose guard is an unanswered OQ is an expected
 | `QA-SCN-REJECT-OPEN` | Command needing an unanswered OQ rejects; no posted fact | THR-012, INV-016 |
 | `QA-SCN-REJECT-ACTOR` | Temporary identity → `GUARD_ACTOR` | SEC-002 |
 | `QA-SCN-REJECT-PORTAL` | PortalPlaceOrder → `GUARD_PORTAL_MVP` | INV-020 |
-| `QA-SCN-CONFLICT` | Second concurrent writer on the same unit/order → `GUARD_CONFLICT` or `GUARD_STATE` | SM-CONC-001 |
+| `QA-SCN-CONFLICT` | Second concurrent writer on the same unit/order → `GUARD_CONFLICT` or `GUARD_STATE`. Two `ActivateReservation` on the same unit: at most one `ACTIVE`. | SM-CONC-001, INV-002 |
 | `QA-SCN-IDEMPOTENT` | Retry same key returns first result; no second GR/dispatch/payment/completion | INV-016 |
 | `QA-SCN-REVERSE` | ReverseGoodsReceipt / ReversePayment / ReturnUnit / VoidInvoice is a new command with a new key | INV-005, SEQ-REVERSE |
 | `QA-SCN-SOD` | VoidInvoice or ReversePayment without a second distinct identity rejects | SV-007 |

@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [integration-architect]
 depends_on: [APP-CMD-001, APP-BG-001, SEC-ISO-001, DATA-TX-001, APR-009, APR-010]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 approval: APR-010
 supersedes: null
 ---
@@ -31,8 +31,9 @@ package (OQ-011, OQ-012, OQ-018).
    rejects as `GUARD_OPEN_POLICY`. It does not invent the missing key.
 5. An adapter must not split a DATA-TX-001 bundle. Partial posting of
    `PostGoodsReceipt`, `DispatchShipment`, `CompleteProductionOperation`,
-   `ActivateReservation`, `AllocatePayment`, or `CreateResidualUnit` is
-   forbidden (QA-SCN-BUNDLE).
+   `ActivateReservation`, `AllocatePayment`, or
+   `CompleteProductionOperation` (including nested `CreateResidualUnit`)
+   is forbidden (QA-SCN-BUNDLE).
 6. The adapter-host or worker process identity is not a substitute for
    the original commander’s `actor_identity` (SEC-ID-001).
 
@@ -67,8 +68,9 @@ do not post.
 | --- | --- |
 | `CommandRetry` | Same key after transport fail (`ADP-*` or UI) |
 | `EventNotice` / `LiveNotice` | `ADP-LIVE` only; isolation required |
-| `GenealogyRebuild` / `BalanceRebuild` | After restore or staleness; never `EditGenealogy` / `AdjustBalance` |
-| `ReservationExpirySweep` / `InquiryQuotationExpirySweep` | Propose expire commands; unanswered policy → `GUARD_OPEN_POLICY` |
+| `GenealogyRebuild` / `BalanceRebuild` | After restore or staleness; Balance from Ledger; Genealogy from DATA-GEN-001 facts; never `EditGenealogy` / `AdjustBalance` |
+| `ReservationExpirySweep` | Propose `ExpireReservation` for orphan/stale rows only; not a confirmed-SO TTL (OQ-008) |
+| `InquiryQuotationExpirySweep` | Propose expire commands; unanswered day-count → `GUARD_OPEN_POLICY` |
 | `OpeningStockImport` | `ADP-CUTOVER` only |
 
 ## Failure handling (labels)

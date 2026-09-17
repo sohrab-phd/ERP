@@ -6,7 +6,7 @@ status: approved
 version: 0.1.0
 owners: [data-architect, chief-solution-architect]
 depends_on: [SM-INV-001, DATA-POST-001, DATA-TX-001, APR-005]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-006
 supersedes: null
 ---
@@ -24,26 +24,26 @@ platform (OQ-018).
 
 | INV | Logical (now) | Later application | Later database / kernel | Stays open |
 | --- | --- | --- | --- | --- |
-| INV-001 | One posting path; Ledger is evidence | Command must call ACT-IPS only | Unique writer of Ledger/Balance | OQ-017 how |
-| INV-002 | Non-negative on-hand/reserved/available | Reject the command | Kernel must not accept a violating write | OQ-008 expiry; OQ-001 qty type |
+| INV-001 | One posting path; Ledger is evidence | Command must call ACT-IPS only | Unique writer of Ledger/Balance | OQ-017 residual: stored functions later ADR. Style recorded. |
+| INV-002 | Non-negative on-hand/reserved/available; at most one `ACTIVE` reservation per Inventory Unit | Reject the command (`GUARD_INVARIANT` / `GUARD_CONFLICT`); no steal | Kernel must not accept a violating write; later unique/partial-unique on the live `ACTIVE` slot per unit | OQ-001 qty type; OQ-008 residual TTL only; OQ-017 how |
 | INV-003 | Availability formula; three distinct facts | Derive available; do not store a fourth truth | Optional check that reserved ≤ on-hand | none as a rule |
 | INV-004 | One location; incompatible destinies | `GUARD_STATE` / `GUARD_CONFLICT` | Unique active location per unit if later proven | ASM-005 |
 | INV-005 | No physical delete; reversal rows | New compensating command | No UPDATE-in-place of posted evidence | OQ-015 cutover authority |
-| INV-006 | One business transaction at operation complete | Orchestrate the bundle | Atomic commit of facts + stock | OQ-003 posting point |
-| INV-007 | Mass-balance equation | Reject close if out of tolerance | Optional check once the number exists | OQ-006 number |
-| INV-008 | Child unit + parent close/split | Same transaction as residual fact | Identity uniqueness | OQ-009 cutoff |
-| INV-009 | Source facts immutable | No edit-genealogy command | Projection rebuildable | OQ-004 grain |
+| INV-006 | One business transaction at `CompleteProductionOperation` (OQ-003 recorded) | Orchestrate the exclusive bundle; reject independent production consume | Atomic commit of facts + stock | Routing step names OQ-003; leftover cutoff numbers OQ-009 |
+| INV-007 | Mass-balance equation | Reject close if out of tolerance | Optional check once the number exists | OQ-006 family % residual; default 0 recorded |
+| INV-008 | Child unit + parent close/split **nested in** INV-006 when leftover is production residual | Same transaction as residual fact and completion | Identity uniqueness | OQ-009 cutoff |
+| INV-009 | Source facts immutable | No edit-genealogy command | Projection rebuildable | OQ-004 recorded hybrid grain; family catalogue is configuration |
 | INV-010 | QC gate before available/shippable | `GUARD_INVARIANT` | Optional state check | OQ-005 plans/people |
 | INV-011 | Authorized customer/order or exceptional flag | `GUARD_OPEN_POLICY` if person missing | none required | OQ-006, OQ-019 |
-| INV-012 | Allocation ≤ payment and ≤ open balance | Reject over-allocation | Optional numeric check | OQ-012 legal export |
-| INV-013 | Unfulfilled Demand without Sales Order | Do not require an order FK | none | OQ-007 close rule |
+| INV-012 | Allocation ≤ payment and ≤ open balance | Reject over-allocation | Optional numeric check | OQ-012 answered: no Legal-GL in MVP |
+| INV-013 | Unfulfilled Demand ≠ overdue; may exist without a Sales Order; remainder-close of an SO requires that fact (OQ-007) | Do not require an order FK for standalone unfulfilled; `CloseSalesOrder` from `PARTIALLY_FULFILLED` requires the remainder fact | none required | none for the close rule |
 | INV-014 | Snapshot at post; later master-data does not rewrite | Copy snapshot onto the document | none | OQ-016 retention days |
 | INV-015 | Backend auth; SoD pairs; customer isolation | Enforce roles; Phase 06 `SEC-*` | none as stock kernel | OQ-010, OQ-019 |
 | INV-016 | Caller idempotency key | Return first result | Unique key store | OQ-011 device identity |
 | INV-017 | QC/Shipping command only | Deny their stock writes | Deny their Ledger/Balance grants | none |
 | INV-018 | GR split | Procurement cannot post qty | Deny Procurement Ledger grants | none |
 | INV-019 | Genealogy is a projection | Deny write API | Allow drop/rebuild | none |
-| INV-020 | Portal order commands rejected | `GUARD_PORTAL_MVP` | none | OQ-010 |
+| INV-020 | Portal order commands rejected | `GUARD_PORTAL_MVP` | none | OQ-010 visibility-only recorded; document list residual |
 
 ## Reading the later columns
 
@@ -53,6 +53,11 @@ platform (OQ-018).
   accepted. Listing a kernel check does not accept option A, B, or C.
 - An invariant with an open numeric guard cannot gain a stored constant.
   The later check is “reject if the number is required and missing.”
+- INV-002’s one-`ACTIVE`-reservation rule is a **logical invariant**, an
+  **application guard**, a **transaction/locking requirement** on the
+  Inventory Unit during `ActivateReservation`, and a later **unique /
+  partial-unique constraint** on the live `ACTIVE` slot. This file does
+  not write SQL or migrations.
 
 ## Must not do with this table
 

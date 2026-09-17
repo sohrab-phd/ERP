@@ -6,7 +6,7 @@ status: approved
 version: 0.2.0
 owners: [qa-architect, operations-owner]
 depends_on: [QA-STRAT-001, SEC-VER-001, APR-008]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-16
 approval: APR-009
 supersedes: null
 ---
@@ -28,7 +28,7 @@ invent OQ-018.
 
 | Intent | Statement | Open |
 | --- | --- | --- |
-| `QA-R-RESTORE` | A restore can rebuild Balance and Genealogy from Ledger | RPO/RTO OQ-016 |
+| `QA-R-RESTORE` | A restore can rebuild Balance from Ledger and Genealogy from DATA-GEN-001 source facts | RPO/RTO OQ-016 |
 | `QA-R-DEVICE` | Weighbridge down → human ACT-* command, not silent Ledger write | OQ-011 |
 | `QA-R-WORKER` | Transport retry uses the same idempotency key | OQ-018 scheduler |
 | `QA-R-CUTOVER` | Opening stock is a Ledger fact with named sign-off | OQ-015 |

@@ -35,6 +35,9 @@ migration is authorized.
 - Quantity, UOM, precision, and rounding stay open (OQ-001, OQ-002).
 - Official routing steps stay open (OQ-003).
 - Tracking granularity stays open (OQ-004).
+- Sales Order close predicate is recorded (OQ-007). Payment is not a
+  close attribute.
+- One `ACTIVE` reservation per Inventory Unit is recorded (OQ-008).
 
 ## Write-owner groups
 
@@ -70,6 +73,7 @@ erDiagram
   MATERIAL_LOT ||--o{ INVENTORY_UNIT : contains
   INVENTORY_LEDGER ||--o{ INVENTORY_BALANCE : projects
   INVENTORY_UNIT ||--o{ RESERVATION : reserved_as
+  SALES_ORDER ||--o{ UNFULFILLED_DEMAND : remainder_may_record
   PRODUCTION_ORDER ||--o{ MATERIAL_ALLOCATION : allocates
   PRODUCTION_ORDER ||--|{ PRODUCTION_OPERATION : executes
   MATERIAL_ALLOCATION ||--o| INVENTORY_UNIT : issues
@@ -86,30 +90,37 @@ erDiagram
   PAYMENT }o--o{ INVOICE : allocates
 ```
 
+At most one `RESERVATION` per `INVENTORY_UNIT` may be in state `ACTIVE`
+(OQ-008). The `||--o{` edge allows historical non-`ACTIVE` rows.
+`UNFULFILLED_DEMAND` may exist without a Sales Order (INV-013). The
+optional remainder edge is the OQ-007 close path, not a required FK.
+
+Invoice bills a Sales Order; that does not couple their close machines.
+
 ## Attributes that may be named now
 
 Identity, write owner, lifecycle state (from the matching SM-*),
 commercial snapshot fields already required by INV-014, reason/actor
-role/authority/timestamp on reversals (INV-005), and caller idempotency
-key (INV-016).
+role/authority/timestamp on reversals (INV-005), caller idempotency
+key (INV-016), Sales Order closure reason and fulfilled/unfulfilled qty
+snapshot (OQ-007), and Reservation demand ref / unit ref / claimed qty /
+state with at most one `ACTIVE` per Inventory Unit (OQ-008).
 
 ## Attributes that stay open
 
 | Attribute family | Why open |
 | --- | --- |
-| Quantity type, UOM, decimals, rounding | OQ-001, OQ-002 |
-| Official operation step name and posting point | OQ-003 |
-| Batch vs bundle vs piece identity | OQ-004 |
-| QC plan, limit, sample, named releaser | OQ-005 |
-| Tolerance percents and over-delivery limits | OQ-006 |
-| Sales Order close predicate | OQ-007 |
-| Reservation expiry and preemption | OQ-008 |
-| Residual cutoff | OQ-009 |
-| Site / legal-entity discriminator | OQ-013 |
-| Physical types, indexes, volumes | OQ-014 |
-| Opening-stock source keys | OQ-015 |
-| Retention days | OQ-016 |
-| Ledger storage mechanism | OQ-017 |
+| Quantity type, UOM, decimals, rounding | OQ-001 residual. Official stock UOM is kg (OQ-001/OQ-002 recorded). |
+| Official operation step **name** | OQ-003 residual. Posting **boundary** is `CompleteProductionOperation` (recorded). |
+| Batch vs bundle vs piece identity | OQ-004 recorded hybrid grain; first-go-live family catalogue is configuration |
+| QC plan, limit, sample, named releaser | OQ-005 residual. QC can block; exceptional release is two-person. |
+| Tolerance percents and over-delivery family % | OQ-006 configuration. Default 0 is recorded. |
+| Residual cutoff | OQ-009 residual numbers |
+| Site / legal-entity discriminator | Not required for MVP. OQ-013 recorded: one legal entity, one principal site. |
+| Physical types, indexes, volumes | OQ-014 residual |
+| Opening-stock source keys | OQ-015 residual |
+| Retention days | OQ-016 residual. RPO/RTO recorded. |
+| Ledger physical schema / function syntax | OQ-017 residual. Posting **style** is recorded (app-owned PostgreSQL transaction). |
 
 Do not invent a column type to stand in for those answers.
 

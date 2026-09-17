@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [operations-owner, delivery-lead]
 depends_on: [INT-CAT-001, APR-013, APR-014, ASM-025]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-16
 approval: APR-014
 supersedes: null
 ---
@@ -26,7 +26,7 @@ and RPO/RTO stay open.
 | `CUT-FREEZE` | Count freeze and discrepancy workflow | OQ-015 |
 | `CUT-SIGN` | Named sign-off | OQ-019 |
 | `CUT-GUARD` | Until OQ-015 and OQ-019 are answered, `ADP-CUTOVER` rejects as `GUARD_OPEN_POLICY` | OQ-015, OQ-019 |
-| `CUT-REBUILD` | After opening Ledger facts, Balance/Genealogy rebuild from Ledger | — |
+| `CUT-REBUILD` | After opening Ledger/Lot/Unit facts, `BalanceRebuild` from Ledger; `GenealogyRebuild` from DATA-GEN-001 (opening-origin facts at cutover) | — |
 
 Do not post Balance-only opening stock. Do not `AdjustBalance`. Do not
 treat Finance-Lite export as legal GL (ASM-010 / OQ-012).
@@ -48,7 +48,7 @@ Sales cancel/hold is not trained as a closed SoD pair.
 | --- | --- | --- |
 | `ROL-SITE` | One principal site unless OQ-013 says otherwise | OQ-013 |
 | `ROL-DEVICE` | Weighbridge down → human `ACT-*` command | OQ-011 |
-| `SUP-RESTORE` | Restore rebuilds projections from Ledger | OQ-016 |
+| `SUP-RESTORE` | Restore: Balance from Ledger; Genealogy from DATA-GEN-001 source facts | OQ-016 |
 | `SUP-EXCEL` | Competing Excel truth remains RISK-001 | workshop adoption |
 | `SUP-PORTAL` | MVP has no portal order write | OQ-010 |
 

@@ -23,6 +23,11 @@ Phase 03 can close numeric guards or owner-signed policy.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
+**Later recorded (not invented by this handoff):** OQ-007 Sales Order
+close and OQ-008 one-`ACTIVE`-reservation uniqueness. Rows below that
+still list those IDs as open guards are historical Phase 02 scope. Current
+authority is [OPEN_QUESTIONS.md](../00-governance/registers/OPEN_QUESTIONS.md).
+
 ## Inherit from Phase 02
 
 - Bounded contexts and forbidden writes:
