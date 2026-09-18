@@ -6,15 +6,16 @@ status: approved
 version: 0.3.0
 owners: [operations-owner]
 depends_on: [QA-NFR-001, DATA-CUTOVER-001, APP-BG-001, APR-009, APR-010]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-18
 approval: APR-010
 supersedes: null
 ---
 
 # Backup, Restore, and Recovery Labels
 
-Named recovery procedures. Minute counts stay OQ-016. Opening-stock
-RACI stays OQ-015.
+Named recovery procedures. OQ-016 recorded: RPO ≤ 60 minutes, RTO ≤
+8 hours, daily backup, offsite copy, restore testing. Retention days
+and backup product remain residual. Opening-stock RACI stays OQ-015.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -22,8 +23,8 @@ RACI stays OQ-015.
 
 | ID | Statement | Open |
 | --- | --- | --- |
-| `DR-BACKUP` | Durable copy of posted facts and audit | Retention days, off-site (OQ-016) |
-| `DR-RESTORE` | Restore durable posted facts; `BalanceRebuild` from Ledger; `GenealogyRebuild` from DATA-GEN-001 source facts (not Ledger-only) | RPO/RTO minutes (OQ-016) |
+| `DR-BACKUP` | Durable copy of posted facts and audit | Retention days / backup product (OQ-016 residual). Offsite copy recorded. |
+| `DR-RESTORE` | Restore durable posted facts; `BalanceRebuild` from Ledger; `GenealogyRebuild` from DATA-GEN-001 source facts (not Ledger-only). Rebuilds are reconstructions, not new business postings. | Retention days / backup product (OQ-016 residual). RPO/RTO recorded. |
 | `DR-ROLLBACK` | Compensating commands, not delete-in-place | INV-005 |
 | `DR-CUTOVER` | Opening stock is a Ledger fact with named sign-off (`ADP-CUTOVER`) | OQ-015, OQ-019 |
 | `DR-DEVICE` | Weighbridge down → human command | OQ-011 |
@@ -51,14 +52,14 @@ Until OQ-015 is answered, `DR-CUTOVER` / `ADP-CUTOVER` reject as
 
 ## What is source truth after restore
 
-Posted commercial documents, Inventory Ledger rows, Production
-consumption/output/residual/scrap facts, Shipping package/shipment
-facts, and `AUD-CMD-*`. Balance is rebuilt from Ledger. Genealogy Link
-is rebuilt from the DATA-GEN-001 source-fact catalogue. Neither
-projection is independently editable.
+Posted commercial documents, Inventory Ledger rows, Lot/Unit origin
+facts, Production consumption/output/residual/scrap/rework facts,
+Shipping package/shipment facts, and `AUD-CMD-*`. Balance is rebuilt
+from Ledger. Genealogy Link is rebuilt from the DATA-GEN-001
+source-fact catalogue. Neither projection is independently editable.
 
 ## Must not decide here
 
 - Backup vendor or snapshot product
-- RPO/RTO numbers
+- Retention day count (OQ-016 residual)
 - Who signs cutover (OQ-019)

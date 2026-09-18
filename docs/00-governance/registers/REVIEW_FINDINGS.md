@@ -660,6 +660,11 @@ artifact approval does not close open findings or their linked questions.
   be read as Ledger-only genealogy.
 - Evidence: DATA-GEN-001; INV-009; INV-019; DEP-DR-001 `2026-09-16`;
   OQ-015 scoped to opening-stock procedure.
+- Later (`2026-09-18`, Gate 4): live operational docs that still said
+  Genealogy rebuilds from Ledger facts were aligned to this treatment.
+  Team-answer OQ-015/OQ-017 cutover/posting wording was left as
+  authoritative source text; it does not replace DATA-GEN-001 for live
+  operations after consumption, output, pack, or ship.
 
 ## FIND-G-015 — Standalone production consumption
 

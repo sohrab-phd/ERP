@@ -14,9 +14,10 @@ supersedes: null
 # Retention, Migration, and Opening Stock
 
 Logical cutover and retention rules. Named people, freeze procedures,
-source-system lists, RPO/RTO, and retention days stay unanswered
-(OQ-015, OQ-016). No migration script or opening-balance spreadsheet is
-authorized here.
+and source-system lists stay OQ-015 treating. OQ-016 RPO ≤ 60 minutes,
+RTO ≤ 8 hours, daily backup, and offsite copy are recorded; retention
+days remain residual. No migration script or opening-balance spreadsheet
+is authorized here.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -58,24 +59,28 @@ This system must not import a legal GL as if it owned it.
 
 ## Genealogy at cutover
 
-If live units have known parent lots, record Lot and Unit facts, then
-rebuild Genealogy Link. Do not load a standalone genealogy spreadsheet
-as truth (INV-019, RISK-005). Unknown parents are allowed; the
-projection then starts at the opening unit.
+If live units have known parent lots, record Lot and Unit **source
+facts**, then run `GenealogyRebuild` from the DATA-GEN-001 catalogue
+(opening-origin facts at cutover). That is not a Ledger-only genealogy
+rebuild and not a new business posting (FIND-G-014). Do not load a
+standalone genealogy spreadsheet as truth (INV-019, RISK-005). Unknown
+parents are allowed; the projection then starts at the opening unit.
+After consumption, output, pack, or ship, live rebuild uses the full
+source-fact catalogue, not opening Ledger rows alone.
 
 ## Retention (OQ-016)
 
 INV-014 and ASM-012 require that posted snapshots and correction
-evidence are kept. How many days, whether an off-site copy exists, RPO,
-and RTO stay OQ-016.
+evidence are kept. RPO ≤ 60 minutes, RTO ≤ 8 hours, daily backup, and
+offsite copy are recorded. Retention days remain residual.
 
-Until that answer:
+Until retention days exist as an operational input:
 
 - Do not delete posted Ledger, Invoice, Payment, consumption, output,
-  residual, scrap, or shipment facts.
-- A projection (Balance, Genealogy Link, KPI) may be dropped and rebuilt.
-- Backup and recovery numbers in any source document remain proposals,
-  not commitments.
+  residual, scrap, package, shipment, or other genealogy source facts.
+- A projection (Balance, Genealogy Link, KPI) may be dropped and rebuilt
+  from its canonical source (`Ledger → Balance`; DATA-GEN-001 →
+  Genealogy). Rebuild must not create Ledger movements.
 
 ## What this does not authorize
 

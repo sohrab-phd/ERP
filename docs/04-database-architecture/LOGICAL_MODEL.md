@@ -32,9 +32,14 @@ migration is authorized.
 - Coil is a kind of Inventory Unit, not a separate entity.
 - ShipmentItem, Dispatch, and Delivery remain Shipment lifecycle facts
   (FIND-023). Do not mint those ENT-* IDs here.
-- Quantity, UOM, precision, and rounding stay open (OQ-001, OQ-002).
-- Official routing steps stay open (OQ-003).
-- Tracking granularity stays open (OQ-004).
+- Quantity type, UOM scale, and rounding stay open (OQ-001 residual).
+  Official stock UOM is kg (OQ-001/OQ-002 recorded).
+- Official routing **step names** stay open (OQ-003 residual). The
+  posting **boundary** is `CompleteProductionOperation`.
+- First-go-live family tracking catalogue stays configuration (OQ-004
+  recorded hybrid grain).
+- Genealogy Link is rebuilt from DATA-GEN-001 source facts, not from
+  Ledger rows alone (FIND-G-014). Balance rebuilds from Ledger.
 - Sales Order close predicate is recorded (OQ-007). Payment is not a
   close attribute.
 - One `ACTIVE` reservation per Inventory Unit is recorded (OQ-008).
@@ -96,6 +101,12 @@ At most one `RESERVATION` per `INVENTORY_UNIT` may be in state `ACTIVE`
 optional remainder edge is the OQ-007 close path, not a required FK.
 
 Invoice bills a Sales Order; that does not couple their close machines.
+
+Genealogy Link is intentionally absent as a source entity. Rebuild it
+from Lot origin, Consumption, Output, Residual, Scrap, Package,
+Shipment, and Rework facts (DATA-GEN-001). Rework is a Production
+operation/fact plus reversals (`StartReworkOperation`); this model does
+not mint ENT-REWORK.
 
 ## Attributes that may be named now
 

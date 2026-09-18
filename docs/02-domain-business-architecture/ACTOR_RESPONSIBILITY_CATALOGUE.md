@@ -80,8 +80,8 @@ Glossary terms are linked on first use.
 | ACT-SHIP | Shipping | human role | `BC-SHIPPING` [Package](../00-governance/registers/BUSINESS_GLOSSARY.md#term-023--package) (TERM-023), [Shipment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-017--shipment) (TERM-017), dispatch, delivery; commands stock exit | Temporary Shipping Owner (temporary) | **none** |
 | ACT-FIN | Finance-lite | human role | `BC-FINANCE-LITE` ([Finance-Lite](../00-governance/registers/BUSINESS_GLOSSARY.md#term-018--finance-lite), TERM-018) operational Invoice, [Payment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-024--payment) (TERM-024), allocation | Temporary Finance-Lite Owner (temporary) | **none** |
 | ACT-SEC | Security | human role | `BC-IDENTITY` / `BC-AUDIT` identity, RBAC, isolation, evidence | Temporary Security Representative (temporary) | **none** |
-| ACT-CUST | Customer as portal party | external party | Not a write owner. Any future portal channel is pending OQ-010. Ordering is formally deferred from MVP. Visibility/request remain optional deferred. | **no roster person** — not a workshop approval role | **none** |
-| ACT-IPS | System / Inventory Posting Service | system actor | Sole proposed mutator of Ledger, Balance, and stock movements (OQ-017 mechanism open) | **no human** | **none** — mechanical integrity only |
+| ACT-CUST | Customer as portal party | external party | Not a write owner. Portal MVP is visibility-only (OQ-010 recorded). Ordering remains out of MVP. | **no roster person** — not a workshop approval role | **none** |
+| ACT-IPS | System / Inventory Posting Service | system actor | Sole mutator of Ledger, Balance, and stock movements. OQ-017 style recorded (app-owned PostgreSQL transaction); stored functions later ADR. | **no human** | **none** — mechanical integrity only |
 
 Related workshop placeholders that are **not** additional operational actors in
 the matrix, but remain the only current people for supporting design roles:

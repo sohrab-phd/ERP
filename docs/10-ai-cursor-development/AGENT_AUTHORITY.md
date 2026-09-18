@@ -6,7 +6,7 @@ status: approved
 version: 0.4.0
 owners: [chief-solution-architect]
 depends_on: [REPO-BR-001, REPO-CONF-001, APP-ORCH-001, APR-011, APR-012]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-18
 approval: APR-012
 supersedes: null
 ---
@@ -64,7 +64,8 @@ An agent must reject, not guess, when asked to:
 
 1. Close or answer an `OQ-*` without a matching register update from
    the Project Owner.
-2. Accept ADR-0006, ADR-0007, ADR-0008, or any package as decided.
+2. Treat ADR-0008 or any package as decided. ADR-0001, ADR-0006, and
+   ADR-0007 are already accepted.
 3. Introduce `EditGenealogy`, `AdjustBalance`, or MVP `PortalPlaceOrder`.
 4. Write Ledger, Balance, or unit quantity outside
    `mod-inventory-posting` / `ACT-IPS`.
@@ -76,7 +77,9 @@ An agent must reject, not guess, when asked to:
 8. Work around a write-gate denial.
 9. Skip SoD on `ReverseGoodsReceipt` (SV-013) or treat a worker
    identity as the commander.
-10. Restore Balance or Genealogy except as a Ledger rebuild.
+10. Restore Balance except as a Ledger rebuild, or restore Genealogy
+    except as a DATA-GEN-001 source-fact rebuild (FIND-G-014). Do not
+    treat Ledger rows as the only genealogy input.
 
 Unanswered policy needed to proceed is `GUARD_OPEN_POLICY`.
 

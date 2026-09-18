@@ -68,7 +68,11 @@ scheduler, Outbox, or Socket.IO is **not** selected. Labels only are in
 needs a worker, it must still obey INV-016 and must not become a second
 stock writer.
 
+`GenealogyRebuild` and `BalanceRebuild` are reconstruction workers, not
+retries of `CompleteProductionOperation` or other posting commands. They
+must not create duplicate Ledger movements.
+
 ## Portal
 
-Any order-placement command is rejected with `GUARD_PORTAL_MVP` until
-OQ-010 is decided otherwise (INV-020).
+Any order-placement command is rejected with `GUARD_PORTAL_MVP`
+(INV-020). OQ-010 is recorded: Customer Portal MVP is visibility-only.

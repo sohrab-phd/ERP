@@ -132,9 +132,8 @@ Proposed sequence:
     remainder, or `CANCELLED`. Shipment `DELIVERED` is not an independent
     close prerequisite.
 
-Customer Portal **ordering is formally deferred from MVP** as proposed scope
-pending OQ-010. Visibility and request remain optional deferred and are **not**
-steps on this happy path.
+Customer Portal MVP is **visibility-only** (OQ-010 recorded). Ordering is
+not a step on this happy path (`PortalPlaceOrder` remains rejected).
 
 ```mermaid
 flowchart TD

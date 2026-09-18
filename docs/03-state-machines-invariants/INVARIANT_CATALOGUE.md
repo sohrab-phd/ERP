@@ -42,8 +42,8 @@ invented here.
 | INV-016 | BR-016 | Retryable commands and external submissions are idempotent. A retry must not duplicate receipt, posting, shipment, payment, or completion. | none |
 | INV-017 | BR-017 | Quality and Shipping request inventory lifecycle changes. They do not write stock tables. | none |
 | INV-018 | BR-018 | Procurement orchestrates inbound commercial/receipt flow. Inventory owns physical stock posting. | none |
-| INV-019 | BR-019 | Genealogy Link is a query projection, not independently editable truth. | none |
-| INV-020 | BR-020 | Customer Portal ordering is out of this MVP until OQ-010 is decided. | OQ-010 remains `treating` |
+| INV-019 | BR-019 | Genealogy Link is a query projection, not independently editable truth. Rebuild from DATA-GEN-001 source facts, not Ledger rows alone (FIND-G-014). | none |
+| INV-020 | BR-020 | Customer Portal MVP is visibility-only. Ordering (`PortalPlaceOrder`) is out of this MVP (OQ-010 recorded). | none as ordering; exact portal document list remains OQ-010 residual |
 
 ## Application rule
 

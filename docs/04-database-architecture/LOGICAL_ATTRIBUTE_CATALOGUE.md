@@ -106,7 +106,7 @@ tolerance stays OQ-006 (INV-007).
 | ENT-SHIPMENT | delivered qty, over-delivery | O | OQ-006 |
 | ENT-INVOICE | commercial snapshot, open balance, state | R / S | not legal GL (OQ-012) |
 | ENT-PAYMENT | amount, allocations, state | R / S / C | allocations ≤ payment and ≤ open (INV-012) |
-| ENT-GENEALOGY-LINK | from-fact, to-fact, hop type | projection | rebuild only; no user edit |
+| ENT-GENEALOGY-LINK | from-fact, to-fact, hop type | projection | rebuild from DATA-GEN-001 source facts only (FIND-G-014); not from Ledger/Balance; no user edit |
 
 Invoice and Payment amounts are operational. Scale stays OQ-001 until a
 finance UOM/currency rule exists. They must not be treated as the legal

@@ -6,7 +6,7 @@ status: approved
 version: 0.1.0
 owners: [data-architect, domain-leads]
 depends_on: [SM-INV-001, GOV-DATA-DICT-001, APR-005]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-18
 approval: APR-006
 supersedes: null
 ---
@@ -39,20 +39,22 @@ They must not be read as Ledger-only genealogy.
 
 ## Source facts (writable)
 
-Rebuild only from these authoritative facts:
+Rebuild only from these authoritative facts. Entity IDs are existing
+dictionary concepts, not a new schema.
 
-| Fact | Write owner |
-| --- | --- |
-| Material Lot origin (supplier / certificate / receipt) | Inventory after Goods Receipt post |
-| Material Consumption | Production |
-| Production Output | Production |
-| Residual parent → child unit | Production fact; Inventory child identity |
-| Scrap | Production or Quality fact; Inventory movement |
-| Package contents | Shipping |
-| Shipment contents and customer/order | Shipping |
-| Rework (new facts; prior posted facts reversed, not edited) | Production |
+| Fact | Role | Existing source entities | Write owner |
+| --- | --- | --- | --- |
+| Lot Origin | Supplier/certificate/receipt origin of material | ENT-MATERIAL-LOT; ENT-GOODS-RECEIPT orchestration; Inventory Unit created at post | Inventory after Goods Receipt post (`ACT-IPS` for stock identity) |
+| Consumption | Input consumed by production | ENT-MATERIAL-CONSUMPTION; ENT-PRODUCTION-OPERATION; consumed ENT-INVENTORY-UNIT | Production |
+| Output | Production output / WIP | ENT-PRODUCTION-OUTPUT; ENT-PRODUCTION-OPERATION; resulting ENT-INVENTORY-UNIT and/or ENT-PRODUCT-BATCH | Production |
+| Residual | Child residual lineage | ENT-RESIDUAL fact; parent and child ENT-INVENTORY-UNIT | Production fact; Inventory child identity |
+| Scrap | Disposition lineage | ENT-SCRAP fact; Inventory scrap movement via `ACT-IPS` | Production fact (including Quality/abort-**commanded** scrap); Inventory movement. Quality does not write stock tables (INV-017). |
+| Package | Product/package relationship | ENT-PACKAGE contents refs | Shipping |
+| Shipment | Package/customer shipment relationship | ENT-SHIPMENT; ENT-PACKAGE; customer/order on the shipment | Shipping |
+| Rework | Rework lineage | New Production facts plus reversals of prior posted facts (`StartReworkOperation`); ENT-PRODUCTION-OPERATION | Production. No separate ENT-REWORK is minted here. |
 
-Do not accept a user “edit genealogy” command.
+Do not accept a user “edit genealogy” command. Projection rebuild is a
+reconstruction, not a new business posting and not Event Sourcing.
 
 ## Required traces (INV-009)
 
@@ -62,20 +64,29 @@ Do not accept a user “edit genealogy” command.
 - Merge, split, rework, and defective-lot impact must remain visible
   because source facts are immutable
 
-Tracking granularity (batch vs bundle vs piece) stays OQ-004. Official
-posting points stay OQ-003. Residual cutoff stays OQ-009.
+Tracking granularity is the recorded OQ-004 hybrid grain; the first
+go-live family catalogue remains configuration. Official posting
+**boundary** is `CompleteProductionOperation` (OQ-003 recorded); step
+**names** remain treating. Residual cutoff **numbers** stay OQ-009.
 
 ## Projection rules
 
 - A projection row may be materialized for query speed later. If it
   disagrees with source facts, rebuild from the facts.
+- Source facts remain authoritative. Editing or deleting a genealogy
+  projection does not change lineage history.
 - Deleting a projection row is allowed. Deleting a source fact is not
-  (INV-005).
+  (INV-005). Correction reverses or posts new source facts; it does not
+  rewrite lineage in place.
 - Reporting KPIs that summarize genealogy are also projections.
+- `GenealogyRebuild` is a reconstruction worker, not `CompleteProductionOperation`,
+  not `AdjustBalance`, and not a second Ledger movement.
 
 ## What this does not decide
 
 - Graph table versus closure table versus recursive query
-- Database product (OQ-018)
-- Volume-driven indexes (OQ-014)
+- Physical indexes (OQ-014 residual). Database product is PostgreSQL
+  (ADR-0007 / OQ-018 recorded); packages remain residual.
 - Label or barcode format (ASM-009 still unconfirmed)
+- A dedicated ENT-REWORK identity (Rework remains a Production fact
+  plus reversals)

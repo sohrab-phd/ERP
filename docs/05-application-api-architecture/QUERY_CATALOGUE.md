@@ -14,8 +14,8 @@ supersedes: null
 # Application Query Catalogue
 
 Read models. Queries do not write Ledger, Balance, or posted documents.
-Customer isolation applies (INV-015). Portal visibility, if later
-allowed, is still a Sales-owned read (OQ-010).
+Customer isolation applies (INV-015). Portal visibility is a Sales-owned
+read (OQ-010 recorded). Portal ordering remains rejected in MVP.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -35,7 +35,7 @@ allowed, is still a Sales-owned read (OQ-010).
 | GetInspection | Quality | |
 | GetPackage / GetShipment | Shipping | |
 | GetInvoice / GetPayment | Finance-Lite | not legal GL |
-| TraceForward / TraceBackward | Genealogy projection | rebuild if stale (INV-019) |
+| TraceForward / TraceBackward | Genealogy projection | rebuild from DATA-GEN-001 source facts if stale (INV-019, FIND-G-014); not from Ledger/Balance |
 
 ## Must not exist as writes
 
@@ -45,7 +45,6 @@ allowed, is still a Sales-owned read (OQ-010).
 
 ## Open
 
-- Decimal display scale (OQ-001, OQ-002)
+- Decimal display scale (OQ-001 residual; official stock UOM is kg)
 - Pagination and volume (OQ-014)
-- Site-scoped lists (OQ-013)
-- Query transport and cache package (OQ-018)
+- Query transport and cache package (OQ-018 residual)

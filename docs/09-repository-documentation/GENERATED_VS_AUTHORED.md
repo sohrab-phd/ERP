@@ -6,7 +6,7 @@ status: approved
 version: 0.3.0
 owners: [solution-architect]
 depends_on: [APP-ENV-001, DATA-LOGICAL-001, APP-BG-001, APR-010, APR-011]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-18
 approval: APR-011
 supersedes: null
 ---
@@ -32,7 +32,7 @@ generator runs in this phase.
 | Typed command DTOs | APP-CMD-001 / envelope labels | A second command catalogue |
 | SQL/ORM artifacts | Phase 04 logical model + later ADR | Ledger rewrite rules |
 | OpenAPI files | Query/command envelope | Isolation policy |
-| Genealogy projection rebuild | Ledger facts | `EditGenealogy` |
+| Genealogy projection rebuild | DATA-GEN-001 source facts (not Ledger rows alone; FIND-G-014) | `EditGenealogy`; Ledger-only genealogy |
 | Balance rebuild | Ledger facts | `AdjustBalance` |
 | Opening-stock load | Cutover command (`ADP-CUTOVER`) | Balance-only rows; OQ-015 still open |
 

@@ -6,15 +6,17 @@ status: approved
 version: 0.1.0
 owners: [data-architect, chief-solution-architect]
 depends_on: [SM-CONC-001, SM-EVT-001, APR-005]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-18
 approval: APR-006
 supersedes: null
 ---
 
 # Transaction and Idempotency Design
 
-Logical transaction boundaries taken from Phase 03. This does not choose
-isolation levels, row locks, or a database product (OQ-017, OQ-018).
+Logical transaction boundaries taken from Phase 03. Database product is
+PostgreSQL (ADR-0007). Posting **style** is the recorded OQ-017
+application-owned PostgreSQL transaction. Physical isolation/lock/index
+syntax and stored functions remain residual (later ADR + spike).
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -138,9 +140,24 @@ A reversal is a new accepted command with a new key and a link to the
 original posted fact (INV-005). It is not an update-in-place and not a
 delete.
 
+## Projection rebuilds are not business commands
+
+`BalanceRebuild` and `GenealogyRebuild` reconstruct projections after
+restore or staleness. They:
+
+- do not consume a business-command `idempotency_key` as if they were
+  `CompleteProductionOperation`, `PostGoodsReceipt`, or `DispatchShipment`;
+- must not create Ledger movements, residual quantity, scrap quantity,
+  or new consumption/output facts;
+- must not replay a completed production operation as a new posting.
+
+`Ledger → Balance`. Canonical genealogy source facts → Genealogy Link.
+A successful database restore already contains the source facts; rebuild
+does not require a second operational posting.
+
 ## Must not decide here
 
-- `SERIALIZABLE` versus row locks versus application mutex
-- PostgreSQL, Prisma, or any package
+- Physical `SERIALIZABLE` versus row-lock SQL syntax
+- Prisma or any package
 - Decimal scale
 - Outbox or broker

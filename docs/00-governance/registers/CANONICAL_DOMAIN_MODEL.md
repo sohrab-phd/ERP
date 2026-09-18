@@ -37,8 +37,9 @@ proposal for Material Lot.
 - `BC-REPORTING`: read-only projections, KPIs, operational reporting
 - `BC-AUDIT`: business, technical, status, and security evidence
 - `BC-INTEGRATION`: Outbox delivery and external adapters
-- `BC-PORTAL`: **proposed/deferred only** — not a confirmed bounded context.
-  Customer Portal ordering is formally deferred from MVP pending OQ-010.
+- `BC-PORTAL`: **not a write-owning bounded context in MVP.** Customer
+  Portal is visibility-only (OQ-010 recorded). Ordering remains out of
+  MVP.
 
 Normative capability, inbound/outbound, and forbidden-write detail lives in
 [DOM-CAP-BC-001](../../02-domain-business-architecture/CAPABILITY_BOUNDED_CONTEXT_MAP.md).

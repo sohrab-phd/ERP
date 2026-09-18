@@ -138,8 +138,8 @@ flowchart LR
   FIN --> AUD
   ID --> AUD
   INT --> AUD
-  POR -.->|optional deferred visibility or request - not ordering| SA
-  POR -.->|customer isolation pending OQ-010| ID
+  POR -.->|optional visibility read - not ordering| SA
+  POR -.->|customer isolation required| ID
 ```
 
 ### Goods Receipt split
@@ -160,22 +160,15 @@ of lot/unit stock identity, with Procurement holding immutable
 supplier/purchase/certificate references. Workshop evidence must confirm or
 replace that split (OQ-003, OQ-011, OQ-015).
 
-### Customer Portal — unconfirmed, formally deferred from MVP ordering
+### Customer Portal — visibility-only in MVP (OQ-010 recorded)
 
-Sources conflict on whether Customer Portal is excluded from MVP or partially
-included (FIND-001, OQ-010, INT-007). This map **does not decide OQ-010**.
+OQ-010 is recorded: Customer Portal MVP is visibility-only. Ordering
+(`PortalPlaceOrder`) remains out of MVP.
 
-Proposed scope pending OQ-010:
-
-- **Customer Portal ordering is formally deferred from MVP.** It is not a
-  confirmed Phase 02 capability and must not be treated as in-scope work.
-- **Visibility and request** (status/documents and quote-or-order *request*
-  capture) remain **optional deferred** candidates. They may be evaluated only
-  after a sponsor decision on OQ-010. They are not authorized by this artifact.
-- No confirmed `BC-PORTAL`. The label `BC-PORTAL` appears only as
-  **proposed/deferred**. Internal `BC-SALES` remains the write owner of Customer,
-  Inquiry, Quotation, and Sales Order regardless of any future portal channel.
-- RISK-007 (premature portal exposure) remains open.
+- **Visibility** is a Sales-owned read, not a portal-module write.
+- No confirmed `BC-PORTAL` write owner. Internal `BC-SALES` remains the
+  write owner of Customer, Inquiry, Quotation, and Sales Order.
+- RISK-007 (premature portal write) remains controlled by INV-020.
 
 ### Bounded-context catalogue
 

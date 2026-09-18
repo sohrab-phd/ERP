@@ -128,8 +128,8 @@ identities cannot approve them.
 | BR-016 | Retryable commands and external submissions are idempotent; a retry must not duplicate receipt, posting, shipment, payment, or completion. | cross-cutting | INT catalogue |
 | BR-017 | Quality and Shipping request inventory lifecycle changes; they do not write stock tables. | BC-QUALITY, BC-SHIPPING, BC-INVENTORY | DOM-OWN-001 |
 | BR-018 | Procurement orchestrates inbound commercial/receipt flow; Inventory owns physical stock posting. | BC-PROCUREMENT, BC-INVENTORY | TERM-019 |
-| BR-019 | Genealogy Link is a query projection, not independently editable truth. | BC-REPORTING | TERM-025, TERM-015 |
-| BR-020 | Customer Portal ordering is out of this MVP until OQ-010 is decided. | BC-SALES | FIND-001 |
+| BR-019 | Genealogy Link is a query projection, not independently editable truth. Rebuild from DATA-GEN-001 source facts, not Ledger rows alone (FIND-G-014). | BC-REPORTING | TERM-025, TERM-015 |
+| BR-020 | Customer Portal MVP is visibility-only. Ordering is out of this MVP (OQ-010 recorded). | BC-SALES | OQ-010, INV-020 |
 
 ## Success criterion for this MVP
 

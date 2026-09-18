@@ -62,7 +62,8 @@ and why a command was refused.
 | `customer_scope` | customer-bearing items |
 
 How these fields are stored (table, file, log shipper) stays OQ-018.
-How long they are kept stays OQ-016. ASM-012 (historical snapshots
+How long they are kept (retention days) stays OQ-016 residual. RPO/RTO
+and offsite copy are recorded. ASM-012 (historical snapshots
 are kept) remains an assumption, not a day count.
 
 ## Access
@@ -73,6 +74,6 @@ customer scope. Temporary identities cannot read or sign audit.
 
 ## Must not decide here
 
-- Retention days, backup copies, or off-site (OQ-016)
+- Retention day count (OQ-016 residual)
 - Log shipper, SIEM, or hash-chain product
 - Legal hold procedure

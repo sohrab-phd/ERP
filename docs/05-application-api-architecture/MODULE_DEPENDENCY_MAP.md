@@ -6,7 +6,7 @@ status: approved
 version: 0.2.0
 owners: [solution-architect]
 depends_on: [DOM-OWN-001, APR-006, APR-007]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-18
 approval: APR-007
 supersedes: null
 ---
@@ -14,9 +14,9 @@ supersedes: null
 # Application Module Dependency Map
 
 One module per write-owning bounded context, plus an Inventory Posting
-module that other modules **command**. This is a proposed Modular
-Monolith shape. It does not accept ADR-0006. Process split, packages,
-and folder layout stay OQ-018.
+module that other modules **command**. Shape is the accepted Modular
+Monolith (ADR-0006). Process split into services, packages, and folder
+layout stay OQ-018 residual.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -32,7 +32,7 @@ and folder layout stay OQ-018.
 | Shipping | Package, Shipment | Inventory pack/exit | Ledger/Balance |
 | Finance-Lite | Invoice, Payment | none for stock | legal GL, Sales Invoice write |
 | Identity / Audit | later Phase 06 | none for stock | stock tables |
-| Reporting | Genealogy projection only | none | source-fact writes |
+| Reporting | Genealogy projection only, rebuilt from DATA-GEN-001 source facts | none | source-fact writes; Ledger-only genealogy; `EditGenealogy` |
 
 ## Allowed dependency direction
 
@@ -65,5 +65,6 @@ library.
 ## Must not decide here
 
 - NestJS modules, Nx, or package manager
-- Separate deployable services versus one process (ADR-0006 open)
+- Separate deployable services versus one process (ADR-0008 remains
+  proposed; ADR-0006 Modular Monolith is already accepted)
 - Socket.IO or any real-time library

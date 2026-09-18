@@ -78,8 +78,10 @@ write** Ledger, Balance, or Inventory Unit stock tables.
 - **May-read**: may read canonical state or a governed projection; not a write
   path.
 
-Inventory Posting Service is the proposed unique writer of Ledger, Balance, and
-stock-movement effects (mechanism open: OQ-017).
+Inventory Posting Service is the unique writer of Ledger, Balance, and
+stock-movement effects. Posting **style** is the recorded OQ-017
+application-owned PostgreSQL transaction; stored functions need a later
+ADR.
 
 ### Ownership matrix
 
@@ -87,10 +89,10 @@ First-use glossary links appear in the Concept column.
 
 | Concept | Dictionary / term | Write owner | May-read | May-command | Must not write |
 | --- | --- | --- | --- | --- | --- |
-| [Customer](../00-governance/registers/BUSINESS_GLOSSARY.md#term-001--customer) | ENT-CUSTOMER / TERM-001 | `BC-SALES` | Procurement, Shipping, Finance-Lite, Quality, Reporting, Identity (isolation), optional deferred portal read if OQ-010 later allows visibility | Identity (principal linkage); Integration adapters mapped to Sales commands | Portal module, Inventory, Production |
-| [Inquiry](../00-governance/registers/BUSINESS_GLOSSARY.md#term-002--inquiry) | ENT-INQUIRY / TERM-002 | `BC-SALES` | Reporting, optional deferred portal visibility | optional deferred portal *request* into Sales if OQ-010 later allows; not MVP ordering | All other BCs |
+| [Customer](../00-governance/registers/BUSINESS_GLOSSARY.md#term-001--customer) | ENT-CUSTOMER / TERM-001 | `BC-SALES` | Procurement, Shipping, Finance-Lite, Quality, Reporting, Identity (isolation), optional portal visibility read (OQ-010 recorded) | Identity (principal linkage); Integration adapters mapped to Sales commands | Portal module writes; Inventory; Production |
+| [Inquiry](../00-governance/registers/BUSINESS_GLOSSARY.md#term-002--inquiry) | ENT-INQUIRY / TERM-002 | `BC-SALES` | Reporting, optional portal visibility | none for portal ordering | All other BCs |
 | [Quotation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-020--quotation) | ENT-QUOTATION / TERM-020 | `BC-SALES` | Reporting; Finance-Lite commercial snapshot consumers | none outside Sales | Inventory, Portal as writer |
-| [Sales Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-003--sales-order) / Item | ENT-SALES-ORDER, ENT-SALES-ORDER-ITEM / TERM-003 | `BC-SALES` | Inventory, Production, Shipping, Finance-Lite, Quality, Reporting, Audit | Inventory (reservation), Procurement (purchase need), Production (make need), Shipping (authorized demand reference) | Inventory stock tables; Portal ordering (deferred from MVP pending OQ-010) |
+| [Sales Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-003--sales-order) / Item | ENT-SALES-ORDER, ENT-SALES-ORDER-ITEM / TERM-003 | `BC-SALES` | Inventory, Production, Shipping, Finance-Lite, Quality, Reporting, Audit | Inventory (reservation), Procurement (purchase need), Production (make need), Shipping (authorized demand reference) | Inventory stock tables; Portal ordering (`PortalPlaceOrder` rejected in MVP; OQ-010 recorded visibility-only) |
 | [Fulfillment Assessment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-004--fulfillment-assessment) | ENT-FULFILLMENT-ASSESSMENT / TERM-004 | `BC-SALES` | Procurement, Production, Inventory, Reporting | Inventory availability read is not a write; resulting reservation/PO/production are separate commands | Inventory, Procurement, Production records |
 | [Unfulfilled Demand](../00-governance/registers/BUSINESS_GLOSSARY.md#term-005--unfulfilled-demand) | ENT-UNFULFILLED-DEMAND / TERM-005 | `BC-SALES` | Reporting | none required for stock | Sales Order must not be required; Inventory must not infer lost demand |
 | [Supplier](../00-governance/registers/BUSINESS_GLOSSARY.md#term-021--supplier) | ENT-SUPPLIER / TERM-021 | `BC-PROCUREMENT` | Inventory (certificate/lot reference), Quality, Reporting | none for stock | Inventory, Sales |
@@ -103,7 +105,7 @@ First-use glossary links appear in the Concept column.
 | [Reservation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-009--reservation) | ENT-RESERVATION / TERM-009 | `BC-INVENTORY` | Sales, Production, Reporting | Sales (claim/release), Production (must not confuse with TERM-010 Allocation) | Sales writing reservation rows; Production writing reservation as allocation |
 | [Material Allocation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-010--material-allocation) | ENT-MATERIAL-ALLOCATION / TERM-010 | `BC-PRODUCTION` | Inventory, Quality, Reporting | Inventory issue of the allocated unit | Inventory writing allocation as Reservation; Sales writing allocation |
 | [Production Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-011--production-order) | ENT-PRODUCTION-ORDER / TERM-011 | `BC-PRODUCTION` | Sales, Inventory, Quality, Reporting | Inventory issue/return; Quality in-process/final inspection | Inventory stock tables |
-| Production Operation | ENT-PRODUCTION-OPERATION; open pending OQ-003 | `BC-PRODUCTION` | Inventory, Quality, Reporting | Inventory posting at official posting points (unvalidated) | Inventory, Quality |
+| Production Operation | ENT-PRODUCTION-OPERATION; step **names** treating (OQ-003) | `BC-PRODUCTION` | Inventory, Quality, Reporting | Inventory posting commanded at `CompleteProductionOperation` (OQ-003 recorded) | Inventory, Quality |
 | Consumption | ENT-MATERIAL-CONSUMPTION | `BC-PRODUCTION` | Inventory, Quality, Reporting, Genealogy projection | Inventory Posting Service for stock decrement | Inventory writing the transformation fact |
 | Output | ENT-PRODUCTION-OUTPUT | `BC-PRODUCTION` | Inventory, Quality, Shipping, Reporting | Inventory Posting Service for stock increment / WIP | Inventory writing the transformation fact |
 | Residual fact | ENT-RESIDUAL / TERM-012; open pending OQ-009 | `BC-PRODUCTION` (fact) | Inventory, Quality, Reporting | Inventory Posting Service to create child unit and close/split parent | Production writing Ledger/Balance |
@@ -114,9 +116,9 @@ First-use glossary links appear in the Concept column.
 | QualityInspection | ENT-QUALITY-INSPECTION; open pending OQ-005 | `BC-QUALITY` | Inventory, Production, Shipping, Procurement, Reporting | Inventory hold/quarantine/release; Shipping shipment-gate | Ledger, Balance, Inventory Unit quantity |
 | [Package](../00-governance/registers/BUSINESS_GLOSSARY.md#term-023--package) | ENT-PACKAGE / TERM-023 | `BC-SHIPPING` | Inventory, Quality, Sales, Reporting | Inventory pack-state posting if required by later Phase 03 | Inventory writing Package as shipment workflow |
 | [Shipment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-017--shipment) | ENT-SHIPMENT / TERM-017 | `BC-SHIPPING` | Sales, Inventory, Finance-Lite, Quality, Reporting | Inventory Posting Service for definitive stock exit on dispatch | Ledger/Balance; Sales writing shipment rows |
-| Invoice | ENT-INVOICE; legal boundary pending OQ-012 | `BC-FINANCE-LITE` ([Finance-Lite](../00-governance/registers/BUSINESS_GLOSSARY.md#term-018--finance-lite), TERM-018) | Sales, Shipping, Reporting, Integration (export candidate) | none for stock | External accounting tables (out of this system); Sales writing invoices |
+| Invoice | ENT-INVOICE; not legal GL (OQ-012 recorded) | `BC-FINANCE-LITE` ([Finance-Lite](../00-governance/registers/BUSINESS_GLOSSARY.md#term-018--finance-lite), TERM-018) | Sales, Shipping, Reporting, Integration (export candidate) | none for stock; none for Sales Order close (OQ-007) | External accounting tables (out of this system); Sales writing invoices; Finance-Lite writing Sales Order lifecycle |
 | [Payment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-024--payment) | ENT-PAYMENT / TERM-024 | `BC-FINANCE-LITE` | Sales, Reporting | none for stock | Inventory, legal GL |
-| [Genealogy Link](../00-governance/registers/BUSINESS_GLOSSARY.md#term-025--genealogy-link) | ENT-GENEALOGY-LINK / TERM-025 **projection** | **none as independent truth** — `BC-REPORTING` may materialize a rebuildable projection | Sales, Quality, Shipping, Procurement, Audit (authorized) | none — must not be edited as source | Any module writing GenealogyLink without rebuilding from Consumption, Output, Residual, Scrap, Package, Shipment facts |
+| [Genealogy Link](../00-governance/registers/BUSINESS_GLOSSARY.md#term-025--genealogy-link) | ENT-GENEALOGY-LINK / TERM-025 **projection** | **none as independent truth** — `BC-REPORTING` may materialize a rebuildable projection | Sales, Quality, Shipping, Procurement, Audit (authorized) | none — must not be edited as source | Any module writing GenealogyLink without rebuilding from Lot origin, Consumption, Output, Residual, Scrap, Package, Shipment, and Rework facts; Ledger-only genealogy rebuild |
 
 ### Quality and Shipping versus stock tables
 
@@ -131,13 +133,13 @@ Normative restatement of ASM-REPORT-001 section 4:
 
 ### Portal and GenealogyLink
 
-- No confirmed portal write owner. Customer Portal **ordering is formally
-  deferred from MVP** pending OQ-010. Visibility/request remain optional
-  deferred and, if later allowed, command `BC-SALES` rather than writing Sales
-  entities from a portal module (FIND-001 remains open).
-- Genealogy source facts stay with Production (and related receiving/shipping
-  facts as recorded). GenealogyLink is a query projection and must be
-  rebuildable to avoid RISK-005.
+- No portal write owner. Customer Portal MVP is **visibility-only**
+  (OQ-010 recorded). Ordering remains out of MVP (`PortalPlaceOrder`
+  rejected). Visibility is a Sales-owned read, not a portal-module write.
+- Genealogy source facts stay with their write owners (Lot origin after
+  Goods Receipt; Production consumption/output/residual/scrap/rework;
+  Shipping package/shipment). GenealogyLink is a query projection rebuilt
+  from those facts (FIND-G-014), not from Ledger rows alone.
 
 ### Material Lot confirmation flag
 

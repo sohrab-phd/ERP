@@ -207,6 +207,7 @@ does not convert them into owner-signed business policy.
 - Aliases: GenealogyLink
 - Definition: Rebuildable query projection of Genealogy (TERM-015)
   relationships. It is not independently editable truth and must be
-  reconstructable from Consumption, Output, Residual, Scrap, Package, and
-  Shipment source facts.
+  reconstructable from Lot origin, Consumption, Output, Residual, Scrap,
+  Package, Shipment, and Rework source facts (DATA-GEN-001, FIND-G-014).
+  Ledger rows alone are not a sufficient rebuild source.
 - Owner: none as independent truth; Reporting may materialize the projection

@@ -51,5 +51,6 @@ map, not a table-write map. Quality and Shipping never write stock tables
 Genealogy Link is never written as source truth. Rebuild from the
 source-fact catalogue in
 [GENEALOGY_PROJECTION.md](../04-database-architecture/GENEALOGY_PROJECTION.md)
-(Consumption, Output, Residual, Scrap, Package, Shipment, Lot origin)
-(INV-019, FIND-G-014). Do not rebuild Genealogy from Ledger rows alone.
+(Lot origin, Consumption, Output, Residual, Scrap, Package, Shipment,
+Rework) (INV-019, FIND-G-014). Do not rebuild Genealogy from Ledger
+rows alone.
