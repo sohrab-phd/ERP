@@ -3,10 +3,10 @@ id: DOM-ROSTER-001
 title: Phase 02 Workshop Named Participant Roster
 phase: 02-domain-business-architecture
 status: approved
-version: 0.2.1
+version: 0.2.2
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [OQ-019, ASM-013, ASM-WORKSHOP-001, GOV-RACI-001]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-23
 approval: APR-004
 supersedes: null
 ---
@@ -58,11 +58,37 @@ are stated explicitly.
 | Solution Architecture representative | Temporary Solution Architecture Representative (temporary) | none (temporary) | assumed available for planned workshop (temporary) | architecture consistency and ADR preparation (temporary) |
 | Independent Reviewer observer | Temporary Independent Reviewer (temporary) | none (temporary) | assumed available as observer where independence permits (temporary) | review observation only; no artifact authorship (temporary) |
 
+## Factory-provided organizational personnel (`2026-09-23`)
+
+Factory meeting FACT-04. These are **personnel / organizational facts only**.
+They are **not** replacements of the `(temporary)` workshop-role rows above.
+They are **not** mapped to system roles, `ACT-*` capabilities, SoD authority,
+approval authority, or delegates. Production-line operators are **not**
+included.
+
+| Person | Current organizational responsibility |
+| --- | --- |
+| Mr. Karimi | Warehousekeeper |
+| Mr. Ghaffari | Invoice issuance/registration + IT responsibility |
+| Ms. Koushki | Government trade-system registration + receivables follow-up |
+| Mr. Pour-Ebrahim | Sales Manager + order receiving |
+| Mr. Dinavand (آقای دیناروند) | Workshop Manager |
+| Ms. Bohlouli | Commercial Manager + sales/order receiving |
+| Ms. Masoumi | Recording completed purchases + sending proforma invoices |
+| Ms. Goodarzi | Accounting Manager |
+| Ms. Rangini | Accountant |
+| Mr. Faraji | Chairman of the Board |
+| Mr. Rouzbahani | CEO |
+
+This partially supplies OQ-019 names and does **not** resolve OQ-019.
+
 ## Status
 
-- Assigned named roles: `19` of `19`, all `(temporary)`
-- Confirmed real people: `0` of `19`
-- OQ-019: `open` / `treating` under ASM-013
+- Assigned named workshop roles: `19` of `19`, all `(temporary)`
+- Confirmed real people mapped onto workshop/sign-off roles: `0` of `19`
+- Factory-provided organizational personnel (FACT-04): `11` people listed;
+  not mapped to the role table; production-line operators not included
+- OQ-019: `treating` under ASM-013; partial name input only
 - Phase 02 gate: `ACTIVE_IN_REVIEW` for design; workshop execution remains blocked
 - Implementation authorized: `false`
 

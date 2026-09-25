@@ -3,10 +3,10 @@ id: DOM-MVP-RULES-001
 title: MVP Scope and Business-Rule Catalogue
 phase: 02-domain-business-architecture
 status: approved
-version: 0.2.1
+version: 0.2.2
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, DOM-CAP-BC-001, DOM-PROCESS-001, DOM-OWN-001, ASM-014]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-23
 approval: APR-004
 supersedes: null
 ---
@@ -130,6 +130,28 @@ identities cannot approve them.
 | BR-018 | Procurement orchestrates inbound commercial/receipt flow; Inventory owns physical stock posting. | BC-PROCUREMENT, BC-INVENTORY | TERM-019 |
 | BR-019 | Genealogy Link is a query projection, not independently editable truth. Rebuild from DATA-GEN-001 source facts, not Ledger rows alone (FIND-G-014). | BC-REPORTING | TERM-025, TERM-015 |
 | BR-020 | Customer Portal MVP is visibility-only. Ordering is out of this MVP (OQ-010 recorded). | BC-SALES | OQ-010, INV-020 |
+
+## Factory-meeting confirmed requirements (`2026-09-23`)
+
+These `RQ-*` identifiers are **factory-meeting evidence labels**. They are
+not a minted Phase 07 `REQ-*` catalogue (FIND-021 / FIND-028), not `INV-*`
+promotions, not schema fields, and not implementation authorization.
+Classification of FACT-03 remains open. Identity/security design for
+FACT-05 remains open.
+
+| ID | Requirement | Evidence class | Related |
+| --- | --- | --- | --- |
+| RQ-01 | Incoming material and customer-order quantity are primarily expressed in kg. Length, thickness, and material/type are secondary criteria. Scale, rounding, conversion factors, and numeric tolerance are not supplied. | Confirmed factory fact; existing kg-first decision confirmed | OQ-001 treating; OQ-002 answered; FACT-01 |
+| RQ-02 | Cut pieces and order scrap must remain traceable to the relevant customer order code. | Confirmed business traceability requirement | OQ-004; FACT-02; TERM-003 note |
+| RQ-03 | The system must not require unique Inventory Unit identity for every tiny physical cut piece where such identity has no operational value. The Inventory Unit model is retained for independently controlled stock. | Confirmed factory fact; hybrid grain confirmed | OQ-004; FACT-02; TERM-007 |
+| RQ-04 | The system must eventually support converting opened-coil leftover material into warehouse-storable sheets without requiring a new customer order. Domain/transaction classification is intentionally **open**. Not added to `CompleteProductionOperation` or DATA-TX-001. | New confirmed business-process requirement; unclassified | OQ-009 treating; FACT-03 |
+| RQ-05 | The system must support predefined production routing through stations. The Production Manager defines the sequence in advance. | Confirmed operational requirement | OQ-003 treating; FACT-05 |
+| RQ-06 | The system must support reporting/visibility of an order's progression from one production station/section to the next. | Confirmed operational/reporting requirement | OQ-003 treating; FACT-05; FACT-06 |
+| RQ-07 | The system must retain and expose the required station entry and forwarding times. Exact timestamp attributes are **not** invented here. Clarification: whether existing Production Operation start/complete events already represent enter/forward. | Confirmed reporting/history requirement | OQ-003 treating; FACT-06; SM-PRODUCTION-OPERATION |
+
+Station-based ordinary execution (FACT-05) is recorded as a confirmed
+operational requirement **plus** an unresolved identity/security design
+question. It does not replace SEC-ID-001 `actor_identity` / `SharedTerminal`.
 
 ## Success criterion for this MVP
 

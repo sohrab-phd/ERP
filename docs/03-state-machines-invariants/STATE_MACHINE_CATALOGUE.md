@@ -3,10 +3,10 @@ id: SM-CATALOGUE-001
 title: State Machine Catalogue
 phase: 03-state-machines-invariants
 status: approved
-version: 0.3.0
+version: 0.3.1
 owners: [chief-solution-architect, domain-leads]
 depends_on: [GOV-STATES-001, SM-INV-001, DOM-ACTORS-001, APR-004, APR-005]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-23
 approval: APR-005
 supersedes: null
 ---
@@ -147,6 +147,19 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Invariants: INV-006, INV-007, INV-009
 - Open guards: real step list (OQ-003). Posting boundary is
   `CompleteProductionOperation` (recorded OQ-003).
+- Factory meeting FACT-05 (`2026-09-23`): stations and Production Manager
+  predefined routing are confirmed operational evidence. Exact
+  station/work-center model and station vs `ACT-OP` identity remain open.
+  Do not assume a station account is the `ACT-OP` principal.
+- Factory meeting FACT-06 (`2026-09-23`): the system must record and make
+  visible when an order enters each production section/station and when it
+  is forwarded to the next stage. Clarification required: whether
+  `StartProductionOperation` / event `ProductionOperationStarted` already
+  represents "enter", and `CompleteProductionOperation` / event
+  `ProductionOperationCompleted` already represents "forward". If later
+  confirmed, that is a conceptual mapping onto this lifecycle. Do **not**
+  invent extra timestamp attributes (`started_at`, `completed_at`,
+  `queued_at`, `acknowledged_at`, `accepted_at`) here.
 
 ## SM-PRODUCTION-ORDER
 

@@ -3,10 +3,10 @@ id: DOM-PROCESS-001
 title: As-Is and To-Be Process Maps
 phase: 02-domain-business-architecture
 status: approved
-version: 0.2.1
+version: 0.2.2
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, DOM-CAP-BC-001]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-23
 approval: APR-004
 supersedes: null
 ---
@@ -233,6 +233,56 @@ Minimum usable dimensions/weight are not approved (OQ-009).
 Scrap is a typed disposition fact (TERM-013) with quantity, reason, origin, and
 genealogy impact. Production writes the scrap fact; Inventory Posting Service
 writes any associated stock movement. Scrap is not a spreadsheet adjustment.
+Factory meeting FACT-02 requires order scrap to carry the relevant customer
+order code; that does not by itself make scrap an Inventory Unit.
+
+#### Opened-coil leftover converted to warehouse sheets (factory meeting `2026-09-23`)
+
+Confirmed business process. **DOMAIN CLASSIFICATION: OPEN.**
+
+This is **not** an accepted architecture decision that the process is nested
+inside `CompleteProductionOperation`, `CreateResidualUnit`, a warehouse
+command, or DATA-TX-001. No new command or entity is created from this
+evidence.
+
+Factory-confirmed sequence:
+
+Opened Coil → Remaining Material (cannot be re-rolled) → Cut to
+Market-Length Sheets (examples given: 12 m, 6 m; not a formal catalogue) →
+Measure Count / Length / Weight → Warehouse Storage
+
+This conversion may occur **without a new customer order**. Resulting sheets
+retain the code associated with the **original coil**. Original coil identity
+and original order code **may be separate identifiers**; their relationship
+is not decided here.
+
+```mermaid
+flowchart TD
+  A[Coil opened for an initial customer order] --> B[Remaining opened coil cannot be re-rolled]
+  B --> C[Cut remaining material to market-length sheets]
+  C --> D[Examples 12 m and 6 m - not a formal catalogue]
+  D --> E[Measure count, length, and weight]
+  E --> F[Warehouse storage as sheets]
+  F --> G[Sheets retain original coil code]
+```
+
+Unresolved before any later architecture or implementation of this flow:
+
+1. Which domain owns the process?
+2. Is it a Production Operation, Warehouse/Inventory transformation, residual processing, or another business operation?
+3. Does it use `CompleteProductionOperation` or another posting boundary?
+4. When exactly does it occur relative to completion of the first order?
+5. What is the resulting inventory identity?
+6. Is each resulting sheet an Inventory Unit?
+7. Can multiple sheets be represented as a batch/count?
+8. What is the authoritative quantity for the resulting stock?
+9. How is cutting loss represented?
+10. Who commands the operation?
+11. Are 6 m and 12 m examples or a formal allowed-length catalogue?
+12. Does each resulting sheet retain original coil identity, original order code, both, or another identity?
+
+A future dedicated OQ may be required if this cannot remain a residual of
+OQ-009.
 
 #### Cancellation
 
@@ -279,13 +329,14 @@ are specifically evidence-gated and must not be treated as confirmed:
 | Entire As-Is Excel/paper picture | Field study, forms, sample records | RISK-001; workshop agenda §2 |
 | Named owners, delegates, approval limits | Real roster replacement | OQ-019, ASM-013, FIND-020 |
 | UOM, weight vs length, rounding | Signed conversion/scale matrix (kg already recorded) | OQ-001 residual; OQ-002 answered |
-| Official consumption/output posting **step names** and routing | Shop-floor maps | OQ-003 residual names. Boundary is `CompleteProductionOperation`. |
+| Official consumption/output posting **step names** and routing | Shop-floor maps | OQ-003 residual names. Boundary is `CompleteProductionOperation`. Factory FACT-05/06: stations, Production Manager routing, enter/forward visibility confirmed; catalogue and identity still open. |
 | Tracking granularity and labels | First-go-live family catalogue | OQ-004 answered hybrid |
 | QC plans, hold/reject authority, exceptional release | Signed QC authority | OQ-005 residual. Block + two-person exceptional release recorded. |
 | Partial fulfillment / over-delivery numeric limits | Family/customer % | OQ-006 answered default 0 |
 | Sales Order closure vs payment | Recorded policy | OQ-007 answered |
 | Reservation uniqueness and confirmed-SO expiry | Recorded policy | OQ-008 answered |
 | Residual vs scrap cutoff numbers | Shop-floor thresholds | OQ-009 residual |
+| Opened-coil leftover → warehouse sheets | Domain/posting/identity classification | FACT-03; DOMAIN CLASSIFICATION OPEN; not nested into `CompleteProductionOperation` |
 | Portal visibility document list | Sponsor residual list | OQ-010 answered visibility-only; no `PortalPlaceOrder` |
 | Weighbridge identity and fallback | Equipment evidence | OQ-011 residual. Commander only. |
 | Invoice/payment vs legal accounting handoff | Accounting product when a later phase needs it | OQ-012 answered: no Legal-GL in MVP |
@@ -320,6 +371,8 @@ demand with overdue demand (REQ-OBJ-001 / ASM-REPORT-001).
   [OPEN_QUESTIONS.md](../00-governance/registers/OPEN_QUESTIONS.md).
   This map does not reopen answered rows. Treating residuals remain
   OQ-001, OQ-003, OQ-005, OQ-009, OQ-011, OQ-014, OQ-015, OQ-019.
+  Factory FACT-03 and FACT-05 are open clarification items; a future
+  dedicated OQ may be required for each.
 - Assumptions: ASM-001 through ASM-014 are not confirmed by these maps.
 
 ## Review evidence

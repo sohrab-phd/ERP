@@ -3,10 +3,10 @@ id: GOV-GLOSSARY-001
 title: Business Glossary
 phase: 00-governance
 status: approved
-version: 0.3.1
+version: 0.3.2
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [SRC-001, SRC-002, ASM-REPORT-001, DOM-CAP-BC-001, DOM-OWN-001]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-23
 approval: APR-004
 supersedes: null
 ---
@@ -41,7 +41,11 @@ does not convert them into owner-signed business policy.
 - Definition: Approved commercial demand composed of Sales Order Items and
   governed by fulfillment, production, shipment, and closure states. Closure
   is independent of invoice payment (OQ-007). Shipment `DELIVERED` is not a
-  close prerequisite.
+  close prerequisite. Factory meeting FACT-02 uses a customer **order code**
+  as the shop-floor/scrap trace key; the exact relationship between that
+  order code and this Sales Order identity is **unclassified** (not decided
+  as database ID, human-visible number, internal business number, or a
+  separate shop-floor code).
 - Owner: Sales
 
 ## TERM-004 — Fulfillment Assessment
@@ -72,7 +76,10 @@ does not convert them into owner-signed business policy.
 
 - Persian: واحد موجودی
 - Definition: Individually controlled physical stock identity such as Coil,
-  Sheet, Product Batch, or reusable Residual.
+  Sheet, Product Batch, or reusable Residual. Factory meeting FACT-02
+  confirms that a tiny physical cut piece does **not** require its own
+  Inventory Unit where such identity has no operational value. The Inventory
+  Unit concept is retained for independently controlled stock.
 - Owner: Inventory
 
 ## TERM-008 — Coil
@@ -107,14 +114,19 @@ does not convert them into owner-signed business policy.
 
 - Persian: باقی‌مانده
 - Definition: Usable material left after consumption/splitting, represented as a
-  new child Inventory Unit linked to its parent.
+  new child Inventory Unit linked to its parent. Factory meeting FACT-03
+  (opened-coil leftover cut to warehouse sheets without a new customer order)
+  is a related business process that is **not** classified as this Residual
+  construct yet.
 - Owner: Production facts; Inventory identity and quantity
 
 ## TERM-013 — Scrap
 
 - Persian: ضایعات
 - Definition: Material disposition recorded with quantity, reason, origin, and
-  genealogy impact.
+  genealogy impact. Factory meeting FACT-02 requires order scrap to carry the
+  relevant customer order code. That association does not by itself make scrap
+  an Inventory Unit.
 - Owner: Production facts; Inventory posting where applicable
 
 ## TERM-014 — Product Batch
@@ -211,3 +223,17 @@ does not convert them into owner-signed business policy.
   Package, Shipment, and Rework source facts (DATA-GEN-001, FIND-G-014).
   Ledger rows alone are not a sufficient rebuild source.
 - Owner: none as independent truth; Reporting may materialize the projection
+
+## Traceability identity distinctions (factory meeting `2026-09-23`)
+
+These concepts are preserved separately. Do not collapse them. No new
+`TERM-*` identifier is minted here.
+
+| Concept | Meaning in this recording | Factory evidence |
+| --- | --- | --- |
+| Customer Order / Order Code | Commercial/order trace key used on cut pieces and order scrap | FACT-02. Exact identity vs TERM-003 Sales Order is unclassified. |
+| Material Lot / Inventory Unit identity | Independently controlled stock (TERM-006 / TERM-007), including Coil and Sheet | FACT-02 does not remove this model. FACT-03 resulting sheets retain the original **coil** code; that is not automatically the order code. |
+| Physical small piece | A cut physical fragment that may share an order code without being an Inventory Unit | FACT-02: unique ID per tiny piece is not feasible and is not required. |
+
+For FACT-03, original **coil** identity and original **order code** may be
+separate identifiers. Their final relationship is not decided.

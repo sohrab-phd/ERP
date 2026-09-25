@@ -3,10 +3,10 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: approved
-version: 0.8.0
+version: 0.9.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-23
 approval: APR-005
 supersedes: null
 ---
@@ -25,19 +25,25 @@ Recorded: `2026-09-15` from `docs/00-governance/team-answers/OQ-001.md`
 through `OQ-019.md`. Implementation remains unauthorized. There is no
 Phase 13.
 
+Factory-site meeting evidence recorded `2026-09-23` as FACT-01 through
+FACT-06 (see [Factory meeting evidence](#factory-meeting-evidence-2026-09-23)).
+These are confirmed business facts. They do not authorize implementation,
+do not close treating residuals they do not actually answer, do not accept
+ADR-0008, and do not create an implementation unlock.
+
 ## Snapshot after recording
 
 | ID | Status | What is now locked | Still unknown |
 | --- | --- | --- | --- |
-| OQ-001 | treating | kg is official stock UOM; one stock truth | Decimal scale, rounding, material conversion factors |
-| OQ-002 | answered | Coil quantity = measured weight in kg | Shop-floor ticket confirmation (validation, not a new choice) |
-| OQ-003 | treating | Official post at `CompleteProductionOperation` | Named routing steps; abort role name |
-| OQ-004 | answered | Unit-level Coil; hybrid finished-product rule | First-go-live product-family catalogue |
-| OQ-005 | treating | QC can block available and ship; exceptional release needs two people | Quality Plans, limits, named approvers |
+| OQ-001 | treating | kg is official stock UOM; one stock truth; factory 2026-09-23 confirms kg primary for incoming coils/sheets and customer orders; length/thickness/material-type are secondary | Decimal scale, rounding, material conversion factors, numeric tolerance |
+| OQ-002 | answered | Coil quantity = measured weight in kg; factory 2026-09-23 reinforces this | Shop-floor ticket confirmation (validation, not a new choice) |
+| OQ-003 | treating | Official post at `CompleteProductionOperation`; factory 2026-09-23: production stations, Production Manager routing, sequential station flow, enter/forward visibility | Named routing/station catalogue; abort role name; station vs human identity; whether start/complete events equal enter/forward |
+| OQ-004 | answered | Unit-level Coil; hybrid finished-product rule; factory 2026-09-23 confirms no unique ID per tiny cut piece; order code is the practical trace key for cut pieces and order scrap | First-go-live product-family catalogue; exact order-code identity; relationship of order code to inventory identity |
+| OQ-005 | treating | QC can block available and ship; exceptional release needs two people; factory 2026-09-23: station identity must not be assumed sufficient for that two-person release | Quality Plans, limits, named approvers |
 | OQ-006 | answered | Partial shipment allowed; default tolerance 0; configurable | Exact %/kg by family/customer |
 | OQ-007 | answered | Close Sales Order on fulfilled/cancelled/unfulfilled demand, not payment | Commercial exceptions if any later |
 | OQ-008 | answered | One Coil, one active reservation; confirmed SO has no timer expiry | Temporary-hold TTL if that type is added later |
-| OQ-009 | treating | Residual vs scrap is a reuse policy, not a global kg | Family min weight/dimensions |
+| OQ-009 | treating | Residual vs scrap is a reuse policy, not a global kg; factory 2026-09-23 adds opened-coil leftover → market-length sheets without a new customer order as an unclassified process | Family min weight/dimensions; FACT-03 domain/posting/identity classification |
 | OQ-010 | answered | MVP portal = visibility only; no order write | Exact document list; later price/request/order phases |
 | OQ-011 | treating | Weighbridge never writes Ledger; human ticket fallback | Make/model, protocol, device id, named operator |
 | OQ-012 | answered | Finance-Lite is not legal GL; no Legal-GL integration in MVP | Accounting product/API when a later phase needs it |
@@ -47,7 +53,7 @@ Phase 13.
 | OQ-016 | answered | RPO 60 min, RTO 8 h, daily backup, off-site copy | Retention days; backup product |
 | OQ-017 | answered | App-owned bundle in a PostgreSQL transaction + locks | PG functions only after a later ADR + spike |
 | OQ-018 | answered | Modular Monolith + PostgreSQL; Node.js + TypeScript | NestJS, Prisma, React, Docker, auth package, extra MCP |
-| OQ-019 | treating | Role/RACI list accepted | Real names, delegates, approval scope |
+| OQ-019 | treating | Role/RACI list accepted; factory 2026-09-23 supplied an organizational personnel roster (operators not included) | Mapping to workshop/sign-off roles; delegates; approval/sign-off scope; production-line operators; system-role mapping |
 
 Inquiry/Quotation expiry remains FIND-026 (`workshop-commercial-practice`),
 not a new `OQ-*`. Extra MCP remains “none by default” under OQ-018.
@@ -72,10 +78,17 @@ arithmetic is required; JavaScript `Number` is not authoritative for
 weight or money. PostgreSQL `NUMERIC` and a TypeScript decimal type are
 the intended representations.
 
+Factory meeting FACT-01 (`2026-09-23`) **confirms** this kg-first policy
+for incoming raw materials such as coils and sheets **and** for customer
+orders. Length, thickness, and material/type characteristics are
+secondary criteria. This is an existing decision confirmed. It does not
+add decimal scale, rounding, conversion factors, or numeric tolerance.
+
 ### Still unknown
 
-Decimal scale, rounding rule, and material-specific conversion factors.
-Commands that need those numbers remain `GUARD_OPEN_POLICY`.
+Decimal scale, rounding rule, material-specific conversion factors, and
+numeric tolerance. Commands that need those numbers remain
+`GUARD_OPEN_POLICY`. OQ-001 remains `treating`.
 
 ### Promoted to
 
@@ -101,6 +114,9 @@ availability or Ledger. Reservation, issue, consumption, residual, scrap,
 balance, and mass-balance use weight. A Coil without length remains valid.
 
 Example recorded in the source file: Coil C-00125 at 12,480.500 kg.
+
+Factory meeting FACT-01 (`2026-09-23`) reinforces this answered kg-based
+Coil quantity. No status change.
 
 ### Still unknown
 
@@ -131,10 +147,31 @@ authorization; after posted facts, abort needs a production-supervisor /
 production-manager role and compensating commands. Routing is versioned
 per product family.
 
+Factory meeting FACT-05 and FACT-06 (`2026-09-23`) add confirmed factory
+evidence, not a closed routing catalogue:
+
+- several production stations will be defined;
+- the Production Manager defines station sequence/routing in advance;
+- the system sends the order sequentially according to that routing;
+- a station receives the production instruction and reports completion;
+- the order then proceeds to the next station;
+- the system must record and make visible when an order enters each
+  production section/station and when it is forwarded to the next stage.
+
+This is confirmed operational/routing evidence. Exact station/work-center
+entity names, the versioned step catalogue, abort role title, and the
+station-vs-human identity model remain unresolved. Do not treat station
+accounts as a silent replacement of `actor_identity` (see FACT-05 below).
+Do not invent extra timestamp attributes for enter/forward (see FACT-06).
+
 ### Still unknown
 
-First-go-live step names, work centers, and the exact abort role title.
-Skip/abort that needs a missing step stays `GUARD_OPEN_POLICY`.
+First-go-live step names, work centers/stations as a catalogue, and the
+exact abort role title. Skip/abort that needs a missing step stays
+`GUARD_OPEN_POLICY`. Station identity vs per-command human identity
+(FACT-05). Whether existing `StartProductionOperation` /
+`CompleteProductionOperation` events already represent factory enter /
+forward times (FACT-06). OQ-003 remains `treating`.
 
 ### Promoted to
 
@@ -163,10 +200,30 @@ independently moved. Scrap: quantity on the operation by default.
 Reusable residual: its own Inventory Unit. Genealogy stays
 Lot → Unit → Operation → Batch → Finished unit → Package → Shipment.
 
+Factory meeting FACT-02 (`2026-09-23`) **confirms** the hybrid principle:
+because sheets are cut into small pieces, assigning a unique identifier
+to every physical small piece is not feasible. Cut pieces belonging to an
+order carry the order-specific code; scrap associated with that order
+also carries that order code. This is a confirmed business traceability
+requirement. It does **not** create a unique Inventory Unit per tiny
+physical piece and does **not** remove TERM-007 Inventory Unit.
+
+Preserve three distinct concepts; do not collapse them:
+
+1. Customer Order / Order Code
+2. Material Lot / Inventory Unit identity
+3. Physical small piece
+
+The exact relationship between "order code" and Sales Order identity is
+**not** decided. Do not invent whether the order code is a database ID,
+a human-visible Sales Order number, an internal business number, or a
+separate shop-floor code.
+
 ### Still unknown
 
 The first-go-live product-family tracking catalogue (application of this
-rule, not a new grain).
+rule, not a new grain). Exact order-code identity. Exact relationship
+between order code and inventory identity.
 
 ### Promoted to
 
@@ -193,10 +250,17 @@ person. Shipping/ordinary Inventory must not override a hold.
 Recommended roles: QC Inspector; Quality Engineer / QC Supervisor;
 Quality Manager (conditional/exceptional); Second Authorized Approver.
 
+Factory meeting FACT-05 (`2026-09-23`) does **not** change this QC
+decision. Station identity must **not** automatically be assumed
+sufficient for two-person exceptional QC release. OQ-005 is not closed
+and is not reopened.
+
 ### Still unknown
 
 First-go-live Quality Plans, checks, limits, sample sizes, and named
-people (OQ-019). Missing plan/limit → `GUARD_OPEN_POLICY`.
+people (OQ-019). Missing plan/limit → `GUARD_OPEN_POLICY`. Whether a
+station account may ever participate in QC hold/release remains an
+unresolved FACT-05 identity/security question, not a QC-plan answer.
 
 ---
 
@@ -302,10 +366,30 @@ independent Inventory Unit with genealogy. Scrap = non-reusable
 disposition via `PostScrapMovement`. No universal 50 kg / 200 mm.
 `CreateResidualUnit` is the residual command.
 
+Factory meeting FACT-03 (`2026-09-23`) records an **additional** residual /
+reuse business-process case that still requires classification. After a
+coil is opened for an initial customer order, the remaining coil cannot
+be re-rolled and may be cut into smaller sheets with common market
+lengths (examples given: 12 m and 6 m) **without a new customer order**,
+so the opened coil can be stored in the warehouse as sheets. Resulting
+sheets retain the code associated with the original coil; count, length,
+and weight are measured.
+
+This is a new confirmed **business-process requirement**. It is **not**
+classified as Production Operation, Warehouse Operation, Residual
+Operation, Material Conversion Operation, or any other final domain
+construct. It is **not** added to `CompleteProductionOperation` or
+DATA-TX-001. No new command or entity is created from this evidence.
+6 m and 12 m are factory examples, not a formal allowed-length catalogue.
+Cutoff numbers remain treating.
+
 ### Still unknown
 
 Minimum weight/dimensions by family. Classification that needs a missing
-threshold stays `GUARD_OPEN_POLICY`.
+threshold stays `GUARD_OPEN_POLICY`. FACT-03 domain ownership, posting
+boundary, resulting inventory identity, authoritative quantity, cutting
+loss, commander, allowed lengths, and coil-code vs order-code on the
+resulting sheets. OQ-009 remains `treating`.
 
 ### Promoted to
 
@@ -578,14 +662,37 @@ Architecture / Technical Lead. SoD: operator is not sole approver of
 that transaction; cutover and exceptional QC need independent
 authorization. Chat is not organizational sign-off.
 
+Factory meeting FACT-04 (`2026-09-23`) **partially** supplies names as
+an eleven-person organizational personnel roster only. Production-line
+operators are **not** included. These people are **not** mapped to
+workshop/sign-off roles, `ACT-*` capabilities, SoD authority, approval
+authority, or delegates. This does not resolve OQ-019.
+
+Recorded roster (organizational facts; not RBAC):
+
+1. Mr. Karimi — Warehousekeeper
+2. Mr. Ghaffari — Invoice issuance/registration + IT responsibility
+3. Ms. Koushki — Government trade-system registration + receivables follow-up
+4. Mr. Pour-Ebrahim — Sales Manager + order receiving
+5. Mr. Dinavand (آقای دیناروند) — Workshop Manager
+6. Ms. Bohlouli — Commercial Manager + sales/order receiving
+7. Ms. Masoumi — Recording completed purchases + sending proforma invoices
+8. Ms. Goodarzi — Accounting Manager
+9. Ms. Rangini — Accountant
+10. Mr. Faraji — Chairman of the Board
+11. Mr. Rouzbahani — CEO
+
 ### Still unknown
 
-Every real full name, delegate or `none`, attendance, and approval
-scope. Temporary roster names still have **no** authority. Workshop
-execution, SV-013 second person, PO approve, and cutover sign-off stay
-blocked until names exist.
+Mapping of the listed personnel to workshop/sign-off roles. Delegate or
+`none` for each assignment. Attendance. Approval/sign-off scope.
+Production-line operators. System-role / `ACT-*` mapping. Temporary
+workshop roster names still have **no** authority. Workshop execution,
+SV-013 second person, PO approve, and cutover sign-off stay blocked until
+those mappings exist.
 
-Architecture will not invent names.
+Architecture will not invent names, delegates, or authorities. OQ-019
+remains `treating`.
 
 ---
 
@@ -595,10 +702,77 @@ Architecture will not invent names.
 | --- | --- |
 | OQ-017 vs OQ-018 | Posting style uses PostgreSQL transactions because ADR-0007 is now accepted. Functions still later. |
 | OQ-010 vs INV-020 | Visibility allowed; order write still forbidden. |
-| OQ-019 | Roles listed; names still treating. |
-| OQ-001 vs OQ-002 | kg official and weight authoritative; scale/rounding still treating on OQ-001. |
+| OQ-019 | Roles listed; factory personnel roster recorded as organizational facts only; workshop/sign-off mapping, delegates, operators, and `ACT-*` assignment still treating. |
+| OQ-001 vs OQ-002 | kg official and weight authoritative; FACT-01 confirms kg-first for incoming material and customer orders; scale/rounding/factors/tolerance still treating on OQ-001. |
 | OQ-008 vs sweep | Confirmed SO has no invented TTL. |
 | OQ-012 vs ASM-010 | Legal books stay outside MVP; product unnamed on purpose. |
 | ADR-0008 | Not accepted. OQ-016 numbers are not a Docker freeze. |
 | NestJS / Prisma / React | Candidates only. |
+| FACT-03 vs `CompleteProductionOperation` | Unclassified business process. Not nested into DATA-TX-001. Not a new command. |
+| FACT-05 vs SEC-ID-001 | Unresolved identity conflict. SharedTerminal still requires per-command operator identity; factory prefers station accounts for ordinary execution. Live identity rule is unchanged. |
 | Implementation | Still unauthorized. No unlock file. |
+
+---
+
+## Factory meeting evidence (`2026-09-23`)
+
+Source: factory-site meeting. Classification of each fact is recorded
+below. Chat discussion is not a second register. These facts do **not**
+authorize implementation.
+
+| Fact | Classification | Existing OQ home | Status effect |
+| --- | --- | --- | --- |
+| FACT-01 | Confirmed factory fact; existing kg-first decision confirmed | OQ-001 treating; OQ-002 answered (reinforced only) | OQ-001 not fully answered |
+| FACT-02 | Confirmed business traceability requirement; hybrid grain confirmed | OQ-004 answered (catalogue and order-code identity still unknown) | No unique Inventory Unit per tiny piece; Inventory Unit model retained |
+| FACT-03 | New confirmed business-process requirement; domain classification open | Recorded on OQ-009 as additional residual/reuse case; **a future dedicated OQ may be required** | Not classified; not added to `CompleteProductionOperation` or DATA-TX-001 |
+| FACT-04 | Organizational personnel facts only | OQ-019 treating (partial names) | Not RBAC; not `ACT-*`; not SoD |
+| FACT-05 | Confirmed operational requirement **plus** unresolved identity/security design question | Recorded on OQ-003; QC implication on OQ-005; **a future dedicated OQ may be required** | Live `actor_identity` / SharedTerminal rule unchanged |
+| FACT-06 | Confirmed reporting/history requirement; timestamp-field set not finalized | Recorded on OQ-003 | Do not invent `started_at` / `completed_at` / `queued_at` / `acknowledged_at` / `accepted_at` |
+
+### FACT-03 — open classification questions (intentionally unanswered)
+
+1. Which domain owns the process?
+2. Is it a Production Operation, Warehouse/Inventory transformation, residual processing, or another business operation?
+3. Does it use `CompleteProductionOperation` or another posting boundary?
+4. When exactly does it occur relative to completion of the first order?
+5. What is the resulting inventory identity?
+6. Is each resulting sheet an Inventory Unit?
+7. Can multiple sheets be represented as a batch/count?
+8. What is the authoritative quantity for the resulting stock?
+9. How is cutting loss represented?
+10. Who commands the operation?
+11. Are 6 m and 12 m examples or a formal allowed-length catalogue?
+12. Does each resulting sheet retain original coil identity, original order code, both, or another identity?
+
+Original coil identity and original order code may be separate identifiers.
+Do not decide their final relationship here.
+
+### FACT-05 — open identity/security questions (intentionally unanswered)
+
+1. Can a station account be used for ordinary production commands?
+2. Is a human actor identity still required per command?
+3. If station identity is used, how is individual accountability preserved?
+4. Which commands may use station identity?
+5. Which commands must require a named human identity?
+6. Are QC hold/release operations excluded?
+7. Are SoD-sensitive commands excluded?
+8. Are reversals excluded?
+9. Are cutover/sign-off operations excluded?
+10. How does the station identity relate to the existing `ACT-*` catalogue?
+
+Do not assume station accounts can perform QC release, SoD, reversals, or
+cutover. Live SEC-ID-001 `SharedTerminal` still requires per-command
+operator identity until a later identity decision is recorded.
+
+### FACT-06 — enter/forward mapping (intentionally unanswered)
+
+Determine whether existing Production Operation start/complete events
+already represent the factory's required enter-station and forward-to-next
+timestamps:
+
+- `StartProductionOperation` → event `ProductionOperationStarted`
+- `CompleteProductionOperation` → event `ProductionOperationCompleted`
+
+If that mapping is later confirmed, it is a conceptual mapping onto the
+existing lifecycle. Do not invent a parallel event model or extra
+timestamp attributes in this recording.

@@ -3,10 +3,10 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: approved
-version: 0.7.0
+version: 0.7.1
 owners: [requirements-owner, qa-architect]
 depends_on: [SRC-001, SRC-002, DOM-MVP-RULES-001, SM-INV-001, APR-005]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-09-23
 approval: APR-005
 supersedes: null
 ---
@@ -221,3 +221,23 @@ adapter, query, worker, and scene homes after that freeze are in
 [SLICE_HOMES.md](SLICE_HOMES.md). Team answers recorded `2026-09-15` on
 OQ-001 through OQ-019; residuals stay `GUARD_OPEN_POLICY`. Missing
 `TEST-*` and workshop REQ-* stay open extensions.
+
+## Factory-meeting requirement evidence (`2026-09-23`)
+
+Factory-site facts FACT-01 through FACT-06 are recorded as evidence labels
+`RQ-01` through `RQ-07` in
+[MVP_SCOPE_AND_BUSINESS_RULES.md](../../02-domain-business-architecture/MVP_SCOPE_AND_BUSINESS_RULES.md).
+They are **not** a workshop-owned `REQ-*` decomposition (FIND-021, FIND-028)
+and are **not** promoted to `INV-*`.
+
+| Evidence ID | Objective link | Status of evidence |
+| --- | --- | --- |
+| RQ-01 kg-first quantity | REQ-OBJ-002 | Confirms existing kg-first; OQ-001 numerical residuals remain treating |
+| RQ-02 order-code traceability | REQ-OBJ-003 | Confirmed traceability requirement; order-code identity unclassified |
+| RQ-03 no mandatory per-piece identity | REQ-OBJ-003 | Confirms OQ-004 hybrid grain; Inventory Unit retained |
+| RQ-04 opened-coil conversion | REQ-OBJ-003 | New process requirement; domain/TX classification open |
+| RQ-05 station routing | REQ-OBJ-003 / REQ-OBJ-004 | Confirmed operational requirement; catalogue treating (OQ-003) |
+| RQ-06 station progression | REQ-OBJ-004 | Confirmed visibility requirement |
+| RQ-07 station timing | REQ-OBJ-004 | Confirmed history/reporting requirement; no invented timestamp fields |
+
+`IMPLEMENTATION_AUTHORIZED` remains `false`.
