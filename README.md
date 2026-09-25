@@ -1,629 +1,896 @@
-# Foolad Navardkaran ERP/MES Architecture
+# Foolad Navardkaran ERP/MES — Architecture Repository
 
-This repository is the **design authority** for the Foolad Navardkaran
-(شرکت فولاد نوردکاران) integrated ERP/MES: sales, procurement, inventory,
-production, quality, delivery, Finance-Lite, genealogy/traceability, and
+This repository is the **design authority** for an integrated ERP/MES for
+Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement, inventory,
+production, quality, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-It is a **Modular Monolith** on **Node.js + TypeScript** with **PostgreSQL**
-as the transactional system of record. Application implementation has **not**
-been authorized.
+If you opened this repository expecting application source, you are in the
+right place at the wrong stage. **There is no implemented application yet.**
+What exists is a gated architecture, a set of canonical registers, and Cursor
+controls that **forbid** writing application code until a human unlock exists.
 
 ```text
 IMPLEMENTATION_AUTHORIZED: false
+CURRENT_PHASE: 12-implementation-planning
+NO_IMPLEMENTATION_UNLOCK: true
 ```
 
-`READY FOR HUMAN IMPLEMENTATION AUTHORIZATION` (Gate 6) is **not**
-authorization. No `.cursor/IMPLEMENTATION_UNLOCK.json` exists. No application
-source, packages, migrations, or deployment implementation should exist yet.
+Authoritative work permission:
+[docs/00-governance/CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md).
 
-Authoritative work authorization:
-[CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md).
-
----
-
-## 1. Project overview
-
-**Purpose.** Fully engineer, validate, and approve the architecture before any
-application implementation, so factory stock, production posting, sales
-fulfillment, quality, shipment, and traceability stay internally consistent.
-
-**Factory context.** A steel rolling operation (Foolad Navardkaran) whose
-primary stock identity is the Coil / Inventory Unit, with kilogram as the
-authoritative stock unit of measure.
-
-**Architectural approach.** One deployable Modular Monolith (ADR-0006) with
-bounded modules, one write owner per concept, and a single Inventory Posting
-Service (`ACT-IPS` / `mod-inventory-posting`) for all stock quantity writes.
-PostgreSQL (ADR-0007) holds Ledger and other transactional facts. Kafka,
-RabbitMQ, Kubernetes, Event Sourcing, and a time-series database are **not**
-required for MVP.
-
-**Current development stage.** Architecture phases 00–12 are approved as
-**structure**. Reconciliation Gates 1–5 are complete. Gate 6 found the design
-ready for a **separate human** implementation-authorization decision.
-Implementation remains locked.
+Full document index:
+[docs/INDEX.md](docs/INDEX.md).
 
 ---
 
-## 2. Current project status
+## 1. What this repository is (and is not)
+
+| This repository **is** | This repository **is not** |
+| --- | --- |
+| The architecture and governance baseline for the ERP/MES | A running NestJS / React / Prisma application |
+| Markdown design artefacts under `docs/` | A place to invent factory numbers, role mappings, or package choices |
+| Cursor lock files under `.cursor/` that keep implementation locked | An implementation unlock |
+| A Modular Monolith design on Node.js + TypeScript + PostgreSQL | A microservices, Kafka, Kubernetes, or Event Sourcing design |
+
+**Runtime technology that is accepted**
+
+- Node.js + TypeScript — [ADR-0001](docs/00-governance/registers/DECISIONS.md)
+- Modular Monolith — [ADR-0006](docs/00-governance/registers/DECISIONS.md)
+- PostgreSQL as transactional system of record, including Inventory Ledger —
+  [ADR-0007](docs/00-governance/registers/DECISIONS.md)
+
+**Not accepted unless a later ADR says so:** NestJS, Prisma, React, Socket.IO,
+JWT, Keycloak, Jest, Playwright, Docker Compose / Nginx ([ADR-0008 remains
+proposed](docs/00-governance/registers/DECISIONS.md)), npm/pnpm, extra MCP.
+.NET / C# / ASP.NET are superseded.
+
+**Not required for MVP:** Kafka, RabbitMQ, Kubernetes, Event Sourcing, a
+time-series database, a service-per-domain mesh.
+
+---
+
+## 2. How a new developer should read this project
+
+Read in this order. Do **not** start coding.
+
+1. This README (orientation and current lock).
+2. [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) — what you may
+   change.
+3. [ARCHITECTURE_CHARTER.md](docs/00-governance/ARCHITECTURE_CHARTER.md) —
+   why the work is gated.
+4. [OPEN_QUESTIONS.md](docs/00-governance/registers/OPEN_QUESTIONS.md) — live
+   OQ status, including factory-meeting evidence.
+5. [DECISIONS.md](docs/00-governance/registers/DECISIONS.md) — ADR status.
+6. [TEAM_QUESTION_PACK.md](docs/00-governance/TEAM_QUESTION_PACK.md) — what
+   still needs a factory/sponsor answer.
+7. [BUSINESS_GLOSSARY.md](docs/00-governance/registers/BUSINESS_GLOSSARY.md)
+   and [CANONICAL_DOMAIN_MODEL.md](docs/00-governance/registers/CANONICAL_DOMAIN_MODEL.md).
+8. Domain and process:
+   [CAPABILITY_BOUNDED_CONTEXT_MAP.md](docs/02-domain-business-architecture/CAPABILITY_BOUNDED_CONTEXT_MAP.md),
+   [PROCESS_MAPS_AS_IS_TO_BE.md](docs/02-domain-business-architecture/PROCESS_MAPS_AS_IS_TO_BE.md),
+   [MVP_SCOPE_AND_BUSINESS_RULES.md](docs/02-domain-business-architecture/MVP_SCOPE_AND_BUSINESS_RULES.md).
+9. Invariants and state:
+   [INVARIANT_CATALOGUE.md](docs/03-state-machines-invariants/INVARIANT_CATALOGUE.md),
+   [STATE_MACHINE_CATALOGUE.md](docs/03-state-machines-invariants/STATE_MACHINE_CATALOGUE.md),
+   [TRANSITION_TABLES.md](docs/03-state-machines-invariants/TRANSITION_TABLES.md).
+10. Data and posting:
+    [LOGICAL_MODEL.md](docs/04-database-architecture/LOGICAL_MODEL.md),
+    [TRANSACTION_AND_IDEMPOTENCY.md](docs/04-database-architecture/TRANSACTION_AND_IDEMPOTENCY.md),
+    [GENEALOGY_PROJECTION.md](docs/04-database-architecture/GENEALOGY_PROJECTION.md).
+11. Commands and modules:
+    [COMMAND_CATALOGUE.md](docs/05-application-api-architecture/COMMAND_CATALOGUE.md),
+    [MODULE_DEPENDENCY_MAP.md](docs/05-application-api-architecture/MODULE_DEPENDENCY_MAP.md).
+12. Implementation *plan* (not permission):
+    [IMPLEMENTATION_READINESS.md](docs/12-implementation-planning/IMPLEMENTATION_READINESS.md),
+    [ROADMAP_AND_SLICES.md](docs/12-implementation-planning/ROADMAP_AND_SLICES.md),
+    [AUTHORIZATION_RECORD.md](docs/12-implementation-planning/AUTHORIZATION_RECORD.md).
+
+Chat, this README, and older APR/CHK freeze text are **not** a second register.
+When they disagree, the live files in step 2–5 win.
+
+---
+
+## 3. Where we are now
+
+The project completed **architecture phases 00–12** as **structure**, then six
+**reconciliation gates**, then recorded **factory-site business evidence**, then
+ran a **clarification-assessment** that concluded **no additional OQ can be
+fully closed** from that evidence.
 
 | Item | State |
 | --- | --- |
-| Architecture phases 00–12 | Approved as structure (APR-002 through APR-014) |
+| Architecture phases 00–12 | Approved as structure ([APR-002](docs/00-governance/approved-baselines/APR-002-governance.md) through [APR-014](docs/00-governance/approved-baselines/APR-014-implementation-planning.md)) |
 | Gates 1–5 (architecture consistency) | Completed |
 | Gate 6 (implementation-readiness) | Completed |
 | Gate 6 result | `READY FOR HUMAN IMPLEMENTATION AUTHORIZATION` |
 | `IMPLEMENTATION_AUTHORIZED` | **`false`** |
-| `.cursor/architecture-gate.json` | `"implementationAuthorized": false`; `"approvedBaseline": null` |
-| `.cursor/IMPLEMENTATION_UNLOCK.json` | **Absent** (must be human-created; agents must never create it) |
-| Application implementation | **Not authorized** |
-| Next authorized step | Explicit **human** implementation authorization against a current approved baseline |
+| [architecture-gate.json](.cursor/architecture-gate.json) | `"implementationAuthorized": false`; `"approvedBaseline": null` |
+| `.cursor/IMPLEMENTATION_UNLOCK.json` | **Absent** (human-only; agents must never create it) |
+| Application source / packages / migrations | **Must not exist yet** |
+| Factory meeting FACT-01–FACT-06 | Recorded as business evidence (`2026-09-23`) |
+| FACT-04 roster | **11 people**, including Mr. Dinavand — Workshop Manager |
+| Clarification assessment | No additional OQ fully closable from current factory evidence |
+| Next authorized step | Explicit **human** implementation authorization against a **current** approved baseline — **or** further factory answers onto matching `OQ-*` rows |
 
-**Ready for authorization ≠ authorized.** Gate 6 allows a human to decide
-whether to unlock. This README does not unlock implementation. Phase 12
-approval (APR-014 / CHK-0013) is not an unlock.
+**Ready for authorization is not authorized.** Gate 6 allows a human to decide
+whether to unlock. Phase 12 approval ([CHK-0013](docs/00-governance/approved-baselines/CHK-0013-phase-12.md)
+at `a6b893095af7c9d14f342371fb6e4ef9c6d833df`, `2026-09-07`) is a **structure
+freeze**, not the complete live baseline and not an unlock.
 
-CURRENT_PHASE: `12-implementation-planning`. There is no Phase 13.
-
----
-
-## 3. Governance / gate history
-
-Architecture phases followed:
-
-`draft → self-check → independent review → reconciliation → explicit approval → checkpoint`
-
-After Phase 12, six **reconciliation gates** aligned the live corpus. Those
-gates are architecture/governance reviews, not implementation unlocks. Each
-left `IMPLEMENTATION_AUTHORIZED: false`.
-
-### Gate 1 — Inventory / production integrity
-
-- **Result:** PASS WITH OPEN ITEM
-- **Purpose:** Inventory truth, production posting atomicity, residual/scrap
-  composition, genealogy rebuild source (FIND-G-001 / G-002 / G-014 / G-015)
-- **Outcomes:**
-  - Inventory Ledger is the stock-movement source of truth.
-  - Inventory Balance is a rebuildable projection of Ledger (`Ledger → Balance`).
-  - `ACT-IPS` is the sole stock writer. No direct Balance edits. No negative
-    inventory.
-  - `CompleteProductionOperation` is the exclusive production posting boundary.
-  - Consumption, good output/WIP, reusable residual **or** scrap, residual
-    identity, scrap quantity, genealogy source facts, Ledger posts, validations,
-    and optional QC request belong in **one** business transaction.
-  - Nested primitives (`ConsumeUnitPartial` / `ConsumeUnitComplete`,
-    `CreateResidualUnit`, `PostScrapMovement`, `ScrapUnit` as destiny) are
-    **not** independent production posting flows.
-  - Residual quantity posts once; `PlaceResidualUnit` does not post a second
-    residual quantity.
-  - Scrap quantity posts once via `PostScrapMovement`; `ScrapUnit` does not
-    create a second quantity post.
-  - Genealogy rebuilds from canonical source facts, not Ledger rows alone.
-- **Residuals:** routing step names (OQ-003); residual/scrap cutoff numbers
-  (OQ-009); UOM scale (OQ-001).
-- **Implementation:** locked.
-
-### Gate 2 — Sales closure / reservation invariants
-
-- **Result:** Accepted after a correction pass (FIND-G-003 / FIND-G-005)
-- **Purpose:** Sales Order close contract and reservation uniqueness
-- **Outcomes:**
-  - `FULFILLED → CLOSED` when remaining valid demand is already zero within
-    OQ-006 tolerance (default 0). `FULFILLED` is remaining-demand truth, not
-    “delivered”.
-  - `PARTIALLY_FULFILLED → CLOSED` only when authorized TERM-005 Unfulfilled
-    Demand (`RecordUnfulfilledDemand`) covers remaining demand. Valid remaining
-    demand is not silently discarded.
-  - `CANCELLED → CLOSED` after confirm-cancel.
-  - Payment and invoice lifecycle do **not** close the Sales Order.
-  - Shipment `DELIVERED` is a fulfillment **fact**, not an independent close
-    trigger.
-  - At most one `ACTIVE` reservation per Inventory Unit. `REQUESTED` does not
-    occupy that slot. An `ACTIVE` reservation cannot be stolen.
-  - Concurrent `ActivateReservation`: at most one succeeds; same idempotency
-    key returns the first result.
-  - Earlier `ConfirmSalesOrder` timestamp is the OQ-008 commercial winner of
-    `ACTIVE` when two confirmed SOs compete.
-  - `ConfirmSalesOrder` does **not** itself create `REQUESTED`.
-    `RequestReservation` and `ActivateReservation` remain distinct.
-  - Confirmed-SO reservations have no invented TTL.
-    `ReservationExpirySweep` is orphan/stale cleanup only.
-  - Reservation ≠ allocation ≠ consumption.
-- **Residuals:** family/customer tolerance % (OQ-006 configuration); later
-  temporary-hold TTL only if that type is added.
-- **Implementation:** locked.
-
-### Gate 3 — OQ propagation / ADR governance consistency
-
-- **Result:** PASS WITH OPEN ITEM
-- **Purpose:** Propagate recorded OQ/ADR status through live documents without
-  inventing rules
-- **Outcomes:**
-  - ADR-0001, ADR-0006, ADR-0007 **accepted**.
-  - ADR-0008 remains **proposed**.
-  - Answered OQs are not live blockers. Treating residuals remain treating.
-  - Historical APR/CHK files that still say “OQs unanswered” or “only ADR-0001”
-    are freeze evidence, not current policy.
-- **Residuals:** treating OQs listed in section 5; packages not frozen.
-- **Implementation:** locked.
-
-### Gate 4 — Genealogy / recovery / cross-domain consistency
-
-- **Result:** PASS WITH OPEN ITEM
-- **Purpose:** FIND-G-014 genealogy rebuild, recovery vs posting, ownership
-- **Outcomes:**
-  - Canonical genealogy source facts: Lot Origin, Consumption, Output,
-    Residual, Scrap, Package, Shipment, Rework.
-  - `ENT-GENEALOGY-LINK` / TERM-025 is a rebuildable projection. No
-    `EditGenealogy`. No `ENT-REWORK` was invented (Rework remains Production
-    facts plus reversals).
-  - `Ledger → Balance` and `DATA-GEN-001 source facts → Genealogy` are
-    **separate** recovery paths. Rebuild is reconstruction, not a new business
-    posting and not Event Sourcing.
-  - Forward and backward traces are defined where corresponding facts exist.
-  - Cross-module persistence writes are forbidden. Named commands orchestrate.
-  - Correction = new compensating command + link to the original (INV-005).
-- **Residuals:** Lot write-owner workshop confirmation; physical genealogy
-  query strategy; treating OQs as in section 5.
-- **Implementation:** locked.
-
-### Gate 5 — Final architecture consistency
-
-- **Result:** PASS WITH OPEN RESIDUALS
-- **Purpose:** Repository-wide coherence after Gates 1–4
-- **Outcomes:** Architecture is globally coherent: Modular Monolith →
-  module-owned boundaries → PostgreSQL → named commands → application-owned
-  transactions → `ACT-IPS` → Ledger truth → rebuildable Balance. Domain
-  ownership, inventory integrity, production atomicity, sales/reservation,
-  genealogy, recovery, Finance-Lite, portal visibility-only, QC SoD,
-  weighbridge-as-commander, PostgreSQL transaction model, and the
-  implementation lock all hold. **No substantive live architecture
-  contradiction** was identified.
-- **Residuals:** treating/Go-Live/implementation items in sections 5 and 12.
-- **Implementation:** locked.
-
-### Gate 6 — Implementation-transition / readiness
-
-- **Result:** `READY FOR HUMAN IMPLEMENTATION AUTHORIZATION`
-- **Purpose:** Define what must be true before a human may authorize
-  implementation. **Did not authorize implementation.**
-- **Outcomes:**
-  - Live architecture baseline is identifiable (registers + Gate 1–5 live
-    catalogues). CHK-0013 is **not** the complete current baseline.
-  - Implementation-critical decisions are listed in section 4.
-  - Write paths, DATA-TX-001 bundles, proposed slice sequence, and slice
-    governance are recorded (sections 7–10).
-  - Human unlock mechanism is defined and unused (section 11).
-  - No architecture-level blockers. Treating residuals are bounded and must
-    stay `GUARD_OPEN_POLICY` where a command needs a missing number/name.
-- **Residuals:** human unlock still absent; packages/ADR-0008 not accepted;
-  treating OQs; no post-Gate-5 APR created (this README does not create one).
-- **Implementation:** locked.
+There is no Phase 13.
 
 ---
 
-## 4. Accepted architecture baseline
+## 4. How we got here (timeline)
 
-Live authority is the current registers and reconciled catalogues, not older
-freeze wording that disagrees with them.
+The work was never “write the app, then document it.” It was: **assimilate
+sources → design → freeze each phase → record team answers → reconcile
+contradictions → record factory facts → keep implementation locked.**
 
-### Technology / architecture
+```text
+Sources (SRC-001 / SRC-002)
+    → Phase 00 governance
+    → Phases 01–12 architecture (each: draft → self-check → independent
+      review → reconciliation → APR → CHK Git freeze)
+    → Team answers OQ-001–OQ-019 (2026-09-15)
+    → Reconciliation Gates 1–5
+    → Gate 6 implementation-readiness (locked)
+    → Factory meeting FACT-01–FACT-06 (2026-09-23)
+    → FACT-04 roster correction (11 people)
+    → Clarification assessment (no extra OQ closed)
+    → still IMPLEMENTATION_AUTHORIZED: false
+```
 
-| Topic | Status |
+### 4.1 Architecture phases 00–12 (structure)
+
+Every phase used the same cadence, defined in
+[PHASE_GATES.md](docs/00-governance/PHASE_GATES.md) and
+[DOCUMENTATION_STANDARD.md](docs/00-governance/DOCUMENTATION_STANDARD.md):
+
+`draft → self-check → independent review → reconciliation → explicit human
+approval (APR-*) → Git checkpoint (CHK-*)`
+
+| Phase | What it produced | Approval | Checkpoint |
+| --- | --- | --- | --- |
+| `00-governance` | Charter, registers, templates, write-gate | [APR-002](docs/00-governance/approved-baselines/APR-002-governance.md) | [CHK-0001](docs/00-governance/approved-baselines/CHK-0001-phase-00.md) `540a606…` |
+| `01-project-assimilation` | Sources, workshop agenda, assimilation report | [APR-003](docs/00-governance/approved-baselines/APR-003-project-assimilation.md) | [CHK-0002](docs/00-governance/approved-baselines/CHK-0002-phase-01.md) `91273e9…` |
+| `02-domain-business-architecture` | Capabilities, processes, actors, MVP rules | [APR-004](docs/00-governance/approved-baselines/APR-004-domain-business-architecture.md) | [CHK-0003](docs/00-governance/approved-baselines/CHK-0003-phase-02.md) `ec3c210…` |
+| `03-state-machines-invariants` | INV-*, SM-*, transitions, SoD | [APR-005](docs/00-governance/approved-baselines/APR-005-state-machines-invariants.md) | [CHK-0006](docs/00-governance/approved-baselines/CHK-0006-phase-03.md) `bef6b64…` |
+| `04-database-architecture` | Logical model, Ledger, genealogy projection | [APR-006](docs/00-governance/approved-baselines/APR-006-database-architecture.md) | [CHK-0004](docs/00-governance/approved-baselines/CHK-0004-phase-04.md) `87f9f10…` |
+| `05-application-api-architecture` | Commands, queries, orchestration | [APR-007](docs/00-governance/approved-baselines/APR-007-application-api-architecture.md) | [CHK-0005](docs/00-governance/approved-baselines/CHK-0005-phase-05.md) `00b30a3…` |
+| `06-security-rbac-audit` | Identity, RBAC labels, audit taxonomy | [APR-008](docs/00-governance/approved-baselines/APR-008-security-rbac-audit.md) | [CHK-0007](docs/00-governance/approved-baselines/CHK-0007-phase-06.md) `1673535…` |
+| `07-testing-quality-architecture` | Verification *intents* (not a `TEST-*` catalogue) | [APR-009](docs/00-governance/approved-baselines/APR-009-testing-quality-architecture.md) | [CHK-0008](docs/00-governance/approved-baselines/CHK-0008-phase-07.md) `29921d6…` |
+| `08-integration-deployment` | Adapters, recovery labels, topology **labels** | [APR-010](docs/00-governance/approved-baselines/APR-010-integration-deployment.md) | [CHK-0009](docs/00-governance/approved-baselines/CHK-0009-phase-08.md) `751035d…` |
+| `09-repository-documentation` | Future layout, import rules, conformance labels | [APR-011](docs/00-governance/approved-baselines/APR-011-repository-documentation.md) | [CHK-0010](docs/00-governance/approved-baselines/CHK-0010-phase-09.md) `81aef0e…` |
+| `10-ai-cursor-development` | Agent authority, unlock rules | [APR-012](docs/00-governance/approved-baselines/APR-012-ai-cursor-development.md) | [CHK-0011](docs/00-governance/approved-baselines/CHK-0011-phase-10.md) `1d581c4…` |
+| `11-architecture-validation` | Integrated review, walkthroughs, coverage | [APR-013](docs/00-governance/approved-baselines/APR-013-architecture-validation.md) | [CHK-0012](docs/00-governance/approved-baselines/CHK-0012-phase-11.md) `57062e9…` |
+| `12-implementation-planning` | Slices, readiness, unlock **labels** | [APR-014](docs/00-governance/approved-baselines/APR-014-implementation-planning.md) | [CHK-0013](docs/00-governance/approved-baselines/CHK-0013-phase-12.md) `a6b8930…` |
+
+Approval register:
+[APPROVALS.md](docs/00-governance/APPROVALS.md).
+Baseline folder:
+[approved-baselines/](docs/00-governance/approved-baselines/).
+
+Those CHK files are **historical freezes**. Several still say “OQs unanswered”
+or “only ADR-0001.” That was true **on the freeze date**. Live status is
+[OPEN_QUESTIONS.md](docs/00-governance/registers/OPEN_QUESTIONS.md) and
+[DECISIONS.md](docs/00-governance/registers/DECISIONS.md).
+
+### 4.2 Team answers (`2026-09-15`)
+
+The Project Owner supplied Markdown answers
+[OQ-001.md](docs/00-governance/team-answers/OQ-001.md) through
+[OQ-019.md](docs/00-governance/team-answers/OQ-019.md). They become
+authoritative only on the matching row in
+[OPEN_QUESTIONS.md](docs/00-governance/registers/OPEN_QUESTIONS.md).
+Index of answer files:
+[team-answers/README.md](docs/00-governance/team-answers/README.md).
+
+Answered vs treating is summarized in [section 8](#8-open-questions-oq-001-through-oq-019).
+
+### 4.3 Reconciliation Gates 1–6
+
+After Phase 12, six architecture/governance reviews aligned the **live**
+corpus. They did **not** unlock implementation.
+
+#### Gate 1 — Inventory / production integrity
+
+**Result:** PASS WITH OPEN ITEM.
+
+- Inventory Ledger is the stock-movement source of truth.
+- Inventory Balance is a rebuildable projection (`Ledger → Balance`). See
+  [LOGICAL_MODEL.md](docs/04-database-architecture/LOGICAL_MODEL.md) and
+  [POSTING_KERNEL.md](docs/04-database-architecture/POSTING_KERNEL.md).
+- `ACT-IPS` (`mod-inventory-posting`) is the sole stock writer. No direct
+  Balance edits. No negative inventory.
+  [MODULE_OWNERSHIP_MATRIX.md](docs/02-domain-business-architecture/MODULE_OWNERSHIP_MATRIX.md).
+- `CompleteProductionOperation` is the exclusive production posting boundary
+  ([OQ-003](docs/00-governance/team-answers/OQ-003.md),
+  [TRANSITION_TABLES.md](docs/03-state-machines-invariants/TRANSITION_TABLES.md)).
+- Consumption, good output/WIP, reusable residual **or** scrap, residual
+  identity, scrap quantity, genealogy source facts, Ledger posts, validations,
+  and optional QC request belong in **one** business transaction (DATA-TX-001).
+- Nested primitives (`ConsumeUnitPartial` / `ConsumeUnitComplete`,
+  `CreateResidualUnit`, `PostScrapMovement`, `ScrapUnit` as destiny) are **not**
+  independent production posting flows.
+- Residual quantity posts once; `PlaceResidualUnit` does not post a second
+  residual quantity. Scrap quantity posts once via `PostScrapMovement`.
+- Genealogy rebuilds from canonical source facts, not Ledger rows alone
+  (FIND-G-014).
+  [GENEALOGY_PROJECTION.md](docs/04-database-architecture/GENEALOGY_PROJECTION.md).
+
+Residuals: routing step names (OQ-003); residual/scrap cutoff numbers (OQ-009);
+UOM scale (OQ-001).
+
+#### Gate 2 — Sales closure / reservation
+
+**Result:** Accepted after a correction pass (FIND-G-003 / FIND-G-005).
+
+- `FULFILLED → CLOSED` when remaining valid demand is already zero within
+  OQ-006 tolerance (default 0). `FULFILLED` is remaining-demand truth, not
+  “delivered”.
+- `PARTIALLY_FULFILLED → CLOSED` only with authorized TERM-005 Unfulfilled
+  Demand. Valid remaining demand is not discarded.
+  [BUSINESS_GLOSSARY.md](docs/00-governance/registers/BUSINESS_GLOSSARY.md)
+  TERM-005.
+- `CANCELLED → CLOSED` after confirm-cancel.
+- Payment and invoice lifecycle do **not** close the Sales Order
+  ([OQ-007](docs/00-governance/team-answers/OQ-007.md)).
+- Shipment `DELIVERED` is a fulfillment **fact**, not an independent close
+  trigger.
+- At most one `ACTIVE` reservation per Inventory Unit. `REQUESTED` does not
+  occupy that slot. No steal. Earlier `ConfirmSalesOrder` timestamp wins
+  `ACTIVE` competition. `ConfirmSalesOrder` does not create `REQUESTED`.
+  Confirmed-SO reservations have no invented TTL.
+  [OQ-008](docs/00-governance/team-answers/OQ-008.md),
+  [CONCURRENCY_AND_INTERLOCK.md](docs/03-state-machines-invariants/CONCURRENCY_AND_INTERLOCK.md).
+- Reservation ≠ allocation ≠ consumption.
+
+#### Gate 3 — OQ / ADR propagation
+
+**Result:** PASS WITH OPEN ITEM.
+
+- ADR-0001, ADR-0006, ADR-0007 **accepted**. ADR-0008 remains **proposed**.
+- Answered OQs are not live architecture blockers. Treating residuals stay
+  treating (`GUARD_OPEN_POLICY` where a command needs a missing number/name).
+- Historical APR/CHK wording that disagrees with live registers is freeze
+  evidence, not current policy.
+
+#### Gate 4 — Genealogy / recovery / cross-domain
+
+**Result:** PASS WITH OPEN ITEM.
+
+- Eight genealogy source-fact families (DATA-GEN-001 / FIND-G-014): Lot Origin,
+  Consumption, Output, Residual, Scrap, Package, Shipment, Rework.
+- Genealogy Link (TERM-025) is a rebuildable **projection**. No `EditGenealogy`.
+  No `ENT-REWORK` entity was invented.
+- `Ledger → Balance` and `source facts → Genealogy` are **separate** recovery
+  paths. Rebuild is reconstruction, not a new posting and not Event Sourcing.
+  [BACKUP_AND_RECOVERY.md](docs/08-integration-deployment/BACKUP_AND_RECOVERY.md),
+  [RETENTION_MIGRATION_OPENING_STOCK.md](docs/04-database-architecture/RETENTION_MIGRATION_OPENING_STOCK.md).
+- Cross-module table writes are forbidden. Named commands orchestrate
+  ([ORCHESTRATION.md](docs/05-application-api-architecture/ORCHESTRATION.md)).
+- Correction = new compensating command + link to the original (INV-005)
+  ([EXCEPTION_CORRECTION.md](docs/03-state-machines-invariants/EXCEPTION_CORRECTION.md)).
+
+#### Gate 5 — Final architecture consistency
+
+**Result:** PASS WITH OPEN RESIDUALS.
+
+No substantive live architecture contradiction was identified. Modular Monolith
+→ module-owned boundaries → PostgreSQL → named commands → application-owned
+transactions → `ACT-IPS` → Ledger truth → rebuildable Balance holds together
+with QC SoD, portal visibility-only, weighbridge-as-commander, and the
+implementation lock.
+
+#### Gate 6 — Implementation-readiness
+
+**Result:** `READY FOR HUMAN IMPLEMENTATION AUTHORIZATION`.
+
+Defined what must be true before a human may authorize implementation.
+**Did not authorize implementation.** No unlock file was created. CHK-0013 is
+**not** the complete current baseline (team answers and Gates 1–5 came later).
+
+See [IMPLEMENTATION_READINESS.md](docs/12-implementation-planning/IMPLEMENTATION_READINESS.md)
+and [AUTHORIZATION_RECORD.md](docs/12-implementation-planning/AUTHORIZATION_RECORD.md).
+
+### 4.4 Factory meeting (`2026-09-23`)
+
+A factory-site meeting produced six **confirmed business facts**. They were
+recorded as evidence. They do **not** authorize implementation, do **not**
+close treating residuals they do not actually answer, and do **not** accept
+ADR-0008.
+
+Canonical recording:
+[OPEN_QUESTIONS.md — Factory meeting evidence](docs/00-governance/registers/OPEN_QUESTIONS.md).
+
+| Fact | What was recorded | What was **not** decided |
+| --- | --- | --- |
+| **FACT-01** | kg is primary for incoming coils/sheets **and** customer orders; length/thickness/type are secondary | Decimal scale, rounding, conversion formulas, numeric tolerance. [OQ-001](docs/00-governance/team-answers/OQ-001.md) stays `treating`. [OQ-002](docs/00-governance/team-answers/OQ-002.md) stays `answered` (reinforced). |
+| **FACT-02** | Cut pieces and order scrap carry the customer **order code**; unique ID per tiny piece is not feasible | Exact order-code identity (DB id vs human-visible number vs shop code). Inventory Unit is **retained**. [OQ-004](docs/00-governance/team-answers/OQ-004.md). Glossary distinctions: [BUSINESS_GLOSSARY.md](docs/00-governance/registers/BUSINESS_GLOSSARY.md). |
+| **FACT-03** | Opened-coil leftover may be cut to market-length sheets (examples 6 m / 12 m) **without a new customer order**, stored in the warehouse; sheets retain **original coil** code; count/length/weight measured | Domain classification **OPEN**. Not nested into `CompleteProductionOperation` or DATA-TX-001. Not a new command. [PROCESS_MAPS_AS_IS_TO_BE.md](docs/02-domain-business-architecture/PROCESS_MAPS_AS_IS_TO_BE.md). [OQ-009](docs/00-governance/team-answers/OQ-009.md) stays `treating`. |
+| **FACT-04** | **Eleven-person organizational roster** (see [section 9](#9-factory-personnel-fact-04)) | Not RBAC. Not `ACT-*`. Not SoD. Not delegates. Operators still missing. [OQ-019](docs/00-governance/team-answers/OQ-019.md) stays `treating`. |
+| **FACT-05** | Stations; Production Manager defines routing; station receives work and reports completion; sequential flow | Station account vs per-command **human** `actor_identity`. Live [SESSION_AND_IDENTITY.md](docs/06-security-rbac-audit/SESSION_AND_IDENTITY.md) is **unchanged** (`SharedTerminal` still requires operator identity per command). Conflict recorded, not resolved. |
+| **FACT-06** | Record and show when an order **enters** a station and is **forwarded** | Equivalence to `StartProductionOperation` / `CompleteProductionOperation` is **not** established. Do not invent `started_at` / `queued_at` fields. [STATE_MACHINE_CATALOGUE.md](docs/03-state-machines-invariants/STATE_MACHINE_CATALOGUE.md). |
+
+Factory-confirmed **requirement evidence labels** `RQ-01`–`RQ-07` (not `INV-*`,
+not a minted `REQ-*` catalogue):
+[MVP_SCOPE_AND_BUSINESS_RULES.md](docs/02-domain-business-architecture/MVP_SCOPE_AND_BUSINESS_RULES.md),
+[REQUIREMENTS_TRACEABILITY.md](docs/00-governance/registers/REQUIREMENTS_TRACEABILITY.md).
+
+Standing questions for the next factory/sponsor pass:
+[TEAM_QUESTION_PACK.md](docs/00-governance/TEAM_QUESTION_PACK.md).
+
+### 4.5 FACT-04 roster correction
+
+The first recording omitted **Mr. Dinavand — Workshop Manager**. The live
+documents now list **eleven** organizational people. That correction did not
+map anyone to system roles.
+
+### 4.6 Clarification assessment
+
+A later analysis-only pass asked which treating OQs the factory evidence could
+**fully** close. Result:
+
+```text
+No additional OQ can be fully closed from the current factory evidence.
+```
+
+Highest remaining factory clarifications (in order): FACT-03 coil→sheet
+classification; FACT-05 station vs human identity; FACT-06 enter/forward
+semantics; OQ-001 numeric policy; OQ-003 routing catalogue; OQ-005 Quality
+plans/names; OQ-009 cutoff numbers; OQ-019 role mapping. Also still treating
+and untouched by the meeting: OQ-011, OQ-014, OQ-015.
+
+No files were changed in that assessment pass.
+
+---
+
+## 5. Governance model a developer must obey
+
+### 5.1 Canonical registers
+
+Index: [registers/README.md](docs/00-governance/registers/README.md).
+
+| Register | Role |
 | --- | --- |
-| Node.js + TypeScript | **Accepted** (ADR-0001). .NET / C# / ASP.NET are superseded. |
-| Modular Monolith | **Accepted** (ADR-0006) |
-| PostgreSQL, including Inventory Ledger | **Accepted** (ADR-0007) |
-| Application-owned PostgreSQL transaction (lock → validate → write Ledger → commit) | **Accepted** style (OQ-017) |
-| Stored functions as posting kernel | **Not** default; later ADR + spike only |
-| Docker Compose / Nginx topology (ADR-0008) | **Proposed** |
-| NestJS, Prisma, React, Socket.IO, JWT, Keycloak, Jest, Playwright, Docker, npm/pnpm, extra MCP | **Not accepted** unless a later ADR says so |
-| Kafka, RabbitMQ, Kubernetes, Event Sourcing, time-series DB, microservices mesh | **Not required** for MVP |
+| [OPEN_QUESTIONS.md](docs/00-governance/registers/OPEN_QUESTIONS.md) | Live OQ status |
+| [DECISIONS.md](docs/00-governance/registers/DECISIONS.md) | ADRs |
+| [BUSINESS_GLOSSARY.md](docs/00-governance/registers/BUSINESS_GLOSSARY.md) | Terms (TERM-*) |
+| [ASSUMPTIONS.md](docs/00-governance/registers/ASSUMPTIONS.md) | ASM-* |
+| [RISKS.md](docs/00-governance/registers/RISKS.md) | RISK-* |
+| [REVIEW_FINDINGS.md](docs/00-governance/registers/REVIEW_FINDINGS.md) | FIND-* |
+| [REQUIREMENTS_TRACEABILITY.md](docs/00-governance/registers/REQUIREMENTS_TRACEABILITY.md) | REQ-OBJ-* / RQ-* evidence |
+| [CANONICAL_DOMAIN_MODEL.md](docs/00-governance/registers/CANONICAL_DOMAIN_MODEL.md) | Domain concepts |
+| [CANONICAL_DATA_DICTIONARY.md](docs/00-governance/registers/CANONICAL_DATA_DICTIONARY.md) | Data dictionary |
+| [STATE_TRANSITION_CATALOGUE.md](docs/00-governance/registers/STATE_TRANSITION_CATALOGUE.md) | Seed lifecycles |
+| [INTEGRATION_CATALOGUE.md](docs/00-governance/registers/INTEGRATION_CATALOGUE.md) | Integration labels |
+| [STAKEHOLDERS_RACI.md](docs/00-governance/registers/STAKEHOLDERS_RACI.md) | Workshop/sign-off roles |
+| [SLICE_HOMES.md](docs/00-governance/registers/SLICE_HOMES.md) | Command/query/slice homes |
+
+Phase documents **link** to these. They must not redefine them.
+
+### 5.2 Implementation lock
+
+Technical unlock requires **both**:
+
+1. A **human-created** `.cursor/IMPLEMENTATION_UNLOCK.json`
+2. [architecture-gate.json](.cursor/architecture-gate.json) set to
+   `"implementationAuthorized": true` with the **same** `approvedBaseline`
+
+Required unlock fields: `approvedBy`, `approvedAt`, `approvedBaseline`,
+`allowedWritePaths`, `allowedShellCommands`. Template:
+[IMPLEMENTATION_UNLOCK_TEMPLATE.md](docs/00-governance/templates/IMPLEMENTATION_UNLOCK_TEMPLATE.md).
+Agent rule: `AG-UNLOCK` never
+([AGENT_AUTHORITY.md](docs/10-ai-cursor-development/AGENT_AUTHORITY.md)).
+
+While locked, Cursor agents may write only:
+
+- `README.md`, `.gitignore`, `docs/**/*.md`
+- `.cursor/rules/**/*.mdc`, `.cursor/skills/**/*.md`
+
+Protected (never agent-created/edited while locked):
+`.cursor/architecture-gate.json`, `.cursor/hooks.json`, `.cursor/hooks/**`,
+`.cursor/IMPLEMENTATION_UNLOCK.json`, `.cursor/PHASE_CHECKPOINT_APPROVAL.json`.
+
+Cursor controls:
+
+- [.cursor/architecture-gate.json](.cursor/architecture-gate.json)
+- [.cursor/rules/00-architecture-first.mdc](.cursor/rules/00-architecture-first.mdc)
+- [.cursor/rules/01-phase-question-pack.mdc](.cursor/rules/01-phase-question-pack.mdc)
+- [.cursor/skills/architecture-gate-review/SKILL.md](.cursor/skills/architecture-gate-review/SKILL.md)
+- [.cursor/hooks.json](.cursor/hooks.json)
+- [HOOK_VALIDATION.md](docs/00-governance/HOOK_VALIDATION.md)
+- [TOOL_MCP_HOOK_SAFETY.md](docs/10-ai-cursor-development/TOOL_MCP_HOOK_SAFETY.md)
+
+### 5.3 Treating residuals
+
+Commands that need a missing number, name, plan, or device must reject with
+`GUARD_OPEN_POLICY` rather than inventing a value
+([EVENT_AND_REJECTION.md](docs/03-state-machines-invariants/EVENT_AND_REJECTION.md)).
+
+---
+
+## 6. Accepted architecture baseline (live)
 
 ### Inventory
 
-- Ledger = immutable stock-movement evidence (source of truth).
-- Balance = rebuildable projection of Ledger. No `AdjustBalance`.
-- `ACT-IPS` / `mod-inventory-posting` = sole writer of Ledger, Balance, and
-  unit quantity.
-- On-hand, reserved, and available cannot go negative.
+- Ledger = immutable stock-movement evidence.
+- Balance = rebuildable projection. No `AdjustBalance`.
+- `ACT-IPS` sole writer of Ledger, Balance, and unit quantity.
 - Official stock UOM is **kg**. Coil quantity is measured weight in kg
-  (OQ-002 answered). Decimal scale, rounding, and conversion factors remain
-  **OQ-001 treating**.
+  ([OQ-002](docs/00-governance/team-answers/OQ-002.md)). Scale/rounding/factors
+  remain [OQ-001 treating](docs/00-governance/team-answers/OQ-001.md).
+- [INVARIANT_CATALOGUE.md](docs/03-state-machines-invariants/INVARIANT_CATALOGUE.md)
+  INV-001–INV-004, INV-017.
 
 ### Production
 
-- `CompleteProductionOperation` is the atomic completion / posting boundary
-  (OQ-003 recorded invariant; step **names** still treating).
-- One business transaction: consumption, good output/WIP, leftover
-  classification (reusable residual **or** scrap per leftover kg), process
-  loss, genealogy source facts, IPS Ledger posts, nested identity/qty
-  primitives, mass balance (INV-007) within OQ-006, optional QC request.
-- Idempotency: caller key on `CompleteProductionOperation`. Same key → first
-  result. A new key for the same completed operation is rejected.
-- Independent production consume is `GUARD_INVARIANT` (INV-006).
+- `CompleteProductionOperation` is the atomic posting boundary for
+  consume/output/residual/scrap of **that** operation.
+- FACT-03 coil→sheet conversion is a **separate, unclassified** business
+  process until the factory answers ownership/domain/posting questions.
+- [OQ-003](docs/00-governance/team-answers/OQ-003.md),
+  [SIDE_EFFECT_MATRIX.md](docs/03-state-machines-invariants/SIDE_EFFECT_MATRIX.md).
 
 ### Sales / reservation
 
-- Sales owns Sales Order lifecycle. Finance-Lite does not.
-- Close paths: FULFILLED (remaining valid demand already zero within OQ-006);
-  PARTIALLY_FULFILLED only with authorized Unfulfilled Demand; CANCELLED.
-- Payment is not a close prerequisite. `DELIVERED` does not itself close the SO.
-- One Inventory Unit → at most one `ACTIVE` reservation; no steal; earlier
-  confirm timestamp wins ACTIVE competition; `ConfirmSalesOrder` does not
-  create `REQUESTED`; no confirmed-SO TTL.
-- Reservation ≠ Material Allocation ≠ Consumption.
+- Sales owns Sales Order lifecycle. Finance-Lite does not close it.
+- Close paths: FULFILLED; PARTIALLY_FULFILLED + Unfulfilled Demand; CANCELLED.
+- One Inventory Unit → one `ACTIVE` reservation.
+- [OQ-007](docs/00-governance/team-answers/OQ-007.md),
+  [OQ-008](docs/00-governance/team-answers/OQ-008.md).
 
-### Genealogy
+### Genealogy / identity distinctions
 
-Eight canonical source-fact families (DATA-GEN-001 / FIND-G-014):
+Preserve separately ([BUSINESS_GLOSSARY.md](docs/00-governance/registers/BUSINESS_GLOSSARY.md)):
 
-1. Lot Origin
-2. Consumption
-3. Output
-4. Residual
-5. Scrap
-6. Package
-7. Shipment
-8. Rework
+1. Customer Order / Order Code
+2. Material Lot / Inventory Unit
+3. Physical small piece (need not be an Inventory Unit)
 
-Genealogy Link is a **projection**, rebuildable, not independently editable
-truth. No `EditGenealogy`. No `ENT-REWORK` was invented.
+FACT-03: original **coil** code and original **order** code may be different.
 
 ### Recovery
 
-OQ-016 **answered** objectives: RPO ≤ 60 minutes; RTO ≤ 8 hours; daily
-backup; offsite copy; restore testing. Retention days and backup **product**
-remain residual.
+[OQ-016](docs/00-governance/team-answers/OQ-016.md): RPO 60 min, RTO 8 h,
+daily backup, off-site copy. Retention days and backup **product** residual.
 
-After restore of durable posted facts:
+After restore: `BalanceRebuild` (Ledger → Balance); `GenealogyRebuild`
+(DATA-GEN-001 → projection). Rebuilds do not post stock.
 
-- `BalanceRebuild`: Ledger → Balance
-- `GenealogyRebuild`: DATA-GEN-001 source facts → Genealogy projection
+### Finance-Lite, portal, QC, weighbridge, scope
 
-Rebuilds do **not** create Ledger movements, residual/scrap quantity, or a
-replay of `CompleteProductionOperation`.
-
-### Finance-Lite
-
-Operational invoices, payments, allocations, and operational balances only.
-**Not** a legal general ledger. Does not own or close Sales Orders.
-
-### Portal
-
-Customer Portal MVP is **visibility-only** (OQ-010). `PortalPlaceOrder` is
-forbidden (`GUARD_PORTAL_MVP` / INV-020). Exact portal document list remains
-residual.
-
-### QC
-
-QC can block availability and shipment where required (OQ-005). Exceptional
-release requires two distinct authorized people. Quality **commands**
-Inventory; it does not write Ledger. Quality Plans, limits, and named
-releasers remain treating.
-
-### Weighbridge
-
-Adapter/commander (`ADP-WEIGHBRIDGE`) only. Never an independent Ledger
-writer. Human ticket fallback is the recorded path. Make/model/protocol
-remain OQ-011 treating.
-
-### Cross-module ownership
-
-Exactly one write owner per authoritative concept. Direct cross-module table
-writes are forbidden. Other modules **command** the owner (or `ACT-IPS` for
-stock). Adapters and workers command; they do not post.
-
-### Scope
-
-One legal entity, one principal site (OQ-013). Future multi-site would reopen
-architecture.
+- Finance-Lite is **not** legal GL ([OQ-012](docs/00-governance/team-answers/OQ-012.md)).
+- Customer Portal MVP is **visibility-only**
+  ([OQ-010](docs/00-governance/team-answers/OQ-010.md), INV-020). No
+  `PortalPlaceOrder`.
+- QC can block availability/shipment; exceptional release is two distinct
+  people ([OQ-005](docs/00-governance/team-answers/OQ-005.md)). Quality
+  commands Inventory; it does not write Ledger.
+  [AUTHORIZATION_SOD.md](docs/03-state-machines-invariants/AUTHORIZATION_SOD.md).
+  Station accounts are **not** assumed sufficient for that two-person release.
+- Weighbridge is a commander only
+  ([OQ-011](docs/00-governance/team-answers/OQ-011.md),
+  [INTEGRATION_CATALOGUE.md](docs/08-integration-deployment/INTEGRATION_CATALOGUE.md)).
+- One legal entity, one principal site
+  ([OQ-013](docs/00-governance/team-answers/OQ-013.md)).
 
 ---
 
-## 5. Open / treating / deferred decisions (OQ-001–OQ-019)
+## 7. Authoritative write paths and transaction boundaries
 
-Canonical rows:
+### Write paths
+
+| Path | Owner | Detail |
+| --- | --- | --- |
+| Stock movement | `ACT-IPS` → Ledger | [POSTING_KERNEL.md](docs/04-database-architecture/POSTING_KERNEL.md) |
+| Production completion | `CompleteProductionOperation` | [COMMAND_CATALOGUE.md](docs/05-application-api-architecture/COMMAND_CATALOGUE.md) |
+| Residual identity (production leftover) | Nested `CreateResidualUnit` | Not a later independent production post |
+| Scrap quantity | `PostScrapMovement` | Nested leftover **or** a new Quality/abort key |
+| Goods receipt | Procurement orchestration + IPS | [OQ-017](docs/00-governance/team-answers/OQ-017.md) |
+| Reservation | `RequestReservation` then `ActivateReservation` | Distinct commands |
+| Shipment dispatch | Shipping command + IPS stock exit | Shipping does not write Ledger |
+| Sales Order | Sales | Must not write Invoice/Ledger qty |
+| Invoice / payment | Finance-Lite | Does not close SO |
+| QC | Quality commands IPS | [ROLE_PERMISSION_MATRIX.md](docs/06-security-rbac-audit/ROLE_PERMISSION_MATRIX.md) |
+| Weighbridge | `ADP-WEIGHBRIDGE` commander | Never a Ledger writer |
+| Rebuilds | `BalanceRebuild` / `GenealogyRebuild` | Reconstruction |
+| Opening stock | `OpeningStockImport` | Blocked until [OQ-015](docs/00-governance/team-answers/OQ-015.md) / OQ-019 |
+
+**Forbidden:** `EditGenealogy`, `AdjustBalance`, `PortalPlaceOrder` (MVP),
+direct Ledger writes by adapters/UI/Quality/Shipping, independent production
+consume posting.
+
+### DATA-TX-001 unsplittable bundles
+
+Recorded in
+[TRANSACTION_AND_IDEMPOTENCY.md](docs/04-database-architecture/TRANSACTION_AND_IDEMPOTENCY.md):
+
+1. `CompleteProductionOperation` + nested consume/output/residual/scrap
+2. `DispatchShipment` + stock exit
+3. `PostGoodsReceipt` + Lot/Unit/Ledger
+4. `ActivateReservation` + reserved-state + reserved qty
+5. `AllocatePayment` + invoice open-balance
+6. Quality/abort scrap that is **not** leftover of that completion
+
+Do **not** add FACT-03 coil→sheet to this list until it is classified.
+`CloseSalesOrder`, `CompleteOperationPartial`, `PlaceResidualUnit`, rebuilds,
+and reversals are intentionally **not** extra universal bundles.
+
+---
+
+## 8. Open questions (OQ-001 through OQ-019)
+
+Canonical:
 [OPEN_QUESTIONS.md](docs/00-governance/registers/OPEN_QUESTIONS.md).
-Team answers:
-[team-answers/](docs/00-governance/team-answers/).
-Recorded `2026-09-15`. Chat is not a second register.
+Pack:
+[TEAM_QUESTION_PACK.md](docs/00-governance/TEAM_QUESTION_PACK.md).
+Answer sheet:
+[TEAM_ANSWER_SHEET.md](docs/00-governance/TEAM_ANSWER_SHEET.md).
 
-| OQ | Subject | Status | Accepted / answered portion | Unresolved portion | Implementation impact |
-| --- | --- | --- | --- | --- | --- |
-| OQ-001 | UOM scale / rounding / conversion | treating | kg is official stock UOM; one stock truth | Decimal scale, rounding, material conversion factors | Commands that need a missing scale → `GUARD_OPEN_POLICY` |
-| OQ-002 | Coil quantity | answered | Coil qty = measured weight in kg | Shop-floor ticket confirmation (validation) | Do not use length as stock truth |
-| OQ-003 | Routing / posting points | treating | Official post at `CompleteProductionOperation` | Named routing steps; abort role name | Kernel can post at complete-op; named routing / abort-after-post waits |
-| OQ-004 | Tracking grain | answered | Unit-level Coil; hybrid finished-product rule | First-go-live family catalogue | Configuration, not a new architecture |
-| OQ-005 | QC plans / release | treating | QC can block available/ship; exceptional release is two-person | Quality Plans, limits, named approvers | Hold/release mechanics allowed; named exceptional release → `GUARD_OPEN_POLICY` |
-| OQ-006 | Tolerance | answered | Partial shipment allowed; default 0; configurable | Exact %/kg by family/customer | Family over-delivery waits on configuration |
-| OQ-007 | Sales Order close | answered | Close on fulfilled / cancelled / authorized unfulfilled remainder; not payment | Later commercial exceptions if any | Must not close on invoice paid or DELIVERED alone |
-| OQ-008 | Reservation | answered | One unit, one ACTIVE; no steal; no confirmed-SO timer | Temporary-hold TTL only if that type is added | Uniqueness is required; do not invent TTL |
-| OQ-009 | Residual vs scrap | treating | Reuse policy; nested identity/qty composition recorded | Family min weight/dimensions | Classification that needs a cutoff → `GUARD_OPEN_POLICY` |
-| OQ-010 | Customer Portal | answered | MVP visibility-only; no order write | Exact document list; later order phases | `PortalPlaceOrder` rejected; visibility reads allowed |
-| OQ-011 | Weighbridge | treating | Never writes Ledger; human ticket fallback | Make/model, protocol, device id, named operator | Auto-device path waits; adapter must not write Ledger |
-| OQ-012 | Finance-Lite | answered | Not legal GL; no Legal-GL integration in MVP | Accounting product/API in a later phase | Do not expand to full GL |
-| OQ-013 | Legal entity / site | answered | One legal entity, one principal site | Future multi-site would reopen architecture | No multi-site MVP schema required |
-| OQ-014 | Volume | treating | Modest scale: &lt;100 users, ~15–25 concurrent | 12-month transaction counts | Physical indexes/capacity wait; logical model does not |
-| OQ-015 | Opening stock | treating | Opening stock = Ledger facts via `OpeningStockImport` | Source files, freeze time, named signers | `SLICE-CUTOVER` / `ADP-CUTOVER` blocked (`GUARD_OPEN_POLICY`) |
-| OQ-016 | Recovery / retention | answered | RPO 60 min, RTO 8 h, daily backup, off-site copy | Retention days; backup product | Objectives required; vendor/days later |
-| OQ-017 | Posting mechanism | answered | App-owned PostgreSQL TX + locks | PG functions only after later ADR + spike | Do not freeze SQL/functions as the kernel |
-| OQ-018 | Architecture / platform | answered | Modular Monolith + PostgreSQL; Node.js + TypeScript | NestJS, Prisma, React, Docker, auth, extra MCP | First code slice needs an explicit package ADR if packages are introduced |
-| OQ-019 | Real names | treating | Role/RACI list accepted | Real names, delegates, approval scope | Named UAT/cutover/SoD people wait; temporary names cannot sign |
+| OQ | Status | Locked | Still unknown | Team answer |
+| --- | --- | --- | --- | --- |
+| OQ-001 | treating | kg-first (FACT-01 confirms incoming **and** customer orders) | Scale, rounding, factors, numeric tolerance | [OQ-001.md](docs/00-governance/team-answers/OQ-001.md) |
+| OQ-002 | answered | Coil qty = kg | Ticket validation | [OQ-002.md](docs/00-governance/team-answers/OQ-002.md) |
+| OQ-003 | treating | Post at `CompleteProductionOperation`; FACT-05/06 stations + visibility | Catalogue, abort title, identity, enter/forward mapping | [OQ-003.md](docs/00-governance/team-answers/OQ-003.md) |
+| OQ-004 | answered | Hybrid grain; FACT-02 no per-piece Unit; order-code trace | Family catalogue; order-code identity | [OQ-004.md](docs/00-governance/team-answers/OQ-004.md) |
+| OQ-005 | treating | QC blocks; two-person exceptional release | Plans, limits, named Quality people | [OQ-005.md](docs/00-governance/team-answers/OQ-005.md) |
+| OQ-006 | answered | Partial ship; default tolerance 0 | Family/customer % | [OQ-006.md](docs/00-governance/team-answers/OQ-006.md) |
+| OQ-007 | answered | Close on fulfill/cancel/unfulfilled, not payment | Later commercial exceptions | [OQ-007.md](docs/00-governance/team-answers/OQ-007.md) |
+| OQ-008 | answered | One ACTIVE per unit; no confirmed-SO TTL | Temporary-hold TTL if added | [OQ-008.md](docs/00-governance/team-answers/OQ-008.md) |
+| OQ-009 | treating | Reuse policy; FACT-03 unclassified process recorded | Cutoff numbers; FACT-03 classification | [OQ-009.md](docs/00-governance/team-answers/OQ-009.md) |
+| OQ-010 | answered | Portal visibility-only | Document list | [OQ-010.md](docs/00-governance/team-answers/OQ-010.md) |
+| OQ-011 | treating | Weighbridge never writes Ledger | Device/protocol/operator | [OQ-011.md](docs/00-governance/team-answers/OQ-011.md) |
+| OQ-012 | answered | Finance-Lite ≠ legal GL | Accounting product later | [OQ-012.md](docs/00-governance/team-answers/OQ-012.md) |
+| OQ-013 | answered | One entity, one site | Multi-site would reopen architecture | [OQ-013.md](docs/00-governance/team-answers/OQ-013.md) |
+| OQ-014 | treating | Modest user scale | 12-month transaction counts | [OQ-014.md](docs/00-governance/team-answers/OQ-014.md) |
+| OQ-015 | treating | Opening stock = Ledger facts | Files, freeze, named signers | [OQ-015.md](docs/00-governance/team-answers/OQ-015.md) |
+| OQ-016 | answered | RPO 60 / RTO 8 / daily / off-site | Retention days; product | [OQ-016.md](docs/00-governance/team-answers/OQ-016.md) |
+| OQ-017 | answered | App-owned PostgreSQL TX | Stored functions later ADR | [OQ-017.md](docs/00-governance/team-answers/OQ-017.md) |
+| OQ-018 | answered | MM + PG + Node/TS | NestJS, Prisma, React, Docker, auth, MCP | [OQ-018.md](docs/00-governance/team-answers/OQ-018.md) |
+| OQ-019 | treating | Role/RACI list; 11-person roster recorded | Mapping, delegates, operators, `ACT-*` | [OQ-019.md](docs/00-governance/team-answers/OQ-019.md) |
 
 Inquiry/Quotation expiry remains FIND-026 (`workshop-commercial-practice`), not
-a new `OQ-*`. Extra MCP remains “none by default” under OQ-018.
-
-Treating items are **Go-Live / business inputs** or implementation follow-ups.
-They are not silently closable. They do **not** all block every slice.
+a new `OQ-*` ([REVIEW_FINDINGS.md](docs/00-governance/registers/REVIEW_FINDINGS.md)).
 
 ---
 
-## 6. ADR status
+## 9. Factory personnel (FACT-04)
 
-Canonical register:
+Organizational facts only. **Not** a permission matrix.
+
+Source:
+[WORKSHOP_ROSTER.md](docs/02-domain-business-architecture/WORKSHOP_ROSTER.md),
+[OQ-019.md](docs/00-governance/team-answers/OQ-019.md).
+
+The 19 workshop **role** rows in `WORKSHOP_ROSTER.md` remain `(temporary)` and
+unmapped (0 of 19 confirmed role assignments).
+
+| Person | Organizational responsibility |
+| --- | --- |
+| Mr. Karimi | Warehousekeeper |
+| Mr. Ghaffari | Invoice issuance/registration + IT responsibility |
+| Ms. Koushki | Government trade-system registration + receivables follow-up |
+| Mr. Pour-Ebrahim | Sales Manager + order receiving |
+| Mr. Dinavand (آقای دیناروند) | Workshop Manager |
+| Ms. Bohlouli | Commercial Manager + sales/order receiving |
+| Ms. Masoumi | Recording completed purchases + sending proforma invoices |
+| Ms. Goodarzi | Accounting Manager |
+| Ms. Rangini | Accountant |
+| Mr. Faraji | Chairman of the Board |
+| Mr. Rouzbahani | CEO |
+
+Production-line operators are **not** listed. Workshop Manager is **not**
+inferred as `ACT-PLAN`, station-account owner, or coil-to-sheet commander.
+
+Actors (system roles, not these people):
+[ACTOR_RESPONSIBILITY_CATALOGUE.md](docs/02-domain-business-architecture/ACTOR_RESPONSIBILITY_CATALOGUE.md).
+
+---
+
+## 10. Decisions (ADRs)
+
 [DECISIONS.md](docs/00-governance/registers/DECISIONS.md).
+Template: [ADR_TEMPLATE.md](docs/00-governance/templates/ADR_TEMPLATE.md).
 
 | ADR | Status | Meaning |
 | --- | --- | --- |
-| ADR-0001 | Accepted | Node.js + TypeScript (not .NET/C#/ASP.NET) |
+| ADR-0001 | Accepted | Node.js + TypeScript |
 | ADR-0002 | Accepted | English documentation + glossary |
 | ADR-0003 | Accepted | Phase approval cadence |
 | ADR-0004 | Accepted | Git checkpoints after approved phases |
 | ADR-0005 | Accepted | Premature-implementation safeguard |
 | ADR-0006 | Accepted | Modular Monolith |
-| ADR-0007 | Accepted | PostgreSQL transactional SoR, including Ledger |
+| ADR-0007 | Accepted | PostgreSQL transactional SoR |
 | ADR-0008 | **Proposed** | Candidate Ubuntu / Docker Compose / Nginx topology |
 
-Candidate packages and frameworks (NestJS, Prisma, React, Socket.IO, auth,
-test runner, Docker) have **not** become accepted architecture merely because
-they appear as candidates. Each needs its own later ADR.
+Candidate packages appearing in planning documents are **not** accepted
+architecture.
 
 ---
 
-## 7. Authoritative write paths
+## 11. Proposed implementation sequence (not authorized)
 
-| Path | Owner | Notes |
-| --- | --- | --- |
-| Stock movement | `ACT-IPS` → Inventory Ledger | Balance is a projection of Ledger |
-| Production completion | `CompleteProductionOperation` | Production facts + IPS stock posts + genealogy source facts in one TX |
-| Residual identity | Nested `CreateResidualUnit` | Parent close/split; residual Ledger qty **once** |
-| Scrap quantity | IPS `PostScrapMovement` | Nested leftover **or** new Quality/abort key; `ScrapUnit` is destiny only |
-| Goods receipt | Procurement orchestration + IPS | Lot / Inventory Unit + Ledger |
-| Reservation request | `RequestReservation` | Does not occupy the ACTIVE uniqueness slot |
-| Reservation activation | Inventory `ActivateReservation` | One ACTIVE per unit; bundle with reserved-state + reserved qty |
-| Shipment dispatch | Shipping command + IPS stock exit | Shipping does not write Ledger |
-| Sales Order lifecycle | Sales | Confirm, fulfill, `CloseSalesOrder`; must not write Invoice/Ledger qty |
-| Invoice / payment | Finance-Lite | `AllocatePayment` + invoice open-balance; does not close SO |
-| QC | Quality commands IPS | Inspection owned by Quality |
-| Weighbridge | `ADP-WEIGHBRIDGE` commander | Never a Ledger writer |
-| Rebuilds | `BalanceRebuild` / `GenealogyRebuild` workers | Reconstruction; never stock writers |
-| Opening stock | `ADP-CUTOVER` / `OpeningStockImport` | Ledger facts; **blocked** until OQ-015 / OQ-019 |
+From [ROADMAP_AND_SLICES.md](docs/12-implementation-planning/ROADMAP_AND_SLICES.md)
+and [WORK_ITEMS.md](docs/12-implementation-planning/WORK_ITEMS.md).
+Homes: [SLICE_HOMES.md](docs/00-governance/registers/SLICE_HOMES.md).
+Spikes: [SPIKES_AND_ACCEPTANCE.md](docs/12-implementation-planning/SPIKES_AND_ACCEPTANCE.md).
+Cutover labels: [CUTOVER_TRAINING_ROLLOUT.md](docs/12-implementation-planning/CUTOVER_TRAINING_ROLLOUT.md).
 
-**Forbidden**
-
-- `EditGenealogy`
-- `AdjustBalance`
-- `PortalPlaceOrder` (MVP)
-- Direct Ledger writes by adapters, workers, UI, Quality, or Shipping
-- Independent production consume posting
-- Portal allocation, consumption, or financial mutation
-
----
-
-## 8. Transaction boundaries
-
-**Named unsplittable business transactions (DATA-TX-001)**
-
-1. `CompleteProductionOperation` + consume/output/residual/scrap (nested
-   residual identity)
-2. `DispatchShipment` + stock exit
-3. `PostGoodsReceipt` + Lot/Unit/Ledger
-4. `ActivateReservation` + unit reserved-state + reserved qty
-5. `AllocatePayment` + invoice open-balance reduction
-6. Quality/abort scrap that is **not** leftover of that completion:
-   `RecordScrapFact` + `PostScrapMovement` (+ `ScrapUnit` if destiny is
-   `SCRAPPED`)
-
-`CreateResidualUnit` for production leftover is nested inside (1), not a later
-independently committable transaction.
-
-**Intentionally not universal DATA-TX-001 bundles** (do not invent extra
-boundaries)
-
-- `CloseSalesOrder` — Sales state; may command `ReleaseReservation`; no Ledger
-  qty
-- `CompleteOperationPartial` — Production Order state only; no stock
-- `PlaceResidualUnit` — placement / QC hold after the child exists; no second
-  residual qty
-- Inquiry / Quotation / SO draft-submit-confirm (`ConfirmSalesOrder` does not
-  create `REQUESTED`)
-- Rebuild workers
-- Correction/reversal commands (new key, link to original)
-
-Physical isolation/lock SQL remains an OQ-017 residual.
-
----
-
-## 9. Implementation sequence (proposed, not authorized)
-
-From Gate 6 / [ROADMAP_AND_SLICES.md](docs/12-implementation-planning/ROADMAP_AND_SLICES.md).
 This sequence is **not** permission to execute it.
 
 0. Human unlock
-1. Runtime/package ADR for the first slice (if packages are introduced)
-2. `SLICE-ENVELOPE` (command/query envelope, idempotency, `AUD-CMD-*`; no Ledger)
-3. PostgreSQL foundation for Ledger / Unit / Reservation (logical model → schema)
+1. Runtime/package ADR if packages are introduced
+2. `SLICE-ENVELOPE` (command envelope, idempotency, `AUD-CMD-*`; no Ledger)
+3. PostgreSQL foundation for Ledger / Unit / Reservation
 4. `SLICE-IPS`
-5. `SLICE-STOCK` (Sales, reservation, pack/dispatch, Finance-Lite)
-6. `SLICE-PURCHASE` (including inbound QC commanders)
-7. `SLICE-MAKE` (including in-process/final QC commanders)
-8. Genealogy projection / traces
+5. `SLICE-STOCK`
+6. `SLICE-PURCHASE`
+7. `SLICE-MAKE`
+8. Genealogy projection
 9. Portal visibility reads
 10. `SLICE-REVERSE`
 11. `SLICE-RESTORE`
 12. `SLICE-CUTOVER` (blocked on OQ-015 / OQ-019)
-13. Deploy / DR (ADR-0008 remains proposed)
+13. Deploy / DR (ADR-0008 proposed)
 
-Quality is not a Ledger-writer stage. Weighbridge auto-path stays inside
-purchase and remains `GUARD_OPEN_POLICY` until OQ-011.
-
----
-
-## 10. Slice governance
-
-Once a human unlock exists, later implementation must:
-
-- Work one named `SLICE-*` / `WI-*` at a time with explicit scope
-- Avoid unrelated refactoring
-- Reopen the owning `APR-*` / add an ADR for architecture-affecting change
-- Forbid cross-module table writes (`CONF-IMPORT`)
-- Keep DATA-TX-001 bundles unsplittable (`CONF-BUNDLE`)
-- Post stock only through `ACT-IPS` (`CONF-IPS`)
-- Require critical invariant evidence (`QA-P-*`, `QA-SCN-*`, `SV-*`; no
-  minted `TEST-*` catalogue)
-- Review migrations so Ledger history is not deleted and Balance is not treated
-  as independent truth
-- Take a Git checkpoint after an **accepted** slice; a failed slice does not
-  silently continue
-- Have Cursor report changed files, checks run, unresolved `OQ-*` /
-  `GUARD_OPEN_POLICY`, and evidence — and not claim completion without that
-- Leave treating residuals as `GUARD_OPEN_POLICY` rather than inventing values
-
-See [SLICE_HOMES.md](docs/00-governance/registers/SLICE_HOMES.md) and
-[WORK_ITEMS.md](docs/12-implementation-planning/WORK_ITEMS.md).
+After a valid unlock, slice rules include: one `SLICE-*` at a time;
+`CONF-IPS` / `CONF-BUNDLE` / `CONF-IMPORT`; leave treating residuals as
+`GUARD_OPEN_POLICY`;
+[CONFORMANCE_CHECKS.md](docs/09-repository-documentation/CONFORMANCE_CHECKS.md);
+[GENERATED_CODE_ACCEPTANCE.md](docs/10-ai-cursor-development/GENERATED_CODE_ACCEPTANCE.md).
 
 ---
 
-## 11. Human authorization / unlock model
-
-Technical unlock requires **both**:
-
-1. A **human-created** `.cursor/IMPLEMENTATION_UNLOCK.json`
-2. `.cursor/architecture-gate.json` independently set to
-   `"implementationAuthorized": true` with the **same** `approvedBaseline`
-
-Required unlock fields: `approvedBy`, `approvedAt`, `approvedBaseline`,
-`allowedWritePaths`, `allowedShellCommands`.
-
-`approvedBaseline` must be an `APR-*` under
-`docs/00-governance/approved-baselines/` with a recorded Git commit. The human
-authorization step should bind the **live** registers and Gate 1–5 catalogues,
-not CHK-0013 freeze text that still says OQs are unanswered.
-
-`allowedShellCommands` must be exact strings (no `;`, `|`, or redirection).
-An unlock that names `package.json`, Docker, or CI is invalid **unless a later
-approval explicitly adds those paths**.
-
-**Agents must never create or edit the unlock** (`AG-UNLOCK` never).
-
-**Current state:** no unlock file; gate `implementationAuthorized` is false;
-this README does not authorize implementation.
-
----
-
-## 12. Current blocking / guarded items
-
-**Global process block (intentional):** no human unlock → no application
-implementation.
-
-Treating OQs **do not** all block all work after a valid unlock. They guard
-the slices that need the missing input:
+## 12. What still blocks or guards work
 
 | Guard | Effect |
 | --- | --- |
 | Human unlock | Blocks **all** application code |
-| OQ-001 | Blocks commands that need missing decimal scale/rounding/factors |
-| OQ-003 | Named routing catalogue and abort-after-post role wait; complete-op boundary is already recorded |
-| OQ-005 | Named exceptional releasers / plans wait; QC can still block |
-| OQ-006 family % | Family over-delivery waits; default 0 is recorded |
-| OQ-009 | Cutoff-dependent residual/scrap classification waits |
-| OQ-010 document list | Visibility-only MVP proceeds; exact document list residual |
-| OQ-011 | Automatic weighbridge integration waits; human ticket fallback is defined |
-| OQ-014 | Physical capacity/index sizing waits |
-| OQ-015 | Opening-stock cutover blocked |
-| OQ-016 residual | Backup product / retention days wait; RPO/RTO recorded |
-| OQ-017 residual | Stored-function ADR waits; app-owned TX is recorded |
-| OQ-018 residual | Package/framework choices wait for explicit ADRs |
-| OQ-019 | Named-person UAT / cutover / some approvals wait |
+| OQ-001 | Commands that need missing scale/rounding/factors |
+| OQ-003 | Named routing / abort-after-post / station identity / enter-forward mapping |
+| FACT-03 | Coil→sheet must not be implemented as an assumed command or DATA-TX-001 row |
+| FACT-05 | Station accounts must not silently replace `actor_identity` |
+| OQ-005 | Named exceptional releasers / Quality Plans |
+| OQ-009 | Cutoff-dependent residual/scrap classification |
+| OQ-011 | Automatic weighbridge path |
+| OQ-014 | Physical capacity/index sizing |
+| OQ-015 / OQ-019 | Opening-stock cutover and named sign-off |
+| OQ-018 / ADR-0008 | Package and deployment product choices |
 
 ---
 
-## 13. Historical / superseded material
+## 13. No-inference rules (factory evidence)
 
-Older APR/CHK manifests, phase SELF_CHECK / INDEPENDENT_REVIEW files, and
-superseded .NET wording remain for audit.
+Do not treat any of the following as decided:
 
-They are **not** current authority when they conflict with:
+- Station account ≠ human identity unless explicitly decided.
+- Original coil code ≠ customer order code unless explicitly decided.
+- Coil → sheet ≠ `CompleteProductionOperation` unless explicitly decided.
+- Coil → sheet ≠ `CreateResidualUnit` unless explicitly decided.
+- 6 m / 12 m ≠ approved length catalogue unless explicitly confirmed.
+- Start ≠ station entry unless explicitly confirmed.
+- Complete ≠ station forwarding unless explicitly confirmed.
+- Organizational title ≠ `ACT-*` permission.
+- Roster ≠ SoD / sign-off assignment.
+- kg-first ≠ decimal / rounding / conversion / tolerance policy.
+- Gate 6 “ready” ≠ `IMPLEMENTATION_AUTHORIZED: true`.
+
+---
+
+## 14. Documentation map
+
+Master index: [docs/INDEX.md](docs/INDEX.md).
+This section is the same corpus grouped for a new developer.
+
+### 14.1 Governance (`docs/00-governance/`)
+
+- Phase home: [README.md](docs/00-governance/README.md)
+- [ARCHITECTURE_CHARTER.md](docs/00-governance/ARCHITECTURE_CHARTER.md)
+- [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md)
+- [PHASE_GATES.md](docs/00-governance/PHASE_GATES.md)
+- [DOCUMENTATION_STANDARD.md](docs/00-governance/DOCUMENTATION_STANDARD.md)
+- [SOURCE_REGISTER.md](docs/00-governance/SOURCE_REGISTER.md)
+- [APPROVALS.md](docs/00-governance/APPROVALS.md)
+- [TEAM_QUESTION_PACK.md](docs/00-governance/TEAM_QUESTION_PACK.md)
+- [TEAM_ANSWER_SHEET.md](docs/00-governance/TEAM_ANSWER_SHEET.md)
+- [HOOK_VALIDATION.md](docs/00-governance/HOOK_VALIDATION.md)
+- Phase evidence: [SELF_CHECK.md](docs/00-governance/SELF_CHECK.md),
+  [INDEPENDENT_REVIEW.md](docs/00-governance/INDEPENDENT_REVIEW.md),
+  [RECONCILIATION.md](docs/00-governance/RECONCILIATION.md),
+  [GATE_CHECKLIST.md](docs/00-governance/GATE_CHECKLIST.md)
+- Templates: [templates/README.md](docs/00-governance/templates/README.md)
+
+### 14.2 Phase 01 — Assimilation (`docs/01-project-assimilation/`)
+
+[README.md](docs/01-project-assimilation/README.md) ·
+[ARCHITECTURE_ASSIMILATION_REPORT.md](docs/01-project-assimilation/ARCHITECTURE_ASSIMILATION_REPORT.md) ·
+[SOURCE_BIBLIOGRAPHY.md](docs/01-project-assimilation/SOURCE_BIBLIOGRAPHY.md) ·
+[PROVENANCE_CLASSIFICATION.md](docs/01-project-assimilation/PROVENANCE_CLASSIFICATION.md) ·
+[MULTI_AGENT_METHOD.md](docs/01-project-assimilation/MULTI_AGENT_METHOD.md) ·
+[WORKSHOP_AGENDA.md](docs/01-project-assimilation/WORKSHOP_AGENDA.md)
+
+### 14.3 Phase 02 — Domain (`docs/02-domain-business-architecture/`)
+
+[README.md](docs/02-domain-business-architecture/README.md) ·
+[CAPABILITY_BOUNDED_CONTEXT_MAP.md](docs/02-domain-business-architecture/CAPABILITY_BOUNDED_CONTEXT_MAP.md) ·
+[PROCESS_MAPS_AS_IS_TO_BE.md](docs/02-domain-business-architecture/PROCESS_MAPS_AS_IS_TO_BE.md)
+(includes FACT-03 coil→sheet, **DOMAIN CLASSIFICATION: OPEN**) ·
+[ACTOR_RESPONSIBILITY_CATALOGUE.md](docs/02-domain-business-architecture/ACTOR_RESPONSIBILITY_CATALOGUE.md) ·
+[MODULE_OWNERSHIP_MATRIX.md](docs/02-domain-business-architecture/MODULE_OWNERSHIP_MATRIX.md) ·
+[MVP_SCOPE_AND_BUSINESS_RULES.md](docs/02-domain-business-architecture/MVP_SCOPE_AND_BUSINESS_RULES.md)
+(BR-001–BR-020 and RQ-01–RQ-07) ·
+[WORKSHOP_ROSTER.md](docs/02-domain-business-architecture/WORKSHOP_ROSTER.md) ·
+[WORKSHOP_COLLECTION_MAP.md](docs/02-domain-business-architecture/WORKSHOP_COLLECTION_MAP.md) ·
+[PHASE03_HANDOFF.md](docs/02-domain-business-architecture/PHASE03_HANDOFF.md)
+
+### 14.4 Phase 03 — State machines (`docs/03-state-machines-invariants/`)
+
+[README.md](docs/03-state-machines-invariants/README.md) ·
+[INVARIANT_CATALOGUE.md](docs/03-state-machines-invariants/INVARIANT_CATALOGUE.md) ·
+[STATE_MACHINE_CATALOGUE.md](docs/03-state-machines-invariants/STATE_MACHINE_CATALOGUE.md) ·
+[TRANSITION_TABLES.md](docs/03-state-machines-invariants/TRANSITION_TABLES.md) ·
+[SIDE_EFFECT_MATRIX.md](docs/03-state-machines-invariants/SIDE_EFFECT_MATRIX.md) ·
+[CROSS_MACHINE_SEQUENCES.md](docs/03-state-machines-invariants/CROSS_MACHINE_SEQUENCES.md) ·
+[CONCURRENCY_AND_INTERLOCK.md](docs/03-state-machines-invariants/CONCURRENCY_AND_INTERLOCK.md) ·
+[EXCEPTION_CORRECTION.md](docs/03-state-machines-invariants/EXCEPTION_CORRECTION.md) ·
+[EVENT_AND_REJECTION.md](docs/03-state-machines-invariants/EVENT_AND_REJECTION.md) ·
+[AUTHORIZATION_SOD.md](docs/03-state-machines-invariants/AUTHORIZATION_SOD.md) ·
+[PHASE04_HANDOFF.md](docs/03-state-machines-invariants/PHASE04_HANDOFF.md)
+
+### 14.5 Phase 04 — Data (`docs/04-database-architecture/`)
+
+[README.md](docs/04-database-architecture/README.md) ·
+[LOGICAL_MODEL.md](docs/04-database-architecture/LOGICAL_MODEL.md) ·
+[LOGICAL_ATTRIBUTE_CATALOGUE.md](docs/04-database-architecture/LOGICAL_ATTRIBUTE_CATALOGUE.md) ·
+[POSTING_KERNEL.md](docs/04-database-architecture/POSTING_KERNEL.md) ·
+[TRANSACTION_AND_IDEMPOTENCY.md](docs/04-database-architecture/TRANSACTION_AND_IDEMPOTENCY.md) ·
+[GENEALOGY_PROJECTION.md](docs/04-database-architecture/GENEALOGY_PROJECTION.md) ·
+[ENFORCEMENT_ASSIGNMENT.md](docs/04-database-architecture/ENFORCEMENT_ASSIGNMENT.md) ·
+[RETENTION_MIGRATION_OPENING_STOCK.md](docs/04-database-architecture/RETENTION_MIGRATION_OPENING_STOCK.md) ·
+[PHASE05_HANDOFF.md](docs/04-database-architecture/PHASE05_HANDOFF.md)
+
+Logical design only. **No physical schema, SQL, or migrations.**
+
+### 14.6 Phase 05 — Application / API (`docs/05-application-api-architecture/`)
+
+[README.md](docs/05-application-api-architecture/README.md) ·
+[COMMAND_CATALOGUE.md](docs/05-application-api-architecture/COMMAND_CATALOGUE.md) ·
+[QUERY_CATALOGUE.md](docs/05-application-api-architecture/QUERY_CATALOGUE.md) ·
+[MODULE_DEPENDENCY_MAP.md](docs/05-application-api-architecture/MODULE_DEPENDENCY_MAP.md) ·
+[ORCHESTRATION.md](docs/05-application-api-architecture/ORCHESTRATION.md) ·
+[API_ENVELOPE.md](docs/05-application-api-architecture/API_ENVELOPE.md) ·
+[BACKGROUND_AND_REALTIME.md](docs/05-application-api-architecture/BACKGROUND_AND_REALTIME.md) ·
+[PHASE06_HANDOFF.md](docs/05-application-api-architecture/PHASE06_HANDOFF.md)
+
+### 14.7 Phase 06 — Security (`docs/06-security-rbac-audit/`)
+
+[README.md](docs/06-security-rbac-audit/README.md) ·
+[THREAT_MODEL.md](docs/06-security-rbac-audit/THREAT_MODEL.md) ·
+[ROLE_PERMISSION_MATRIX.md](docs/06-security-rbac-audit/ROLE_PERMISSION_MATRIX.md) ·
+[CUSTOMER_ISOLATION.md](docs/06-security-rbac-audit/CUSTOMER_ISOLATION.md) ·
+[SESSION_AND_IDENTITY.md](docs/06-security-rbac-audit/SESSION_AND_IDENTITY.md)
+(FACT-05 unresolved conflict recorded; live identity rule unchanged) ·
+[AUDIT_TAXONOMY.md](docs/06-security-rbac-audit/AUDIT_TAXONOMY.md) ·
+[SECURITY_VERIFICATION.md](docs/06-security-rbac-audit/SECURITY_VERIFICATION.md) ·
+[PHASE07_HANDOFF.md](docs/06-security-rbac-audit/PHASE07_HANDOFF.md)
+
+### 14.8 Phase 07 — Testing architecture (`docs/07-testing-quality-architecture/`)
+
+[README.md](docs/07-testing-quality-architecture/README.md) ·
+[TEST_STRATEGY.md](docs/07-testing-quality-architecture/TEST_STRATEGY.md) ·
+[VERIFICATION_TRACE.md](docs/07-testing-quality-architecture/VERIFICATION_TRACE.md) ·
+[SCENARIO_CATALOGUE.md](docs/07-testing-quality-architecture/SCENARIO_CATALOGUE.md) ·
+[PROPERTY_AND_KERNEL_INTENTS.md](docs/07-testing-quality-architecture/PROPERTY_AND_KERNEL_INTENTS.md) ·
+[NFR_AND_UAT.md](docs/07-testing-quality-architecture/NFR_AND_UAT.md) ·
+[QUALITY_GATES.md](docs/07-testing-quality-architecture/QUALITY_GATES.md) ·
+[PHASE08_HANDOFF.md](docs/07-testing-quality-architecture/PHASE08_HANDOFF.md)
+
+Intents only. No `TEST-*` catalogue. No chosen runner (OQ-018).
+
+### 14.9 Phase 08 — Integration / deployment labels (`docs/08-integration-deployment/`)
+
+[README.md](docs/08-integration-deployment/README.md) ·
+[INTEGRATION_CATALOGUE.md](docs/08-integration-deployment/INTEGRATION_CATALOGUE.md) ·
+[EXTERNAL_BOUNDARIES.md](docs/08-integration-deployment/EXTERNAL_BOUNDARIES.md) ·
+[DEPLOYMENT_TOPOLOGY.md](docs/08-integration-deployment/DEPLOYMENT_TOPOLOGY.md) ·
+[OBSERVABILITY.md](docs/08-integration-deployment/OBSERVABILITY.md) ·
+[BACKUP_AND_RECOVERY.md](docs/08-integration-deployment/BACKUP_AND_RECOVERY.md) ·
+[RUNBOOK_CATALOGUE.md](docs/08-integration-deployment/RUNBOOK_CATALOGUE.md) ·
+[PHASE09_HANDOFF.md](docs/08-integration-deployment/PHASE09_HANDOFF.md)
+
+### 14.10 Phase 09 — Future repository (`docs/09-repository-documentation/`)
+
+[README.md](docs/09-repository-documentation/README.md) ·
+[REPOSITORY_LAYOUT.md](docs/09-repository-documentation/REPOSITORY_LAYOUT.md) ·
+[DEPENDENCY_AND_IMPORT_RULES.md](docs/09-repository-documentation/DEPENDENCY_AND_IMPORT_RULES.md) ·
+[BRANCHING_AND_RELEASE.md](docs/09-repository-documentation/BRANCHING_AND_RELEASE.md) ·
+[DOCUMENTATION_OWNERSHIP.md](docs/09-repository-documentation/DOCUMENTATION_OWNERSHIP.md) ·
+[GENERATED_VS_AUTHORED.md](docs/09-repository-documentation/GENERATED_VS_AUTHORED.md) ·
+[CONFORMANCE_CHECKS.md](docs/09-repository-documentation/CONFORMANCE_CHECKS.md) ·
+[PHASE10_HANDOFF.md](docs/09-repository-documentation/PHASE10_HANDOFF.md)
+
+### 14.11 Phase 10 — Cursor / agents (`docs/10-ai-cursor-development/`)
+
+[README.md](docs/10-ai-cursor-development/README.md) ·
+[AGENT_AUTHORITY.md](docs/10-ai-cursor-development/AGENT_AUTHORITY.md) ·
+[RULE_AND_SKILL_CATALOGUE.md](docs/10-ai-cursor-development/RULE_AND_SKILL_CATALOGUE.md) ·
+[IMPLEMENTATION_PROMPT_STANDARDS.md](docs/10-ai-cursor-development/IMPLEMENTATION_PROMPT_STANDARDS.md) ·
+[HUMAN_AND_INDEPENDENT_REVIEW.md](docs/10-ai-cursor-development/HUMAN_AND_INDEPENDENT_REVIEW.md) ·
+[TOOL_MCP_HOOK_SAFETY.md](docs/10-ai-cursor-development/TOOL_MCP_HOOK_SAFETY.md) ·
+[GENERATED_CODE_ACCEPTANCE.md](docs/10-ai-cursor-development/GENERATED_CODE_ACCEPTANCE.md) ·
+[PHASE11_HANDOFF.md](docs/10-ai-cursor-development/PHASE11_HANDOFF.md)
+
+### 14.12 Phase 11 — Validation (`docs/11-architecture-validation/`)
+
+[README.md](docs/11-architecture-validation/README.md) ·
+[INTEGRATED_REVIEW.md](docs/11-architecture-validation/INTEGRATED_REVIEW.md) ·
+[TRACEABILITY_COVERAGE.md](docs/11-architecture-validation/TRACEABILITY_COVERAGE.md) ·
+[WALKTHROUGHS.md](docs/11-architecture-validation/WALKTHROUGHS.md) ·
+[CROSS_DOMAIN.md](docs/11-architecture-validation/CROSS_DOMAIN.md) ·
+[RISK_OPERABILITY.md](docs/11-architecture-validation/RISK_OPERABILITY.md) ·
+[CORRECTIVE_ACTIONS.md](docs/11-architecture-validation/CORRECTIVE_ACTIONS.md) ·
+[PHASE12_HANDOFF.md](docs/11-architecture-validation/PHASE12_HANDOFF.md)
+
+### 14.13 Phase 12 — Implementation planning (`docs/12-implementation-planning/`)
+
+[README.md](docs/12-implementation-planning/README.md) ·
+[IMPLEMENTATION_READINESS.md](docs/12-implementation-planning/IMPLEMENTATION_READINESS.md) ·
+[ROADMAP_AND_SLICES.md](docs/12-implementation-planning/ROADMAP_AND_SLICES.md) ·
+[WORK_ITEMS.md](docs/12-implementation-planning/WORK_ITEMS.md) ·
+[SPIKES_AND_ACCEPTANCE.md](docs/12-implementation-planning/SPIKES_AND_ACCEPTANCE.md) ·
+[CUTOVER_TRAINING_ROLLOUT.md](docs/12-implementation-planning/CUTOVER_TRAINING_ROLLOUT.md) ·
+[AUTHORIZATION_RECORD.md](docs/12-implementation-planning/AUTHORIZATION_RECORD.md)
+
+Each phase also has `SELF_CHECK.md`, `INDEPENDENT_REVIEW.md`,
+`RECONCILIATION.md` or equivalent, `GATE_CHECKLIST.md`, and `CHECKPOINT_APR-*.md`.
+Those are **phase-gate evidence**, not live policy when they conflict with
+registers.
+
+---
+
+## 15. Historical vs live
+
+Use live files when they conflict with freeze text:
 
 - [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md)
-- [DECISIONS.md](docs/00-governance/registers/DECISIONS.md)
 - [OPEN_QUESTIONS.md](docs/00-governance/registers/OPEN_QUESTIONS.md)
-- Gate 1–5 live catalogues
+- [DECISIONS.md](docs/00-governance/registers/DECISIONS.md)
+- Gate 1–5 reconciled catalogues listed above
 
-In particular, **CHK-0013** (`a6b893095af7c9d14f342371fb6e4ef9c6d833df`,
-2026-09-07) froze Phase 12 **structure**. Team answers (2026-09-15) and
-Gates 1–6 later-recorded the live OQ/ADR/reconciliation state. Do not treat
-CHK-0013 as the complete current architecture baseline.
+[CHK-0013](docs/00-governance/approved-baselines/CHK-0013-phase-12.md) froze
+Phase 12 **structure** on `2026-09-07`. Team answers (`2026-09-15`), Gates 1–6,
+and factory evidence (`2026-09-23`) came **after** that freeze.
 
-APR freeze files that say “OQ-001–019 remain unanswered” or “only ADR-0001
-accepted” describe the signed gate at that time.
+Superseded governance approvals:
+[APR-000](docs/00-governance/approved-baselines/APR-000-governance.md),
+[APR-001](docs/00-governance/approved-baselines/APR-001-governance.md).
 
 ---
 
-## 14. Where we are now
+## 16. What to do next
 
-The ERP architecture and governance baseline has completed Gates 1–5 and the
-implementation-readiness Gate 6. The project is now **READY FOR HUMAN
-IMPLEMENTATION AUTHORIZATION**, but implementation is **NOT** authorized.
+**If you are implementing software:** stop. There is no unlock.
+
+**If you are continuing architecture/governance:**
+
+1. Take [TEAM_QUESTION_PACK.md](docs/00-governance/TEAM_QUESTION_PACK.md) to
+   the factory/sponsor.
+2. Record returned answers only on the matching `OQ-*` row. Partial answers
+   are allowed. Chat is not a second register.
+3. Do not invent FACT-03 classification, station-account security, timestamp
+   fields, RBAC mappings, or package choices.
+4. A question pack is not implementation authorization.
+
+**If you are the human who may authorize implementation:** bind a **current**
+baseline (live registers + Gate 1–5 catalogues, not CHK-0013 freeze text
+alone), create `.cursor/IMPLEMENTATION_UNLOCK.json` yourself, and set
+matching `architecture-gate.json` policy. Agents must not do that for you.
 
 ```text
 IMPLEMENTATION_AUTHORIZED: false
 NO_IMPLEMENTATION_UNLOCK_CREATED: true
+APPLICATION_CODE: none
 ```
-
-The next governance action is explicit **human** implementation authorization
-against an approved **current** baseline (live registers + Gate 1–5
-catalogues), via a human-created unlock and matching architecture-gate policy.
-Only after that authorization should the first implementation slice begin.
-
----
-
-## Start here
-
-1. [Documentation index](docs/INDEX.md)
-2. [Current phase authorization](docs/00-governance/CURRENT_PHASE.md)
-3. [Architecture charter](docs/00-governance/ARCHITECTURE_CHARTER.md)
-4. [Open questions](docs/00-governance/registers/OPEN_QUESTIONS.md)
-5. [Decision register](docs/00-governance/registers/DECISIONS.md)
-6. [Team question pack](docs/00-governance/TEAM_QUESTION_PACK.md)
-7. [Implementation readiness (not an unlock)](docs/12-implementation-planning/IMPLEMENTATION_READINESS.md)
-8. [Authorization record labels](docs/12-implementation-planning/AUTHORIZATION_RECORD.md)
-9. [Roadmap and slices](docs/12-implementation-planning/ROADMAP_AND_SLICES.md)
-
----
-
-## Architecture phase dashboard (structure freezes)
-
-These APR/CHK rows record **phase structure** approval. They are historical
-checkpoints, not the live OQ/ADR snapshot and not an implementation unlock.
-
-| Phase | Structure status | Approval | Checkpoint commit |
-| --- | --- | --- | --- |
-| `00-governance` | Approved | APR-002 | `540a606ef32a3cb17f7e886dff3c4dcde82ca4b1` |
-| `01-project-assimilation` | Approved | APR-003 | `91273e9e30ead2f19203fab2f82d5f23911ee0aa` |
-| `02-domain-business-architecture` | Approved | APR-004 | `ec3c210a83a0d8f163bbbb6fadc1e4a28b8bf8db` |
-| `03-state-machines-invariants` | Approved | APR-005 | `bef6b6464baaf62ac8d3db9f9b7fa835ad04ec6c` |
-| `04-database-architecture` | Approved (logical) | APR-006 | `87f9f10442d58fbd224dce09f46c862eb8707e8f` |
-| `05-application-api-architecture` | Approved (structure) | APR-007 | `00b30a3064027fd0584c35c5f479b04d087614a6` |
-| `06-security-rbac-audit` | Approved (structure) | APR-008 | `167353573840ef22d23049b864636d7383c61911` |
-| `07-testing-quality-architecture` | Approved (structure) | APR-009 | `29921d69e10bf6704966a08ff927d9e6ae9c0bd3` |
-| `08-integration-deployment` | Approved (structure) | APR-010 | `751035d2359abb5bd99a1b8a254715b2a5c937ae` |
-| `09-repository-documentation` | Approved (structure) | APR-011 | `81aef0e7bc217cf5172b1f64edf13848b6242bb2` |
-| `10-ai-cursor-development` | Approved (structure) | APR-012 | `1d581c4357a784f3170bd42349a47c1b38bde1e6` |
-| `11-architecture-validation` | Approved (structure) | APR-013 | `57062e96c91b6eff52f233aaf3a0df65a81e9da4` |
-| `12-implementation-planning` | Approved (structure) | APR-014 | `a6b893095af7c9d14f342371fb6e4ef9c6d833df` |
-
-Team answers were recorded `2026-09-15`. Gates 1–6 followed. Temporary workshop
-identities still cannot sign decisions (OQ-019).
