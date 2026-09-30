@@ -3,10 +3,10 @@ id: DOM-CAP-BC-001
 title: Capability and Bounded-Context Map
 phase: 02-domain-business-architecture
 status: approved
-version: 0.2.1
+version: 0.2.3
 owners: [chief-solution-architect, business-process-owner]
 depends_on: [GOV-DOMAIN-001, ASM-REPORT-001]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-09-30
 approval: APR-004
 supersedes: null
 ---
@@ -159,6 +159,15 @@ requires workshop confirmation. This map **proposes** Inventory as write owner
 of lot/unit stock identity, with Procurement holding immutable
 supplier/purchase/certificate references. Workshop evidence must confirm or
 replace that split (OQ-003, OQ-011, OQ-015).
+
+Factory intake (`2026-09-30`) matches the split in this limited sense:
+warehouse intake records physical facts; quantity is still posted by
+Inventory, not by Procurement. It does not confirm lot-entity ownership,
+a purchase approver, or a device. The table above is not deleted.
+
+The order-to-station flow does not add a Production Planner or a second
+production posting owner. `BC-PRODUCTION` still records operations.
+`ACT-IPS` still posts stock at `CompleteProductionOperation`.
 
 ### Customer Portal — visibility-only in MVP (OQ-010 recorded)
 

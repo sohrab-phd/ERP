@@ -3,10 +3,10 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: approved
-version: 0.7.1
+version: 0.7.3
 owners: [requirements-owner, qa-architect]
 depends_on: [SRC-001, SRC-002, DOM-MVP-RULES-001, SM-INV-001, APR-005]
-last_reviewed: 2026-09-23
+last_reviewed: 2026-10-01
 approval: APR-005
 supersedes: null
 ---
@@ -161,7 +161,9 @@ evidence and Phase 07.
   QA-SCN-REVERSE; QA-SCN-QC-HOLD; QA-SCN-SOD; QA-SCN-SOD-GR
 - Phase 08 integration intents (structure, not products):
   `OBS-AUDIT`; `RB-SOD`; `ADP-CUTOVER` stays `GUARD_OPEN_POLICY` until
-  OQ-015
+  OQ-015. That adapter is an architecture candidate. The factory has not
+  confirmed an opening-stock file, freeze, or signer, and normal receiving
+  does not answer it.
 - Phase 09 repository intents (structure, not products):
   authored catalogues stay source truth; generated OpenAPI cannot close
   an `OQ-*`
@@ -232,12 +234,12 @@ and are **not** promoted to `INV-*`.
 
 | Evidence ID | Objective link | Status of evidence |
 | --- | --- | --- |
-| RQ-01 kg-first quantity | REQ-OBJ-002 | Confirms existing kg-first; OQ-001 numerical residuals remain treating |
+| RQ-01 kg-first quantity | REQ-OBJ-002 | kg-only stock quantity confirmed. Measurement: 0 decimals, 1 kg, no measurement rounding. Weight difference must be shown; no automatic measurement tolerance. That is not OQ-006. kg↔length formula still open. OQ-001 remains treating |
 | RQ-02 order-code traceability | REQ-OBJ-003 | Confirmed traceability requirement; order-code identity unclassified |
 | RQ-03 no mandatory per-piece identity | REQ-OBJ-003 | Confirms OQ-004 hybrid grain; Inventory Unit retained |
-| RQ-04 opened-coil conversion | REQ-OBJ-003 | New process requirement; domain/TX classification open |
-| RQ-05 station routing | REQ-OBJ-003 / REQ-OBJ-004 | Confirmed operational requirement; catalogue treating (OQ-003) |
+| RQ-04 opened-coil conversion | REQ-OBJ-003 | Factory: inventory transformation without a customer order or Production Order; Coil↔Sheet traceability. Posting command not accepted. Conflict with `CompleteProductionOperation` left open |
+| RQ-05 station routing | REQ-OBJ-003 / REQ-OBJ-004 | Per-order route by the Production Manager; Stations may be skipped. Earlier fixed-sequence wording is historical. Storage still OQ-003 |
 | RQ-06 station progression | REQ-OBJ-004 | Confirmed visibility requirement |
-| RQ-07 station timing | REQ-OBJ-004 | Confirmed history/reporting requirement; no invented timestamp fields |
+| RQ-07 station timing | REQ-OBJ-004 | Entry and Referral are system-clock events and are not Start or Complete. Storage beside the operation lifecycle remains open. No invented timestamp fields |
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.

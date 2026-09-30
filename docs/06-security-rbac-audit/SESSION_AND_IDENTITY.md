@@ -3,10 +3,10 @@ id: SEC-ID-001
 title: Session and Identity Policy Labels
 phase: 06-security-rbac-audit
 status: approved
-version: 0.2.1
+version: 0.2.2
 owners: [security-architect]
 depends_on: [SEC-RBAC-001, SEC-THREAT-001, APR-007, APR-008]
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-30
 approval: APR-008
 supersedes: null
 ---
@@ -76,39 +76,34 @@ second human for SoD.
 - MFA mandate list
 - Password length or rotation days
 
-## Unresolved factory identity conflict (FACT-05, `2026-09-23`)
+## Earlier station-account preference is superseded (`2026-09-30`)
 
-The live rules above are **unchanged**. `actor_identity` remains a stable
-person or service identity. `SharedTerminal` still requires operator
+The 2026-09-23 text below preferred a station account. The later factory
+clarification **supersedes** that preference:
+
+- There is no shared Station account.
+- Each operator has a personal account.
+- Attributable activity uses that personal identity.
+- Station is not a user. One person may work at more than one Station.
+- A shared **terminal** may still exist. The account used on it is personal.
+- `ACT-*` permissions are not changed.
+- Operator login and logout are recorded. That is factory evidence. It
+  does not choose a session product, and it does not make login the same
+  event as Station Entry. Mr. Ghaffari's account responsibility is not a
+  super-admin permission.
+- QC, SoD, reversal, and cutover are not remapped onto a station account,
+  because that account does not exist in the factory evidence.
+
+## Historical factory preference (FACT-05, `2026-09-23`) — superseded
+
+The live rules in the sections above were not rewritten by the 2026-09-23
+note. `actor_identity` remains a stable person or service identity.
+`SharedTerminal` still allows a shared device and still requires operator
 identity per command. `PasswordPolicy` still says a human principal is not
-a shared shop password. `ACT-*` permissions are not changed here.
+a shared shop password.
 
-Factory meeting FACT-05 is recorded as a **confirmed operational
-requirement plus an unresolved identity/security design question**:
-
-- production stations will be defined;
-- ordinary production-line execution should not depend on individual
-  operator accounts because operators may change;
-- operators would use the account associated with their station.
-
-This factory preference **conflicts with, and does not silently override**,
-the SharedTerminal / per-command human identity rule. A later identity
-decision is required. Until then, do not assume a station account satisfies
-audit, SoD, QC release, reversals, or cutover.
-
-Open questions (intentionally unanswered):
-
-1. Can a station account be used for ordinary production commands?
-2. Is a human actor identity still required per command?
-3. If station identity is used, how is individual accountability preserved?
-4. Which commands may use station identity?
-5. Which commands must require a named human identity?
-6. Are QC hold/release operations excluded?
-7. Are SoD-sensitive commands excluded?
-8. Are reversals excluded?
-9. Are cutover/sign-off operations excluded?
-10. How does the station identity relate to the existing `ACT-*` catalogue?
-
-A future dedicated OQ may be required if this cannot remain a residual of
-OQ-003. Canonical recording:
-[OPEN_QUESTIONS.md](../00-governance/registers/OPEN_QUESTIONS.md).
+The 2026-09-23 meeting preferred ordinary execution on the account
+associated with the station. That preference conflicted with per-command
+human identity. The 2026-09-30 clarification removes the conflict on this
+point: personal accounts are required. Do not implement shared station
+passwords.

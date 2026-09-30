@@ -3,10 +3,10 @@ id: DOM-MVP-RULES-001
 title: MVP Scope and Business-Rule Catalogue
 phase: 02-domain-business-architecture
 status: approved
-version: 0.2.2
+version: 0.2.7
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, DOM-CAP-BC-001, DOM-PROCESS-001, DOM-OWN-001, ASM-014]
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-30
 approval: APR-004
 supersedes: null
 ---
@@ -39,17 +39,32 @@ sign-off, and not implementation authorization.
   Assessment, promised dates, confirmation/change/cancellation, Unfulfilled
   Demand as a distinct outcome (TERM-005).
 - Procurement: Supplier, Purchase Order, shortage-driven purchasing, Goods
-  Receipt orchestration (TERM-019).
+  Receipt orchestration (TERM-019). Factory intake evidence does not add a
+  Procurement Manager or a purchase-approval person.
 - Inventory: Material Lot, Inventory Unit / Coil, locations, Ledger, Balance,
   Reservation, transfer, adjustment, quality-hold coordination, one-writer
-  posting.
+  posting. Incoming quantity remains `PostGoodsReceipt`. Count at intake is
+  not a second ledger. Current factory intake does not require Quality
+  approval; quality-hold coordination stays future capability.
 - Production/MES: Production Order, operations, allocation, issue/consumption,
   output, residual, scrap, mass-balance posting, genealogy source facts.
+  Registering a customer order does not automatically create a Production
+  Order. Entry and Referral are not Start or Complete. A Station
+  completion does not post. No Production Planner is added.
 - Quality: incoming/in-process/final inspection, hold/quarantine, accept /
-  reject / conditional release, shipment-release gate.
+  reject / conditional release, shipment-release gate. **Future capability.**
+  Factory clarification (`2026-09-30`): there is no QC department, QC is
+  outside the current factory MVP, and there is no Quality role or
+  Quality personnel. This line is not deleted. It is not current factory
+  operation and does not authorize a QC workflow. OQ-005 stays treating.
+  BR-010 is not rewritten.
 - Shipping: packaging, picking/loading, dispatch, partial delivery, delivery
   confirmation, stock-exit request to Inventory.
 - Finance-Lite: operational Invoice, Payment, allocation, customer balance.
+  Factory evidence (`2026-09-30`) adds the commercial estimate, the final
+  amount, three payment methods, and an unnamed external invoice upload.
+  It does not make Finance-Lite a legal general ledger and does not add
+  a Legal-GL connector.
 - Reporting: operational stock, fulfillment, production, quality, lost demand,
   OTIF, and bidirectional genealogy queries.
 - Audit: immutable business, status, and security evidence.
@@ -136,22 +151,29 @@ identities cannot approve them.
 These `RQ-*` identifiers are **factory-meeting evidence labels**. They are
 not a minted Phase 07 `REQ-*` catalogue (FIND-021 / FIND-028), not `INV-*`
 promotions, not schema fields, and not implementation authorization.
-Classification of FACT-03 remains open. Identity/security design for
-FACT-05 remains open.
+Classification of the Coil → Sheet **posting command** remains open.
+Identity/security design for FACT-05 remains open.
 
 | ID | Requirement | Evidence class | Related |
 | --- | --- | --- | --- |
-| RQ-01 | Incoming material and customer-order quantity are primarily expressed in kg. Length, thickness, and material/type are secondary criteria. Scale, rounding, conversion factors, and numeric tolerance are not supplied. | Confirmed factory fact; existing kg-first decision confirmed | OQ-001 treating; OQ-002 answered; FACT-01 |
+| RQ-01 | Incoming material and customer-order quantity are primarily expressed in kg. Length, thickness, width, and material/type are secondary and are not stock quantities. Measured stock weight: 0 decimal places, smallest step 1 kg, rounding not needed for that measurement. Weight↔length may be needed; formula undefined. Weight↔count conversion is not required. A measured-vs-expected weight difference must be shown; no automatic measurement tolerance is defined. That threshold is not OQ-006. | Confirmed factory measurement evidence; OQ-001 not fully closed | OQ-001 treating; OQ-002 answered; OQ-006 unchanged; FACT-01 |
 | RQ-02 | Cut pieces and order scrap must remain traceable to the relevant customer order code. | Confirmed business traceability requirement | OQ-004; FACT-02; TERM-003 note |
 | RQ-03 | The system must not require unique Inventory Unit identity for every tiny physical cut piece where such identity has no operational value. The Inventory Unit model is retained for independently controlled stock. | Confirmed factory fact; hybrid grain confirmed | OQ-004; FACT-02; TERM-007 |
-| RQ-04 | The system must eventually support converting opened-coil leftover material into warehouse-storable sheets without requiring a new customer order. Domain/transaction classification is intentionally **open**. Not added to `CompleteProductionOperation` or DATA-TX-001. | New confirmed business-process requirement; unclassified | OQ-009 treating; FACT-03 |
-| RQ-05 | The system must support predefined production routing through stations. The Production Manager defines the sequence in advance. | Confirmed operational requirement | OQ-003 treating; FACT-05 |
+| RQ-04 | The system must eventually support warehouse conversion of an opened-Coil remainder into Sheets without a customer order and without a Production Order, retaining Source Coil → Sheets traceability. Factory calls this an inventory transformation, separate from customer-order production. Authoritative stock quantity is measured kg. Sheet Code format is Coil Code + Sheet number. Posting command is **not** accepted: not added to `CompleteProductionOperation` or DATA-TX-001. | Factory business-process evidence; architecture posting boundary in conflict and still open | OQ-009 treating; OQ-001 treating; FACT-03 |
+| RQ-05 | The system must support production routing through the current Stations. The Production Manager defines the route per order. Some Stations may be skipped. An earlier note that the system sends one fixed sequence is historical. | Confirmed operational requirement; how the route is stored remains OQ-003 | OQ-003 treating; FACT-05 |
 | RQ-06 | The system must support reporting/visibility of an order's progression from one production station/section to the next. | Confirmed operational/reporting requirement | OQ-003 treating; FACT-05; FACT-06 |
-| RQ-07 | The system must retain and expose the required station entry and forwarding times. Exact timestamp attributes are **not** invented here. Clarification: whether existing Production Operation start/complete events already represent enter/forward. | Confirmed reporting/history requirement | OQ-003 treating; FACT-06; SM-PRODUCTION-OPERATION |
+| RQ-07 | The system must retain and expose Entry and Referral times from the system clock. Those events are not `StartProductionOperation` or `CompleteProductionOperation`. Exact storage beside the operation lifecycle is still open. No timestamp columns are invented here. | Confirmed reporting/history requirement | OQ-003 treating; FACT-06; SM-PRODUCTION-OPERATION |
 
-Station-based ordinary execution (FACT-05) is recorded as a confirmed
-operational requirement **plus** an unresolved identity/security design
-question. It does not replace SEC-ID-001 `actor_identity` / `SharedTerminal`.
+Station-based ordinary execution (FACT-05) uses personal operator accounts.
+The 2026-09-23 shared station-account preference is superseded. It does not
+replace SEC-ID-001 `actor_identity`. Login and logout are recorded and are
+not Station Entry.
+
+Factory production facts do not change BR-006 or BR-007. Process loss in
+those rules is an architecture fact when a routing records it. The factory
+has not defined process loss or a mass-balance percentage. A weight
+difference is not that fact. `ConsumeUnitPartial` and `ConsumeUnitComplete`
+stay nested. The factory has not named them.
 
 ## Success criterion for this MVP
 

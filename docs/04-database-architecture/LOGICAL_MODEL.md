@@ -3,10 +3,10 @@ id: DATA-LOGICAL-001
 title: Logical Data Model
 phase: 04-database-architecture
 status: approved
-version: 0.1.0
+version: 0.1.3
 owners: [data-architect, domain-leads]
 depends_on: [GOV-DATA-DICT-001, DOM-OWN-001, APR-005]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-10-01
 approval: APR-006
 supersedes: null
 ---
@@ -56,6 +56,13 @@ migration is authorized.
 | Shipping | Package, Shipment |
 | Finance-Lite | Invoice, Payment |
 | none as truth | Genealogy Link (rebuildable projection) |
+
+Factory intake (`2026-09-30`) does not add an entity or a second quantity.
+Internal Code, Count, and Type are intake attributes. Weight in kg is the
+Ledger quantity. A standalone incoming Sheet is not given a Coil parent.
+Goods Receipt is not the whole genealogy model. No schema is created here.
+Entry, Referral, login, and logout are not new entities in this model.
+A Station completion is not a Ledger row.
 
 ## Relationships
 
@@ -129,7 +136,7 @@ state with at most one `ACTIVE` per Inventory Unit (OQ-008).
 | Residual cutoff | OQ-009 residual numbers |
 | Site / legal-entity discriminator | Not required for MVP. OQ-013 recorded: one legal entity, one principal site. |
 | Physical types, indexes, volumes | OQ-014 residual |
-| Opening-stock source keys | OQ-015 residual |
+| Opening-stock source keys | OQ-015 residual. `OpeningStockImport` is an architecture candidate, not a factory-confirmed Goods Receipt, and not a second Ledger writer. |
 | Retention days | OQ-016 residual. RPO/RTO recorded. |
 | Ledger physical schema / function syntax | OQ-017 residual. Posting **style** is recorded (app-owned PostgreSQL transaction). |
 

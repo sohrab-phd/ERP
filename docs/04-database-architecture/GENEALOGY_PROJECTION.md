@@ -3,10 +3,10 @@ id: DATA-GEN-001
 title: Genealogy Projection Design
 phase: 04-database-architecture
 status: approved
-version: 0.1.0
+version: 0.1.1
 owners: [data-architect, domain-leads]
 depends_on: [SM-INV-001, GOV-DATA-DICT-001, APR-005]
-last_reviewed: 2026-09-18
+last_reviewed: 2026-09-30
 approval: APR-006
 supersedes: null
 ---
@@ -36,6 +36,12 @@ rows alone.
 Recovery labels that say “rebuild Genealogy from Ledger” mean: restore
 durable posted facts, then run `GenealogyRebuild` from this catalogue.
 They must not be read as Ledger-only genealogy.
+
+Factory evidence (`2026-09-30`) supports Coil → resulting Sheets, production
+input → output, leftover → Residual or Scrap, and Customer Order Code on
+order-related pieces and order scrap. It does not add a source fact, an
+`EditGenealogy` command, or a Coil ancestor for every material. Standalone
+stock need not carry an Order Code. Genealogy Link stays a projection.
 
 ## Source facts (writable)
 

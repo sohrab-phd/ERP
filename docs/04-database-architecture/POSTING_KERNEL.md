@@ -3,10 +3,10 @@ id: DATA-POST-001
 title: Inventory Posting Kernel and Alternatives
 phase: 04-database-architecture
 status: approved
-version: 0.1.0
+version: 0.1.6
 owners: [data-architect, inventory-domain-owner]
 depends_on: [SM-INV-001, SM-CONC-001, APR-005]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-006
 supersedes: null
 ---
@@ -34,6 +34,29 @@ syntax, ORM, or package is frozen here (OQ-018 residual).
 - Quality/Shipping command; ACT-IPS writes stock (INV-017)
 - Procurement orchestrates receipt; Inventory posts quantity (INV-018)
 - Retry must not duplicate a posted fact (INV-016)
+
+Factory intake (`2026-09-30`) records Internal Code, Count, Weight, and
+Type at one warehouse station. That evidence does not add a writer.
+`PostGoodsReceipt` remains the receiving quantity command. Count is not
+a second Ledger quantity. A weighbridge or warehouse screen must not
+write the Ledger directly. No generic inventory-update command is added.
+An operator's Station completion declaration is also not a posting.
+Production quantity remains inside `CompleteProductionOperation`.
+The factory has not named `ConsumeUnitPartial` or `ConsumeUnitComplete`.
+They stay nested. Residual and scrap quantity, where the accepted
+operation applies, are posted once inside that boundary. No second scrap
+or residual quantity post is added.
+A shipment screen is not a Ledger writer. Any later stock exit stays
+with the Inventory Posting Service. The factory has not confirmed a
+shipment posting command. None is added here.
+A Sales Order change or cancellation screen is not a Ledger writer.
+No automatic inventory release or production reversal is added.
+
+Opening stock is not this intake and is not `PostGoodsReceipt`.
+`OpeningStockImport` remains an architecture candidate under OQ-015. The
+factory has not confirmed that command, a freeze, or a signer. It is not
+a second inventory writer. `ACT-IPS` remains the sole stock writer. No
+import or migration mechanism is added here.
 
 ## Proposed logical facts
 

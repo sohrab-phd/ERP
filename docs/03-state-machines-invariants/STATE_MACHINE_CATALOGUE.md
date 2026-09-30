@@ -3,10 +3,10 @@ id: SM-CATALOGUE-001
 title: State Machine Catalogue
 phase: 03-state-machines-invariants
 status: approved
-version: 0.3.1
+version: 0.4.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [GOV-STATES-001, SM-INV-001, DOM-ACTORS-001, APR-004, APR-005]
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-30
 approval: APR-005
 supersedes: null
 ---
@@ -75,6 +75,15 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Commands / actors: ACT-SALES; hold/cancel after confirm requires SalesOrderChange, not regression to Draft
 - Invariants: INV-013, INV-014
 - Open guards: family over-delivery %/kg (OQ-006 configuration; default 0 answered)
+- Factory commercial evidence (`2026-09-30`) does not add a state. Payment
+  and invoice status remain outside closure. Estimated and final amounts
+  are commercial facts, not this lifecycle.
+- Factory evidence does not name who amends or cancels a customer order.
+  `CANCEL_PENDING`, `CANCELLED`, hold, and `SalesOrderChange` stay
+  architecture candidates. Mr. Dinavand's production stop/cancel decision
+  is not this machine. No new transition is added. A cancelled order
+  reopening is not factory-confirmed. `REOPENED_AS_INQUIRY` on unfulfilled
+  demand stays an architecture branch.
 
 ## SM-UNFULFILLED-DEMAND
 
@@ -95,6 +104,11 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Commands / actors: ACT-PROC
 - Invariants: INV-018
 - Open guards: commercial approval person is workshop-owned (OQ-019)
+- Factory evidence (`2026-09-30`) does not confirm this lifecycle. Ms.
+  Masoumi registers purchases and sends proformas. She is not a confirmed
+  approver, receiver, or inventory poster. These states stay architecture
+  candidates. They are not deleted. No current QC hold is required on
+  intake.
 
 ## SM-GOODS-RECEIPT
 
@@ -105,6 +119,14 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Commands / actors: ACT-PROC orchestrates; ACT-QC may command hold; ACT-IPS posts
 - Invariants: INV-001, INV-010, INV-017, INV-018
 - Open guards: inbound QC plan (OQ-005); opening-stock cutover (OQ-015)
+- Factory intake (`2026-09-30`): one station; Internal Code, Count,
+  Weight, Type; kg is stock quantity; Count is descriptive. Current
+  factory does not require Quality approval on intake. The `QC_HOLD`
+  step and `ACT-QC` hold remain future capability and are not deleted.
+  Posting actor remains `ACT-IPS` via `PostGoodsReceipt`. No second path.
+  Opening stock remains OQ-015, not this receipt. `ApprovePurchaseOrder`
+  on the purchase machine stays an unnamed architecture command (OQ-019),
+  not a factory-confirmed approver.
 
 ## SM-RESERVATION
 
@@ -143,23 +165,28 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Write owner: `BC-PRODUCTION`
 - Happy path: `PLANNED → IN_PROGRESS → COMPLETED`
 - Branches: `SKIPPED`, `REWORK`
-- Commands / actors: ACT-PLAN plans; ACT-OP records; ACT-IPS posts stock effects
+- Commands / actors: ACT-PLAN plans; ACT-OP records; ACT-IPS posts stock effects. `ACT-OP` is an architecture actor. It is not a named operator, not a Station identity, and not the operator's station-completion declaration.
 - Invariants: INV-006, INV-007, INV-009
-- Open guards: real step list (OQ-003). Posting boundary is
-  `CompleteProductionOperation` (recorded OQ-003).
-- Factory meeting FACT-05 (`2026-09-23`): stations and Production Manager
-  predefined routing are confirmed operational evidence. Exact
-  station/work-center model and station vs `ACT-OP` identity remain open.
-  Do not assume a station account is the `ACT-OP` principal.
-- Factory meeting FACT-06 (`2026-09-23`): the system must record and make
-  visible when an order enters each production section/station and when it
-  is forwarded to the next stage. Clarification required: whether
-  `StartProductionOperation` / event `ProductionOperationStarted` already
-  represents "enter", and `CompleteProductionOperation` / event
-  `ProductionOperationCompleted` already represents "forward". If later
-  confirmed, that is a conceptual mapping onto this lifecycle. Do **not**
-  invent extra timestamp attributes (`started_at`, `completed_at`,
-  `queued_at`, `acknowledged_at`, `accepted_at`) here.
+- Open guards: real step list as a versioned mechanism (OQ-003). Posting
+  boundary is `CompleteProductionOperation` (recorded OQ-003).
+- Factory clarification (`2026-09-30`): Station is physical and, in factory
+  wording, the Production Step. No separate Work Center in factory
+  terminology. Ten current station names are recorded on OQ-003. They are
+  not a fixed route. Entry and Referral are workflow events and are **not**
+  this machine's Start or Complete commands. No shared Station account.
+  Personal operator identity is required for attributable activity. Do not
+  add timestamp columns here. Stop/cancel remains the existing abort
+  branches; the factory names the Production Manager as the business
+  decider and does not replace those transitions.
+- Operator login and logout are recorded and are not this machine's
+  Start. A Station completion declaration informs the Production Manager
+  and is not this machine's Complete, and it does not post stock. No
+  Production Planner role is added.
+- The factory has not named nested consume primitives and has not defined
+  process loss or a good-output versus WIP workflow. Those remain
+  architecture facts inside this completion. Not every Station consumes
+  a unit. Residual versus Scrap stays a human decision. No cutoff was
+  added.
 
 ## SM-PRODUCTION-ORDER
 
@@ -184,6 +211,20 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Invariants: INV-008, INV-006
 - Open guards: threshold numbers (OQ-009). Independent residual qty after
   completion is forbidden.
+- Coil → Sheet clarification (`2026-09-30`): reusable cutting waste of that
+  conversion is called Residual. Factory warehouse conversion is described
+  as an inventory transformation that may have **no** Production Order.
+  This machine is **not** silently extended to that conversion. Conflict
+  with `CompleteProductionOperation` nesting remains open. See FACT-03 in
+  OPEN_QUESTIONS.md.
+- Factory Residual/Scrap clarification (`2026-09-30`): reusable waste is
+  Residual and returns to the warehouse as a business disposition.
+  Non-reusable waste is Scrap. A person decides. The system must not
+  classify from weight or dimensions. No universal numeric cutoff is
+  supplied. The `BELOW_THRESHOLD_TO_SCRAP` branch is **not** deleted.
+  It conflicts with "no universal cutoff" and stays an open OQ-009
+  conflict. No new posting command is added. A weight difference is not
+  this machine.
 
 ## SM-SCRAP
 
@@ -193,7 +234,9 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Commands / actors: ACT-OP nested leftover, or ACT-QC/abort new scrap;
   ACT-IPS `PostScrapMovement` posts quantity once
 - Invariants: INV-001, INV-009, INV-017
-- Open guards: residual cutoff numbers when the source is leftover (OQ-009)
+- Open guards: residual cutoff numbers when the source is leftover (OQ-009).
+  Coil → Sheet clarification: non-reusable cutting waste of that conversion
+  is called Scrap. That name mapping does not add a new scrap command.
 
 ## SM-QUALITY-INSPECTION
 
@@ -203,6 +246,11 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Commands / actors: ACT-QC; ACT-IPS posts hold/release when commanded
 - Invariants: INV-010, INV-017
 - Open guards: plans, limits, samples, named releasers (OQ-005)
+- Current factory (`2026-09-30`): there is no QC department. QC is outside
+  the current MVP. There is no Quality role and no Quality personnel.
+  This machine is retained as **future** Quality capability. It is not
+  current factory operation. Transitions are not deleted and not
+  implemented. Do not invent a current QC workflow.
 
 ## SM-PACKAGE
 
@@ -222,6 +270,10 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Commands / actors: ACT-SHIP; ACT-IPS posts definitive stock exit on dispatch
 - Invariants: INV-011, INV-017
 - Open guards: partial/over-delivery (OQ-006); shipment-without-demand named person (OQ-019)
+- Factory evidence (`2026-09-30`) does not name a shipper, loader, carrier,
+  or delivery confirmer. This machine is not deleted. `DELIVERED` is not
+  Sales Order closure. Stock exit stays `ACT-IPS`. No shipment screen
+  writes the Ledger. No shipping role is added.
 
 ## SM-INVOICE
 
@@ -232,6 +284,10 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Commands / actors: ACT-FIN
 - Invariants: INV-012, INV-014
 - Open guards: legal books (OQ-012). Sales Order closure is not an invoice guard (OQ-007).
+- Factory evidence: Mr. Pour-Ebrahim issues the customer invoice;
+  Mr. Ghaffari records it and uploads the record to an unnamed external
+  system. That handoff does not add a state and does not make the upload
+  a Legal-GL write. `ACT-FIN` ownership is unchanged. No RBAC mapping.
 
 ## SM-PAYMENT
 
@@ -242,3 +298,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Commands / actors: ACT-FIN
 - Invariants: INV-012, INV-016
 - Open guards: legal-accounting export (OQ-012)
+- Factory payment methods, not new states: deposit with remainder after
+  delivery; cheque or promissory note; known-customer credit. No credit
+  limit or aging rule. Allocation is unchanged. Payment does not close
+  the Sales Order.

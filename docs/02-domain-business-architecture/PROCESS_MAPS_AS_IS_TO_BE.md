@@ -3,10 +3,10 @@ id: DOM-PROCESS-001
 title: As-Is and To-Be Process Maps
 phase: 02-domain-business-architecture
 status: approved
-version: 0.2.2
+version: 0.3.1
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, DOM-CAP-BC-001]
-last_reviewed: 2026-09-23
+last_reviewed: 2026-09-30
 approval: APR-004
 supersedes: null
 ---
@@ -130,10 +130,69 @@ Proposed sequence:
     (Finance-Lite). Sales Order close is independent of payment (OQ-007):
     remaining valid demand already zero (`FULFILLED`), authorized unfulfilled
     remainder, or `CANCELLED`. Shipment `DELIVERED` is not an independent
-    close prerequisite.
+    close prerequisite. The factory has not defined who amends or cancels a
+    customer order, or what a change does to reservation or production.
+    Architecture cancel and change commands are not a factory procedure.
+
+Steps 10 and 11 are the architecture proposal. The factory has not named
+who packs, loads, dispatches, or confirms delivery. Those steps are not
+deleted. They are not a factory logistics procedure, and they do not make
+`DELIVERED` a Sales Order close.
 
 Customer Portal MVP is **visibility-only** (OQ-010 recorded). Ordering is
 not a step on this happy path (`PortalPlaceOrder` remains rejected).
+
+### Factory commercial evidence (`2026-09-30`)
+
+This does not replace the sequence above and does not add invoice states.
+
+- Sales registers the customer order from available warehouse stock.
+  Estimated amount = required weight × price per kg.
+- Mr. Dinavand receives the order and defines the route when production
+  is required.
+- Mr. Karimi calculates the final order weight. That weight is commercial
+  evidence. The weighbridge still does not write the Inventory Ledger.
+- Final amount = actual/final weighbridge weight × applicable price per kg
+  + cutting service fee.
+- Mr. Pour-Ebrahim issues the customer invoice and gives it to
+  Mr. Ghaffari. Mr. Ghaffari creates the corresponding record and uploads
+  it to an unrelated external system. He does not issue the invoice.
+  The upload is not a Legal-GL API.
+- Payment methods: deposit with remainder after delivery; cheque or
+  promissory note; known-customer credit. None of these close the Sales
+  Order. None is recorded as required before shipment. Ms. Koushki
+  follows up receivables. The factory has not named who records a
+  payment, an invoice link, cheque or note settlement, a credit limit,
+  a customer balance, or a payment reversal. Finance-Lite allocation
+  stays architecture and is not redesigned.
+- Ms. Masoumi's purchase proformas are not the customer invoice.
+- Step 11's "issue operational Invoice" after delivery confirmation remains
+  the architecture proposal. The factory did not state invoice timing
+  versus shipment. That timing stays open. Payment allocation is unchanged.
+
+### Incoming material (`2026-09-30`)
+
+One warehouse intake station, associated with Mr. Karimi
+(Warehousekeeper; questionnaire also says Warehouse Manager). Materials
+include Coil, Sheet, angle, beam, and similar types. Record Internal
+Code, Count, Weight, and Type. Count is not a second stock ledger.
+Official quantity is measured kg. No weight-per-piece conversion.
+
+Procurement document types, including a Purchase Order, are architecture
+candidates. The factory has not confirmed that lifecycle. Ms. Masoumi
+registers purchases and sends proformas. That is not approval, receiving,
+or the inventory post. Warehouse intake records physical arrival. Quantity is posted only
+by `PostGoodsReceipt` (Lot + Inventory Unit + Ledger) through the
+Inventory Posting Service.
+
+Step 6's "inbound quality as required" is future architecture. The
+current factory has no QC department and this intake does not require
+Quality approval. That step is not deleted.
+
+A standalone incoming Sheet has no fabricated Coil parent. A Sheet made
+from a Coil keeps the Coil trace. Angle and beam have no invented
+transformation. Normal receiving is not opening-stock cutover (OQ-015).
+No scale or protocol is defined for the intake weight.
 
 ```mermaid
 flowchart TD
@@ -194,6 +253,12 @@ that stock is a later Inventory write, not a Procurement write.
 
 #### QC hold / reject
 
+Current factory evidence (`2026-09-30`): there is no Quality Control
+department, QC is outside the current MVP, and there is no Quality role
+or Quality personnel. The flow below is retained as **future** Quality
+capability. It is not current factory operation. It is not deleted, and
+it is not a reason to invent a QC workflow or a Quality employee.
+
 Inbound, in-process, or final inspection may hold, quarantine, reject, or
 conditionally release (SM-QUALITY-INSPECTION). Material cannot become available
 or shippable while required QC is pending, quarantined, or rejected. Quality
@@ -226,7 +291,14 @@ rework routing is not in the sources as a validated map (OQ-003).
 Usable remainder after consumption/splitting becomes a **new child Inventory
 Unit** linked to its parent; the parent is closed/split (TERM-012). Production
 writes the residual fact; Inventory writes resulting identity and quantity.
-Minimum usable dimensions/weight are not approved (OQ-009).
+Minimum usable dimensions/weight are not approved (OQ-009). Factory
+clarification: reusable waste is Residual and returns to the warehouse
+as a business disposition. The Production/Workshop Manager decides
+reusability. The system must not classify from weight or dimensions.
+No universal numeric cutoff is defined. That return is not a new
+posting command. The factory has not defined process loss. A weight
+difference is not process loss. Not every Station consumes a unit or
+posts stock. The factory has not named partial or complete consumption.
 
 #### Scrap
 
@@ -235,54 +307,71 @@ genealogy impact. Production writes the scrap fact; Inventory Posting Service
 writes any associated stock movement. Scrap is not a spreadsheet adjustment.
 Factory meeting FACT-02 requires order scrap to carry the relevant customer
 order code; that does not by itself make scrap an Inventory Unit.
+Non-reusable waste is Scrap. No disposal process is defined. An earlier
+Scrap Code / unique-part mention is historical and does not require a
+code on every tiny scrap piece. A weight difference is not Scrap.
 
-#### Opened-coil leftover converted to warehouse sheets (factory meeting `2026-09-23`)
+#### Coil → Sheet (factory evidence through 2026-09-30)
 
-Confirmed business process. **DOMAIN CLASSIFICATION: OPEN.**
+Factory business evidence. **Not** an accepted change to
+`CompleteProductionOperation`, `CreateResidualUnit`, or DATA-TX-001.
+No new command or entity is created here.
 
-This is **not** an accepted architecture decision that the process is nested
-inside `CompleteProductionOperation`, `CreateResidualUnit`, a warehouse
-command, or DATA-TX-001. No new command or entity is created from this
-evidence.
+The factory calls Context A **"conversion of Coil to Sheet for warehouse"**
+and an **inventory transformation**.
 
-Factory-confirmed sequence:
+**Context A — warehouse conversion.** Opened-Coil remainder is converted
+to Sheets when it is not suitable for another customer order. This can
+happen immediately or later. There is no automatic timing rule. Once the
+Coil is opened it cannot be re-rolled. No customer order is required. No
+Production Order is required. It is separate from customer-order
+production. One Coil leaves inventory; multiple Sheets enter. The
+relationship Source Coil → resulting Sheets is retained. Resulting Sheets
+may be directly saleable and/or allocatable. They need not be allocated
+at once.
 
-Opened Coil → Remaining Material (cannot be re-rolled) → Cut to
-Market-Length Sheets (examples given: 12 m, 6 m; not a formal catalogue) →
-Measure Count / Length / Weight → Warehouse Storage
+**Context B — customer-order-related production.** A Coil may be opened
+or processed while an order is in work. That context keeps the Order Code
+on associated material. Do not collapse Context B into Context A.
 
-This conversion may occur **without a new customer order**. Resulting sheets
-retain the code associated with the **original coil**. Original coil identity
-and original order code **may be separate identifiers**; their relationship
-is not decided here.
+**Place and decision.** The operation is in the workshop, under the
+Production/Workshop Manager. Identified person: Mr. Dinavand. Source
+titles vary (Workshop Manager / Production Manager). That is not an
+`ACT-*` or SoD assignment.
+
+**Coil-derived Sheet attributes:** original Coil Code; Sheet Code
+(factory format: Coil Code + Sheet number; global uniqueness not
+confirmed by the factory); Order Code when applicable; Sheet count;
+total measured weight (kg, official stock quantity); individual length;
+dimensions; cutting date.
+
+6 m and 12 m are example market lengths, not an allowed-length catalogue.
+
+Cutting loss may be reusable (Residual) or non-reusable (Scrap). No
+universal numeric cutoff. The manager decides. Do not auto-classify.
+
+**Standalone incoming Sheet.** Not Coil-derived. New unique product code.
+Do not invent a Coil Code. Do not use Coil-derived genealogy.
+
+**Open conflict.** Live production posting still nests residual/scrap of
+a production operation inside `CompleteProductionOperation`. Factory
+Context A may have no Production Order. The posting boundary for Context
+A is not decided.
 
 ```mermaid
 flowchart TD
-  A[Coil opened for an initial customer order] --> B[Remaining opened coil cannot be re-rolled]
-  B --> C[Cut remaining material to market-length sheets]
-  C --> D[Examples 12 m and 6 m - not a formal catalogue]
-  D --> E[Measure count, length, and weight]
-  E --> F[Warehouse storage as sheets]
-  F --> G[Sheets retain original coil code]
+  A[Opened Coil cannot be re-rolled] --> B{Context}
+  B -->|A warehouse conversion no customer order no Production Order| C[Inventory transformation in the workshop]
+  B -->|B order in work| D[Customer-order production keeps Order Code]
+  C --> E[One Coil leaves inventory]
+  E --> F[Multiple Sheets enter inventory]
+  F --> G[Each Sheet keeps Coil Code and Sheet Code]
+  G --> H[Measured kg is stock quantity]
+  H --> I[Count length dimensions cutting date are attributes]
+  I --> J{Cutting loss}
+  J -->|reusable| K[Residual person decides]
+  J -->|non-reusable| L[Scrap person decides]
 ```
-
-Unresolved before any later architecture or implementation of this flow:
-
-1. Which domain owns the process?
-2. Is it a Production Operation, Warehouse/Inventory transformation, residual processing, or another business operation?
-3. Does it use `CompleteProductionOperation` or another posting boundary?
-4. When exactly does it occur relative to completion of the first order?
-5. What is the resulting inventory identity?
-6. Is each resulting sheet an Inventory Unit?
-7. Can multiple sheets be represented as a batch/count?
-8. What is the authoritative quantity for the resulting stock?
-9. How is cutting loss represented?
-10. Who commands the operation?
-11. Are 6 m and 12 m examples or a formal allowed-length catalogue?
-12. Does each resulting sheet retain original coil identity, original order code, both, or another identity?
-
-A future dedicated OQ may be required if this cannot remain a residual of
-OQ-009.
 
 #### Cancellation
 
@@ -328,18 +417,18 @@ are specifically evidence-gated and must not be treated as confirmed:
 | --- | --- | --- |
 | Entire As-Is Excel/paper picture | Field study, forms, sample records | RISK-001; workshop agenda §2 |
 | Named owners, delegates, approval limits | Real roster replacement | OQ-019, ASM-013, FIND-020 |
-| UOM, weight vs length, rounding | Signed conversion/scale matrix (kg already recorded) | OQ-001 residual; OQ-002 answered |
-| Official consumption/output posting **step names** and routing | Shop-floor maps | OQ-003 residual names. Boundary is `CompleteProductionOperation`. Factory FACT-05/06: stations, Production Manager routing, enter/forward visibility confirmed; catalogue and identity still open. |
+| UOM, weight vs length, rounding | kg↔length formula still missing. Weight measurement: 0 decimal places, 1 kg, rounding not needed. Weight difference must be shown; no automatic measurement tolerance. That is not OQ-006 | OQ-001 still treating; OQ-002 answered; OQ-006 unchanged |
+| Official consumption/output posting **step names** and routing | Per-order route by Mr. Dinavand; some Stations may be skipped; Entry/Referral are not Start/Complete; a Station completion does not post | OQ-003 treating. Ten Stations recorded. Posting remains `CompleteProductionOperation`. No shared Station account. Login and logout are recorded and are not Entry. |
 | Tracking granularity and labels | First-go-live family catalogue | OQ-004 answered hybrid |
-| QC plans, hold/reject authority, exceptional release | Signed QC authority | OQ-005 residual. Block + two-person exceptional release recorded. |
+| QC plans, hold/reject authority, exceptional release | Current factory: no QC department and no Quality person. Future plans and named releasers if Quality is later enabled | OQ-005 treating. Future capability retained. Not current MVP execution. |
 | Partial fulfillment / over-delivery numeric limits | Family/customer % | OQ-006 answered default 0 |
 | Sales Order closure vs payment | Recorded policy | OQ-007 answered |
 | Reservation uniqueness and confirmed-SO expiry | Recorded policy | OQ-008 answered |
-| Residual vs scrap cutoff numbers | Shop-floor thresholds | OQ-009 residual |
-| Opened-coil leftover → warehouse sheets | Domain/posting/identity classification | FACT-03; DOMAIN CLASSIFICATION OPEN; not nested into `CompleteProductionOperation` |
+| Residual vs scrap cutoff numbers | Reusable = Residual and returns to the warehouse; non-reusable = Scrap; person decides; no universal cutoff; do not classify from measurements | OQ-009 still treating. Conflict with `GUARD_OPEN_POLICY` and the below-threshold branch left open |
+| Coil → Sheet warehouse conversion | Factory: inventory transformation; posting command not accepted | FACT-03. Not nested into `CompleteProductionOperation` or DATA-TX-001 |
 | Portal visibility document list | Sponsor residual list | OQ-010 answered visibility-only; no `PortalPlaceOrder` |
 | Weighbridge identity and fallback | Equipment evidence | OQ-011 residual. Commander only. |
-| Invoice/payment vs legal accounting handoff | Accounting product when a later phase needs it | OQ-012 answered: no Legal-GL in MVP |
+| Invoice/payment vs legal accounting handoff | Accounting product when a later phase needs it. Factory upload target is unnamed and is not that product. | OQ-012 answered: no Legal-GL in MVP |
 | Single-site / legal-entity assumption | — | OQ-013 answered |
 | Opening stock freeze and discrepancy workflow | Cutover files and named signers | OQ-015 residual |
 | State guards, customer-visible status mappings | Lifecycle walkthrough | GOV-STATES-001; workshop agenda §5 |
@@ -371,8 +460,10 @@ demand with overdue demand (REQ-OBJ-001 / ASM-REPORT-001).
   [OPEN_QUESTIONS.md](../00-governance/registers/OPEN_QUESTIONS.md).
   This map does not reopen answered rows. Treating residuals remain
   OQ-001, OQ-003, OQ-005, OQ-009, OQ-011, OQ-014, OQ-015, OQ-019.
-  Factory FACT-03 and FACT-05 are open clarification items; a future
-  dedicated OQ may be required for each.
+  Factory FACT-03 posting-boundary conflict remains open. FACT-05 shared
+  station accounts are superseded by personal accounts. A future dedicated
+  OQ may still be required for the posting conflict and for Entry/Referral
+  beside the Production Operation lifecycle.
 - Assumptions: ASM-001 through ASM-014 are not confirmed by these maps.
 
 ## Review evidence

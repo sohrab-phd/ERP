@@ -3,10 +3,10 @@ id: APP-CMD-001
 title: Application Command Catalogue
 phase: 05-application-api-architecture
 status: approved
-version: 0.2.0
+version: 0.2.8
 owners: [solution-architect, api-architect]
 depends_on: [SM-TRANS-001, SM-EVT-001, APR-006, APR-007]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-09-30
 approval: APR-007
 supersedes: null
 ---
@@ -52,6 +52,12 @@ HoldSalesOrder,
 ReleaseSalesOrderHold, RequestSalesOrderCancel,
 ConfirmSalesOrderCancel.
 
+The factory has not confirmed who may request or confirm a Sales Order
+cancel, or who may change quantity or material after registration. These
+commands stay architecture candidates. They are not deleted. They do not
+write the Ledger. Production stop/cancel by Mr. Dinavand is not one of
+these commands. No reopen-of-a-cancelled-order command is added.
+
 Sales must not write Invoice, Ledger, or Balance.
 
 ### CloseSalesOrder (OQ-007 / FIND-G-003)
@@ -89,6 +95,19 @@ CancelPurchaseOrder, DraftGoodsReceipt, ReceiveGoods.
 
 Procurement must not post quantity (INV-018).
 
+Factory intake (`2026-09-30`) does not add a command. `PostGoodsReceipt`
+remains the only receiving quantity post. `ApprovePurchaseOrder` stays
+open on OQ-019. It is not a factory-confirmed approval chain. No
+`UpdateInventory` command is added. Current intake does not call a
+Quality command.
+
+The purchase commands above, including draft, submit, approve, send,
+partial receipt, full receipt, hold, and cancel, are architecture
+candidates. The factory has not confirmed a Purchase Order lifecycle,
+supplier approval, or a procurement payment. They are not deleted.
+Ms. Masoumi's purchase registration and proforma sending are not these
+commands.
+
 ## Inventory / ACT-IPS
 
 PostGoodsReceipt, ReverseGoodsReceipt, RequestReservation (commanded),
@@ -122,6 +141,14 @@ RecordScrapFact (nested leftover **or** later Quality/abort scrap).
 
 Production must not write Ledger.
 
+Factory order flow (`2026-09-30`) does not add a command. Entry, Referral,
+login, logout, and an operator's completion declaration are not
+`StartProductionOperation` or `CompleteProductionOperation`. A Station
+completion does not post quantity.
+
+The factory has not named those nested consume primitives and has not
+defined when consumption occurs. No user-facing consume workflow is added.
+
 ## Production posting composition (FIND-G-001 / FIND-G-002 / FIND-G-015)
 
 Canonical contract:
@@ -129,7 +156,7 @@ Canonical contract:
 
 | Command | Status | Purpose | May post Ledger? | Independently callable? | Relation to `CompleteProductionOperation` |
 | --- | --- | --- | --- | --- | --- |
-| `CompleteProductionOperation` | Business command | Exclusive production posting boundary | Via nested `ACT-IPS` only | Yes (the operator command) | — |
+| `CompleteProductionOperation` | Business command | Exclusive production posting boundary | Via nested `ACT-IPS` only | Yes, as the architecture posting command. Not the operator's station-completion declaration. | — |
 | `CreateResidualUnit` | Nested IPS command | Residual **identity**, parent close/split, residual on-hand once (OQ-009, INV-008) | Yes, once, for the child unit | No for leftover of this operation | Nested inside the bundle when leftover is reusable |
 | `RecordResidualFact` | Nested Production fact | Residual domain fact, not stock tables | No | No for that leftover | Nested |
 | `PostScrapMovement` | Authoritative scrap qty command (OQ-009) | Scrap **quantity** Ledger | Yes, once per scrap fact | Not for leftover already in the bundle. Yes for a **new** Quality/abort scrap with a new key | Nested for production leftover |
@@ -154,11 +181,23 @@ DispatchShipment, RecordPartialDelivery, ConfirmDelivery,
 CloseShipment. Exceptional shipment person `open: OQ-019`. Over-delivery
 `open: OQ-006`.
 
+The factory has not confirmed these shipping commands and has not named
+who uses them. They are not deleted. None of them closes a Sales Order.
+Dispatch does not write the Ledger; stock exit stays with the Inventory
+Posting Service.
+
 Finance-Lite: DraftInvoice, IssueInvoice, AllocatePartialPayment,
 AllocateFullPayment, CloseInvoice, MarkInvoiceOverdue,
 RequestInvoiceVoid, VoidInvoice, RecordPayment, AllocatePayment,
 LeavePaymentUnallocated, ClosePayment, ReversePayment. Not legal GL
 (OQ-012).
+
+These Finance-Lite commands remain architecture. The factory has named
+three customer payment methods and has not named who records a payment,
+whether payment must link to an invoice, a cheque or promissory-note
+settlement, a credit limit, or a reversal procedure. The commands are
+not deleted and are not treated as that missing procedure. They do not
+close a Sales Order and they do not write the Inventory Ledger.
 
 ## Events
 

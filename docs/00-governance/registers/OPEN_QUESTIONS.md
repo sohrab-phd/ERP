@@ -3,10 +3,10 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: approved
-version: 0.9.0
+version: 0.23.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
-last_reviewed: 2026-09-23
+last_reviewed: 2026-10-01
 approval: APR-005
 supersedes: null
 ---
@@ -35,25 +35,25 @@ ADR-0008, and do not create an implementation unlock.
 
 | ID | Status | What is now locked | Still unknown |
 | --- | --- | --- | --- |
-| OQ-001 | treating | kg is official stock UOM; one stock truth; factory 2026-09-23 confirms kg primary for incoming coils/sheets and customer orders; length/thickness/material-type are secondary | Decimal scale, rounding, material conversion factors, numeric tolerance |
+| OQ-001 | treating | kg is the only official stock quantity; count, length, dimensions, thickness, width, and material/type are not stock quantities; factory weight measurement is 0 decimal places, 1 kg, rounding not needed; weight↔count conversion is not required; a measured-vs-expected weight difference must be shown; Sheet count and individual length stay as attributes | kg↔length formula and factors; technical persistence/arithmetic scale; whether 0 decimals applies beyond scale measurement; any automatic threshold for a weight difference |
 | OQ-002 | answered | Coil quantity = measured weight in kg; factory 2026-09-23 reinforces this | Shop-floor ticket confirmation (validation, not a new choice) |
-| OQ-003 | treating | Official post at `CompleteProductionOperation`; factory 2026-09-23: production stations, Production Manager routing, sequential station flow, enter/forward visibility | Named routing/station catalogue; abort role name; station vs human identity; whether start/complete events equal enter/forward |
+| OQ-003 | treating | Post at `CompleteProductionOperation`; no universal hard-coded route; clarification 2026-09-30: ten current physical Stations, Station = Production Step, no separate factory Work Center, route is per order and may skip Stations, Entry and Referral are workflow events with system timestamps and are not Start/Complete | How Entry/Referral sit beside the Production Operation lifecycle; exact abort/cancel command; whether architecture "work center" is unused or aliased; versioned routing mechanism |
 | OQ-004 | answered | Unit-level Coil; hybrid finished-product rule; factory 2026-09-23 confirms no unique ID per tiny cut piece; order code is the practical trace key for cut pieces and order scrap | First-go-live product-family catalogue; exact order-code identity; relationship of order code to inventory identity |
-| OQ-005 | treating | QC can block available and ship; exceptional release needs two people; factory 2026-09-23: station identity must not be assumed sufficient for that two-person release | Quality Plans, limits, named approvers |
+| OQ-005 | treating | Current factory MVP: no QC department, no Quality role, no Quality personnel, no QC execution. Future Quality gates, two-person exceptional release, and inspection lifecycle are retained as architecture and are not current factory operations | Future plans, limits, and named people if Quality is later enabled. Not invented for the current MVP |
 | OQ-006 | answered | Partial shipment allowed; default tolerance 0; configurable | Exact %/kg by family/customer |
-| OQ-007 | answered | Close Sales Order on fulfilled/cancelled/unfulfilled demand, not payment | Commercial exceptions if any later |
+| OQ-007 | answered | Close Sales Order on fulfilled/cancelled/unfulfilled demand, not payment. Factory payment methods do not change this. | Who may amend or cancel a customer order, and what happens to reservation, production, or already-produced material. The close rule itself is not reopened. |
 | OQ-008 | answered | One Coil, one active reservation; confirmed SO has no timer expiry | Temporary-hold TTL if that type is added later |
-| OQ-009 | treating | Residual vs scrap is a reuse policy, not a global kg; factory 2026-09-23 adds opened-coil leftover → market-length sheets without a new customer order as an unclassified process | Family min weight/dimensions; FACT-03 domain/posting/identity classification |
+| OQ-009 | treating | Reusable waste = Residual and returns to the warehouse as a business disposition; non-reusable waste = Scrap; no universal numeric cutoff; the system must not classify from weight or dimensions; Production/Workshop Manager decides reusability; order scrap stays traceable by Order Code | Family policy beyond that statement; how the human decision is recorded; conflict with `GUARD_OPEN_POLICY`; posting command not changed |
 | OQ-010 | answered | MVP portal = visibility only; no order write | Exact document list; later price/request/order phases |
-| OQ-011 | treating | Weighbridge never writes Ledger; human ticket fallback | Make/model, protocol, device id, named operator |
-| OQ-012 | answered | Finance-Lite is not legal GL; no Legal-GL integration in MVP | Accounting product/API when a later phase needs it |
+| OQ-011 | treating | Weighbridge never writes Ledger; human ticket fallback; final invoice weight is commercial evidence, not a second stock writer | Make/model, protocol, device id, named operator |
+| OQ-012 | answered | Finance-Lite is not legal GL; no Legal-GL integration in MVP. Factory external invoice upload is not that connector. | External-system identity and any later accounting product/API |
 | OQ-013 | answered | One legal entity, one principal site | Future multi-site would reopen architecture |
-| OQ-014 | treating | Modest scale: &lt;100 users, ~15–25 concurrent | 12-month transaction counts |
-| OQ-015 | treating | Opening stock = Ledger facts via `OpeningStockImport` | Source files, freeze time, named signers |
+| OQ-014 | treating | Modest scale: &lt;100 users, ~15–25 concurrent; about 10 production operators is a current workforce estimate only | 12-month transaction counts; operator names |
+| OQ-015 | treating | Architecture baseline only: opening Ledger facts would use the same Ledger, not a second stock truth. `OpeningStockImport` is that candidate and is not factory-confirmed. | Source file, material list, counter, preparer, signer, freeze time, source code, opening identity, residual and scrap at opening, and whether opening stock is a Goods Receipt |
 | OQ-016 | answered | RPO 60 min, RTO 8 h, daily backup, off-site copy | Retention days; backup product |
 | OQ-017 | answered | App-owned bundle in a PostgreSQL transaction + locks | PG functions only after a later ADR + spike |
 | OQ-018 | answered | Modular Monolith + PostgreSQL; Node.js + TypeScript | NestJS, Prisma, React, Docker, auth package, extra MCP |
-| OQ-019 | treating | Role/RACI list accepted; factory 2026-09-23 supplied an organizational personnel roster (operators not included) | Mapping to workshop/sign-off roles; delegates; approval/sign-off scope; production-line operators; system-role mapping |
+| OQ-019 | treating | 11-person organizational roster; no named delegate identified; no Quality person; operator population is separate and unnamed | Workshop/sign-off mapping, approval mechanics, operator names, `ACT-*`. Do not invent a delegate |
 
 Inquiry/Quotation expiry remains FIND-026 (`workshop-commercial-practice`),
 not a new `OQ-*`. Extra MCP remains “none by default” under OQ-018.
@@ -81,13 +81,60 @@ the intended representations.
 Factory meeting FACT-01 (`2026-09-23`) **confirms** this kg-first policy
 for incoming raw materials such as coils and sheets **and** for customer
 orders. Length, thickness, and material/type characteristics are
-secondary criteria. This is an existing decision confirmed. It does not
-add decimal scale, rounding, conversion factors, or numeric tolerance.
+secondary criteria.
+
+Coil → Sheet clarification (`2026-09-30`) adds measurement evidence for
+that process, not a full UOM matrix:
+
+- Only measured weight in kilograms is the official stock quantity.
+- Count, length, and dimensions are descriptive/operational attributes.
+  They are not a second stock-ledger quantity.
+- Weight is recorded with zero decimal places. The smallest scale
+  measurement is 1 kg. Rounding is not needed for that measurement.
+- Conversion between weight and length **may** be needed. The formula and
+  factors are **not** defined.
+- Conversion between weight and count is **not** required. Do not derive
+  stock quantity from count, and do not invent an average or fixed piece
+  weight.
+- Width is a secondary criterion, with length, thickness, and
+  material/type. None of those is an authoritative stock quantity.
+- There is one stock quantity in the Ledger: measured kg. Count, metres,
+  and dimensions are not parallel stock ledgers. Balance remains a
+  projection of Ledger. This does not change that architecture.
+- Sheet count and each Sheet's length must still be recorded. 6 m and
+  12 m are examples, not an allowed-length list. Dimensions must be
+  representable and are not stock quantity.
+- When expected or calculated weight differs from measured weight, the
+  difference must be shown or reported. The factory has **not** defined a
+  tolerance that automatically marks that difference acceptable,
+  unacceptable, process loss, Residual, or Scrap.
+- That missing measurement threshold is **not** OQ-006. OQ-006 remains
+  the fulfillment under/over-delivery and over-production rule (default
+  0). It is also **not** the Residual/Scrap reusability decision.
+- Customer-order demand quantity stays kg. Secondary order
+  characteristics are not extra demand quantities.
+- Quantity wording, now stated with the commercial formulas. This is not
+  a sales-workflow redesign and not a new stock unit. Estimated amount =
+  required weight × price per kg. Final amount = actual/final weighbridge
+  weight × applicable price per kg + cutting service fee. Price-list
+  ownership, tax, discount, currency, and the cutting-service fee formula
+  are not defined. Weighbridge device and protocol stay OQ-011. The
+  weighbridge does not write the Inventory Ledger.
+
+Factory measurement precision (0 decimal places, 1 kg, rounding not
+needed) is not a decision to store 0.1 kg, 0.01 kg, or 0.001 kg, and it
+is not a full technical persistence or arithmetic-scale design. The
+existing exact-decimal / PostgreSQL `NUMERIC` direction is unchanged.
 
 ### Still unknown
 
-Decimal scale, rounding rule, material-specific conversion factors, and
-numeric tolerance. Commands that need those numbers remain
+Material-specific kg↔length conversion formula and factors. No density,
+grade factor, or thickness/width equation is recorded. Technical
+persistence and arithmetic scale beyond the factory measurement
+statement. Whether zero decimal places applies to every stored kg value
+or only to scale measurement. Any automatic threshold for a
+measured-vs-expected weight difference. Scales for non-kg descriptive
+UOMs. Commands that need a missing conversion factor remain
 `GUARD_OPEN_POLICY`. OQ-001 remains `treating`.
 
 ### Promoted to
@@ -147,31 +194,86 @@ authorization; after posted facts, abort needs a production-supervisor /
 production-manager role and compensating commands. Routing is versioned
 per product family.
 
-Factory meeting FACT-05 and FACT-06 (`2026-09-23`) add confirmed factory
-evidence, not a closed routing catalogue:
+Factory meeting (`2026-09-23`) said stations would exist, the Production
+Manager would define routing in advance, and the system would send the
+order sequentially. That wording is historical.
 
-- several production stations will be defined;
-- the Production Manager defines station sequence/routing in advance;
-- the system sends the order sequentially according to that routing;
-- a station receives the production instruction and reports completion;
-- the order then proceeds to the next station;
-- the system must record and make visible when an order enters each
-  production section/station and when it is forwarded to the next stage.
+Clarification (`2026-09-30`) takes precedence where it is more specific:
 
-This is confirmed operational/routing evidence. Exact station/work-center
-entity names, the versioned step catalogue, abort role title, and the
-station-vs-human identity model remain unresolved. Do not treat station
-accounts as a silent replacement of `actor_identity` (see FACT-05 below).
-Do not invent extra timestamp attributes for enter/forward (see FACT-06).
+- A Station is a real physical station and, in factory wording, the
+  Production Step. There is no separate Work Center in factory terminology.
+- Current stations, not a permanent catalogue and not a mandatory sequence:
+  1. Heavy roll opener
+  2. Light roll opener — hot sheet
+  3. Light roll opener — cold & galvanized
+  4. 6 m guillotine
+  5. 3 m guillotine
+  6. 2 m guillotine
+  7. 1 m guillotine
+  8. Angle/shear station (قیچی نبشی‌بر)
+  9. Punch
+  10. Plasma cutting
+- The production path is not fixed. Mr. Dinavand (Workshop Manager /
+  Production Manager; title wording varies) defines the route per order.
+  Some stations may be skipped. Do not assume all ten in order.
+- Entry is when the order reaches the defined user role or Station.
+  Referral is assignment of the order to the next user role or Station.
+  That user role is an organizational routing target. It is not a system
+  account, not an `ACT-*` permission, and not a Station identity.
+  The system clock timestamps both. In normal circumstances referral time
+  usually matches arrival at the next stage. That is an observation, not
+  an invariant that the timestamps are always identical.
+- Operators declare completion of their Station work on a **personal**
+  account. The Production Manager is informed. Mr. Dinavand then refers
+  the order to the next stage. That declaration is not an approval
+  workflow and is not `CompleteProductionOperation`.
+- Operator login and logout are recorded. Login is not Entry, not machine
+  start, and not a permanent assignment to that Station. No session
+  product, timeout, or permission is defined. Mr. Ghaffari's IT and
+  Stations/accounts responsibility is not a super-admin permission.
+- Assignment does not change merely because the shift changes. No shift
+  schedule or Shift Manager is defined.
+- A Station completion does not by itself post inventory. Quantity posting
+  stays at `CompleteProductionOperation`. There is no second production
+  posting path and no Station-screen write to the Ledger.
+- No Production Planner, Scheduler, Dispatcher, Production Controller,
+  Station Manager, or QC role is created.
+- The Production Manager decides when production should stop or cancel.
+  That is responsibility evidence. It does not add a state transition.
+  The live pre-post / post-post abort split is unchanged.
+- Entry is not `StartProductionOperation`. Referral and operator
+  completion are not `CompleteProductionOperation`. The posting boundary
+  is unchanged.
+- No shared Station account. Personal operator accounts only. An operator
+  may use those credentials at different Stations and is not permanently
+  bound to one Station. Station is not a user.
+- About 10 operators. Names are not supplied. This is not a fixed user
+  count.
+- One incoming-material intake Station, associated with Mr. Karimi.
+  Materials include Coil, Sheet, angle, beam, and similar. Record Internal
+  Code, Count, Weight, and Type. Count is an intake attribute. Weight in
+  kg remains the stock quantity.
+- After sales registration, Mr. Dinavand receives the order and defines
+  the route. That handoff is not automatic Production Order creation and
+  not automatic `StartProductionOperation`.
+
+The architecture routing note that a version may include a work center or
+machine is not deleted. For this factory, Station is the step and there is
+no separate Work Center. Whether that architecture attribute is unused,
+the same thing as Station, or a later abstraction is open.
 
 ### Still unknown
 
-First-go-live step names, work centers/stations as a catalogue, and the
-exact abort role title. Skip/abort that needs a missing step stays
-`GUARD_OPEN_POLICY`. Station identity vs per-command human identity
-(FACT-05). Whether existing `StartProductionOperation` /
-`CompleteProductionOperation` events already represent factory enter /
-forward times (FACT-06). OQ-003 remains `treating`.
+How Entry and Referral are recorded beside the Production Operation
+lifecycle. The exact stop/cancel command, and the pre-post versus
+post-post split, which the factory did not redefine. Whether "work center"
+in the architecture text is retired or aliased to Station. A versioned
+routing mechanism beyond "the manager sets the route per order and some
+steps may be skipped." How a recorded login or logout is stored. Operator
+completion has no defined approval semantics. OQ-003 remains `treating`.
+Posting stays at `CompleteProductionOperation`. Registering a customer
+order does not automatically create a Production Order and does not
+invoke `StartProductionOperation`.
 
 ### Promoted to
 
@@ -251,16 +353,52 @@ Recommended roles: QC Inspector; Quality Engineer / QC Supervisor;
 Quality Manager (conditional/exceptional); Second Authorized Approver.
 
 Factory meeting FACT-05 (`2026-09-23`) does **not** change this QC
-decision. Station identity must **not** automatically be assumed
-sufficient for two-person exceptional QC release. OQ-005 is not closed
-and is not reopened.
+decision. There is no shared Station account, so a station account is
+not a Quality identity. OQ-005 is not closed and is not reopened.
+
+### Current factory vs future Quality (`2026-09-30`)
+
+The factory clarification states that there is **no Quality Control
+department** and that **QC is outside the current MVP**.
+
+Current factory / current MVP:
+
+- no QC department
+- no QC execution
+- no Quality role
+- no Quality personnel
+- no Quality approval actor
+- no existing employee is assigned a Quality title
+
+The recommended roles above (QC Inspector, Quality Engineer / QC
+Supervisor, Quality Manager, Second Authorized Approver) and the
+Quality Manager / QC Supervisor workshop role are **historical
+architecture recommendations**. They are **not applicable to the
+current MVP**. They are not deleted. They are not filled by mapping
+another named employee.
+
+Future architecture:
+
+- Quality gates, `SM-QUALITY-INSPECTION`, TERM-016, and the recorded
+  hold/release rules stay in the architecture as future capability.
+- They are not current factory operations.
+- No future QC implementation is specified here.
+
+A questionnaire mention of Quality approval is superseded for the
+current MVP by this clarification. Mr. Dinavand's separate "final
+approval" wording is recorded on OQ-019. It is not a substitute Quality
+role.
 
 ### Still unknown
 
-First-go-live Quality Plans, checks, limits, sample sizes, and named
-people (OQ-019). Missing plan/limit → `GUARD_OPEN_POLICY`. Whether a
-station account may ever participate in QC hold/release remains an
-unresolved FACT-05 identity/security question, not a QC-plan answer.
+If Quality is later brought into scope: first-go-live Quality Plans,
+checks, limits, sample sizes, and named people. Missing plan/limit →
+`GUARD_OPEN_POLICY`. Those inputs are not invented for the current MVP.
+OQ-005 remains `treating`.
+
+Incoming warehouse intake (`2026-09-30`) does not require a current
+Quality approval. The incoming-QC block above is future architecture.
+It is not current factory execution and is not deleted.
 
 ---
 
@@ -285,6 +423,13 @@ exception — not a silent UI bypass.
 
 Exact %/kg by product, customer, or order type (configuration under this
 rule).
+
+Measurement discrepancy is a different subject. The factory requires a
+measured-vs-expected weight difference to be shown, and has not defined an
+automatic acceptance threshold for it. That absence does **not** change
+this fulfillment rule. OQ-006 stays `answered`. BR-007 mass-balance
+tolerance is also not that undefined measurement threshold. Estimated
+amount versus final invoice amount is also not this fulfillment rule.
 
 ### Promoted to
 
@@ -312,6 +457,21 @@ close. Sales must not write payment state to close an order.
 
 `CloseSalesOrder` is no longer `GUARD_OPEN_POLICY` for the missing rule.
 It still rejects if unresolved demand remains.
+
+Factory commercial evidence (`2026-09-30`) does **not** change this rule.
+Deposit plus later settlement, cheque or promissory note, and known-customer
+credit are payment methods only. Invoice issued, payment received, and
+Sales Order closed stay separate. Payment does not close the Sales Order.
+The factory has not said that any payment method is required before
+shipment. Who records a payment is not part of this close rule.
+
+The factory has **not** said who may amend or cancel a customer order,
+whether a confirmed order may be edited, how a quantity change is
+recorded, what happens to a reservation or to material already produced,
+whether customer confirmation or a reason code is required, or whether a
+cancelled order can be reopened. Those points stay open. They do **not**
+reopen this close rule. Mr. Dinavand's production stop/cancel decision is
+not Sales Order cancellation authority.
 
 ### Promoted to
 
@@ -366,30 +526,58 @@ independent Inventory Unit with genealogy. Scrap = non-reusable
 disposition via `PostScrapMovement`. No universal 50 kg / 200 mm.
 `CreateResidualUnit` is the residual command.
 
-Factory meeting FACT-03 (`2026-09-23`) records an **additional** residual /
-reuse business-process case that still requires classification. After a
-coil is opened for an initial customer order, the remaining coil cannot
-be re-rolled and may be cut into smaller sheets with common market
-lengths (examples given: 12 m and 6 m) **without a new customer order**,
-so the opened coil can be stored in the warehouse as sheets. Resulting
-sheets retain the code associated with the original coil; count, length,
-and weight are measured.
+Factory clarification (`2026-09-30`) states the factory's Residual/Scrap
+terminology. It was first recorded against Coil → Sheet cutting loss and
+is the same mapping here. It does not add a third category.
 
-This is a new confirmed **business-process requirement**. It is **not**
-classified as Production Operation, Warehouse Operation, Residual
-Operation, Material Conversion Operation, or any other final domain
-construct. It is **not** added to `CompleteProductionOperation` or
-DATA-TX-001. No new command or entity is created from this evidence.
-6 m and 12 m are factory examples, not a formal allowed-length catalogue.
-Cutoff numbers remain treating.
+- Reusable waste = Residual.
+- Non-reusable waste = Scrap.
+- There is **no** universal minimum weight or dimension cutoff. Do not
+  invent Residual if weight or length is at least X, or Scrap if it is
+  below X.
+- The system must not infer reusability from weight, dimensions, length,
+  or any other numeric measurement.
+- The Production/Workshop Manager decides from the input/output difference
+  and from whether the remaining material is reusable.
+- Mr. Dinavand is the identified person. Title wording is Workshop Manager
+  / Production Manager. This is organizational evidence, not an `ACT-*`,
+  SoD, delegate, or approval-matrix rule.
+- Reusable material **returns to the warehouse**. Business disposition:
+  production/workshop → Residual → warehouse. That is not a new inventory
+  posting command and does not change `CompleteProductionOperation` or
+  the Inventory Posting Service.
+- Non-reusable material is Scrap. No scrap disposal process, accounting
+  treatment, or external waste workflow is defined.
+- Scrap from a customer order stays traceable by **Order Code**. Order
+  Code, material/inventory identity, and the physical small piece stay
+  separate. No unique identifier is required for every tiny scrap piece.
+- An earlier questionnaire mention of Scrap Code / unique part identifier
+  is historical source evidence. It is not a universal coding requirement.
+  It is not deleted.
+- A measured-vs-expected weight difference must be shown. That difference
+  is not automatically Residual and not automatically Scrap. It is also
+  not the mass-balance rule. No new mass-balance formula is defined.
+
+This does **not** close OQ-009. It does **not** move `CreateResidualUnit`
+or `PostScrapMovement` out of their recorded production-completion nesting,
+and it does **not** make the warehouse conversion itself those commands.
+
+Conflict left open: live OQ-009 / INV text still treats a missing numeric
+threshold as `GUARD_OPEN_POLICY`, and `SM-RESIDUAL` still has a
+below-threshold branch. Factory evidence says there is no universal
+numeric cutoff and a person decides reusability. That guard and that
+branch are **not** rewritten here.
 
 ### Still unknown
 
-Minimum weight/dimensions by family. Classification that needs a missing
-threshold stays `GUARD_OPEN_POLICY`. FACT-03 domain ownership, posting
-boundary, resulting inventory identity, authoritative quantity, cutting
-loss, commander, allowed lengths, and coil-code vs order-code on the
-resulting sheets. OQ-009 remains `treating`.
+Whether any material family still has a numeric keep/scrap policy outside
+this statement. How a human reusability decision is recorded without
+inventing a command. Physical warehouse posting of the return. When
+material becomes consumed. The business condition for partial versus
+complete consumption. The factory does not define a separate process-loss
+category or a production mass-balance percentage. Good output versus WIP
+is an architecture distinction, not a factory workflow. OQ-009 remains
+`treating`.
 
 ### Promoted to
 
@@ -449,6 +637,12 @@ ticket using the **same** Goods Receipt command.
 ### Still unknown
 
 Make, model, location, protocol, stable device id, named GR operator.
+Mr. Karimi's final order weight, used in the customer invoice, is
+commercial measurement evidence. It does not make the weighbridge a
+Ledger writer and does not add a second inventory posting path.
+Incoming-material weight is also not assumed to come from a named
+device. No scale, protocol, or automatic integration is defined for
+intake.
 
 ---
 
@@ -472,6 +666,15 @@ on Legal GL.
 ### Still unknown
 
 Product, version, API/file when a later phase actually integrates.
+Factory evidence that Mr. Ghaffari uploads an invoice record to an
+unrelated external system does **not** name that system, protocol, or
+legal role, and it is not an automatic API. It is not the Legal-GL
+connector. A known-customer credit arrangement is also recorded and does
+not define a credit limit, aging rule, credit-approval authority, or
+accounting treatment. Who records a customer payment, and what a
+customer balance means operationally, are not defined by this answer.
+The architecture phrase "customer credit-related operational controls" is
+not expanded by this evidence.
 
 ### Promoted to
 
@@ -520,7 +723,9 @@ lines, operations, ledger rows, and shipments remain TBD.
 
 ### Still unknown
 
-The 12-month counts (system / Excel / signed estimate).
+The 12-month counts (system / Excel / signed estimate). About 10
+production operators is a current workforce estimate only. It does not
+freeze user cardinality and does not supply operator names.
 
 ### Promoted to
 
@@ -538,18 +743,32 @@ ASM-002 kept as planning baseline, not a measured limit.
 
 ### Recorded answer
 
-Opening stock comes from a controlled physical count, optional cutover
-worksheet, and reconciliation. Excel is a cutover input, not live truth.
-Procedure: freeze → count → discrepancy list → investigation → named
-sign-off → `ADP-CUTOVER` / `OpeningStockImport` as Ledger facts →
-BalanceRebuild and GenealogyRebuild. No Balance-only row. No
-`AdjustBalance`. `ADP-CUTOVER` stays `GUARD_OPEN_POLICY` until source
-files, freeze time, and named signers exist.
+The procedure below is an **architecture baseline**. The factory has not
+confirmed it. It is not deleted.
+
+Opening stock, in that baseline, comes from a controlled physical count,
+optional cutover worksheet, and reconciliation. Excel is a cutover input,
+not live truth. Procedure: freeze → count → discrepancy list →
+investigation → named sign-off → `ADP-CUTOVER` / `OpeningStockImport` as
+Ledger facts → BalanceRebuild and GenealogyRebuild. No Balance-only row.
+No `AdjustBalance`. `ADP-CUTOVER` stays `GUARD_OPEN_POLICY` until source
+files, freeze time, and named signers exist. `OpeningStockImport` is not
+a second inventory writer and is not `PostGoodsReceipt`. `ACT-IPS` remains
+the sole stock writer. The factory has not confirmed that command.
 
 ### Still unknown
 
-Source files, freeze date/time, discrepancy workflow details, named
-signatories.
+The factory has not specified an opening-stock file, which materials it
+includes, who counts or prepares it, who signs it, a freeze date/time,
+whether it is entered before or after go-live, a source document or
+source code, required Coil Code, Sheet Code, or Internal Code, whether
+opening stock contains standalone or Coil-derived Sheets, how existing
+Residual or Scrap is represented, or a special posting event. kg remains
+the official stock quantity for the Ledger. That general rule does not
+describe an opening-stock file. Count, length, and dimensions stay
+descriptive and are not confirmed as opening-file fields. Normal incoming
+receiving is not this cutover. No QC signer is created. OQ-015 stays
+`treating`.
 
 ### Promoted to
 
@@ -677,7 +896,8 @@ Recorded roster (organizational facts; not RBAC):
 5. Mr. Dinavand (آقای دیناروند) — Workshop Manager
 6. Ms. Bohlouli — Commercial Manager + sales/order receiving
 7. Ms. Masoumi — Recording completed purchases + sending proforma invoices
-8. Ms. Goodarzi — Accounting Manager
+8. Ms. Goodarzi / Ms. Goudarzi — Accounting Manager (one person; both
+   spellings appear in successive evidence statements)
 9. Ms. Rangini — Accountant
 10. Mr. Faraji — Chairman of the Board
 11. Mr. Rouzbahani — CEO
@@ -694,6 +914,58 @@ those mappings exist.
 Architecture will not invent names, delegates, or authorities. OQ-019
 remains `treating`.
 
+Clarification (`2026-09-30`), organizational only, not RBAC:
+
+- The roster count stays **11**. It is not reverted to 10.
+- No named delegate has been identified. Do not infer one from titles or
+  hierarchy. Delegate mapping stays open.
+- The approximately 10 operators are a separate population. They are not
+  the 11-person roster. Names are not supplied.
+- Mr. Dinavand (Workshop Manager / Production Manager; both titles kept)
+  also decides Coil → Sheet reusability context, Residual versus Scrap,
+  production stop/cancel, routing, and referral to the next stage. The
+  questionnaire also names him for final approval. That is business
+  evidence. It is not an approval workflow, an authorization hierarchy,
+  or a Quality role.
+- Mr. Karimi's roster title is Warehousekeeper. Questionnaire wording
+  also says Warehouse Manager. Those titles are not merged. He is
+  associated with incoming-material intake (Internal Code, Count, Weight,
+  Type) and with final order weight.
+- Mr. Ghaffari: IT and Stations/accounts. Not a super-admin permission.
+  Earlier roster wording said "invoice issuance/registration." That
+  issuance wording is superseded for the customer invoice: he does not
+  issue it. He creates the corresponding record and uploads that record
+  to an unrelated external system after Mr. Pour-Ebrahim gives him the
+  invoice. The external system is not named. This is not an API and not
+  legal accounting.
+- Mr. Pour-Ebrahim: Sales Manager and order intake. Not extra approval
+  authority from the title. He registers the customer order from available
+  warehouse stock and calculates the estimated cost (required weight ×
+  price per kg). He issues the customer invoice from final/actual order
+  weight × applicable price per kg, plus the cutting service fee, and
+  gives that invoice to Mr. Ghaffari. Sales and invoice workflows are not
+  redesigned as commands here.
+- Mr. Karimi calculates the final order weight used in that invoice.
+  That weight is not a second stock quantity.
+- Mr. Dinavand receives the order and defines the production route when
+  production is required. That is not automatic Production Order creation.
+- Ms. Koushki: trade-system registration and receivables follow-up. Not
+  payment approval.
+- Ms. Bohlouli: Commercial Manager; sales and order intake. Not customer
+  invoice issuance.
+- Ms. Masoumi: purchase registration and sending proformas. A purchase
+  proforma is not the customer invoice, the customer order, or a payment
+  document.
+- Ms. Goodarzi / Ms. Goudarzi: Accounting Manager. One roster slot. Not
+  invoice approval.
+- Ms. Rangini: Accountant. No added duty.
+- Mr. Faraji: Board Chairman / Chairman of the Board. Not payment approval.
+- Mr. Rouzbahani: CEO. Not payment approval.
+- No additional duties are inferred from these titles.
+- There is no Quality person on this roster. The historical Quality
+  Manager / QC Supervisor role is not applicable to the current MVP and
+  is not filled from this list.
+
 ---
 
 ## Consistency after recording
@@ -703,13 +975,30 @@ remains `treating`.
 | OQ-017 vs OQ-018 | Posting style uses PostgreSQL transactions because ADR-0007 is now accepted. Functions still later. |
 | OQ-010 vs INV-020 | Visibility allowed; order write still forbidden. |
 | OQ-019 | Roles listed; factory personnel roster recorded as organizational facts only; workshop/sign-off mapping, delegates, operators, and `ACT-*` assignment still treating. |
-| OQ-001 vs OQ-002 | kg official and weight authoritative; FACT-01 confirms kg-first for incoming material and customer orders; scale/rounding/factors/tolerance still treating on OQ-001. |
+| OQ-001 vs OQ-002 | kg is the only stock quantity. Factory measurement: 0 decimals, 1 kg, no measurement rounding. Weight↔count conversion is not required. Weight↔length formula still open. A weight difference must be shown; no automatic measurement tolerance. That tolerance is not OQ-006. |
 | OQ-008 vs sweep | Confirmed SO has no invented TTL. |
 | OQ-012 vs ASM-010 | Legal books stay outside MVP; product unnamed on purpose. |
 | ADR-0008 | Not accepted. OQ-016 numbers are not a Docker freeze. |
 | NestJS / Prisma / React | Candidates only. |
-| FACT-03 vs `CompleteProductionOperation` | Unclassified business process. Not nested into DATA-TX-001. Not a new command. |
-| FACT-05 vs SEC-ID-001 | Unresolved identity conflict. SharedTerminal still requires per-command operator identity; factory prefers station accounts for ordinary execution. Live identity rule is unchanged. |
+| FACT-03 vs `CompleteProductionOperation` | Factory calls warehouse Coil→Sheet an inventory transformation that may have no Production Order and no customer order. Live production posting boundary is unchanged. Conflict open. Not added to DATA-TX-001. No new command. |
+| FACT-05 vs SEC-ID-001 | 2026-09-23 preferred station accounts. Clarification 2026-09-30 supersedes that: no shared Station account; personal operator accounts only. `SharedTerminal` may still be a shared device; the account is personal. `ACT-*` permissions unchanged. |
+| Current factory QC vs architecture Quality | Factory: no QC department; QC is outside the current MVP; no Quality role or personnel. Quality state machines, TERM-016, BR-010, and recommended Quality roles stay as future capability. They are not current factory operations and are not deleted. OQ-005 stays treating. |
+| Residual cutoff vs `GUARD_OPEN_POLICY` | Factory: reusable = Residual and returns to the warehouse; non-reusable = Scrap; a person decides; no universal numeric cutoff; do not classify from measurements. Live missing-threshold guard and the below-threshold residual branch are not rewritten. OQ-009 stays treating. |
+| Scrap Code vs Order Code | An earlier questionnaire mention of Scrap Code / unique part identifier is historical. Order Code is the practical key for order scrap and tiny pieces. Unique coding of every tiny scrap piece is not required. OQ-004 stays answered. |
+| Who issues the customer invoice | Earlier roster label gave Mr. Ghaffari "invoice issuance/registration." Clarification: Mr. Pour-Ebrahim issues the customer invoice and gives it to Mr. Ghaffari. Mr. Ghaffari creates the corresponding record and uploads it to an unrelated external system. The earlier issuance label is superseded for that step and is not deleted. |
+| External invoice upload vs Legal GL | The upload is not a named system, not an API, and not the Legal-GL connector. Finance-Lite remains operational Invoice/Payment/allocation. OQ-012 stays answered. |
+| Final invoice weight vs Ledger | Mr. Karimi's final order weight feeds the commercial amount. Weighbridge still must not write the Inventory Ledger. OQ-011 stays treating. |
+| Purchase proforma vs customer invoice | Ms. Masoumi sends purchase proformas. That is not the customer invoice issued by Mr. Pour-Ebrahim. |
+| Incoming QC vs current intake | `SM-GOODS-RECEIPT` still has `QC_HOLD`, and older text says required incoming QC can block Available. Current factory: no QC department and no Quality approval on intake. That path is future capability and is not deleted. Current intake does not invent a Quality person. |
+| Intake count vs stock quantity | Intake records Count. Official stock quantity remains measured kg. Count is not a second Ledger. Weight↔count conversion is not required. |
+| Warehouse intake vs `PostGoodsReceipt` | One intake station with Mr. Karimi records Internal Code, Count, Weight, and Type. Quantity posting stays `PostGoodsReceipt` with Lot, Inventory Unit, and Ledger. Procurement does not write quantity. No second receiving path. |
+| Normal receipt vs opening stock | Incoming receiving is not OQ-015 cutover. `OpeningStockImport` stays an architecture candidate. It is not `PostGoodsReceipt` and is not a factory-confirmed opening process. Files, freeze, and signers stay open. |
+| Per-order route vs versioned family route | Architecture text still says routing is versioned per product family and a step is skipped only when that version marks it optional. Factory evidence says Mr. Dinavand sets the route per order and may skip Stations. The storage mechanism is not rewritten. OQ-003 stays treating. |
+| Sequential system send | The 2026-09-23 note that the system sends the order sequentially is historical. The later evidence does not confirm automatic next-station selection. |
+| Station completion vs posting | Operator completion and Referral are not `CompleteProductionOperation`. A Station screen does not write the Ledger. Not every Station consumes a separate Inventory Unit. |
+| Process loss vs measurement difference | Architecture may record an optional process-loss fact inside `CompleteProductionOperation` when a routing records it. The factory has not defined process loss or a percentage. A weight difference is not process loss, Residual, or Scrap. BR-007 is not rewritten. |
+| Nested consume primitives | `ConsumeUnitPartial` and `ConsumeUnitComplete` remain nested architecture primitives. The factory has not named them and has not stated when consumption occurs. |
+| Shipment/delivery vs Sales Order closure | Factory evidence does not define a logistics process. `DELIVERED`, invoice issued, and payment received are not close guards (OQ-007). "Settlement after delivery" is a payment method, not a delivery workflow and not closure. |
 | Implementation | Still unauthorized. No unlock file. |
 
 ---
@@ -724,55 +1013,671 @@ authorize implementation.
 | --- | --- | --- | --- |
 | FACT-01 | Confirmed factory fact; existing kg-first decision confirmed | OQ-001 treating; OQ-002 answered (reinforced only) | OQ-001 not fully answered |
 | FACT-02 | Confirmed business traceability requirement; hybrid grain confirmed | OQ-004 answered (catalogue and order-code identity still unknown) | No unique Inventory Unit per tiny piece; Inventory Unit model retained |
-| FACT-03 | New confirmed business-process requirement; domain classification open | Recorded on OQ-009 as additional residual/reuse case; **a future dedicated OQ may be required** | Not classified; not added to `CompleteProductionOperation` or DATA-TX-001 |
+| FACT-03 | Factory business evidence for Coil→Sheet, clarified 2026-09-30 | Recorded here and on OQ-001 / OQ-009 / process map. **A future dedicated OQ may still be required** for the posting-boundary conflict | Factory classification recorded. Live `CompleteProductionOperation` / DATA-TX-001 **not** changed |
 | FACT-04 | Organizational personnel facts only | OQ-019 treating (partial names) | Not RBAC; not `ACT-*`; not SoD |
-| FACT-05 | Confirmed operational requirement **plus** unresolved identity/security design question | Recorded on OQ-003; QC implication on OQ-005; **a future dedicated OQ may be required** | Live `actor_identity` / SharedTerminal rule unchanged |
-| FACT-06 | Confirmed reporting/history requirement; timestamp-field set not finalized | Recorded on OQ-003 | Do not invent `started_at` / `completed_at` / `queued_at` / `acknowledged_at` / `accepted_at` |
+| FACT-05 | 2026-09-23 station preference, superseded on identity by 2026-09-30 clarification | OQ-003 | No shared Station account. Personal accounts. Station is not a user. |
+| FACT-06 | Entry and Referral defined 2026-09-30 | OQ-003 | Not equal to Start or `CompleteProductionOperation`. No invented timestamp columns. |
 
-### FACT-03 — open classification questions (intentionally unanswered)
+### FACT-03 — Coil → Sheet (factory evidence through 2026-09-30)
 
-1. Which domain owns the process?
-2. Is it a Production Operation, Warehouse/Inventory transformation, residual processing, or another business operation?
-3. Does it use `CompleteProductionOperation` or another posting boundary?
-4. When exactly does it occur relative to completion of the first order?
-5. What is the resulting inventory identity?
-6. Is each resulting sheet an Inventory Unit?
-7. Can multiple sheets be represented as a batch/count?
-8. What is the authoritative quantity for the resulting stock?
-9. How is cutting loss represented?
-10. Who commands the operation?
-11. Are 6 m and 12 m examples or a formal allowed-length catalogue?
-12. Does each resulting sheet retain original coil identity, original order code, both, or another identity?
+Sources: factory meeting `2026-09-23`, plus clarification evidence
+`2026-09-30` (task statement of `بسته پرسش (1).docx` and
+`بسته پرسش شفاف‌سازی شماره ۲.docx`; those files are not in this
+repository). This is factory evidence. It does not authorize
+implementation and does not create a command, entity, or DATA-TX-001 row.
 
-Original coil identity and original order code may be separate identifiers.
-Do not decide their final relationship here.
+#### What the factory stated
 
-### FACT-05 — open identity/security questions (intentionally unanswered)
+**Business name.** "Conversion of Coil to Sheet for warehouse."
 
-1. Can a station account be used for ordinary production commands?
-2. Is a human actor identity still required per command?
-3. If station identity is used, how is individual accountability preserved?
-4. Which commands may use station identity?
-5. Which commands must require a named human identity?
-6. Are QC hold/release operations excluded?
-7. Are SoD-sensitive commands excluded?
-8. Are reversals excluded?
-9. Are cutover/sign-off operations excluded?
-10. How does the station identity relate to the existing `ACT-*` catalogue?
+**Where.** The workshop.
 
-Do not assume station accounts can perform QC release, SoD, reversals, or
-cutover. Live SEC-ID-001 `SharedTerminal` still requires per-command
-operator identity until a later identity decision is recorded.
+**Who decides.** Production/Workshop Manager. The identified person is
+Mr. Dinavand. Source wording varies: Workshop Manager and Production
+Manager. That title variation needs confirmation. It is not an `ACT-*`,
+SoD, delegate, or approval-matrix assignment. OQ-019 stays `treating`.
 
-### FACT-06 — enter/forward mapping (intentionally unanswered)
+**Why.** A Coil may be converted when the remaining material is not
+suitable for another customer order. Once a Coil has been opened, it
+cannot be re-rolled, so the remainder eventually needs to become Sheets.
+Timing may be immediate or later. There is no automatic timing rule.
 
-Determine whether existing Production Operation start/complete events
-already represent the factory's required enter-station and forward-to-next
-timestamps:
+**Two contexts. Do not collapse them.**
 
-- `StartProductionOperation` → event `ProductionOperationStarted`
-- `CompleteProductionOperation` → event `ProductionOperationCompleted`
+- Context A — warehouse conversion: opened-Coil remainder becomes Sheets
+  **without** a customer order and **without** a Production Order. The
+  factory calls this an **inventory transformation**, separate from
+  customer-order production. Resulting Sheets can be directly saleable
+  and/or allocatable. A customer order is not required for them to exist
+  or to be inventory. They are not assumed to be allocated immediately.
+- Context B — customer-order-related production: a Coil may be opened or
+  processed while an order is in work. Material associated with that
+  order keeps the Order Code. This is not the same workflow as Context A.
 
-If that mapping is later confirmed, it is a conceptual mapping onto the
-existing lifecycle. Do not invent a parallel event model or extra
-timestamp attributes in this recording.
+**Inventory effect (Context A).** One Coil leaves inventory. Multiple
+Sheets enter inventory. The relationship Source Coil → resulting Sheets
+is retained. This is not only an aggregate quantity change. Traceability
+must support Sheet → original Coil and Coil → all resulting Sheets.
+Source-Coil identity is not destroyed when a Sheet becomes independent
+inventory.
+
+**Identifiers. Do not merge them.**
+
+| Identifier | Factory meaning |
+| --- | --- |
+| Coil Code | Source Coil |
+| Sheet Code | Resulting Sheet. Factory-described format: Coil Code + Sheet number. Global uniqueness of that string is **not** confirmed by the factory. |
+| Customer Order Code | Customer order, **when applicable**. Not the same as Coil Code or Sheet Code. |
+
+Order-code traceability for tiny cut pieces (FACT-02) does not remove
+Coil Code or Sheet Code from this transformation.
+
+**Attributes to preserve on a Coil-derived Sheet:** original Coil Code;
+Sheet Code; Order Code when applicable; Sheet count; total weight;
+individual Sheet length; dimensions; cutting date.
+
+**Lengths.** 6 m and 12 m are examples of common market lengths, not a
+fixed allowed-length catalogue. Each resulting Sheet's actual length must
+be recordable.
+
+**Stock quantity.** Only measured weight in kilograms is the official
+stock quantity. Count, length, and dimensions are descriptive. They must
+not become a second stock-ledger quantity.
+
+**Measurement precision (this evidence).** Weight: zero decimal places;
+smallest scale measurement 1 kg; rounding is not needed. This does not
+close OQ-001. Weight↔length conversion may be needed; formula/factors are
+undefined. Weight↔count conversion is not required.
+
+**Cutting loss.** May occur. It can be unusable or reusable. The system
+must not decide which automatically.
+
+- Reusable waste = Residual.
+- Non-reusable waste = Scrap.
+- No universal minimum weight or dimension cutoff.
+- The Production/Workshop Manager decides from reusability.
+
+**Standalone incoming Sheet.** A Sheet that enters the factory and is
+**not** the result of Coil → Sheet conversion receives a new unique
+product code. Do not fabricate a Coil Code when there is no source Coil.
+Do not force that case into Coil-derived genealogy.
+
+#### What this evidence does not change
+
+- `CompleteProductionOperation` remains the recorded posting boundary for
+  **production** consume/output/residual/scrap.
+- DATA-TX-001 is not extended.
+- No new command or entity is created.
+- `CreateResidualUnit` is not redefined as this warehouse conversion.
+
+#### Conflict left open (do not silently overwrite)
+
+Live architecture nests production residual identity and production scrap
+quantity inside `CompleteProductionOperation`. Factory evidence says
+warehouse Coil → Sheet is an inventory transformation that may occur with
+**no** Production Order and **no** customer order, and is separate from
+customer-order production. Both positions are recorded. The posting
+boundary for Context A is **not** decided.
+
+A second open conflict: a missing numeric residual threshold is still
+`GUARD_OPEN_POLICY` in the live OQ-009 treatment, while this factory
+evidence says this conversion has no universal numeric cutoff and a
+person decides. The guard text is not rewritten here.
+
+#### Still unresolved after this evidence
+
+- kg↔length formula and factors
+- whether the factory Sheet Code is globally unique
+- whether each Sheet Code is the Inventory Unit business identity or an
+  additional attribute on an Inventory Unit (TERM-007 already allows Sheet
+  as a kind of Inventory Unit; schema is not decided)
+- the command/transaction that posts "one Coil leaves, many Sheets enter"
+- persistence/arithmetic scale beyond the measurement statement
+- canonical title string for Mr. Dinavand
+- family residual policy outside this conversion
+
+### FACT-05 — stations and identity (clarified 2026-09-30)
+
+**Historical (`2026-09-23`).** The first recording said ordinary execution
+should use the account associated with the station because operators
+change. That shared-station-account preference is **superseded**. It is
+kept only so the earlier wording is not deleted.
+
+**Clarification (takes precedence).** There is no shared Station account.
+Every operator has a personal account. Activities that require attribution
+use that personal identity. Station is not a user. A person may work at
+more than one Station and is not permanently assigned to one. The
+questionnaire also says operator assignment does not change with shift.
+No shift schedule, shift ownership, or shared shift account is defined.
+About 10 operators exist; their names are a later OQ-019 input, not ten
+user records created here.
+
+Mr. Ghaffari is responsible for IT and for Stations/accounts. That is
+organizational evidence, not a super-admin role.
+
+`SharedTerminal` still means a device may be shared. The account on that
+device is personal. `PasswordPolicy` still says a human principal is not a
+shared shop password. `ACT-*` permissions are not changed.
+
+Answered from this clarification: no shared Station account; personal
+identity for attributable activity; Station and user are different.
+
+Still open: the full list of commands that require attribution; QC, SoD,
+reversal, and cutover still follow their existing named-human rules and
+are not remapped here.
+
+### FACT-06 — Entry and Referral (clarified 2026-09-30)
+
+**Historical.** The first recording required visibility of when an order
+enters a station and when it is forwarded, and left the meaning open.
+
+**Clarification.**
+
+- Entry: the order reaches the defined user role or Station. Record the
+  system-clock time. Entry is not defined as machine start, login, first
+  material movement, or `StartProductionOperation`.
+- Referral: the order is assigned to the next user role or Station.
+  Record the system-clock time. Operators declare completion. The manager
+  (Mr. Dinavand) refers the work onward. Referral is not
+  `CompleteProductionOperation`.
+- In normal circumstances, referral time from the previous stage usually
+  corresponds to arrival at the next stage. That is not a rule that the
+  two timestamps are always identical.
+- No timezone or clock-synchronization requirement is added.
+- No columns named `started_at`, `completed_at`, `queued_at`,
+  `acknowledged_at`, or `accepted_at` are created.
+
+The Production Operation lifecycle is not redefined. How Entry and
+Referral are stored beside it remains open.
+
+## Sales, invoice, and payment (factory evidence `2026-09-30`)
+
+Commercial evidence only. It does not authorize implementation, does not
+add commands, and does not change `SM-SALES-ORDER`, `SM-INVOICE`, or
+`SM-PAYMENT`.
+
+### Customer order
+
+- Mr. Pour-Ebrahim (Sales Manager) registers the customer order from
+  available warehouse stock. The title is not extra approval authority.
+- Demand quantity is weight in kilograms. Length, thickness, dimensions,
+  and type stay descriptive. They are not parallel stock ledgers.
+- Estimated amount = required weight × price per kg. This is an estimate,
+  not a final accounting rule.
+- When production is required, Mr. Dinavand receives the order and defines
+  the route. That is not automatic Production Order creation and not
+  `StartProductionOperation`.
+- Mr. Karimi calculates the final order weight.
+
+### Final amount
+
+Final amount = actual/final weighbridge weight × applicable price per kg
++ cutting service fee.
+
+Mr. Pour-Ebrahim issues the customer invoice from that final order weight
+cost plus the cutting service fee.
+
+An earlier quantity note said the final amount uses weighbridge weight
+plus a cutting service fee. That shorter wording is kept only as history.
+The explicit factory formula is the multiplication above.
+
+Not defined: price-list ownership, price versions, customer-specific
+prices, tax, discount, currency, money rounding, the cutting-service fee
+formula, who sets that fee, invoice numbering, and invoice timing versus
+shipment.
+
+### Invoice handoff
+
+1. Mr. Pour-Ebrahim issues the customer invoice.
+2. He gives it to Mr. Ghaffari.
+3. Mr. Ghaffari creates the corresponding record.
+4. Mr. Ghaffari uploads that record to an unrelated external system.
+
+Mr. Ghaffari does not issue the customer invoice. Accounting does not
+issue it. This is not a two-person approval. The external system identity,
+protocol, legal role, and whether the upload is manual or automatic are
+open. It is not a Legal-GL integration.
+
+Ms. Masoumi's purchase proformas are not this customer invoice.
+
+### Payment methods
+
+1. Deposit, with the remainder settled after delivery. No deposit
+   percentage and no settlement deadline are defined.
+2. A financial document: cheque or promissory note. No other document
+   types are added. No accounting treatment is defined.
+3. An established credit arrangement for a known customer. No credit
+   limit, approval hierarchy, or aging policy is defined.
+
+Invoice issued, payment received, and Sales Order closed are separate.
+Payment does not close the Sales Order (OQ-007, unchanged).
+
+Customer Portal remains visibility-only. No `PortalPlaceOrder`.
+
+Finance-Lite still owns operational Invoice, Payment, and Payment
+Allocation. It is not legal GL. The invoice lifecycle
+`DRAFT → ISSUED → PARTIALLY_PAID → PAID → CLOSED` is not replaced.
+Payment allocation is not redesigned. Those states and allocation
+commands remain architecture. The factory has not confirmed them as a
+payment procedure.
+
+### What the factory has not specified about customer payment
+
+- Who records a customer payment. Ms. Koushki follows up receivables.
+  That follow-up is not payment recording and not payment approval.
+  Mr. Ghaffari's invoice record is not a payment record.
+- Whether a payment must be linked to one invoice, whether one payment
+  may cover several invoices or orders, and whether partial invoice
+  payment is a factory procedure. `PARTIALLY_PAID` stays an architecture
+  state.
+- How a cheque or promissory note is recorded or settled. No cheque
+  lifecycle and no promissory-note lifecycle are defined.
+- A credit-approval authority or a credit limit for known-customer
+  credit. None is defined.
+- Whether payment timing affects shipment. No payment method is recorded
+  as mandatory before shipment.
+- An operational meaning for customer balance, and a procedure for
+  payment correction or reversal.
+
+Payment timing does not close the Sales Order. OQ-007 stays answered.
+OQ-012 stays answered. No tax, currency, bank, or legal-accounting rule
+is added. No new `OQ-*` is opened.
+
+## Incoming material and receiving (factory evidence `2026-09-30`)
+
+Physical intake evidence. It does not authorize implementation, does not
+add a posting command, and does not close OQ-001, OQ-005, OQ-009, OQ-011,
+OQ-015, or OQ-019.
+
+### Intake
+
+There is one intake station, associated with the warehouse function and
+with Mr. Karimi. His roster title is Warehousekeeper. Questionnaire
+wording also says Warehouse Manager. Those are one person, not two
+titles collapsed into a new job.
+
+Materials include Coil, Sheet, angle, beam, and other incoming types.
+No production transformation is defined here for angle or beam.
+
+Recorded at intake:
+
+- Internal Code
+- Count
+- Weight
+- Type
+
+No other intake field is added.
+
+### Quantity
+
+Official stock quantity is measured kilograms. Count is recorded and is
+descriptive. It is not a second inventory quantity ledger. Length and
+dimensions stay descriptive where already established. Weight↔count
+conversion is not required. No weight-per-piece rule is defined.
+
+### Identities
+
+Keep these separate. Do not assume one code structure for every material:
+
+- Internal Code
+- supplier or manufacturer identifiers, where they exist
+- material identity
+- Inventory Unit identity
+- Coil Code or Sheet Code, where applicable
+- Customer Order Code, only when the material is already tied to an order
+
+A standalone incoming Sheet is not Coil-derived. Do not fabricate a Coil
+Code or a Coil parent for it. It has its own material identity. Coil→Sheet
+trace applies only when a Sheet is produced from a Coil. Those Sheets
+keep the original Coil trace. Sheet Code stays distinct. Quantity remains kg.
+
+An incoming Coil may enter as an inventory unit. Later conversion follows
+the already recorded Coil→Sheet evidence. It is not this intake posting.
+
+Lot origin is a source fact. An Inventory Unit links to that origin.
+Genealogy Link is a rebuildable projection and is not manually edited.
+Goods Receipt is not the whole genealogy model. Do not give every Sheet
+a Coil ancestor.
+
+### Ownership boundary
+
+- Procurement document types such as a purchase request or a Purchase
+  Order are **architecture candidates**. The factory has not named a
+  Purchase Order lifecycle, a supplier code, or a mandatory link from
+  intake to a purchase record. What the factory has said is narrower:
+  Ms. Masoumi registers purchases and sends purchase proformas. A purchase
+  proforma is not a customer invoice, not supplier approval, and not the
+  inventory post. No Procurement Manager, purchase-approval hierarchy, or
+  supplier-selection authority is confirmed. `ApprovePurchaseOrder`
+  remains an architecture command whose person is OQ-019, not a
+  factory-confirmed approver.
+- Warehouse intake records that material arrived and records the physical
+  facts above. That is Mr. Karimi's organizational responsibility. It is
+  not an `ACT-*` permission.
+- Inventory quantity changes only through the Inventory Posting Service.
+  The command remains `PostGoodsReceipt`. The bundle remains
+  PostGoodsReceipt + Lot + Inventory Unit + Inventory Ledger.
+  Procurement orchestrates. Inventory posts the quantity. There is no
+  second receiving path, no Procurement write to the Ledger, no warehouse
+  screen write to the Ledger, no weighbridge write to the Ledger, and no
+  generic inventory-update command.
+
+### What this evidence does not do
+
+- It does not require current incoming QC. Older incoming-QC text stays
+  as future capability.
+- It does not name a scale, protocol, or automatic weight feed. OQ-011
+  stays treating.
+- It does not define a receiving discrepancy policy or a receiving
+  tolerance.
+- It does not define supplier invoice or supplier-document flow beyond
+  the purchase proforma already recorded.
+- It does not close opening-stock cutover. OQ-015 stays treating.
+- It does not change OQ-009 residual/scrap rules.
+
+## Customer order to station referral (factory evidence `2026-09-30`)
+
+Operational meaning only. No new command. No equivalence is created
+between factory words and existing commands.
+
+### Order and handoff
+
+- Mr. Pour-Ebrahim registers the customer order from available warehouse
+  stock. Demand quantity is kilograms. Estimated amount = required weight
+  × applicable price per kg. Price ownership, versions, tax, discount,
+  and currency stay undefined.
+- That registration does not automatically create a Production Order and
+  does not invoke `StartProductionOperation`.
+- When production is required, Mr. Dinavand receives the order and defines
+  the route for that order. The route is not a fixed global sequence.
+  Different orders may use different Stations. Some Stations may be
+  skipped. No Production Planner, Scheduler, Dispatcher, or Production
+  Controller is identified.
+
+### Stations
+
+The ten current physical Stations remain those listed on OQ-003. Station
+is the physical location and, in factory wording, the Production Step.
+No separate Work Center is confirmed. No station was added.
+
+### Entry and Referral
+
+- Entry: the order reaches the defined user role or Station. The system
+  clock records that time. Entry is not machine start, operator login,
+  first material movement, `StartProductionOperation`, or completion.
+- Referral: the order is assigned to the next user role or Station. The
+  system clock records that time. In normal circumstances this is close
+  to arrival at the next stage. The two times are not required to be the
+  same event. Mr. Dinavand performs the referral. Referral is not
+  production completion, inventory posting, shipment, or
+  `CompleteProductionOperation`.
+
+### Operators
+
+- Personal accounts only. No shared Station account. Login and logout are
+  recorded. Login is not Entry and does not bind the person to that
+  Station.
+- An operator may work at more than one Station. Assignment does not
+  change merely because the shift changes. About 10 operators; names not
+  supplied.
+- The operator declares completion of the Station work. The Production
+  Manager is informed and refers the order onward. That declaration has
+  no invented approval semantics.
+- Mr. Ghaffari's Stations/accounts responsibility is not a super-admin
+  permission.
+
+### Posting and stop
+
+- Not every Station completion posts inventory. The posting boundary
+  remains `CompleteProductionOperation`. No Station screen writes the
+  Ledger.
+- The Production Manager decides whether production should stop or be
+  cancelled. No cancellation code, reason list, or new state was added.
+  The existing pre-post and post-post abort split is unchanged.
+
+### Commercial handoff already recorded
+
+Mr. Karimi calculates the final order weight. Final amount = actual/final
+weighbridge weight × applicable price per kg + cutting service fee. The
+weighbridge does not write the Ledger. Mr. Pour-Ebrahim issues the
+invoice and gives it to Mr. Ghaffari, who records it and uploads the
+record to an unnamed external system. Payment does not close the Sales
+Order. QC remains outside the current MVP.
+
+OQ-003 and OQ-019 stay treating. OQ-006 is not this workflow.
+
+## Production facts and the posting boundary (factory evidence `2026-09-30`)
+
+This records factory meaning beside the accepted architecture. It does
+not change `CompleteProductionOperation`, DATA-TX-001, INV-006, INV-007,
+or the genealogy source-fact list. No new command is added.
+
+### What the factory supports
+
+- A customer order is registered from warehouse stock. When production is
+  required, Mr. Dinavand sets an order-specific route. Operators work at
+  Stations and declare completion. He is informed and refers the next
+  stage.
+- Material used in that production, the resulting output, reusable
+  leftover, and non-reusable leftover stay distinguishable.
+- Reusable leftover is Residual and returns to the warehouse. Non-reusable
+  leftover is Scrap. Mr. Dinavand decides from reusability. The system
+  must not classify from weight, dimensions, quantity, percentage, or a
+  universal cutoff. There is no third waste category.
+- Where the material or scrap belongs to a customer order, the Customer
+  Order Code is the practical order-level trace key. Tiny pieces do not
+  each receive a physical-part code. That code does not replace Inventory
+  Unit identity. Standalone warehouse stock need not carry an Order Code.
+- Coil → Sheet can be a warehouse transformation without a customer order
+  and without a Production Order. Those Sheets keep the Coil trace. That
+  conversion is not automatically customer-order production and is not
+  automatically `CompleteProductionOperation`.
+- A measured weight difference must be shown. It is not automatically
+  Residual, Scrap, or process loss.
+
+### What the factory does not say
+
+- It does not say when material becomes consumed.
+- It does not say that every Station consumes a separate Inventory Unit.
+- It does not say that every Station completion creates an inventory
+  movement.
+- It does not name `ConsumeUnitPartial` or `ConsumeUnitComplete`, and it
+  does not give the condition for partial versus complete consumption.
+- It does not define good output as a workflow distinct from WIP. That
+  split remains an architecture concept inside the accepted completion
+  bundle. No output grade, yield category, or Quality release is added.
+  QC stays outside the current MVP.
+- It does not define process loss, a process-loss percentage, or a
+  production mass-balance percentage. OQ-006 fulfillment tolerance is not
+  that missing percentage. BR-007 is not rewritten.
+- It does not define a scrap numbering scheme. Older Scrap Code / unique
+  part identifier wording stays historical.
+
+### Architecture that stays
+
+Inside customer-order production, where the accepted operation applies,
+consumption, good output/WIP, Residual, and Scrap quantity are posted
+once inside `CompleteProductionOperation` through `ACT-IPS`.
+`ConsumeUnitPartial` and `ConsumeUnitComplete` stay nested primitives,
+not user-facing workflows. `CreateResidualUnit` stays the nested residual
+identity post. `PlaceResidualUnit` is not a second quantity post.
+`PostScrapMovement` is the nested scrap quantity post. `ScrapUnit` destiny
+`SCRAPPED` is not a second quantity post. No production screen writes the
+Ledger.
+
+Genealogy source facts stay Lot Origin, Consumption, Output, Residual,
+Scrap, Package, Shipment, and Rework. Genealogy Link is a rebuildable
+projection, not editable truth, and not a Ledger-only rebuild. No
+`EditGenealogy` command is added. Not every material has a Coil ancestor.
+
+Corrections remain new compensating facts. kg remains the only official
+stock quantity. Count, length, and dimensions stay descriptive.
+
+OQ-001, OQ-003, and OQ-009 stay treating. OQ-006 stays answered.
+
+## Shipment, delivery, and fulfillment (factory evidence `2026-09-30`)
+
+The factory documents do not define a logistics process. This section
+records that gap. It does not add a command, a shipping role, or a change
+to OQ-006, OQ-007, or OQ-008.
+
+### What is supported
+
+- Customer demand and official stock quantity stay kilograms. Count,
+  length, and dimensions stay descriptive. There is no second fulfillment
+  ledger and no piece-fulfillment quantity.
+- Final commercial quantity uses the final weighbridge weight already
+  recorded. That weight is not a Ledger write. No shipment tolerance is
+  defined.
+- Where parts belong to a customer order, the Customer Order Code remains
+  the practical order-level trace, including through package and shipment
+  source facts already in the genealogy catalogue. It does not replace
+  Inventory Unit, Coil Code, Sheet Code, or Shipment identity. Not every
+  shipment line is one physical piece.
+- Payment method 1 is a deposit with the remainder settled after delivery.
+  That phrase does not define who delivers, how delivery is confirmed, or
+  that delivery closes the Sales Order.
+- Mr. Karimi, Mr. Pour-Ebrahim, Mr. Ghaffari, and Mr. Dinavand are not
+  given shipment, loading, carrier, or delivery authority by this evidence.
+
+### What stays architecture, not a factory procedure
+
+- Inventory remains stock truth. Balance is a projection. Stock exit, if
+  a shipment is later posted, still goes through the Inventory Posting
+  Service. A shipment screen does not write the Ledger or edit Balance.
+  The existing dispatch command is architecture. The factory has not
+  confirmed it, and no second writer is added.
+- Reservation stays distinct from shipment. One Inventory Unit, one active
+  reservation. A confirmed reservation does not expire on a timer. A later
+  order does not steal it. Reservation is not delivery. No picking
+  algorithm or automatic allocation strategy is added.
+- `ConfirmSalesOrder` does not automatically create a shipment.
+- Partial shipment remains the answered OQ-006 rule when a line allows it,
+  default tolerance 0. The factory has not described who prepares, splits,
+  or records that shipment.
+- Sales Order closure stays: remaining valid demand zero within that
+  tolerance, or cancelled, or authorized unfulfilled remainder. Shipment
+  `DELIVERED`, invoice issued, and payment received are not close guards.
+  Delivered is not Closed. Invoice paid is not Closed. Invoice issued is
+  not Closed. Shipment created is not Closed.
+- Who may authorize an unfulfilled remainder, and any cancellation reason
+  codes, stay open. A shipment does not discard remaining valid demand.
+
+### Left open
+
+Who prepares a shipment, who authorizes it, who loads it, who records it,
+who confirms delivery, which document goes with it, carrier responsibility,
+the delivery evidence, customer signature, invoice timing versus shipment,
+and payment before shipment. No Shipping Manager, Logistics Manager,
+Dispatcher, Driver, or Delivery Officer is created. The temporary Shipping
+owner row is not a factory person. OQ-007 and OQ-008 stay answered.
+OQ-019 stays treating.
+
+## Customer-order change and cancellation (factory evidence `2026-09-30`)
+
+The factory documents do not define a customer-order amendment or
+cancellation procedure. This section records that gap. It does not add a
+command, a role, or a change to the OQ-007 close rule.
+
+### Supported
+
+- Mr. Pour-Ebrahim registers the customer order. That registration is not
+  evidence that he may amend or cancel it afterward.
+- Mr. Dinavand may decide that **production** should stop or be cancelled.
+  That is a production responsibility already recorded. It is not Sales
+  Order cancellation authority, not an automatic production reversal, and
+  not an instruction to change the route because the customer order
+  changed.
+- A Sales Order may still close when remaining valid demand is zero within
+  OQ-006 (default 0), or when the remainder is cancelled or authorized as
+  unfulfilled. Valid demand is not discarded because a shipment occurred.
+  Payment and invoice status are not close guards.
+
+### Not specified by the factory — left open
+
+- Who may request, approve, record, or execute a customer-order change or
+  cancellation.
+- Whether a confirmed order may be edited.
+- Whether a quantity increase or decrease modifies existing demand or
+  creates a new commercial fact.
+- Changes to material or product requirements.
+- What an order change does to the production route. Changing an order
+  does not automatically start, cancel, reverse, or modify production.
+- What happens to an active reservation after cancellation. No automatic
+  release rule is added. The accepted reservation rules are unchanged.
+- What happens to material already allocated or already produced.
+- Cancellation after production has started, after partial fulfillment, or
+  after shipment.
+- Whether customer confirmation, a reason code, a timestamp beyond the
+  existing audit rule, or other evidence is required.
+- Whether a cancelled order can be reopened.
+
+### Architecture candidates, not factory procedures
+
+`RequestSalesOrderCancel`, `ConfirmSalesOrderCancel`, `HoldSalesOrder`,
+`SalesOrderChange`, `RecordUnfulfilledDemand`, and `ReopenAsInquiry`
+remain architecture commands. Cancel and hold states on the Sales Order
+machine remain architecture. They are not deleted. The factory has not
+confirmed who uses them. They do not write the Ledger. A Sales Order
+screen is not a second inventory writer. Genealogy is not edited;
+corrections stay compensating facts.
+
+These stay distinct: a customer-requested change, a commercial amendment,
+a reservation change, a production stop/cancel, an inventory correction,
+and Sales Order closure.
+
+OQ-007 stays **answered** for the close rule. The amendment and
+cancellation procedure stays open on that residual and on OQ-019. No new
+`OQ-*` is minted. No delegate and no approval chain is created.
+
+## Procurement and purchasing (factory evidence `2026-09-30`)
+
+Factory facts only. Purchase Order states and commands stay architecture
+candidates. No new `OQ-*` is minted. OQ-001, OQ-005, OQ-011, OQ-012, and
+OQ-015 are not reopened.
+
+### Supported
+
+- Ms. Masoumi registers purchases and sends proformas. That is not
+  customer invoicing, supplier selection, purchase approval, payment
+  approval, receiving, acceptance or rejection, or an inventory post.
+- Mr. Karimi is associated with the one intake station. Materials include
+  Coil, Sheet, angle, beam, and similar types. Intake records Internal
+  Code, Count, Weight, and Type. Official stock quantity is measured kg,
+  0 decimal places, smallest step 1 kg, no measurement rounding. Count is
+  descriptive. Weight↔count conversion is not required.
+- A standalone incoming Sheet has no fabricated Coil parent. Lot origin
+  is a source fact where the material is received. Genealogy Link stays a
+  projection. No new genealogy source fact is added.
+- There is no QC department. Incoming material does not require a current
+  Quality approval.
+- Mr. Ghaffari's customer-invoice record and external upload are not
+  procurement duties.
+
+### Architecture, not a factory procedure
+
+Procurement may orchestrate a purchasing-side record. Inventory posts
+quantity only through `PostGoodsReceipt` plus Lot, Inventory Unit, and
+Ledger. `ACT-IPS` is the sole stock writer. A procurement screen and a
+warehouse screen do not write the Ledger. Balance is a projection.
+
+`SM-PURCHASE-ORDER` and the purchase commands, including
+`ApprovePurchaseOrder`, `SendPurchaseOrder`, partial and full receipt,
+hold, and cancel, are architecture candidates. The factory has not
+confirmed that lifecycle.
+
+### Left open
+
+Supplier master-data ownership, supplier identity or code, supplier
+selection and approval, purchase-request authority, whether a Purchase
+Order exists as a factory document, who creates or approves it, the
+proforma lifecycle beyond "Masoumi sends proformas," supplier
+confirmation, quantity changes, purchase cancellation and its effect on
+supplier records, receiving, inventory, payment, or demand, purchase
+return, price, currency, tax, and payment terms, incoming acceptance,
+discrepancy handling when physical weight differs from a purchase
+quantity, receiving authority beyond Karimi's intake recording, partial
+receipt, over-receipt, under-receipt, and receipt cancellation or
+correction. No procurement tolerance and no procurement payment workflow
+are defined. No mandatory link from an intake record to a purchase
+record is defined.
