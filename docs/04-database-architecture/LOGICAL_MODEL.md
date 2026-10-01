@@ -3,7 +3,7 @@ id: DATA-LOGICAL-001
 title: Logical Data Model
 phase: 04-database-architecture
 status: approved
-version: 0.1.3
+version: 0.3.0
 owners: [data-architect, domain-leads]
 depends_on: [GOV-DATA-DICT-001, DOM-OWN-001, APR-005]
 last_reviewed: 2026-10-01
@@ -21,6 +21,13 @@ This is not a physical schema. No table, column type, key algorithm, or
 migration is authorized.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+OQ-005 scope: Quality Inspection and its relationship below are
+future/deferred logical concepts only. The current MVP has no QC
+department, Quality role, mandatory inspection, quarantine, or Quality
+release. Existing `AVAILABLE` is the current-MVP normal Unit state after
+valid stock-in commits (INV-003); no physical schema or replacement status
+is defined.
 
 ## Rules
 
@@ -43,6 +50,10 @@ migration is authorized.
 - Sales Order close predicate is recorded (OQ-007). Payment is not a
   close attribute.
 - One `ACTIVE` reservation per Inventory Unit is recorded (OQ-008).
+- Ledger movements remain kg quantity truth; Balance is rebuildable.
+  Inventory Unit `AVAILABLE` expresses lifecycle eligibility for normal
+  use after valid stock-in commits, subject to existing guards (INV-003).
+  It is not a parallel quantity ledger or an unconditional shipment right.
 
 ## Write-owner groups
 
@@ -52,7 +63,7 @@ migration is authorized.
 | Procurement | Supplier, Purchase Order, Goods Receipt (orchestration) |
 | Inventory / ACT-IPS | Material Lot, Inventory Unit, Inventory Ledger, Inventory Balance, Reservation; Goods Receipt stock posting; Residual resulting unit; Scrap stock movement |
 | Production | Production Order, Material Allocation, Production Operation, Material Consumption, Production Output, Residual fact, Scrap fact, Product Batch |
-| Quality | Quality Inspection |
+| Quality (future only) | Quality Inspection (future only) |
 | Shipping | Package, Shipment |
 | Finance-Lite | Invoice, Payment |
 | none as truth | Genealogy Link (rebuildable projection) |
@@ -131,7 +142,7 @@ state with at most one `ACTIVE` per Inventory Unit (OQ-008).
 | Quantity type, UOM, decimals, rounding | OQ-001 residual. Official stock UOM is kg (OQ-001/OQ-002 recorded). |
 | Official operation step **name** | OQ-003 residual. Posting **boundary** is `CompleteProductionOperation` (recorded). |
 | Batch vs bundle vs piece identity | OQ-004 recorded hybrid grain; first-go-live family catalogue is configuration |
-| QC plan, limit, sample, named releaser | OQ-005 residual. QC can block; exceptional release is two-person. |
+| QC plan, limit, sample, named releaser | OQ-005 future residual only. Future QC could block and use two-person exceptional release if separately enabled; none is a current-MVP input. |
 | Tolerance percents and over-delivery family % | OQ-006 configuration. Default 0 is recorded. |
 | Residual cutoff | OQ-009 residual numbers |
 | Site / legal-entity discriminator | Not required for MVP. OQ-013 recorded: one legal entity, one principal site. |

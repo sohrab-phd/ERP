@@ -3,10 +3,10 @@ id: DOM-OWN-001
 title: Module Capability and Data-Ownership Matrix
 phase: 02-domain-business-architecture
 status: approved
-version: 0.2.1
+version: 0.3.0
 owners: [chief-solution-architect, data-architect]
 depends_on: [GOV-DATA-DICT-001, DOM-CAP-BC-001]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-10-01
 approval: APR-004
 supersedes: null
 ---
@@ -26,6 +26,11 @@ tables, columns, keys, schemas, or migrations.
 accepted. ADR-0008 remains proposed. Packages are not frozen (OQ-018
 residual). Posting style is the recorded OQ-017 application-owned
 PostgreSQL transaction; stored functions need a later ADR.
+
+Quality ownership and command references below describe future/deferred
+architecture only (OQ-005). There is no current-MVP Quality role,
+inspection, hold, or release gate. No Quality command is a dependency
+of current receiving, production completion, availability, or shipment.
 
 ## Scope
 
@@ -112,8 +117,8 @@ First-use glossary links appear in the Concept column.
 | Residual resulting unit | TERM-012 inventory side | `BC-INVENTORY` | Production, Quality, Sales, Reporting | Production residual-completion command | Production writing unit identity as a second owner |
 | Scrap fact | ENT-SCRAP / TERM-013 | `BC-PRODUCTION` (creation/disposition fact) | Inventory, Quality, Reporting | Inventory Posting Service where scrap changes inventory | Production writing Ledger/Balance |
 | Scrap stock movement | ENT-SCRAP inventory side | Inventory Posting Service | Production, Audit, Reporting | Production/Quality scrap or reject commands | Quality writing stock tables |
-| [Product Batch](../00-governance/registers/BUSINESS_GLOSSARY.md#term-014--product-batch) | ENT-PRODUCT-BATCH / TERM-014; open pending OQ-004 | `BC-PRODUCTION` | Quality, Shipping, Inventory, Reporting | Quality release; Shipping pack/ship | Shipping writing batch identity |
-| QualityInspection | ENT-QUALITY-INSPECTION; open pending OQ-005 | `BC-QUALITY` | Inventory, Production, Shipping, Procurement, Reporting | Inventory hold/quarantine/release; Shipping shipment-gate | Ledger, Balance, Inventory Unit quantity |
+| [Product Batch](../00-governance/registers/BUSINESS_GLOSSARY.md#term-014--product-batch) | ENT-PRODUCT-BATCH / TERM-014; open pending OQ-004 | `BC-PRODUCTION` | Quality (future), Shipping, Inventory, Reporting | Shipping pack/ship; Quality release only in future scope | Shipping writing batch identity |
+| QualityInspection (**future only**) | ENT-QUALITY-INSPECTION; OQ-005 future residual | `BC-QUALITY` (future) | Inventory, Production, Shipping, Procurement, Reporting | Future Inventory hold/quarantine/release and Shipping gate only | Ledger, Balance, Inventory Unit quantity |
 | [Package](../00-governance/registers/BUSINESS_GLOSSARY.md#term-023--package) | ENT-PACKAGE / TERM-023 | `BC-SHIPPING` | Inventory, Quality, Sales, Reporting | Inventory pack-state posting if required by later Phase 03 | Inventory writing Package as shipment workflow |
 | [Shipment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-017--shipment) | ENT-SHIPMENT / TERM-017 | `BC-SHIPPING` | Sales, Inventory, Finance-Lite, Quality, Reporting | Inventory Posting Service for definitive stock exit on dispatch | Ledger/Balance; Sales writing shipment rows |
 | Invoice | ENT-INVOICE; not legal GL (OQ-012 recorded) | `BC-FINANCE-LITE` ([Finance-Lite](../00-governance/registers/BUSINESS_GLOSSARY.md#term-018--finance-lite), TERM-018) | Sales, Shipping, Reporting, Integration (export candidate) | none for stock; none for Sales Order close (OQ-007) | External accounting tables (out of this system); Sales writing invoices; Finance-Lite writing Sales Order lifecycle |

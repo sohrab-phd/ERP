@@ -3,10 +3,10 @@ id: DOM-CAP-BC-001
 title: Capability and Bounded-Context Map
 phase: 02-domain-business-architecture
 status: approved
-version: 0.2.3
+version: 0.4.0
 owners: [chief-solution-architect, business-process-owner]
 depends_on: [GOV-DOMAIN-001, ASM-REPORT-001]
-last_reviewed: 2026-09-30
+last_reviewed: 2026-10-01
 approval: APR-004
 supersedes: null
 ---
@@ -26,6 +26,12 @@ implementation.
 (ADR-0001), Modular Monolith (ADR-0006), and PostgreSQL (ADR-0007) are
 accepted. ADR-0008 remains proposed. Bounded contexts here are business
 boundaries, not framework or package choices.
+
+`BC-QUALITY` relationships in this proposed context map are
+future/deferred only under OQ-005. The current factory has no QC
+department, Quality role, inspection execution, or mandatory release
+gate. Current receiving, production, availability, and shipment do not
+depend on this context.
 
 ## Scope
 
@@ -58,11 +64,11 @@ Terms below use glossary IDs on first use. Conceptual entities remain
 | Identity, sessions, RBAC, scopes | `BC-IDENTITY` | `BC-AUDIT` | Server-authoritative policy. |
 | Shared definitions: material, product, grade, UOM, warehouse, machine | `BC-MASTER-DATA` | `BC-IDENTITY` | UOM matrix open (OQ-001). |
 | Sales/CRM: [Customer](../00-governance/registers/BUSINESS_GLOSSARY.md#term-001--customer) (TERM-001), [Inquiry](../00-governance/registers/BUSINESS_GLOSSARY.md#term-002--inquiry) (TERM-002), [Quotation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-020--quotation) (TERM-020), [Sales Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-003--sales-order) (TERM-003), [Fulfillment Assessment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-004--fulfillment-assessment) (TERM-004), [Unfulfilled Demand](../00-governance/registers/BUSINESS_GLOSSARY.md#term-005--unfulfilled-demand) (TERM-005) | `BC-SALES` | `BC-INVENTORY`, `BC-PROCUREMENT`, `BC-PRODUCTION`, `BC-FINANCE-LITE` | Commercial demand owner. |
-| Procurement: [Supplier](../00-governance/registers/BUSINESS_GLOSSARY.md#term-021--supplier) (TERM-021), [Purchase Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-022--purchase-order) (TERM-022), inbound commercial commitment, [Goods Receipt](../00-governance/registers/BUSINESS_GLOSSARY.md#term-019--goods-receipt) (TERM-019) orchestration | `BC-PROCUREMENT` | `BC-INVENTORY`, `BC-QUALITY`, `BC-MASTER-DATA` | Commercial receipt vs stock posting are split. |
-| Inventory/warehouse: [Material Lot](../00-governance/registers/BUSINESS_GLOSSARY.md#term-006--material-lot) (TERM-006), [Inventory Unit](../00-governance/registers/BUSINESS_GLOSSARY.md#term-007--inventory-unit) (TERM-007) / [Coil](../00-governance/registers/BUSINESS_GLOSSARY.md#term-008--coil) (TERM-008), Ledger, Balance, [Reservation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-009--reservation) (TERM-009) | `BC-INVENTORY` | `BC-QUALITY`, `BC-PRODUCTION`, `BC-SHIPPING`, `BC-PROCUREMENT` | Shared business use; one write owner. |
-| Production/MES: [Production Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-011--production-order) (TERM-011), operations, [Material Allocation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-010--material-allocation) (TERM-010), consumption, output, [Residual](../00-governance/registers/BUSINESS_GLOSSARY.md#term-012--residual) (TERM-012), [Scrap](../00-governance/registers/BUSINESS_GLOSSARY.md#term-013--scrap) (TERM-013), [Product Batch](../00-governance/registers/BUSINESS_GLOSSARY.md#term-014--product-batch) (TERM-014), [Genealogy](../00-governance/registers/BUSINESS_GLOSSARY.md#term-015--genealogy) (TERM-015) source facts | `BC-PRODUCTION` | `BC-INVENTORY`, `BC-QUALITY`, `BC-MASTER-DATA` | Routing/posting points open (OQ-003). |
-| Quality: inspection, measurement, nonconformance, hold, [Released](../00-governance/registers/BUSINESS_GLOSSARY.md#term-016--released) (TERM-016) | `BC-QUALITY` | `BC-INVENTORY`, `BC-SHIPPING`, `BC-PRODUCTION` | Requests stock lifecycle; does not write stock tables. |
-| Shipping/delivery: [Package](../00-governance/registers/BUSINESS_GLOSSARY.md#term-023--package) (TERM-023), [Shipment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-017--shipment) (TERM-017), dispatch, delivery | `BC-SHIPPING` | `BC-INVENTORY`, `BC-SALES`, `BC-QUALITY` | Requests definitive stock exit; does not write stock tables. |
+| Procurement: [Supplier](../00-governance/registers/BUSINESS_GLOSSARY.md#term-021--supplier) (TERM-021), [Purchase Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-022--purchase-order) (TERM-022), inbound commercial commitment, [Goods Receipt](../00-governance/registers/BUSINESS_GLOSSARY.md#term-019--goods-receipt) (TERM-019) orchestration | `BC-PROCUREMENT` | `BC-INVENTORY`, `BC-MASTER-DATA`; `BC-QUALITY` **future only** | Commercial receipt vs stock posting are split. No current QC dependency. |
+| Inventory/warehouse: [Material Lot](../00-governance/registers/BUSINESS_GLOSSARY.md#term-006--material-lot) (TERM-006), [Inventory Unit](../00-governance/registers/BUSINESS_GLOSSARY.md#term-007--inventory-unit) (TERM-007) / [Coil](../00-governance/registers/BUSINESS_GLOSSARY.md#term-008--coil) (TERM-008), Ledger, Balance, [Reservation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-009--reservation) (TERM-009) | `BC-INVENTORY` | `BC-PRODUCTION`, `BC-SHIPPING`, `BC-PROCUREMENT`; `BC-QUALITY` **future only** | Shared business use; one write owner. |
+| Production/MES: [Production Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-011--production-order) (TERM-011), operations, [Material Allocation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-010--material-allocation) (TERM-010), consumption, output, [Residual](../00-governance/registers/BUSINESS_GLOSSARY.md#term-012--residual) (TERM-012), [Scrap](../00-governance/registers/BUSINESS_GLOSSARY.md#term-013--scrap) (TERM-013), [Product Batch](../00-governance/registers/BUSINESS_GLOSSARY.md#term-014--product-batch) (TERM-014), [Genealogy](../00-governance/registers/BUSINESS_GLOSSARY.md#term-015--genealogy) (TERM-015) source facts | `BC-PRODUCTION` | `BC-INVENTORY`, `BC-MASTER-DATA`; `BC-QUALITY` **future only** | Routing/posting points open (OQ-003). No current QC dependency. |
+| Quality (**future only**): inspection, measurement, nonconformance, hold, [Released](../00-governance/registers/BUSINESS_GLOSSARY.md#term-016--released) (TERM-016) | `BC-QUALITY` (deferred) | `BC-INVENTORY`, `BC-SHIPPING`, `BC-PRODUCTION` if later enabled | Would request stock lifecycle; never writes stock tables. |
+| Shipping/delivery: [Package](../00-governance/registers/BUSINESS_GLOSSARY.md#term-023--package) (TERM-023), [Shipment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-017--shipment) (TERM-017), dispatch, delivery | `BC-SHIPPING` | `BC-INVENTORY`, `BC-SALES`; `BC-QUALITY` **future only** | Requests definitive stock exit; no current Quality-release gate. Does not write stock tables. |
 | [Finance-Lite](../00-governance/registers/BUSINESS_GLOSSARY.md#term-018--finance-lite) (TERM-018): operational Invoice, [Payment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-024--payment) (TERM-024), allocation, customer balance | `BC-FINANCE-LITE` | `BC-SALES`, `BC-SHIPPING`, `BC-INTEGRATION` | Not legal accounting (OQ-012, ASM-010). |
 | Operational reporting, KPIs, traceability query | `BC-REPORTING` | all transactional BCs | Read-only projections. |
 | Technical, business, status, and security evidence | `BC-AUDIT` | all BCs | Immutable evidence; not transactional truth. |
@@ -83,12 +89,15 @@ flowchart LR
     PR[BC-PROCUREMENT]
     INV[BC-INVENTORY]
     PD[BC-PRODUCTION]
-    QC[BC-QUALITY]
     SH[BC-SHIPPING]
     FIN[BC-FINANCE-LITE]
     REP[BC-REPORTING]
     AUD[BC-AUDIT]
     INT[BC-INTEGRATION]
+  end
+
+  subgraph future_quality [Future Quality - outside current MVP]
+    QC[BC-QUALITY]
   end
 
   subgraph deferred [Proposed deferred - not confirmed]
@@ -99,7 +108,7 @@ flowchart LR
   ID -->|policy and principals| PR
   ID -->|policy and principals| INV
   ID -->|policy and principals| PD
-  ID -->|policy and principals| QC
+  ID -->|future only: policy and principals| QC
   ID -->|policy and principals| SH
   ID -->|policy and principals| FIN
   MD -->|definitions| SA
@@ -111,14 +120,14 @@ flowchart LR
   SA -->|production need| PD
   SA -->|operational receivable facts| FIN
   PR -->|"GoodsReceipt commercial orchestration"| INV
-  PR -->|inbound QC request| QC
+  PR -->|future only: inbound QC request| QC
   INV -->|stock and location reads| SA
   INV -->|stock and location reads| PD
   INV -->|stock and location reads| SH
   PD -->|issue consume output residual scrap posting commands| INV
-  PD -->|in-process / final QC request| QC
-  QC -->|hold quarantine release commands| INV
-  QC -->|shipment-release gate| SH
+  PD -->|future only: in-process / final QC request| QC
+  QC -->|future only: hold quarantine release commands| INV
+  QC -->|future only: shipment-release gate; no current prerequisite| SH
   SH -->|dispatch stock-exit command| INV
   SH -->|delivery facts| FIN
   FIN -->|legal-accounting candidate export| INT
@@ -127,13 +136,13 @@ flowchart LR
   SA --> REP
   INV --> REP
   PD --> REP
-  QC --> REP
+  QC -->|future only| REP
   SH --> REP
   FIN --> REP
   SA --> AUD
   INV --> AUD
   PD --> AUD
-  QC --> AUD
+  QC -->|future only| AUD
   SH --> AUD
   FIN --> AUD
   ID --> AUD
@@ -234,8 +243,8 @@ references or read projections.
 - Inbound: shortage/purchase-need from `BC-SALES` or production planning;
   supplier and certificate references; weighbridge/manual receiving evidence
   (device/protocol open: OQ-011).
-- Outbound: GoodsReceipt posting commands to `BC-INVENTORY`; inbound QC
-  requests to `BC-QUALITY`.
+- Outbound: GoodsReceipt posting commands to `BC-INVENTORY`. Inbound QC
+  requests to `BC-QUALITY` are future-only, not current-MVP receiving.
 - Write-owned: Supplier, PurchaseOrder, GoodsReceipt commercial/orchestration
   record (TERM-019 orchestration side).
 - Must not write: Ledger, Balance, Inventory Unit quantity/location,
@@ -249,11 +258,12 @@ references or read projections.
   Service mutates stock state (OQ-017 keeps the mechanism open).
 - Inbound: reservation commands from Sales; GoodsReceipt posting commands from
   Procurement; issue/consume/output/residual/scrap posting commands from
-  Production; hold/quarantine/release commands from Quality; dispatch stock-exit
-  commands from Shipping; cutover/adjustment commands under controlled
+  Production; future-only hold/quarantine/release commands from Quality;
+  dispatch stock-exit commands from Shipping; cutover/adjustment commands under controlled
   authority (OQ-015).
 - Outbound: availability and location reads to Sales, Production, Shipping, and
-  Quality; posting evidence to `BC-AUDIT`; stock projections to `BC-REPORTING`.
+  future-only Quality; posting evidence to `BC-AUDIT`; stock projections to
+  `BC-REPORTING`.
 - Write-owned: Material Lot (proposed; confirmation required), Inventory Unit /
   Coil / Sheet / reusable Residual *identity and quantity*, Ledger, Balance,
   Reservation, Transfer, Adjustment postings.
@@ -267,11 +277,11 @@ references or read projections.
 - Purpose: authorized production plans, operations, allocations, and material
   transformation facts that are the source of genealogy.
 - Inbound: production-need from Sales; stock availability and issue results from
-  Inventory; quality dispositions; master-data routing definitions (routing
-  itself open: OQ-003).
+  Inventory; future-only quality dispositions; master-data routing definitions
+  (routing itself open: OQ-003).
 - Outbound: posting commands to `BC-INVENTORY` for issue, consumption, output,
-  residual identity, and scrap stock effect; QC requests to `BC-QUALITY`;
-  immutable genealogy source facts consumed by `BC-REPORTING`.
+  residual identity, and scrap stock effect; future-only QC requests to
+  `BC-QUALITY`; immutable genealogy source facts consumed by `BC-REPORTING`.
 - Write-owned: Production Order, Production Operation, Material Allocation,
   Consumption, Output, Residual *creation/disposition fact*, Scrap
   *creation/disposition fact*, Product Batch, rework/downtime facts recorded in
@@ -281,7 +291,7 @@ references or read projections.
   quantity* and scrap *stock movement* are posted by Inventory, not by
   Production table writes.
 
-#### BC-QUALITY
+#### BC-QUALITY — future/deferred, outside current MVP
 
 - Purpose: inspection evidence and disposition/release decisions that gate
   availability and shipment.
@@ -302,8 +312,9 @@ references or read projections.
   Dispatch causes definitive stock exit through Inventory. Shipment without
   demand requires explicit authority (ASM-REPORT-001 invariant; authority matrix
   unvalidated).
-- Inbound: released Product Batch / Package eligibility; customer/order
-  authorization from Sales; quality release gate.
+- Inbound: permitted Product Batch / Package eligibility; customer/order
+  authorization from Sales. A Quality release gate is future-only and is
+  not a current shipment prerequisite.
 - Outbound: stock-exit command to `BC-INVENTORY` on dispatch; delivery facts to
   `BC-FINANCE-LITE`.
 - Write-owned: Package, Shipment, ShipmentItem, Dispatch, Delivery.
@@ -404,7 +415,7 @@ Answered rows are recorded policy, not still-open architecture.
 | Coil quantity: weight is authoritative kg | OQ-002 answered |
 | Real routing, measurement, and official posting points | OQ-003 residual names. Posting boundary is `CompleteProductionOperation` (recorded). |
 | Batch / bundle / piece tracking granularity | OQ-004 answered; first-go-live family catalogue remains configuration |
-| Quality plans, limits, samples, release authority | OQ-005 residual. QC can block; exceptional release is two-person. |
+| Quality plans, limits, samples, release authority | OQ-005 future-only residual. QC can block only in a later approved Quality scope; exceptional release would need two people. No current-MVP QC gate. |
 | Partial-shipment / over-production / over-delivery tolerances | OQ-006 answered default 0; family % is configuration |
 | Sales Order closure: fulfilled, cancelled, or authorized unfulfilled remainder; not payment | OQ-007 answered |
 | Reservation: one Inventory Unit → one `ACTIVE`; no confirmed-SO timer | OQ-008 answered |

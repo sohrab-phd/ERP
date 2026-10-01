@@ -3,10 +3,10 @@ id: PLAN-SLICE-001
 title: Roadmap and Vertical Slices
 phase: 12-implementation-planning
 status: approved
-version: 0.3.0
+version: 0.4.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [SM-SEQ-001, APP-ORCH-001, REPO-LAY-001, APR-013, APR-014, ASM-025]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-014
 supersedes: null
 ---
@@ -18,6 +18,10 @@ plan, or application tree. Later folders stay labels from REPO-LAY-001;
 they are not created now.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+OQ-005 records the current-MVP exclusion of QC execution. Its remaining
+plans, limits, and people are future-only inputs, not guards on the current
+purchase or make slices. No current slice requires `mod-quality`.
 
 ## Standing slice rules
 
@@ -50,8 +54,8 @@ kernel.
 | `SLICE-ENVELOPE` | Command/query envelope, idempotency key, rejection families, `AUD-CMD-*` | `kern-command`, `host-backend`, `mod-identity-audit` | Write Ledger; choose NestJS/Prisma | OQ-018 residual packages |
 | `SLICE-IPS` | Inventory Posting kernel commanded by others | `mod-inventory-posting` | Second writer; Balance-only API | OQ-001 residual; OQ-017 functions later ADR |
 | `SLICE-STOCK` | SEQ-STOCK: `ActivateReservation` bundle → pack → `DispatchShipment` bundle → invoice → `AllocatePayment` bundle; `CloseSalesOrder` per OQ-007 | `mod-sales`, `mod-shipping`, `mod-finance-lite`, commands IPS | Steal an `ACTIVE` reservation; split any named bundle; close SO because invoice is paid | OQ-006 |
-| `SLICE-PURCHASE` | SEQ-PURCHASE: PO → `PostGoodsReceipt` bundle; `ADP-WEIGHBRIDGE` commander | `mod-procurement`, `host-adapter`, IPS posts | Device writes quantity | OQ-011, OQ-005, OQ-019 |
-| `SLICE-MAKE` | SEQ-MAKE: allocation issue → `CompleteProductionOperation` bundle (nested residual identity / scrap qty) | `mod-production`, `mod-quality` commands IPS | Guess routing or residual cutoff; split the complete-op bundle or post leftover after commit | OQ-003 names, OQ-009 cutoff numbers, OQ-006 |
+| `SLICE-PURCHASE` | SEQ-PURCHASE: PO → `PostGoodsReceipt` bundle; `ADP-WEIGHBRIDGE` commander | `mod-procurement`, `host-adapter`, IPS posts; no current Quality dependency | Device writes quantity | OQ-011, OQ-019; OQ-005 future Quality only, not a current guard |
+| `SLICE-MAKE` | SEQ-MAKE: allocation issue → `CompleteProductionOperation` bundle (nested residual identity / scrap qty) | `mod-production` commands IPS; `mod-quality` deferred outside MVP | Guess routing or residual cutoff; split the complete-op bundle or post leftover after commit | OQ-003 names, OQ-009 cutoff numbers, OQ-006; OQ-005 future Quality only |
 | `SLICE-REVERSE` | SEQ-REVERSE compensating commands; SV-013 on ReverseGoodsReceipt | owning BC commands; IPS on stock reverse | Device replay; `REV-AGENT` waiving SoD | OQ-015, OQ-019 |
 | `SLICE-RESTORE` | Restore: `BalanceRebuild` from Ledger; `GenealogyRebuild` from DATA-GEN-001 source facts | `host-worker` rebuild kinds | `AdjustBalance` / `EditGenealogy`; Ledger-only genealogy | OQ-016 residual retention/product. RPO/RTO recorded. |
 | `SLICE-CUTOVER` | `ADP-CUTOVER` / `OpeningStockImport` | `host-adapter` | Bypass OQ-015; post Balance-only | OQ-015, OQ-019 |

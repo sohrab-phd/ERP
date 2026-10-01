@@ -3,7 +3,7 @@ id: GOV-QPACK-001
 title: Team Question Pack
 phase: 00-governance
 status: approved
-version: 0.6.0
+version: 0.8.0
 owners: [chief-solution-architect, project-sponsor]
 depends_on: [GOV-QUESTIONS-001, ASM-015]
 last_reviewed: 2026-10-01
@@ -35,8 +35,9 @@ OQ-009, OQ-011, OQ-014, OQ-015.
 recorded; kg↔length formula is not). FACT-02 confirms hybrid grain and
 order-code traceability (order-code identity still unclassified). FACT-04
 is an eleven-person personnel roster only (OQ-019 still treating).
-FACT-03 warehouse Coil→Sheet is recorded as an inventory transformation
-without a customer order or Production Order; the posting-boundary
+FACT-03 / C-07: initial Coil opening/use requires a Customer Order; an already
+opened remainder may become warehouse Sheets without a new Customer Order
+or a Production Order for that remainder transformation. The posting-boundary
 conflict with `CompleteProductionOperation` is open. A future dedicated
 OQ may be required. FACT-05 shared station accounts are superseded:
 personal operator accounts only. FACT-06 Entry and Referral are defined
@@ -118,7 +119,9 @@ extra MCP are not. `IMPLEMENTATION_AUTHORIZED` remains `false`.
 - If Quality is later brought into scope, plans, limits, samples, and
   named people would still be required. Those are not current-MVP inputs.
 - Why: Hold/release architecture is retained as future capability. OQ-005
-  stays treating. It is not current factory execution.
+  stays treating only for future detail. The current-MVP exclusion is
+  answered evidence; QC is not a current-MVP gate for production,
+  receiving, availability, or shipment.
 
 ### OQ-009 — How the human Residual/Scrap decision is recorded
 
@@ -135,14 +138,16 @@ extra MCP are not. `IMPLEMENTATION_AUTHORIZED` remains `false`.
 ### FACT-03 — Coil → Sheet posting boundary (no dedicated OQ yet)
 
 - Already recorded. Do not re-ask as blank: workshop conversion of an
-  opened Coil to Sheets; no customer order and no Production Order
-  required for warehouse conversion; separate from customer-order
+  opened Coil remainder to Sheets; initial Coil opening/use requires a
+  Customer Order, while the later remainder conversion needs no new Customer Order
+  or Production Order for that transformation; separate from customer-order
   production; one Coil leaves and many Sheets enter; Coil Code kept;
   Sheet Code = Coil Code + Sheet number; Order Code only when applicable;
   measured kg is the stock quantity; 6 m and 12 m are examples; cutting
   loss is Residual or Scrap by human decision; a standalone incoming
   Sheet gets its own product code and no invented Coil Code; Mr. Dinavand
-  decides in the organizational sense only.
+  decides in the organizational sense only. Do not infer speculative
+  opening of an intact Coil without a Customer Order, a time limit, or scheduling.
 - Still ask: which posting boundary records "one Coil leaves, many Sheets
   enter" without silently using `CompleteProductionOperation`? Is the
   factory Sheet Code globally unique, and is it the Inventory Unit
@@ -280,8 +285,9 @@ reservation and no timer on confirmed SO; OQ-010 visibility-only portal;
 OQ-012 Finance-Lite not legal GL; OQ-013 one entity one site; OQ-016
 RPO 60 / RTO 8; OQ-017 app-owned PostgreSQL transaction posting; OQ-018
 Modular Monolith + PostgreSQL, packages not frozen; FACT-04 eleven-person
-organizational roster (not a role mapping). Coil→Sheet warehouse
-conversion facts listed under FACT-03 in the question pack are recorded;
+organizational roster (not a role mapping). FACT-03 / C-07's initial
+Customer Order requirement and later opened-remainder conversion without
+a new Customer Order are recorded;
 do not re-ask them as if blank. The posting-boundary conflict is still
 open.
 

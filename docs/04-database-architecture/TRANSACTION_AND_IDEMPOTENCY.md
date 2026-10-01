@@ -3,10 +3,10 @@ id: DATA-TX-001
 title: Transaction and Idempotency Design
 phase: 04-database-architecture
 status: approved
-version: 0.1.0
+version: 0.3.0
 owners: [data-architect, chief-solution-architect]
 depends_on: [SM-CONC-001, SM-EVT-001, APR-005]
-last_reviewed: 2026-09-18
+last_reviewed: 2026-10-01
 approval: APR-006
 supersedes: null
 ---
@@ -74,7 +74,8 @@ residual after completion.
    on-hand (when reusable), and scrap quantity (when non-reusable).
 8. Nested `CreateResidualUnit` when leftover is reusable (INV-008): child
    Inventory Unit identity, parent close/split, residual Ledger on-hand
-   **once**.
+   **once**. Valid normal child Unit is `AVAILABLE` when the transaction
+   commits (INV-003); no separate release or placement post is required.
 9. Nested unit-state primitives: `ConsumeUnitPartial` / `ConsumeUnitComplete`
    for the issued parent; `ScrapUnit` only when that unit’s destiny is
    `SCRAPPED`.
@@ -83,14 +84,22 @@ residual after completion.
     when the close needs a number → `GUARD_OPEN_POLICY`. Family residual
     cutoff numbers remain OQ-009 treating; missing cutoff when
     classification requires it → `GUARD_OPEN_POLICY`.
-11. Optional QC request. Quality does not write stock (INV-017).
+11. QC request only as a future/deferred extension if Quality is later
+    enabled. Current-MVP completion has no QC request or approval
+    dependency. Future Quality does not write stock (INV-017).
+
+Valid normal good/reusable output Units created in this same transaction
+are `AVAILABLE` for permitted inventory use after commit (INV-003). This
+does not classify all WIP as saleable or make Scrap available.
 
 ### What this command does not do later
 
 - It does not post residual quantity again after commit.
 - It does not post scrap quantity again after commit.
-- `PlaceResidualUnit` may run **after** the child unit exists (QC /
-  location). It must not create a second residual Ledger quantity.
+- `PlaceResidualUnit` may run **after** the child unit exists for
+  location handling where applicable; its QC branch is future only. It is not required
+  for current-MVP availability and must not create a second residual
+  Ledger quantity.
 - `CompleteOperationPartial` moves the Production **Order** to
   `PARTIALLY_COMPLETED` after at least one operation completed through
   this contract. It does not post stock.

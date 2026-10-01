@@ -30,8 +30,9 @@ supersedes: null
 - Ledger rows, `AUD-CMD-*`, and the first idempotency result are
   evidence. Balance, Genealogy Link, and UI screenshots are not source
   truth.
-- Quality and Shipping still command Inventory; tests must not invent a
-  second stock writer.
+- Shipping commands Inventory; future Quality may command Inventory only
+  if separately enabled. This historical Phase 07 structure did not
+  authorize a current-MVP Quality role or a second stock writer.
 - Temporary identities cannot sign UAT (OQ-019).
 - Jest, Playwright, k6, coverage percents, and CI products remain open.
 - No application or test code is part of this package.

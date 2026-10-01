@@ -3,10 +3,10 @@ id: QA-NFR-001
 title: NFR Recovery and UAT Intents
 phase: 07-testing-quality-architecture
 status: approved
-version: 0.2.0
+version: 0.3.0
 owners: [qa-architect, operations-owner]
 depends_on: [QA-STRAT-001, SEC-VER-001, APR-008]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-009
 supersedes: null
 ---
@@ -48,7 +48,7 @@ cite ASM-002 as `keep`/`replace` only after the team answers.
 | `QA-UAT-STOCK` | Workshop walks QA-SCN-STOCK with real roles | OQ-019 names |
 | `QA-UAT-PURCHASE` | Workshop walks QA-SCN-PURCHASE | OQ-019, OQ-005 |
 | `QA-UAT-MAKE` | Workshop walks QA-SCN-MAKE | OQ-003, OQ-019 |
-| `QA-UAT-QC` | Workshop walks hold/release | OQ-005 |
+| `QA-UAT-QC` (**future only**) | If Quality is later enabled, workshop walks hold/release; not a current-MVP acceptance gate | OQ-005 future residual |
 | `QA-UAT-REVERSE` | Workshop walks SEQ-REVERSE compensating commands | OQ-015, OQ-019 |
 | `QA-UAT-PORTAL` | Not in MVP ordering | OQ-010 |
 

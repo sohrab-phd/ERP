@@ -3,10 +3,10 @@ id: SM-EXC-001
 title: Exception and Correction Workflows
 phase: 03-state-machines-invariants
 status: approved
-version: 0.2.0
+version: 0.3.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-CATALOGUE-001, SM-INV-001, DOM-PROCESS-001, APR-004, APR-005]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-005
 supersedes: null
 ---
@@ -43,13 +43,14 @@ requires `RecordUnfulfilledDemand` (TERM-005), not silent discard
 
 SM-PRODUCTION-ORDER `PAUSED` returns to the prior live state by
 `ResumeProductionOrder`. Pause is not a skip and does not post stock. A QC
-hold still blocks resume.
+hold would block resume only in a future approved Quality scope (OQ-005).
 
 ## QC hold, reject, and conditional release
 
+**Future Quality only; outside current MVP (OQ-005).** If enabled later,
 SM-QUALITY-INSPECTION dispositions command Inventory. Stock stays unavailable
 while required QC is pending, quarantined, or rejected (INV-010). Who may make
-an exception stays OQ-005.
+an exception stays OQ-005. No current-MVP exception or release actor is created.
 
 ## Residual versus scrap
 

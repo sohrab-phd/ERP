@@ -3,10 +3,10 @@ id: SM-TRANS-001
 title: Transition Tables
 phase: 03-state-machines-invariants
 status: approved
-version: 0.3.0
+version: 0.5.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-CATALOGUE-001, SM-INV-001, SM-SIDE-001, APR-004, APR-005]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-005
 supersedes: null
 ---
@@ -24,6 +24,16 @@ reversal, not delete (INV-005). Temporary roster names cannot be the Actor.
 Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+OQ-005 current-MVP scope overrides the proposed QC-dependent rows below:
+there is no Quality role or QC execution. Rows involving `ACT-QC`,
+`QC_HOLD`, `PENDING_QC`, `QUARANTINED`, or Quality `Released` are future-only.
+They are not required for `CompleteProductionOperation`, `PostGoodsReceipt`,
+inventory availability, or shipment. Current-MVP valid normal stock-in
+uses existing `CreateUnitFromPosting` to create the Inventory Unit as
+`AVAILABLE` within the `ACT-IPS` posting transaction. Normal use is
+eligible after commit, subject to existing guards (INV-003). No replacement
+state or approval command is introduced.
 
 ## Column key
 
@@ -134,10 +144,10 @@ Shipment completion does not by itself close the Sales Order.
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | DRAFT | DraftGoodsReceipt | ACT-PROC | authorized PO or inbound reference (INV-018) | Procurement writes GR | GoodsReceiptDrafted |
-| DRAFT | RECEIVED | ReceiveGoods | ACT-PROC / ACT-WH | physical receive evidence | Procurement writes GR; commands QC if required | GoodsReceived |
-| RECEIVED | QC_HOLD | HoldInboundForQc | ACT-QC | `open: OQ-005` | Quality writes inspection; commands Inventory hold; does not write stock | GoodsReceiptQcHeld |
-| RECEIVED or QC_HOLD | POSTED | PostGoodsReceipt | ACT-IPS | QC not blocking (INV-010); `open: OQ-005`, `open: OQ-015` | Inventory posts Lot/Unit/Ledger; Procurement does not write quantity | GoodsReceiptPosted |
-| POSTED | POSTED (reversal) | ReverseGoodsReceipt | ACT-IPS | INV-005; `open: OQ-015` | new reversing Ledger rows | GoodsReceiptReversed |
+| DRAFT | RECEIVED | ReceiveGoods | ACT-PROC / ACT-WH | physical receive evidence | Procurement writes GR; no current-MVP QC request | GoodsReceived |
+| RECEIVED | QC_HOLD | HoldInboundForQc | ACT-QC | **Future Quality only**; `open: OQ-005` | Quality writes inspection; commands Inventory hold; does not write stock | GoodsReceiptQcHeld |
+| RECEIVED (or future `QC_HOLD`) | POSTED | PostGoodsReceipt | ACT-IPS | Accepted command guards pass; no current-MVP QC approval; future QC may apply INV-010 only if later enabled. OQ-015 opening stock is separate. | Inventory posts Lot/Unit/Ledger; valid normal resulting Unit is `AVAILABLE` on commit (INV-003). Procurement does not write quantity. | GoodsReceiptPosted |
+| POSTED | POSTED (reversal) | ReverseGoodsReceipt | ACT-IPS | INV-005; normal receipt reversal is separate from OQ-015 opening-stock correction | new reversing Ledger rows | GoodsReceiptReversed |
 
 ## SM-RESERVATION
 
@@ -153,9 +163,10 @@ Shipment completion does not by itself close the Sales Order.
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | PENDING_QC | CreateUnitFromPosting | ACT-IPS | GoodsReceipt or output posting | Inventory writes Unit/Ledger | InventoryUnitCreated |
-| PENDING_QC | AVAILABLE | ReleaseUnit | ACT-IPS commanded by ACT-QC | INV-010; `open: OQ-005` | Inventory writes Unit | InventoryUnitAvailable |
-| PENDING_QC or AVAILABLE | QUARANTINED | QuarantineUnit | ACT-IPS commanded by ACT-QC | INV-017 | Inventory writes Unit | InventoryUnitQuarantined |
+| (none) | AVAILABLE | CreateUnitFromPosting | ACT-IPS | **Current-MVP normal stock-in**; valid authorized posting, kg quantity, identity, location, idempotency, concurrency, and no-negative guards pass (INV-001–004, INV-016). No QC release. | Inventory writes Unit and Ledger within the accepted stock-in transaction; lifecycle eligibility begins after commit, while Ledger remains quantity truth. | InventoryUnitCreated |
+| (none) | PENDING_QC | CreateUnitFromPosting | ACT-IPS | **Future Quality path only**; GoodsReceipt or output posting if a later approved QC scope requires it. | Inventory writes Unit/Ledger | InventoryUnitCreated |
+| PENDING_QC | AVAILABLE | ReleaseUnit | ACT-IPS commanded by ACT-QC | **Future Quality only**; INV-010; `open: OQ-005` | Inventory writes Unit | InventoryUnitAvailable |
+| PENDING_QC or AVAILABLE | QUARANTINED | QuarantineUnit | ACT-IPS commanded by ACT-QC | **Future Quality only**; INV-017 | Inventory writes Unit | InventoryUnitQuarantined |
 | AVAILABLE | RESERVED | ReserveUnit | ACT-IPS | Nested in `ActivateReservation` bundle; INV-002, INV-003; one ACTIVE reservation per unit (OQ-008) | Inventory writes Unit reserved-state | InventoryUnitReserved |
 | RESERVED | ISSUED_TO_PRODUCTION | IssueUnit | ACT-IPS | Production Order released; INV-004 | Inventory writes Unit/Ledger | InventoryUnitIssued |
 | AVAILABLE | ISSUED_TO_PRODUCTION | IssueUnitFromAllocation | ACT-IPS | SM-MATERIAL-ALLOCATION is ISSUED; INV-003, INV-004; `open: OQ-003` | Inventory writes Unit/Ledger | InventoryUnitIssued |
@@ -182,7 +193,7 @@ Shipment completion does not by itself close the Sales Order.
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | PLANNED | PlanProductionOperation | ACT-PLAN | `open: OQ-003` real step list | Production writes Operation | ProductionOperationPlanned |
 | PLANNED | IN_PROGRESS | StartProductionOperation | ACT-OP | order is RELEASED or IN_PROGRESS | Production writes Operation | ProductionOperationStarted |
-| IN_PROGRESS | COMPLETED | CompleteProductionOperation | ACT-OP | INV-006 exclusive posting boundary; step names `open: OQ-003`; mass-balance number `open: OQ-006`; residual cutoff number `open: OQ-009` | One transaction: consume/output/leftover residual **or** scrap, process loss, genealogy source facts, nested IPS identity/qty posts; optional QC request. See DATA-TX-001. | ProductionOperationCompleted |
+| IN_PROGRESS | COMPLETED | CompleteProductionOperation | ACT-OP | INV-006 exclusive posting boundary; step names `open: OQ-003`; mass-balance number `open: OQ-006`; residual cutoff number `open: OQ-009`; no current-MVP QC guard | One transaction: consume/output/leftover residual **or** scrap, process loss, genealogy source facts, nested IPS identity/qty posts. Valid normal good/reusable output Units are `AVAILABLE` on commit; Scrap is not. QC request is deferred to a future Quality scope only. See DATA-TX-001. | ProductionOperationCompleted |
 | PLANNED | SKIPPED | SkipProductionOperation | ACT-PLAN | `open: OQ-003` whether skip is allowed | Production writes Operation; no silent stock change | ProductionOperationSkipped |
 | COMPLETED | REWORK | StartReworkOperation | ACT-OP | INV-005, INV-009; `open: OQ-003` | new operation/fact; prior posted facts reverse, not edit | ProductionOperationRework |
 
@@ -198,8 +209,8 @@ Shipment completion does not by itself close the Sales Order.
 | IN_PROGRESS or PARTIALLY_COMPLETED | COMPLETED | CompleteProductionOrder | ACT-OP / ACT-PLAN | remaining operations done; mass balance `open: OQ-006` | Production writes PO | ProductionOrderCompleted |
 | COMPLETED | CLOSED | CloseProductionOrder | ACT-PLAN | none for stock | Production writes PO | ProductionOrderClosed |
 | live | PAUSED | PauseProductionOrder | ACT-PLAN / ACT-OP | none numeric | Production writes PO | ProductionOrderPaused |
-| PAUSED | prior live state | ResumeProductionOrder | ACT-PLAN / ACT-OP | change record exists; a QC hold must not still block | Production writes PO | ProductionOrderResumed |
-| live | ON_HOLD | HoldProductionOrder | ACT-PLAN or ACT-QC command | QC may command hold | Production writes PO; may command Inventory | ProductionOrderHeld |
+| PAUSED | prior live state | ResumeProductionOrder | ACT-PLAN / ACT-OP | change record exists; QC hold applies only in future Quality scope | Production writes PO | ProductionOrderResumed |
+| live | ON_HOLD | HoldProductionOrder | ACT-PLAN or future ACT-QC command | QC may command hold only in future Quality scope | Production writes PO; may command Inventory | ProductionOrderHeld |
 | pre-post | CANCELLED | CancelProductionOrder | ACT-PLAN | posted issues reverse first | Production writes PO | ProductionOrderCancelled |
 | live | ABORTED | AbortProductionOrder | ACT-PLAN | residual/scrap facts required | Production writes PO | ProductionOrderAborted |
 
@@ -208,19 +219,19 @@ Shipment completion does not by itself close the Sales Order.
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | FACT_RECORDED | RecordResidualFact | ACT-OP nested inside `CompleteProductionOperation` | parent Unit known; leftover of this operation is not independently postable (INV-006) | Production writes residual fact, not Ledger | ResidualFactRecorded |
-| FACT_RECORDED | UNIT_CREATED | CreateResidualUnit | ACT-IPS nested inside `CompleteProductionOperation` | INV-008; `open: OQ-009` usable; not a second qty post after completion | Inventory creates child Unit; parent closed/split; residual on-hand Ledger **once** | ResidualUnitCreated |
+| FACT_RECORDED | UNIT_CREATED | CreateResidualUnit | ACT-IPS nested inside `CompleteProductionOperation` | INV-008; `open: OQ-009` usable; not a second qty post after completion | Inventory creates child Unit as `AVAILABLE` for current-MVP normal use on valid commit; parent closed/split; residual on-hand Ledger **once** | ResidualUnitCreated |
 | FACT_RECORDED | BELOW_THRESHOLD_TO_SCRAP | ConvertResidualToScrap | ACT-OP / ACT-IPS nested inside `CompleteProductionOperation` | `open: OQ-009`; same leftover must not also keep residual qty | start SM-SCRAP inside the same completion transaction | ResidualBelowThreshold |
-| UNIT_CREATED | AVAILABLE_OR_QUARANTINE | PlaceResidualUnit | ACT-IPS | QC if required (INV-010) | Inventory writes child Unit | ResidualUnitPlaced |
+| UNIT_CREATED | AVAILABLE_OR_QUARANTINE | PlaceResidualUnit | ACT-IPS | Historical/future placement/QC branch; not required to make a valid current-MVP child Unit `AVAILABLE`. Quarantine applies only in future Quality scope (INV-010). | Follow-on placement where applicable may change location without a second quantity post; no current-MVP release effect | ResidualUnitPlaced |
 
 ## SM-SCRAP
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | FACT_RECORDED | RecordScrapFact | ACT-OP or ACT-QC | quantity, reason, origin; production leftover nested in `CompleteProductionOperation` | Production or Quality writes scrap fact, not stock | ScrapFactRecorded |
+| (none) | FACT_RECORDED | RecordScrapFact | ACT-OP; ACT-QC future only | quantity, reason, origin; production leftover nested in `CompleteProductionOperation` | Production writes scrap fact; future Quality may do so only if enabled. Neither writes stock. | ScrapFactRecorded |
 | FACT_RECORDED | STOCK_POSTED | PostScrapMovement | ACT-IPS | INV-001, INV-017; OQ-009 authoritative scrap **qty**; one Ledger row per scrap fact | Inventory posts scrap quantity once | ScrapStockPosted |
-| STOCK_POSTED | CLOSED | CloseScrap | ACT-OP / ACT-QC | none numeric | owning fact closed | ScrapClosed |
+| STOCK_POSTED | CLOSED | CloseScrap | ACT-OP; ACT-QC future only | none numeric | owning fact closed | ScrapClosed |
 
-## SM-QUALITY-INSPECTION
+## SM-QUALITY-INSPECTION — future/deferred, outside current MVP
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -236,8 +247,8 @@ Shipment completion does not by itself close the Sales Order.
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | DRAFT | DraftPackage | ACT-SHIP | released contents or `open: OQ-004` | Shipping writes Package | PackageDrafted |
-| DRAFT | PACKED | PackPackage | ACT-SHIP | INV-010, INV-011 | Shipping writes Package; may command Inventory pack-state | PackagePacked |
+| (none) | DRAFT | DraftPackage | ACT-SHIP | permitted contents; `open: OQ-004`. Quality release only in future QC scope | Shipping writes Package | PackageDrafted |
+| DRAFT | PACKED | PackPackage | ACT-SHIP | INV-011; INV-010 only in future QC scope | Shipping writes Package; may command Inventory pack-state | PackagePacked |
 | PACKED | ASSIGNED_TO_SHIPMENT | AssignPackageToShipment | ACT-SHIP | Shipment draft exists | Shipping writes Package + Shipment | PackageAssigned |
 | PACKED | UNPACKED | UnpackPackage | ACT-SHIP | not yet dispatched | Shipping writes Package; reverse pack-state if posted | PackageUnpacked |
 
@@ -246,7 +257,7 @@ Shipment completion does not by itself close the Sales Order.
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | DRAFT | DraftShipment | ACT-SHIP | authorized customer/order or INV-011 exceptional authority; named person `open: OQ-019`; not OQ-005 | Shipping writes Shipment | ShipmentDrafted |
-| DRAFT | READY | MarkShipmentReady | ACT-SHIP | contents Released; `open: OQ-006` | Shipping writes Shipment | ShipmentReady |
+| DRAFT | READY | MarkShipmentReady | ACT-SHIP | authorized contents and `open: OQ-006`; Quality `Released` only in future QC scope, not current MVP | Shipping writes Shipment | ShipmentReady |
 | READY | LOADING | StartLoading | ACT-SHIP | none numeric | Shipping writes Shipment | ShipmentLoading |
 | LOADING | DISPATCHED | DispatchShipment | ACT-SHIP | commands ACT-IPS stock exit (INV-017) | Shipping writes Shipment; Inventory posts exit | ShipmentDispatched |
 | DISPATCHED | PARTIALLY_DELIVERED | RecordPartialDelivery | ACT-SHIP | `open: OQ-006` | Shipping writes Shipment | ShipmentPartiallyDelivered |

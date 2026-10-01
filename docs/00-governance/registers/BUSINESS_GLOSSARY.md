@@ -3,7 +3,7 @@ id: GOV-GLOSSARY-001
 title: Business Glossary
 phase: 00-governance
 status: approved
-version: 0.4.3
+version: 0.5.0
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [SRC-001, SRC-002, ASM-REPORT-001, DOM-CAP-BC-001, DOM-OWN-001]
 last_reviewed: 2026-10-01
@@ -143,7 +143,8 @@ does not convert them into owner-signed business policy.
 
 - Persian: بچ محصول
 - Definition: Batch-level production output that may become finished inventory,
-  pass Quality release, and enter packaging/shipment.
+  and enter packaging/shipment. A Quality release is a future capability,
+  not a current-MVP prerequisite.
 - Owner: Production
 
 ## TERM-015 — Genealogy
@@ -236,7 +237,8 @@ does not convert them into owner-signed business policy.
 
 - Persian: بسته / بسته‌بندی
 - Definition: Shipping-owned packing grouping that may contain released Product
-  Batch or permitted Inventory Unit form before Shipment dispatch.
+  Batch under a future Quality scope, or permitted Inventory Unit form
+  before Shipment dispatch. Quality release is not required in the current MVP.
 - Owner: Shipping
 
 ## TERM-024 — Payment

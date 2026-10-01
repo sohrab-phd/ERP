@@ -3,10 +3,10 @@ id: SM-CATALOGUE-001
 title: State Machine Catalogue
 phase: 03-state-machines-invariants
 status: approved
-version: 0.4.0
+version: 0.6.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [GOV-STATES-001, SM-INV-001, DOM-ACTORS-001, APR-004, APR-005]
-last_reviewed: 2026-09-30
+last_reviewed: 2026-10-01
 approval: APR-005
 supersedes: null
 ---
@@ -21,6 +21,14 @@ Actor IDs are roles from DOM-ACTORS-001. Temporary roster names are not
 actors and cannot authorize a transition.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+The QC paths below are future/deferred architecture (OQ-005). The
+current MVP has no QC department, Quality role, inspection, hold, or
+Quality release gate. A proposed QC state must not be read as a mandatory
+current-MVP transition. Under INV-003, valid normal stock-in creates the
+resulting Inventory Unit as `AVAILABLE` in the posting transaction;
+normal use begins after commit, subject to existing guards. This is an
+architecture reconciliation, not a factory-stated procedure.
 
 ## Convention
 
@@ -114,11 +122,12 @@ command is rejected with a reason. Posted states use reversal, not delete
 
 - Seed: GOV-STATES-001
 - Write owner: `BC-PROCUREMENT` for orchestration; Inventory Posting Service for stock
-- Happy path: `DRAFT → RECEIVED → QC_HOLD → POSTED`
+- Current-MVP path: `DRAFT → RECEIVED → POSTED`; no QC approval gate
+- Future Quality branch: `RECEIVED → QC_HOLD → POSTED` only if QC is later enabled
 - Branches: posted cancellation by reversal only
 - Commands / actors: ACT-PROC orchestrates; ACT-QC may command hold; ACT-IPS posts
 - Invariants: INV-001, INV-010, INV-017, INV-018
-- Open guards: inbound QC plan (OQ-005); opening-stock cutover (OQ-015)
+- Open guards: inbound QC plan (OQ-005) only for future Quality. Opening-stock cutover (OQ-015) is separate from normal Goods Receipt.
 - Factory intake (`2026-09-30`): one station; Internal Code, Count,
   Weight, Type; kg is stock quantity; Count is descriptive. Current
   factory does not require Quality approval on intake. The `QC_HOLD`
@@ -142,12 +151,13 @@ command is rejected with a reason. Posted states use reversal, not delete
 
 - Seed: GOV-STATES-001
 - Write owner: `BC-INVENTORY`
-- Happy path: `PENDING_QC → AVAILABLE → RESERVED → ISSUED_TO_PRODUCTION → PARTIALLY_CONSUMED|CONSUMED`
+- Current-MVP normal stock-in path: `(none) → AVAILABLE` in the valid `ACT-IPS` posting transaction. No separate release command is required. Ledger establishes stock quantity; this state establishes lifecycle eligibility after commit, subject to existing reservation, location, quantity, and destiny guards (INV-001–004).
+- Historical/future Quality path: `PENDING_QC → AVAILABLE → RESERVED → ISSUED_TO_PRODUCTION → PARTIALLY_CONSUMED|CONSUMED`. `PENDING_QC` and Quality release are not current-MVP prerequisites.
 - MAKE path without Reservation: `AVAILABLE → ISSUED_TO_PRODUCTION` after SM-MATERIAL-ALLOCATION is `ISSUED` (INV-003)
-- Additional: `QUARANTINED`, `PACKED`, `SHIPPED`, `RETURNED`, `SCRAPPED`, `CLOSED`
+- Additional: `PACKED`, `SHIPPED`, `RETURNED`, `SCRAPPED`, `CLOSED`; `QUARANTINED` is future Quality only
 - Commands / actors: ACT-IPS writes stock; ACT-QC / ACT-SHIP / ACT-OP command only
 - Invariants: INV-001 through INV-004, INV-017
-- Open guards: UOM (OQ-001); Coil weight vs length (OQ-002); official issue point (OQ-003); QC (OQ-005)
+- Open guards: UOM (OQ-001); Coil weight vs length (OQ-002); official issue point (OQ-003); future QC only (OQ-005)
 
 ## SM-MATERIAL-ALLOCATION
 
@@ -197,13 +207,14 @@ command is rejected with a reason. Posted states use reversal, not delete
 - `PAUSED` returns to the prior live state by resume; it is not a silent skip
 - Commands / actors: ACT-PLAN plans/releases; ACT-OP records execution; ACT-IPS posts stock effects
 - Invariants: INV-006, INV-007, INV-009
-- Open guards: routing step names (OQ-003); QC gates (OQ-005); residual cutoff numbers (OQ-009)
+- Open guards: routing step names (OQ-003); residual cutoff numbers (OQ-009); QC gates (OQ-005) only in a future Quality scope
 
 ## SM-RESIDUAL
 
 - Concept: TERM-012 / ENT-RESIDUAL
 - Write owner: Production fact; Inventory resulting unit
-- Happy path: `FACT_RECORDED → UNIT_CREATED → AVAILABLE_OR_QUARANTINE`
+- Current reusable path: `FACT_RECORDED → UNIT_CREATED`; valid nested residual stock-in makes the resulting child Inventory Unit `AVAILABLE` when `CompleteProductionOperation` commits. Scrap does not become `AVAILABLE`.
+- Historical/future placement/QC branch: `UNIT_CREATED → AVAILABLE_OR_QUARANTINE`; it is not a current-MVP availability prerequisite, and its quarantine branch is future Quality only.
 - Branches: `BELOW_THRESHOLD_TO_SCRAP`
 - Commands / actors: ACT-OP records residual fact nested in
   `CompleteProductionOperation`; ACT-IPS creates child unit in the same
@@ -274,6 +285,7 @@ command is rejected with a reason. Posted states use reversal, not delete
   or delivery confirmer. This machine is not deleted. `DELIVERED` is not
   Sales Order closure. Stock exit stays `ACT-IPS`. No shipment screen
   writes the Ledger. No shipping role is added.
+- Current-MVP shipment readiness does not require Quality release (OQ-005).
 
 ## SM-INVOICE
 

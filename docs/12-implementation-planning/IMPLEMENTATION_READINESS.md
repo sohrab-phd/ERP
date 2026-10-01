@@ -3,10 +3,10 @@ id: PLAN-READY-001
 title: Implementation Readiness Checklist
 phase: 12-implementation-planning
 status: approved
-version: 0.3.0
+version: 0.5.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [APR-013, APR-014, CHK-0012, CHK-0013, ASM-025, CONF-UNLOCK]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-10-01
 approval: APR-014
 supersedes: null
 ---
@@ -26,6 +26,9 @@ the unlock and not a `TEST-*` catalogue.
 - [x] Phase 12 Git freeze CHK-0013
       `a6b893095af7c9d14f342371fb6e4ef9c6d833df`.
 - [x] One Ledger writer (`ACT-IPS` / `mod-inventory-posting`).
+- [x] Current-MVP normal Inventory Unit availability after valid stock-in:
+      `AVAILABLE` in the posting transaction, usable after commit under
+      existing guards (INV-003); no QC release or replacement approval.
 - [x] DATA-TX-001 six bundles named and unsplittable.
 - [x] Forbidden writes: `EditGenealogy`, `AdjustBalance`, MVP
       `PortalPlaceOrder`.
@@ -41,7 +44,7 @@ the unlock and not a `TEST-*` catalogue.
 | Ready item | Wait on |
 | --- | --- |
 | Named people on SoD, UAT, cutover sign-off | OQ-019 residual |
-| UOM decimal scale / rounding / conversion factors; QC plans/names; routing step names | OQ-001, OQ-003, OQ-005 residuals. OQ-002 coil kg and OQ-006 default 0 are recorded. |
+| UOM decimal scale / rounding / conversion factors; routing step names | OQ-001 and OQ-003 residuals. OQ-002 coil kg and OQ-006 default 0 are recorded. QC plans/names (OQ-005) are future-only, not current-MVP readiness inputs. |
 | Residual cutoff numbers | OQ-009 residual |
 | Portal document list (visibility-only MVP is recorded) | OQ-010 residual |
 | Weighbridge make/model/protocol | OQ-011 residual. OQ-012: no Legal-GL in MVP. |

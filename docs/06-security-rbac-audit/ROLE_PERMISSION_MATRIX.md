@@ -3,10 +3,10 @@ id: SEC-RBAC-001
 title: Role Permission and Scope Matrix
 phase: 06-security-rbac-audit
 status: approved
-version: 0.2.0
+version: 0.3.0
 owners: [security-architect, business-control-owner]
 depends_on: [DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-10-01
 approval: APR-008
 supersedes: null
 ---
@@ -18,6 +18,11 @@ a permission catalogue, not an RBAC library and not named people
 (OQ-019). Backend evaluation is required (INV-015).
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+`ACT-QC` and every Quality permission below are future/deferred labels
+only (OQ-005). The current factory has no Quality role or person.
+These rows authorize no current-MVP QC command, hold, release, or
+shipment gate and are not mapped to another employee or delegate.
 
 ## Standing rules
 
@@ -52,7 +57,7 @@ with the owning bounded context.
 | Production plan/release/pause/resume | ACT-PLAN | no | no |
 | Shop-floor operation facts | ACT-OP records; ACT-IPS posts | ACT-IPS | no — operator does not sign policy |
 | AbortProductionOrder / post-post cancel | ACT-PLAN | ACT-IPS for reversals | residual/scrap already recorded; open: OQ-003 |
-| Quality inspection and hold/release command | ACT-QC | ACT-IPS when commanded | ConditionallyRelease named person OQ-005 |
+| Quality inspection and hold/release command (**future only**) | ACT-QC (deferred) | ACT-IPS if later commanded | Future named person OQ-005; no current-MVP Quality actor |
 | Package / Shipment (with demand) | ACT-SHIP | ACT-IPS on dispatch | no |
 | DraftShipment without customer/order | ACT-SHIP | ACT-IPS if later dispatched | exceptional authority OQ-019 |
 | Invoice / Payment (non-void) | ACT-FIN | no | no |

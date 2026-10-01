@@ -3,10 +3,10 @@ id: GOV-DOMAIN-001
 title: Canonical Domain Model
 phase: 00-governance
 status: approved
-version: 0.2.1
+version: 0.3.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [ASM-REPORT-001, GOV-GLOSSARY-001, DOM-CAP-BC-001, DOM-OWN-001]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-004
 supersedes: null
 ---
@@ -22,6 +22,11 @@ APR-002 approved the Phase 00 seed. The current version is `in_review` because
 Phase 02 recorded the Goods Receipt split, portal deferral, and Inventory write
 proposal for Material Lot.
 
+`BC-QUALITY` and its inspection/release relationships below are
+future/deferred architecture under OQ-005, outside the current MVP.
+The factory has no QC department or Quality role. Current production,
+receiving, availability, and shipment do not pass through Quality.
+
 ## Proposed domain boundaries
 
 - `BC-IDENTITY`: principals, roles, sessions, credentials, scopes
@@ -31,7 +36,7 @@ proposal for Material Lot.
   Goods Receipt commercial orchestration
 - `BC-INVENTORY`: lots, physical units, locations, ledger, balance, reservations
 - `BC-PRODUCTION`: production orders, operations, allocation, transformation facts
-- `BC-QUALITY`: inspections, measurements, nonconformance, disposition, release
+- `BC-QUALITY` (**future only**): inspections, measurements, nonconformance, disposition, release
 - `BC-SHIPPING`: packaging, shipment, dispatch, delivery
 - `BC-FINANCE-LITE`: operational invoices, payments, allocations, balances
 - `BC-REPORTING`: read-only projections, KPIs, operational reporting
@@ -61,9 +66,12 @@ flowchart LR
     ProductionOperation --> ProductionOutput --> ProductBatch
     ProductionOperation --> Residual
     ProductionOperation --> Scrap
-    ProductBatch --> QualityInspection --> Package --> Shipment --> Delivery
+    ProductBatch --> Package --> Shipment --> Delivery
     Delivery --> Invoice --> Payment
 ```
+
+The earlier `ProductBatch → QualityInspection → Package` chain is
+historical/future Quality architecture, not the current-MVP path.
 
 Goods Receipt (TERM-019) is one business concept with two write authorities:
 Procurement owns commercial orchestration; Inventory owns resulting lot/unit

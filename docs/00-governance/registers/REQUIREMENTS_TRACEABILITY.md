@@ -3,7 +3,7 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: approved
-version: 0.7.3
+version: 0.9.0
 owners: [requirements-owner, qa-architect]
 depends_on: [SRC-001, SRC-002, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-10-01
@@ -105,7 +105,7 @@ evidence and Phase 07.
 
 - Business/architecture content source: SRC-001
 - Methodological/validation support: SRC-002
-- Domains: Procurement, Inventory, Production, Quality, Shipping
+- Domains: Procurement, Inventory, Production, Shipping; Quality is deferred
 - Phase 01 evidence:
   [Assimilation Report sections 1 and 5](../../01-project-assimilation/ARCHITECTURE_ASSIMILATION_REPORT.md),
   [Provenance Classification](../../01-project-assimilation/PROVENANCE_CLASSIFICATION.md),
@@ -145,8 +145,9 @@ evidence and Phase 07.
   [Multi-Agent Method](../../01-project-assimilation/MULTI_AGENT_METHOD.md),
   and
   [Workshop Agenda sections 5, 7, and 8](../../01-project-assimilation/WORKSHOP_AGENDA.md)
-- Open questions: OQ-005 residual (plans/names), OQ-006 family %
-  configuration. Default tolerance 0 and Sales Order close are recorded.
+- Open questions: OQ-006 family % configuration. OQ-005 plans/names
+  concern future Quality only and do not block the current MVP. Default
+  tolerance 0 and Sales Order close are recorded.
 - Risks: RISK-006, RISK-008
 - Phase 02 design evidence:
   [Actor catalogue](../../02-domain-business-architecture/ACTOR_RESPONSIBILITY_CATALOGUE.md)
@@ -158,7 +159,7 @@ evidence and Phase 07.
   [exception workflows](../../03-state-machines-invariants/EXCEPTION_CORRECTION.md);
   [event and rejection catalogue](../../03-state-machines-invariants/EVENT_AND_REJECTION.md)
 - Phase 07 verification intents (structure, not tests):
-  QA-SCN-REVERSE; QA-SCN-QC-HOLD; QA-SCN-SOD; QA-SCN-SOD-GR
+  QA-SCN-REVERSE; QA-SCN-SOD; QA-SCN-SOD-GR. QA-SCN-QC-HOLD is future only.
 - Phase 08 integration intents (structure, not products):
   `OBS-AUDIT`; `RB-SOD`; `ADP-CUTOVER` stays `GUARD_OPEN_POLICY` until
   OQ-015. That adapter is an architecture candidate. The factory has not
@@ -170,7 +171,8 @@ evidence and Phase 07.
 - Phase 10 agent intents (structure, not products):
   `REV-AGENT` cannot approve architecture; unanswered policy is
   `GUARD_OPEN_POLICY`
-- Status: proposed; QC plans/names remain treating (OQ-005). Default
+- Status: proposed; current-MVP QC exclusion is answered evidence.
+  OQ-005 stays treating for future Quality details only. Default
   tolerance 0 and Sales Order closure are recorded.
 
 ### REQ-OBJ-005 — Maintainable Node.js/TypeScript platform
@@ -237,7 +239,7 @@ and are **not** promoted to `INV-*`.
 | RQ-01 kg-first quantity | REQ-OBJ-002 | kg-only stock quantity confirmed. Measurement: 0 decimals, 1 kg, no measurement rounding. Weight difference must be shown; no automatic measurement tolerance. That is not OQ-006. kg↔length formula still open. OQ-001 remains treating |
 | RQ-02 order-code traceability | REQ-OBJ-003 | Confirmed traceability requirement; order-code identity unclassified |
 | RQ-03 no mandatory per-piece identity | REQ-OBJ-003 | Confirms OQ-004 hybrid grain; Inventory Unit retained |
-| RQ-04 opened-coil conversion | REQ-OBJ-003 | Factory: inventory transformation without a customer order or Production Order; Coil↔Sheet traceability. Posting command not accepted. Conflict with `CompleteProductionOperation` left open |
+| RQ-04 opened-coil conversion | REQ-OBJ-003 | C-07: initial Coil opening/use requires a Customer Order. Already opened remainder may later become warehouse Sheets without a new Customer Order or a Production Order for that remainder transformation; Coil↔Sheet traceability remains. No speculative opening of intact Coil stock is implied. Posting command not accepted. Conflict with `CompleteProductionOperation` left open |
 | RQ-05 station routing | REQ-OBJ-003 / REQ-OBJ-004 | Per-order route by the Production Manager; Stations may be skipped. Earlier fixed-sequence wording is historical. Storage still OQ-003 |
 | RQ-06 station progression | REQ-OBJ-004 | Confirmed visibility requirement |
 | RQ-07 station timing | REQ-OBJ-004 | Entry and Referral are system-clock events and are not Start or Complete. Storage beside the operation lifecycle remains open. No invented timestamp fields |

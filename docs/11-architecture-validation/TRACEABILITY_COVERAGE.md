@@ -3,10 +3,10 @@ id: VAL-TRACE-001
 title: Requirements and Traceability Coverage
 phase: 11-architecture-validation
 status: approved
-version: 0.3.0
+version: 0.4.0
 owners: [requirements-owner, qa-architect]
 depends_on: [GOV-TRACE-001, APR-012, APR-013, ASM-024, QA-SCN-001]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-10-01
 approval: APR-013
 supersedes: null
 ---
@@ -47,7 +47,7 @@ not an in-scope structure hole.
 | REQ-OBJ-001 Unified operational truth | Capabilities; INV-013/014/018/020; QA-SCN-STOCK/PURCHASE/MAKE/NOT-FEASIBLE; `ADP-REPORT` / `ADP-LIVE` isolation; `mod-reporting` read-only; `CONF-ISO` | Workshop REQ-* decomposition; OQ-010 residual document list (visibility-only recorded) |
 | REQ-OBJ-002 Correct inventory | INV-001–004, INV-016–017; QA-P-NONNEG; QA-SCN-CONFLICT; QA-SCN-BUNDLE; `CONF-IPS` / `CONF-BUNDLE`; `ADP-WEIGHBRIDGE` commander; restore rebuilds Balance | OQ-001 residual. OQ-002 kg and OQ-008 uniqueness recorded. OQ-017 style recorded; functions later ADR. |
 | REQ-OBJ-003 Bidirectional genealogy | INV-006–009, INV-019; QA-SCN-MAKE; QA-SCN-REJECT-GENEALOGY; `GenealogyRebuild`; `CONF-FORBID`; prompts reject `EditGenealogy` | OQ-003 residual names; OQ-009 residual cutoffs. OQ-004 recorded. |
-| REQ-OBJ-004 Controlled lifecycles | INV-005, INV-010–016; QA-SCN-REVERSE/QC-HOLD/SOD/SOD-GR; `OBS-AUDIT`; `ADP-CUTOVER` `GUARD_OPEN_POLICY`; `REV-AGENT` cannot approve | OQ-005 residual; OQ-015, OQ-019. OQ-006 default 0 and OQ-007 close recorded. |
+| REQ-OBJ-004 Controlled lifecycles | INV-005, INV-011–016; QA-SCN-REVERSE/SOD/SOD-GR; future-only INV-010 / QA-SCN-QC-HOLD; `OBS-AUDIT`; `ADP-CUTOVER` `GUARD_OPEN_POLICY`; `REV-AGENT` cannot approve | OQ-005 future Quality residual, not current-MVP gate; OQ-015, OQ-019. OQ-006 default 0 and OQ-007 close recorded. |
 | REQ-OBJ-005 Maintainable Node.js/TypeScript | ADR-0001, ADR-0006, ADR-0007; `ZONE-*` / `mod-*` / `AG-*` / `QG-ARCH`; existing Cursor controls | OQ-018 residual packages; ADR-0008 proposed; OQ-019 names |
 
 ## Invariant intent map (INV-001–020)
@@ -61,7 +61,7 @@ Every approved invariant has at least one verification **intent**
 | INV-001–004 stock/reservation | QA-P-NONNEG, QA-SCN-CONFLICT, QA-SCN-BUNDLE | OQ-001 residual; uniqueness recorded (OQ-008); Coil kg recorded (OQ-002) |
 | INV-005 reversal not delete | QA-SCN-REVERSE | OQ-015 residual. OQ-017 style recorded. |
 | INV-006–009 production/genealogy | QA-SCN-MAKE, QA-P-GEN-*, QA-SCN-REJECT-GENEALOGY | OQ-003 residual names; OQ-009 residual cutoffs; OQ-006 default 0 recorded |
-| INV-010 QC hold | QA-SCN-QC-HOLD | OQ-005 |
+| INV-010 QC hold (**future only**) | QA-SCN-QC-HOLD (deferred) | OQ-005 future residual; no current-MVP QC gate |
 | INV-011 shipment needs demand | QA-SCN-SHIP-NO-DEMAND | OQ-019 |
 | INV-012 payment allocation | WALK-BUNDLE-PAY | — |
 | INV-013 unfulfilled ≠ overdue | QA-SCN-UNFULFILLED / WALK-NOT-FEASIBLE | — |

@@ -3,10 +3,10 @@ id: DATA-ENF-001
 title: Invariant Enforcement Assignment
 phase: 04-database-architecture
 status: approved
-version: 0.1.0
+version: 0.2.0
 owners: [data-architect, chief-solution-architect]
 depends_on: [SM-INV-001, DATA-POST-001, DATA-TX-001, APR-005]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-006
 supersedes: null
 ---
@@ -19,6 +19,10 @@ targets. They are not an accepted mechanism (OQ-017) and not an accepted
 platform (OQ-018).
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+Current factory evidence (OQ-005) excludes QC execution and the Quality
+role from the MVP. The INV-010 and Quality parts of INV-017 below describe
+future-only enforcement assignments; they are not current guards or actors.
 
 ## Assignment table
 
@@ -33,14 +37,14 @@ platform (OQ-018).
 | INV-007 | Mass-balance equation | Reject close if out of tolerance | Optional check once the number exists | OQ-006 family % residual; default 0 recorded |
 | INV-008 | Child unit + parent close/split **nested in** INV-006 when leftover is production residual | Same transaction as residual fact and completion | Identity uniqueness | OQ-009 cutoff |
 | INV-009 | Source facts immutable | No edit-genealogy command | Projection rebuildable | OQ-004 recorded hybrid grain; family catalogue is configuration |
-| INV-010 | QC gate before available/shippable | `GUARD_INVARIANT` | Optional state check | OQ-005 plans/people |
+| INV-010 | **Future Quality only:** QC gate before available/shippable | Future `GUARD_INVARIANT` only | Future optional state check | OQ-005 future plans/people; no current-MVP gate |
 | INV-011 | Authorized customer/order or exceptional flag | `GUARD_OPEN_POLICY` if person missing | none required | OQ-006, OQ-019 |
 | INV-012 | Allocation ≤ payment and ≤ open balance | Reject over-allocation | Optional numeric check | OQ-012 answered: no Legal-GL in MVP |
 | INV-013 | Unfulfilled Demand ≠ overdue; may exist without a Sales Order; remainder-close of an SO requires that fact (OQ-007) | Do not require an order FK for standalone unfulfilled; `CloseSalesOrder` from `PARTIALLY_FULFILLED` requires the remainder fact | none required | none for the close rule |
 | INV-014 | Snapshot at post; later master-data does not rewrite | Copy snapshot onto the document | none | OQ-016 retention days |
 | INV-015 | Backend auth; SoD pairs; customer isolation | Enforce roles; Phase 06 `SEC-*` | none as stock kernel | OQ-010, OQ-019 |
 | INV-016 | Caller idempotency key | Return first result | Unique key store | OQ-011 device identity |
-| INV-017 | QC/Shipping command only | Deny their stock writes | Deny their Ledger/Balance grants | none |
+| INV-017 | Shipping commands Inventory; Quality command authority is future only | Deny direct stock writes | Deny Ledger/Balance grants | No current Quality actor |
 | INV-018 | GR split | Procurement cannot post qty | Deny Procurement Ledger grants | none |
 | INV-019 | Genealogy is a projection | Deny write API | Allow drop/rebuild | none |
 | INV-020 | Portal order commands rejected | `GUARD_PORTAL_MVP` | none | OQ-010 visibility-only recorded; document list residual |

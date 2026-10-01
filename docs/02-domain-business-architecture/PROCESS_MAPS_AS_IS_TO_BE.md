@@ -3,10 +3,10 @@ id: DOM-PROCESS-001
 title: As-Is and To-Be Process Maps
 phase: 02-domain-business-architecture
 status: approved
-version: 0.3.1
+version: 0.5.0
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, DOM-CAP-BC-001]
-last_reviewed: 2026-09-30
+last_reviewed: 2026-10-01
 approval: APR-004
 supersedes: null
 ---
@@ -102,6 +102,11 @@ Lifecycle names cite [GOV-STATES-001](../00-governance/registers/STATE_TRANSITIO
 and remain Phase 03 work. Guards, actors, and side effects are
 workshop-unvalidated.
 
+The earlier QC steps in that proposal are **deferred** under OQ-005.
+The current factory has no QC department or Quality role, and current
+receiving, production completion, inventory availability, and shipment
+do not require inspection or Quality release.
+
 Proposed sequence:
 
 1. Record Customer and Inquiry even if the demand may never become a Sales
@@ -113,8 +118,7 @@ Proposed sequence:
 5. If stock available: create Reservation in `BC-INVENTORY` (command from
    `BC-SALES`; Inventory writes Reservation).
 6. If purchase needed: create PurchaseOrder; receive via GoodsReceipt
-   **commercial orchestration** in `BC-PROCUREMENT`; inbound quality as
-   required; **Inventory Posting Service** posts Material Lot / Inventory Unit
+   **commercial orchestration** in `BC-PROCUREMENT`; **Inventory Posting Service** posts Material Lot / Inventory Unit
    stock (split in DOM-CAP-BC-001).
 7. Plan/release [Production Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-011--production-order)
    (TERM-011). Allocate material (TERM-010). Issue to production through
@@ -122,11 +126,9 @@ Proposed sequence:
 8. Complete operations with atomic consumption, output, residual, scrap,
    genealogy source facts, and coordinated inventory postings (posting points
    open: OQ-003).
-9. Quality inspection; Product Batch must be Released before shipment
-   (OQ-005 open).
-10. Pack; create Shipment whose items belong to the authorized demand/customer;
+9. Pack; create Shipment whose items belong to the authorized demand/customer;
     dispatch requests definitive stock exit through Inventory.
-11. Confirm delivery; issue operational Invoice; allocate Payment
+10. Confirm delivery; issue operational Invoice; allocate Payment
     (Finance-Lite). Sales Order close is independent of payment (OQ-007):
     remaining valid demand already zero (`FULFILLED`), authorized unfulfilled
     remainder, or `CANCELLED`. Shipment `DELIVERED` is not an independent
@@ -134,7 +136,7 @@ Proposed sequence:
     customer order, or what a change does to reservation or production.
     Architecture cancel and change commands are not a factory procedure.
 
-Steps 10 and 11 are the architecture proposal. The factory has not named
+Steps 9 and 10 are the architecture proposal. The factory has not named
 who packs, loads, dispatches, or confirms delivery. Those steps are not
 deleted. They are not a factory logistics procedure, and they do not make
 `DELIVERED` a Sales Order close.
@@ -185,9 +187,9 @@ or the inventory post. Warehouse intake records physical arrival. Quantity is po
 by `PostGoodsReceipt` (Lot + Inventory Unit + Ledger) through the
 Inventory Posting Service.
 
-Step 6's "inbound quality as required" is future architecture. The
-current factory has no QC department and this intake does not require
-Quality approval. That step is not deleted.
+The earlier proposed step 6 included "inbound quality as required."
+That QC branch is retained only in the future flow below. The current
+factory has no QC department, and intake does not require Quality approval.
 
 A standalone incoming Sheet has no fabricated Coil parent. A Sheet made
 from a Coil keeps the Coil trace. Angle and beam have no invented
@@ -202,13 +204,11 @@ flowchart TD
   D -->|stock available| E[Reservation in Inventory]
   D -->|purchase needed| F[PurchaseOrder]
   F --> G[GoodsReceipt commercial orchestration]
-  G --> H[Inbound QC if required]
-  H --> I[Inventory posting of Lot and Unit]
+  G --> I[Inventory posting of Lot and Unit]
   I --> E
   E --> J[Production Order release]
   J --> K[Allocation issue consumption output]
-  K --> L[Quality final / Product Batch Released]
-  L --> M[Package and Shipment]
+  K --> M[Package and Shipment]
   M --> N[Dispatch stock exit via Inventory]
   N --> O[Delivery]
   O --> P[Operational Invoice]
@@ -248,8 +248,10 @@ flowchart TD
 Fulfillment Assessment may select purchase even when a Sales Order exists
 without currently available stock. PurchaseOrder proceeds independently through
 SM-PURCHASE-ORDER until GoodsReceipt. Physical stock becomes available only
-after Inventory posting (and any required inbound QC). Reservation against
-that stock is a later Inventory write, not a Procurement write.
+after a valid Inventory posting commits. The resulting normal Inventory Unit
+is then `AVAILABLE` for permitted use under existing guards (INV-003); QC
+release is not a current-MVP prerequisite. Reservation against that stock
+is a later Inventory write, not a Procurement write.
 
 #### QC hold / reject
 
@@ -299,6 +301,9 @@ No universal numeric cutoff is defined. That return is not a new
 posting command. The factory has not defined process loss. A weight
 difference is not process loss. Not every Station consumes a unit or
 posts stock. The factory has not named partial or complete consumption.
+For a valid accepted residual stock-in, the resulting child Inventory
+Unit is `AVAILABLE` after the posting transaction commits (INV-003).
+This is an architecture consequence, not a new factory procedure.
 
 #### Scrap
 
@@ -311,7 +316,7 @@ Non-reusable waste is Scrap. No disposal process is defined. An earlier
 Scrap Code / unique-part mention is historical and does not require a
 code on every tiny scrap piece. A weight difference is not Scrap.
 
-#### Coil → Sheet (factory evidence through 2026-09-30)
+#### Coil → Sheet (factory evidence through C-07)
 
 Factory business evidence. **Not** an accepted change to
 `CompleteProductionOperation`, `CreateResidualUnit`, or DATA-TX-001.
@@ -320,18 +325,30 @@ No new command or entity is created here.
 The factory calls Context A **"conversion of Coil to Sheet for warehouse"**
 and an **inventory transformation**.
 
-**Context A — warehouse conversion.** Opened-Coil remainder is converted
-to Sheets when it is not suitable for another customer order. This can
-happen immediately or later. There is no automatic timing rule. Once the
-Coil is opened it cannot be re-rolled. No customer order is required. No
-Production Order is required. It is separate from customer-order
-production. One Coil leaves inventory; multiple Sheets enter. The
-relationship Source Coil → resulting Sheets is retained. Resulting Sheets
+**Initial opening/use (C-07).** A Customer Order must be involved when a Coil is
+initially opened/used for Coil → Sheet processing. This does not establish
+that the triggering demand must technically be a Production Order. It does
+not permit speculative opening of an intact Coil without demand.
+
+**Context A — warehouse conversion after that order.** Opened-Coil
+remainder may be converted to Sheets without another/new Customer Order
+and without a Production Order for this remainder transformation. The
+remainder may stay temporarily on the roll-opening machine. Once the Coil
+is opened it cannot be re-rolled; the remainder ultimately becomes
+Sheets. No time limit or automatic schedule is defined. This activity is
+separate from customer-order production. One Coil leaves inventory;
+multiple Sheets enter. The relationship Source Coil → resulting Sheets is
+retained. Resulting Sheets
 may be directly saleable and/or allocatable. They need not be allocated
 at once.
 
-**Context B — customer-order-related production.** A Coil may be opened
-or processed while an order is in work. That context keeps the Order Code
+Architecture consequence only: once the still-unresolved Coil → Sheet
+posting boundary is accepted and validly commits resulting Sheet stock,
+those Sheets are `AVAILABLE` for permitted use without QC release
+(INV-003). This does not define that posting command.
+
+**Context B — customer-order-related production.** The initial Coil
+opening/use has a Customer Order involved. That context keeps the Order Code
 on associated material. Do not collapse Context B into Context A.
 
 **Place and decision.** The operation is in the workshop, under the
@@ -360,9 +377,10 @@ A is not decided.
 
 ```mermaid
 flowchart TD
-  A[Opened Coil cannot be re-rolled] --> B{Context}
-  B -->|A warehouse conversion no customer order no Production Order| C[Inventory transformation in the workshop]
-  B -->|B order in work| D[Customer-order production keeps Order Code]
+  A[Customer Order involved in initial Coil opening] --> B[Coil opened and used for order]
+  B --> D[Customer-order production keeps Order Code]
+  B --> R{Opened Coil remainder?}
+  R -->|Yes, later conversion needs no new Customer Order| C[Warehouse inventory transformation in workshop]
   C --> E[One Coil leaves inventory]
   E --> F[Multiple Sheets enter inventory]
   F --> G[Each Sheet keeps Coil Code and Sheet Code]
@@ -425,7 +443,7 @@ are specifically evidence-gated and must not be treated as confirmed:
 | Sales Order closure vs payment | Recorded policy | OQ-007 answered |
 | Reservation uniqueness and confirmed-SO expiry | Recorded policy | OQ-008 answered |
 | Residual vs scrap cutoff numbers | Reusable = Residual and returns to the warehouse; non-reusable = Scrap; person decides; no universal cutoff; do not classify from measurements | OQ-009 still treating. Conflict with `GUARD_OPEN_POLICY` and the below-threshold branch left open |
-| Coil → Sheet warehouse conversion | Factory: inventory transformation; posting command not accepted | FACT-03. Not nested into `CompleteProductionOperation` or DATA-TX-001 |
+| Opened-Coil remainder → Sheet warehouse conversion | Factory: initial opening/use requires a Customer Order; later remainder conversion needs no new Customer Order and is an inventory transformation; posting command not accepted | FACT-03 / C-07. Not nested into `CompleteProductionOperation` or DATA-TX-001 |
 | Portal visibility document list | Sponsor residual list | OQ-010 answered visibility-only; no `PortalPlaceOrder` |
 | Weighbridge identity and fallback | Equipment evidence | OQ-011 residual. Commander only. |
 | Invoice/payment vs legal accounting handoff | Accounting product when a later phase needs it. Factory upload target is unnamed and is not that product. | OQ-012 answered: no Legal-GL in MVP |

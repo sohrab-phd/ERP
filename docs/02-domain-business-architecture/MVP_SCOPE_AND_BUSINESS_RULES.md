@@ -3,10 +3,10 @@ id: DOM-MVP-RULES-001
 title: MVP Scope and Business-Rule Catalogue
 phase: 02-domain-business-architecture
 status: approved
-version: 0.2.7
+version: 0.5.0
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, DOM-CAP-BC-001, DOM-PROCESS-001, DOM-OWN-001, ASM-014]
-last_reviewed: 2026-09-30
+last_reviewed: 2026-10-01
 approval: APR-004
 supersedes: null
 ---
@@ -42,21 +42,15 @@ sign-off, and not implementation authorization.
   Receipt orchestration (TERM-019). Factory intake evidence does not add a
   Procurement Manager or a purchase-approval person.
 - Inventory: Material Lot, Inventory Unit / Coil, locations, Ledger, Balance,
-  Reservation, transfer, adjustment, quality-hold coordination, one-writer
+  Reservation, transfer, adjustment, one-writer
   posting. Incoming quantity remains `PostGoodsReceipt`. Count at intake is
   not a second ledger. Current factory intake does not require Quality
-  approval; quality-hold coordination stays future capability.
+  approval.
 - Production/MES: Production Order, operations, allocation, issue/consumption,
   output, residual, scrap, mass-balance posting, genealogy source facts.
   Registering a customer order does not automatically create a Production
   Order. Entry and Referral are not Start or Complete. A Station
   completion does not post. No Production Planner is added.
-- Quality: incoming/in-process/final inspection, hold/quarantine, accept /
-  reject / conditional release, shipment-release gate. **Future capability.**
-  Factory clarification (`2026-09-30`): there is no QC department, QC is
-  outside the current factory MVP, and there is no Quality role or
-  Quality personnel. This line is not deleted. It is not current factory
-  operation and does not authorize a QC workflow. OQ-005 stays treating.
   BR-010 is not rewritten.
 - Shipping: packaging, picking/loading, dispatch, partial delivery, delivery
   confirmation, stock-exit request to Inventory.
@@ -65,13 +59,18 @@ sign-off, and not implementation authorization.
   amount, three payment methods, and an unnamed external invoice upload.
   It does not make Finance-Lite a legal general ledger and does not add
   a Legal-GL connector.
-- Reporting: operational stock, fulfillment, production, quality, lost demand,
+- Reporting: operational stock, fulfillment, production, lost demand,
   OTIF, and bidirectional genealogy queries.
 - Audit: immutable business, status, and security evidence.
 - Integration: adapter boundary and Outbox *pattern* as a proposal only.
 
 ## Deferred from this MVP — proposed
 
+- Quality: incoming/in-process/final inspection, hold/quarantine, accept /
+  reject / conditional release, quality reporting, and shipment-release
+  gate. Current factory: no QC department, execution, Quality role, or
+  personnel. This future architecture creates no current-MVP dependency.
+  OQ-005 stays treating for future detail only.
 - Customer Portal **ordering** and any customer-facing commercial write path
   until OQ-010 / FIND-001 is decided. Visibility/request/document features may
   be evaluated later; they are not in the current MVP cut.
@@ -101,7 +100,6 @@ than inventing values.
 - OQ-002 Coil weight versus length semantics
 - OQ-003 production routing and tracking granularity
 - OQ-004 finished-product identity (batch vs unit)
-- OQ-005 quality-plan and exceptional-release authority
 - OQ-006 over-production / over-delivery tolerances
 - OQ-009 residual usability threshold
 - OQ-010 portal phase (`treating`; ordering formally deferred from MVP; does
@@ -126,15 +124,14 @@ identities cannot approve them.
 | --- | --- | --- | --- |
 | BR-001 | Every stock change has exactly one authorized posting path and immutable evidence. | BC-INVENTORY | OQ-017 |
 | BR-002 | On-hand, reserved, and available quantities cannot become negative; active reservations cannot exceed free stock under concurrency; at most one `ACTIVE` reservation per Inventory Unit. | BC-INVENTORY | OQ-008 recorded uniqueness; residual TTL only |
-| BR-003 | Availability is on-hand minus reservations and quality hold. Reservation, Allocation, and Consumption are distinct. | BC-INVENTORY, BC-PRODUCTION | TERM-009, TERM-010 |
-| BR-003 | Availability is on-hand minus reservations and quality hold. Reservation, Allocation, and Consumption are distinct. | BC-INVENTORY, BC-PRODUCTION | TERM-009, TERM-010 |
+| BR-003 | Available quantity is Ledger-derived on-hand minus reservations; Inventory Unit lifecycle eligibility is separate. Current-MVP valid normal stock-in creates or increases stock whose resulting Unit is `AVAILABLE` in the posting transaction, usable after commit under existing guards and without QC release. A Quality hold applies only if future QC is enabled. Reservation, Allocation, and Consumption are distinct. | BC-INVENTORY, BC-PRODUCTION | TERM-009, TERM-010; INV-003; OQ-005 future only |
 | BR-004 | One Inventory Unit has one active physical location and cannot be simultaneously issued, shipped, quarantined, or consumed incompatibly. | BC-INVENTORY | ASM-005 |
 | BR-005 | Posted operational and financial records are not physically deleted; corrections use reversal with reason, actor, authority, and audit. | cross-cutting | ASM-006, ASM-012, OQ-015 |
 | BR-006 | Operation completion atomically records Consumption, Output/WIP, Residual, Scrap, process loss, genealogy, and inventory postings. | BC-PRODUCTION | OQ-003 |
 | BR-007 | Mass balance holds within approved tolerance: consumed weight equals good output plus WIP plus residual plus scrap plus approved process loss. | BC-PRODUCTION | OQ-006 |
 | BR-008 | A usable residual receives a new Inventory Unit identity linked to its parent; the parent is closed or split. Minimum usable threshold is OQ-009. | BC-PRODUCTION, BC-INVENTORY | OQ-009 |
 | BR-009 | Genealogy source facts are immutable and support supplier-to-customer and customer-to-source tracing, including merge, split, rework, and defective-lot impact. | BC-PRODUCTION, BC-REPORTING | TERM-015 |
-| BR-010 | Material/product cannot become available or shippable while required QC is pending, quarantined, or rejected. Product Batch must be Released before shipment. | BC-QUALITY, BC-SHIPPING | OQ-005, TERM-016 |
+| BR-010 | **Future Quality only:** if a later approved scope requires QC, pending/quarantined/rejected Quality disposition blocks availability or shipment and Product Batch release follows that plan. No QC gate or Quality `Released` state is required in the current MVP. | BC-QUALITY, BC-SHIPPING | OQ-005 future residual, TERM-016 |
 | BR-011 | Shipment content belongs to the authorized customer/order and references permitted Package or Product Batch form. Shipment without demand requires explicit authority. | BC-SHIPPING | OQ-006 |
 | BR-012 | Issued invoices are immutable; void/credit/reversal preserves history. Payment allocations cannot exceed payment value or invoice open balance. | BC-FINANCE-LITE | OQ-012 |
 | BR-013 | Unfulfilled demand is not overdue demand and may exist without a Sales Order; both remain separately reportable. Remainder-close of a Sales Order uses this record (OQ-007). | BC-SALES | OQ-007 recorded, TERM-005 |
@@ -159,7 +156,7 @@ Identity/security design for FACT-05 remains open.
 | RQ-01 | Incoming material and customer-order quantity are primarily expressed in kg. Length, thickness, width, and material/type are secondary and are not stock quantities. Measured stock weight: 0 decimal places, smallest step 1 kg, rounding not needed for that measurement. Weight↔length may be needed; formula undefined. Weight↔count conversion is not required. A measured-vs-expected weight difference must be shown; no automatic measurement tolerance is defined. That threshold is not OQ-006. | Confirmed factory measurement evidence; OQ-001 not fully closed | OQ-001 treating; OQ-002 answered; OQ-006 unchanged; FACT-01 |
 | RQ-02 | Cut pieces and order scrap must remain traceable to the relevant customer order code. | Confirmed business traceability requirement | OQ-004; FACT-02; TERM-003 note |
 | RQ-03 | The system must not require unique Inventory Unit identity for every tiny physical cut piece where such identity has no operational value. The Inventory Unit model is retained for independently controlled stock. | Confirmed factory fact; hybrid grain confirmed | OQ-004; FACT-02; TERM-007 |
-| RQ-04 | The system must eventually support warehouse conversion of an opened-Coil remainder into Sheets without a customer order and without a Production Order, retaining Source Coil → Sheets traceability. Factory calls this an inventory transformation, separate from customer-order production. Authoritative stock quantity is measured kg. Sheet Code format is Coil Code + Sheet number. Posting command is **not** accepted: not added to `CompleteProductionOperation` or DATA-TX-001. | Factory business-process evidence; architecture posting boundary in conflict and still open | OQ-009 treating; OQ-001 treating; FACT-03 |
+| RQ-04 | C-07: a Customer Order must be involved in initial Coil opening/use. An already opened Coil remainder may later become warehouse Sheets without a new Customer Order or a Production Order for that remainder transformation, retaining Source Coil → Sheets traceability. This does not allow speculative opening of intact Coil stock. Factory calls the remainder activity an inventory transformation, separate from customer-order production. Authoritative stock quantity is measured kg. Sheet Code format is Coil Code + Sheet number. Posting command is **not** accepted: not added to `CompleteProductionOperation` or DATA-TX-001. | Factory business-process evidence; architecture posting boundary in conflict and still open | OQ-009 treating; OQ-001 treating; FACT-03 / C-07 |
 | RQ-05 | The system must support production routing through the current Stations. The Production Manager defines the route per order. Some Stations may be skipped. An earlier note that the system sends one fixed sequence is historical. | Confirmed operational requirement; how the route is stored remains OQ-003 | OQ-003 treating; FACT-05 |
 | RQ-06 | The system must support reporting/visibility of an order's progression from one production station/section to the next. | Confirmed operational/reporting requirement | OQ-003 treating; FACT-05; FACT-06 |
 | RQ-07 | The system must retain and expose Entry and Referral times from the system clock. Those events are not `StartProductionOperation` or `CompleteProductionOperation`. Exact storage beside the operation lifecycle is still open. No timestamp columns are invented here. | Confirmed reporting/history requirement | OQ-003 treating; FACT-06; SM-PRODUCTION-OPERATION |
@@ -192,7 +189,7 @@ downstream phases.
 | --- | --- |
 | OQ-001, OQ-002 | Extension points only; no signed UOM or Coil quantity rule |
 | OQ-003, OQ-004 | Production owns facts; routing and tracking granularity unset |
-| OQ-005 | Quality commands Inventory; no named approvers or limits |
+| OQ-005 | Historical Phase 02 Quality proposal, now future only; no current-MVP Quality commander, approver, or limit input |
 | OQ-006 | Partial fulfillment exists; default over-delivery 0; family % is configuration |
 | OQ-008 | Originally scoped out of this Phase 02 gate; recorded 2026-09-15: one `ACTIVE` per Inventory Unit; no confirmed-SO timer |
 | OQ-010 | Ordering formally deferred from MVP; visibility/request optional deferred |

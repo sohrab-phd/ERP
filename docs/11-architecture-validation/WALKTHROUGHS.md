@@ -3,10 +3,10 @@ id: VAL-WALK-001
 title: End-to-End and Exceptional-Flow Walkthroughs
 phase: 11-architecture-validation
 status: approved
-version: 0.3.0
+version: 0.5.0
 owners: [independent-reviewer, qa-architect]
 depends_on: [QA-SCN-001, SM-SEQ-001, APP-ORCH-001, APR-012, APR-013, ASM-024]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-013
 supersedes: null
 ---
@@ -23,13 +23,19 @@ Golden paths match SM-SEQ-001 / QA-SCN-001. Dispatch is SEQ-STOCK
 step 7 (`DispatchShipment` + stock exit). It is not a fifth golden
 path.
 
+QC paths in the older walks are future-only (OQ-005). Current MVP has
+no Quality inspection, hold, release, or Quality actor as a prerequisite.
+Valid normal stock-in makes the resulting Inventory Unit `AVAILABLE`
+after the posting transaction commits, subject to existing guards
+(INV-003). This is architecture reconciliation, not factory procedure.
+
 ## Happy-path walks (from Phase 03 SEQ-* / Phase 07 QA-SCN-*)
 
 | Walk | Approved sequence | Command order (labels) | Stock writer | Open guard |
 | --- | --- | --- | --- | --- |
-| `WALK-STOCK` | SEQ-STOCK / QA-SCN-STOCK | Inquiry/Quotation optional → fulfillment STOCK → confirm Sales Order → `RequestReservation` / `ActivateReservation` (one `ACTIVE` per unit) → pack → `DispatchShipment` → invoice → `AllocatePayment`. `CloseSalesOrder` after `FULFILLED` (remaining demand already zero) / authorized remainder / cancelled; payment and shipment `DELIVERED` are not close guards. | `ACT-IPS` on reservation and exit | OQ-006 family %; QC OQ-005 |
-| `WALK-PURCHASE` | SEQ-PURCHASE / QA-SCN-PURCHASE | Fulfillment PURCHASE → confirm Sales Order (purchase-need) → PO send → `ReceiveGoods` / optional `HoldInboundForQc` → `PostGoodsReceipt` (`ADP-WEIGHBRIDGE` may command) → continue SEQ-STOCK from reservation | `ACT-IPS` posts GR bundle; Procurement does not write quantity (INV-018) | OQ-019 (PO approve), OQ-005, OQ-011, OQ-015 |
-| `WALK-MAKE` | SEQ-MAKE / QA-SCN-MAKE | Fulfillment MAKE → `StartOrderProduction` → release Production Order → allocation issue (`IssueUnitFromAllocation`) → `CompleteProductionOperation` bundle (nested residual identity / scrap qty) → `PlaceResidualUnit` / QC if required → SEQ-STOCK from pack. `CloseSalesOrder` independent of payment (OQ-007). | `ACT-IPS` on consume/output/residual/scrap qty; Production writes facts, not Ledger tables | OQ-003 names, OQ-009 cutoff numbers, OQ-006, OQ-005 |
+| `WALK-STOCK` | SEQ-STOCK / QA-SCN-STOCK | Inquiry/Quotation optional → fulfillment STOCK → confirm Sales Order → `RequestReservation` / `ActivateReservation` (one `ACTIVE` per unit) → pack → `DispatchShipment` → invoice → `AllocatePayment`. `CloseSalesOrder` after `FULFILLED` (remaining demand already zero) / authorized remainder / cancelled; payment and shipment `DELIVERED` are not close guards. | `ACT-IPS` on reservation and exit | OQ-006 family %; no current-MVP QC gate |
+| `WALK-PURCHASE` | SEQ-PURCHASE / QA-SCN-PURCHASE | Fulfillment PURCHASE → confirm Sales Order (purchase-need) → PO send → `ReceiveGoods` → `PostGoodsReceipt` (`ADP-WEIGHBRIDGE` may command) → resulting normal Unit `AVAILABLE` on valid commit → continue SEQ-STOCK from reservation. `HoldInboundForQc` is future-only. | `ACT-IPS` posts GR bundle; Procurement does not write quantity (INV-018) | OQ-019 (PO approve), OQ-011; OQ-005 future only. OQ-015 cutover is separate. |
+| `WALK-MAKE` | SEQ-MAKE / QA-SCN-MAKE | Fulfillment MAKE → `StartOrderProduction` → release Production Order → allocation issue (`IssueUnitFromAllocation`) → `CompleteProductionOperation` bundle (nested residual identity / scrap qty) → valid normal good/reusable output Units `AVAILABLE` on commit → `PlaceResidualUnit` where applicable → SEQ-STOCK from pack. Scrap is not available. No current-MVP QC request or release. `CloseSalesOrder` independent of payment (OQ-007). | `ACT-IPS` on consume/output/residual/scrap qty; Production writes facts, not Ledger tables | OQ-003 names, OQ-009 cutoff numbers, OQ-006; OQ-005 future only |
 | `WALK-NOT-FEASIBLE` | SEQ-NOT-FEASIBLE / QA-SCN-NOT-FEASIBLE | `RecordFulfillmentNotFeasible` → `RecordUnfulfilledDemand` (INV-013). No Sales Order required. Not overdue. | none | — |
 
 Each accepted command uses one idempotency key (INV-016). Bundles in
@@ -55,7 +61,7 @@ How the bundle is committed stays OQ-017.
 | `WALK-REVERSE` | SEQ-REVERSE / QA-SCN-REVERSE | New compensating command; original posted row stays (INV-005) | OQ-015, OQ-017, OQ-019 |
 | `WALK-SOD-GR` | QA-SCN-SOD-GR | `ReverseGoodsReceipt` needs a different human than the original post (SV-013) | OQ-015, OQ-019 |
 | `WALK-SOD-FIN` | QA-SCN-SOD | VoidInvoice / ReversePayment needs a second distinct identity (SV-007) | OQ-019 |
-| `WALK-QC-HOLD` | QA-SCN-QC-HOLD | Stock not available/shippable while required QC is open (INV-010) | OQ-005 |
+| `WALK-QC-HOLD` (**future only**) | QA-SCN-QC-HOLD | If Quality is later enabled, stock is not available/shippable while required QC is open (INV-010). No current-MVP gate. | OQ-005 future residual |
 | `WALK-REJECT-OPEN` | QA-SCN-REJECT-OPEN | Command needing an unanswered OQ rejects; no posted fact | matching `OQ-*` |
 | `WALK-REJECT-GENEALOGY` | QA-SCN-REJECT-GENEALOGY | No `EditGenealogy`; rebuild from DATA-GEN-001 source facts (INV-019, FIND-G-014) | — |
 | `WALK-REJECT-ADJUST` | QA-SCN-REJECT-ADJUST | No `AdjustBalance` | — |

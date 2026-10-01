@@ -3,10 +3,10 @@ id: SM-SOD-001
 title: Authorization and Separation of Duties
 phase: 03-state-machines-invariants
 status: approved
-version: 0.1.0
+version: 0.2.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-INV-001, SM-EVT-001, DOM-ACTORS-001, APR-004, APR-005, ASM-016]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-10-01
 approval: APR-005
 supersedes: null
 ---
@@ -18,6 +18,11 @@ an RBAC implementation and not Phase 06. Named people remain OQ-019.
 Quality releasers remain OQ-005. Portal actions remain OQ-010.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+`ACT-QC`, Quality releasers, and exceptional QC release are future-only
+labels under OQ-005. There is no current-MVP Quality role, person,
+delegate, or QC authorization requirement. These permissions are not
+transferred to any existing employee.
 
 ## Standing rules
 

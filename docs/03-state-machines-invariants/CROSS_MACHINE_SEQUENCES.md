@@ -3,10 +3,10 @@ id: SM-SEQ-001
 title: Cross-Machine Sequences
 phase: 03-state-machines-invariants
 status: approved
-version: 0.1.0
+version: 0.3.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-TRANS-001, SM-SIDE-001, SM-INV-001, APR-004, APR-005, ASM-016]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-005
 supersedes: null
 ---
@@ -18,6 +18,12 @@ executable workflows. A step whose guard is an unanswered OQ stops with
 `GUARD_OPEN_POLICY`. No quantity, person, or cutoff is invented.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+QC branches in the older sequence proposals are future-only under OQ-005.
+They are not current-MVP prerequisites for receipt, production posting,
+availability, or shipment. Valid normal stock-in creates the resulting
+Inventory Unit as `AVAILABLE` in the posting transaction; normal use is
+eligible after commit under existing guards (INV-003).
 
 Commands and actors are those in
 [TRANSITION_TABLES.md](TRANSITION_TABLES.md). Side effects are those in
@@ -35,9 +41,9 @@ Commands and actors are those in
    `GUARD_INVARIANT` (INV-002) / `GUARD_CONFLICT`. Later SO must not steal
    (OQ-008). Partial claimed qty is not a second `ACTIVE` slot on the
    same unit.
-5. Unit must be `AVAILABLE` or become so after QC release. Required QC
-   still pending: `GUARD_INVARIANT` (INV-010) or `GUARD_OPEN_POLICY` /
-   OQ-005.
+5. Unit must satisfy the Inventory availability rule. Current MVP does
+   not require QC release. The old QC-pending rejection applies only to
+   a future approved Quality scope (INV-010 / OQ-005).
 6. `DraftPackage` → `PackPackage` → `AssignPackageToShipment`.
 7. `DraftShipment` → `MarkShipmentReady` → `StartLoading` →
    `DispatchShipment`. Dispatch commands ACT-IPS stock exit (INV-017).
@@ -71,10 +77,11 @@ flowchart LR
 2. `ConfirmSalesOrder` commands a purchase-need. No Production Order.
 3. `DraftPurchaseOrder` → `SubmitPurchaseOrder` → `ApprovePurchaseOrder`
    (`open: OQ-019`) → `SendPurchaseOrder`.
-4. `DraftGoodsReceipt` → `ReceiveGoods`. If inbound QC is required:
-   `HoldInboundForQc` then later `PostGoodsReceipt`. Plans and releasers
-   stay OQ-005. Opening-stock cutover stays OQ-015.
-5. ACT-IPS posts Lot/Unit. Procurement does not write quantity (INV-018).
+4. `DraftGoodsReceipt` → `ReceiveGoods` → `PostGoodsReceipt` in the
+   current MVP, without QC acceptance. `HoldInboundForQc` is a deferred
+   future branch (OQ-005). Opening-stock cutover stays OQ-015.
+5. ACT-IPS posts Lot/Unit. The valid normal Unit is `AVAILABLE` after
+   commit (INV-003). Procurement does not write quantity (INV-018).
 6. After the unit is `AVAILABLE`, continue from SEQ-STOCK step 4
    (reservation if still required) through shipment and finance.
 7. `ClosePurchaseOrder` is independent of `CloseSalesOrder`.
@@ -115,10 +122,11 @@ flowchart LR
    Official step **names** stay OQ-003 treating. Mass-balance tolerance
    stays OQ-006. Residual cutoff **numbers** stay OQ-009 treating;
    missing cutoff when classification requires it → `GUARD_OPEN_POLICY`.
-7. After the child residual unit exists (if any): `PlaceResidualUnit`
-   and output QC as required (OQ-005) before the unit may become
-   shippable (INV-010). Placement and QC must not post residual or scrap
-   quantity again.
+7. Valid normal good/reusable output Units, including a reusable child
+   residual Unit, are `AVAILABLE` when the completion transaction commits
+   (INV-003); Scrap is not. Optional later `PlaceResidualUnit` does not
+   post residual or scrap quantity again and is not an availability gate.
+   Output QC and its shipment gate (INV-010 / OQ-005) are future-only.
 8. Continue from SEQ-STOCK step 6 through shipment and finance.
 9. `CloseProductionOrder` does not write Invoice. `CloseSalesOrder`
    follows OQ-007 and is independent of payment.
@@ -132,8 +140,7 @@ flowchart LR
   SO --> PR[Production Order released]
   PR --> AL[Allocation issued]
   AL --> OP[Operation completed]
-  OP --> QC[QC if required]
-  QC --> SHP[Shipment dispatched]
+  OP --> SHP[Shipment dispatched]
 ```
 
 ## SEQ-NOT-FEASIBLE — demand without an order
@@ -162,7 +169,7 @@ A rejected command is not this sequence. After a posted write:
 
 | If this is still unanswered | Sequence stops at |
 | --- | --- |
-| OQ-005 | inbound or output QC hold/release/post |
+| OQ-005 | future Quality hold/release only; no current-MVP sequence stop |
 | OQ-006 | partial/over fulfillment, mass-balance close, over-delivery |
 | OQ-009 | residual versus scrap |
 | OQ-003 | production release, operation complete, allocation issue |

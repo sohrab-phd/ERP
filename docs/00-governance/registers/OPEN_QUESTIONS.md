@@ -3,7 +3,7 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: approved
-version: 0.23.0
+version: 0.25.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
 last_reviewed: 2026-10-01
@@ -31,6 +31,10 @@ These are confirmed business facts. They do not authorize implementation,
 do not close treating residuals they do not actually answer, do not accept
 ADR-0008, and do not create an implementation unlock.
 
+Factory clarification C-07 refines FACT-03: a Customer Order is involved
+in initial Coil opening/use; later conversion of its opened remainder
+needs no new Customer Order. FACT-03's posting boundary stays open.
+
 ## Snapshot after recording
 
 | ID | Status | What is now locked | Still unknown |
@@ -39,7 +43,7 @@ ADR-0008, and do not create an implementation unlock.
 | OQ-002 | answered | Coil quantity = measured weight in kg; factory 2026-09-23 reinforces this | Shop-floor ticket confirmation (validation, not a new choice) |
 | OQ-003 | treating | Post at `CompleteProductionOperation`; no universal hard-coded route; clarification 2026-09-30: ten current physical Stations, Station = Production Step, no separate factory Work Center, route is per order and may skip Stations, Entry and Referral are workflow events with system timestamps and are not Start/Complete | How Entry/Referral sit beside the Production Operation lifecycle; exact abort/cancel command; whether architecture "work center" is unused or aliased; versioned routing mechanism |
 | OQ-004 | answered | Unit-level Coil; hybrid finished-product rule; factory 2026-09-23 confirms no unique ID per tiny cut piece; order code is the practical trace key for cut pieces and order scrap | First-go-live product-family catalogue; exact order-code identity; relationship of order code to inventory identity |
-| OQ-005 | treating | Current factory MVP: no QC department, no Quality role, no Quality personnel, no QC execution. Future Quality gates, two-person exceptional release, and inspection lifecycle are retained as architecture and are not current factory operations | Future plans, limits, and named people if Quality is later enabled. Not invented for the current MVP |
+| OQ-005 | treating (future residual; no current-MVP QC blocker) | Current factory MVP: no QC department, no Quality role or personnel, no QC execution or mandatory QC gate. Future Quality gates, two-person exceptional release, and inspection lifecycle are retained as deferred architecture | Future plans, limits, and named people only if Quality is later enabled. Not current-MVP inputs |
 | OQ-006 | answered | Partial shipment allowed; default tolerance 0; configurable | Exact %/kg by family/customer |
 | OQ-007 | answered | Close Sales Order on fulfilled/cancelled/unfulfilled demand, not payment. Factory payment methods do not change this. | Who may amend or cancel a customer order, and what happens to reservation, production, or already-produced material. The close rule itself is not reopened. |
 | OQ-008 | answered | One Coil, one active reservation; confirmed SO has no timer expiry | Temporary-hold TTL if that type is added later |
@@ -335,13 +339,13 @@ ASM-004 replaced: batch is not always enough for finished goods.
 
 ## OQ-005 — Quality plans and release authority
 
-- Answer owner: Quality (names via OQ-019)
+- Answer owner: future Quality owner, if that capability is later authorized (names via OQ-019)
 - Severity: critical
 - Status: treating
 - Source: [OQ-005.md](../team-answers/OQ-005.md)
 - Recorded: `2026-09-15`
 
-### Recorded answer
+### Recorded answer — future Quality architecture, not current MVP
 
 Required incoming QC blocks Available. Required in-process/final QC
 blocks Ship-Eligible. Quality decides; Inventory applies state.
@@ -360,6 +364,14 @@ not a Quality identity. OQ-005 is not closed and is not reopened.
 
 The factory clarification states that there is **no Quality Control
 department** and that **QC is outside the current MVP**.
+
+This current-MVP scope decision is answered factory evidence. No
+`QualityInspection`, Quality approval, QC request, `QC_HOLD`,
+`PENDING_QC`, `QUARANTINED`, or Quality `Released` state is a mandatory
+current-MVP step for production completion, Goods Receipt, inventory
+availability, or shipment. Existing state paths and guards that imply
+otherwise are future-only architecture and require later reconciliation
+if Quality is brought into scope. Do not invent a replacement approver or status.
 
 Current factory / current MVP:
 
@@ -391,10 +403,11 @@ role.
 
 ### Still unknown
 
-If Quality is later brought into scope: first-go-live Quality Plans,
+If Quality is later brought into scope: Quality Plans,
 checks, limits, sample sizes, and named people. Missing plan/limit →
-`GUARD_OPEN_POLICY`. Those inputs are not invented for the current MVP.
-OQ-005 remains `treating`.
+`GUARD_OPEN_POLICY` for that future capability only. Those inputs are
+not current-MVP blockers. OQ-005 remains `treating` for future detail;
+the current-MVP exclusion is answered evidence.
 
 Incoming warehouse intake (`2026-09-30`) does not require a current
 Quality approval. The incoming-QC block above is future architecture.
@@ -980,7 +993,7 @@ Clarification (`2026-09-30`), organizational only, not RBAC:
 | OQ-012 vs ASM-010 | Legal books stay outside MVP; product unnamed on purpose. |
 | ADR-0008 | Not accepted. OQ-016 numbers are not a Docker freeze. |
 | NestJS / Prisma / React | Candidates only. |
-| FACT-03 vs `CompleteProductionOperation` | Factory calls warehouse Coil→Sheet an inventory transformation that may have no Production Order and no customer order. Live production posting boundary is unchanged. Conflict open. Not added to DATA-TX-001. No new command. |
+| FACT-03 vs `CompleteProductionOperation` | C-07: a Customer Order is involved in initial Coil opening/use; an already opened Coil remainder may later become warehouse Sheets without a new Customer Order or Production Order for that remainder transformation. The posting boundary is open. Live production posting is unchanged. Not added to DATA-TX-001. No new command. |
 | FACT-05 vs SEC-ID-001 | 2026-09-23 preferred station accounts. Clarification 2026-09-30 supersedes that: no shared Station account; personal operator accounts only. `SharedTerminal` may still be a shared device; the account is personal. `ACT-*` permissions unchanged. |
 | Current factory QC vs architecture Quality | Factory: no QC department; QC is outside the current MVP; no Quality role or personnel. Quality state machines, TERM-016, BR-010, and recommended Quality roles stay as future capability. They are not current factory operations and are not deleted. OQ-005 stays treating. |
 | Residual cutoff vs `GUARD_OPEN_POLICY` | Factory: reusable = Residual and returns to the warehouse; non-reusable = Scrap; a person decides; no universal numeric cutoff; do not classify from measurements. Live missing-threshold guard and the below-threshold residual branch are not rewritten. OQ-009 stays treating. |
@@ -1013,17 +1026,18 @@ authorize implementation.
 | --- | --- | --- | --- |
 | FACT-01 | Confirmed factory fact; existing kg-first decision confirmed | OQ-001 treating; OQ-002 answered (reinforced only) | OQ-001 not fully answered |
 | FACT-02 | Confirmed business traceability requirement; hybrid grain confirmed | OQ-004 answered (catalogue and order-code identity still unknown) | No unique Inventory Unit per tiny piece; Inventory Unit model retained |
-| FACT-03 | Factory business evidence for Coil→Sheet, clarified 2026-09-30 | Recorded here and on OQ-001 / OQ-009 / process map. **A future dedicated OQ may still be required** for the posting-boundary conflict | Factory classification recorded. Live `CompleteProductionOperation` / DATA-TX-001 **not** changed |
+| FACT-03 | Factory business evidence for Coil→Sheet, refined by C-07 | Recorded here and on OQ-001 / OQ-009 / process map. **A future dedicated OQ may still be required** for the posting-boundary conflict | Initial opening requires a Customer Order; opened-remainder conversion does not need a new one. Factory classification recorded. Live `CompleteProductionOperation` / DATA-TX-001 **not** changed |
 | FACT-04 | Organizational personnel facts only | OQ-019 treating (partial names) | Not RBAC; not `ACT-*`; not SoD |
 | FACT-05 | 2026-09-23 station preference, superseded on identity by 2026-09-30 clarification | OQ-003 | No shared Station account. Personal accounts. Station is not a user. |
 | FACT-06 | Entry and Referral defined 2026-09-30 | OQ-003 | Not equal to Start or `CompleteProductionOperation`. No invented timestamp columns. |
 
-### FACT-03 — Coil → Sheet (factory evidence through 2026-09-30)
+### FACT-03 — Coil → Sheet (factory evidence through C-07)
 
 Sources: factory meeting `2026-09-23`, plus clarification evidence
 `2026-09-30` (task statement of `بسته پرسش (1).docx` and
 `بسته پرسش شفاف‌سازی شماره ۲.docx`; those files are not in this
-repository). This is factory evidence. It does not authorize
+repository), and factory clarification C-07 supplied for this reconciliation.
+This is factory evidence. It does not authorize
 implementation and does not create a command, entity, or DATA-TX-001 row.
 
 #### What the factory stated
@@ -1037,22 +1051,30 @@ Mr. Dinavand. Source wording varies: Workshop Manager and Production
 Manager. That title variation needs confirmation. It is not an `ACT-*`,
 SoD, delegate, or approval-matrix assignment. OQ-019 stays `treating`.
 
-**Why.** A Coil may be converted when the remaining material is not
-suitable for another customer order. Once a Coil has been opened, it
-cannot be re-rolled, so the remainder eventually needs to become Sheets.
-Timing may be immediate or later. There is no automatic timing rule.
+**Initial opening/use (C-07).** A Customer Order must be involved when a Coil is
+initially opened/used for Coil → Sheet processing. This does not establish
+whether that demand is technically represented by a Production Order. It
+does not permit speculative opening of an intact Coil without demand.
+
+**After that order (C-07).** If opened Coil material remains after the
+order, that remainder may be converted to Sheets without another/new
+Customer Order. An opened Coil cannot be re-rolled; the remainder may
+stay temporarily on the roll-opening machine and ultimately becomes
+Sheets. The factory specifies no time limit or automatic schedule.
 
 **Two contexts. Do not collapse them.**
 
-- Context A — warehouse conversion: opened-Coil remainder becomes Sheets
-  **without** a customer order and **without** a Production Order. The
+- Context A — warehouse conversion: remainder from a Coil already opened
+  for a Customer Order becomes Sheets **without a new Customer Order** and
+  **without a Production Order for this remainder transformation**. The
   factory calls this an **inventory transformation**, separate from
   customer-order production. Resulting Sheets can be directly saleable
-  and/or allocatable. A customer order is not required for them to exist
-  or to be inventory. They are not assumed to be allocated immediately.
-- Context B — customer-order-related production: a Coil may be opened or
-  processed while an order is in work. Material associated with that
-  order keeps the Order Code. This is not the same workflow as Context A.
+  and/or allocatable warehouse inventory. They are not assumed to be
+  allocated immediately. This does not authorize opening an intact Coil
+  speculatively without a Customer Order.
+- Context B — customer-order-related production: the initial Coil
+  opening/use has a Customer Order involved. Material associated with that order
+  keeps the Order Code. This is not the same workflow as Context A.
 
 **Inventory effect (Context A).** One Coil leaves inventory. Multiple
 Sheets enter inventory. The relationship Source Coil → resulting Sheets
@@ -1115,9 +1137,10 @@ Do not force that case into Coil-derived genealogy.
 Live architecture nests production residual identity and production scrap
 quantity inside `CompleteProductionOperation`. Factory evidence says
 warehouse Coil → Sheet is an inventory transformation that may occur with
-**no** Production Order and **no** customer order, and is separate from
-customer-order production. Both positions are recorded. The posting
-boundary for Context A is **not** decided.
+**no** Production Order or new Customer Order for an **already opened
+remainder**, and is separate from customer-order production. C-07 requires
+Customer Order involvement for initial Coil opening/use. Both positions
+are recorded. The posting boundary for Context A is **not** decided.
 
 A second open conflict: a missing numeric residual threshold is still
 `GUARD_OPEN_POLICY` in the live OQ-009 treatment, while this factory
@@ -1131,6 +1154,8 @@ person decides. The guard text is not rewritten here.
 - whether each Sheet Code is the Inventory Unit business identity or an
   additional attribute on an Inventory Unit (TERM-007 already allows Sheet
   as a kind of Inventory Unit; schema is not decided)
+- whether the original triggering Customer Order Code remains associated
+  with later warehouse Sheets beyond the recorded "Order Code when applicable"
 - the command/transaction that posts "one Coil leaves, many Sheets enter"
 - persistence/arithmetic scale beyond the measurement statement
 - canonical title string for Mr. Dinavand
@@ -1468,9 +1493,10 @@ or the genealogy source-fact list. No new command is added.
   Order Code is the practical order-level trace key. Tiny pieces do not
   each receive a physical-part code. That code does not replace Inventory
   Unit identity. Standalone warehouse stock need not carry an Order Code.
-- Coil → Sheet can be a warehouse transformation without a customer order
-  and without a Production Order. Those Sheets keep the Coil trace. That
-  conversion is not automatically customer-order production and is not
+- After a Coil has initially been opened/used for a Customer Order, its remainder
+  can become warehouse Sheets without a new Customer Order or a Production
+  Order for that remainder transformation. Those Sheets keep the Coil trace.
+  That conversion is not automatically customer-order production and is not
   automatically `CompleteProductionOperation`.
 - A measured weight difference must be shown. It is not automatically
   Residual, Scrap, or process loss.

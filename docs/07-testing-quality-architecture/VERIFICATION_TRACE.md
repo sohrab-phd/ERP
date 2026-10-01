@@ -3,10 +3,10 @@ id: QA-TRACE-001
 title: Verification Trace
 phase: 07-testing-quality-architecture
 status: approved
-version: 0.2.0
+version: 0.3.0
 owners: [qa-architect, requirements-owner]
 depends_on: [GOV-TRACE-001, SM-INV-001, SEC-VER-001, APR-008]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-009
 supersedes: null
 ---
@@ -33,14 +33,14 @@ FIND-028). Canonical objective rows stay in
 | INV-007 | L-PROPERTY | Mass-balance within tolerance | OQ-006 |
 | INV-008 | L-BUNDLE | Residual gets a new unit; parent closed/split | OQ-009 |
 | INV-009 | L-PROPERTY | Genealogy facts immutable; traces both ways | OQ-004 |
-| INV-010 | L-COMMAND | QC pending blocks available/ship | OQ-005 |
+| INV-010 (**future only**) | L-COMMAND | If future Quality is enabled, QC pending blocks available/ship; no current-MVP gate | OQ-005 future residual |
 | INV-011 | L-SEQUENCE | Shipment belongs to authorized demand | OQ-006, OQ-019 |
 | INV-012 | L-BUNDLE | Payment allocation cannot exceed open balance | OQ-012 |
 | INV-013 | L-COMMAND | Unfulfilled demand is not overdue; remainder-close uses that fact | none for OQ-007 close rule |
 | INV-014 | L-COMMAND | Posted snapshots do not rewrite | OQ-016 days |
 | INV-015 | L-SECURITY | Backend auth, SoD, customer isolation | OQ-010, OQ-019 |
 | INV-016 | L-COMMAND, L-PROPERTY | Same key does not double-post | none |
-| INV-017 | L-COMMAND | QC/Shipping command; ACT-IPS writes | none |
+| INV-017 | L-COMMAND | Shipping commands; future QC may command; ACT-IPS writes | OQ-005 future only for QC |
 | INV-018 | L-COMMAND | Procurement orchestrates; Inventory posts | none |
 | INV-019 | L-PROPERTY | Genealogy is rebuild-only; no EditGenealogy | none |
 | INV-020 | L-SECURITY | PortalPlaceOrder rejected in MVP | OQ-010 |
@@ -57,7 +57,7 @@ an OQ remains. Named scenarios (where one exists) are in
 | --- | --- | --- |
 | SV-001 | `QA-SCN-UI-LEDGER` | none as a rule |
 | SV-002 | `QA-SCN-REJECT-ACTOR` | none |
-| SV-003 | `QA-SCN-QC-COMMAND` | none as a write-owner rule |
+| SV-003 | `QA-SCN-QC-COMMAND` (QC portion future only) | OQ-005 future scope; none as a write-owner rule |
 | SV-004 | `QA-SCN-IDEMPOTENT` | none |
 | SV-005 | `QA-SCN-ISOLATION` | OQ-010 portal read |
 | SV-006 | `QA-SCN-REJECT-PORTAL` | OQ-010 |
@@ -118,7 +118,7 @@ rows stay in
 | REQ-OBJ-001 | QA-SCN-STOCK / PURCHASE / MAKE / NOT-FEASIBLE; INV-013, INV-014, INV-018, INV-020 |
 | REQ-OBJ-002 | INV-001–004, INV-016–017; QA-P-NONNEG; QA-SCN-CONFLICT; QA-SCN-BUNDLE |
 | REQ-OBJ-003 | INV-006–009, INV-019; QA-P-GEN-*; QA-SCN-MAKE; QA-SCN-REJECT-GENEALOGY |
-| REQ-OBJ-004 | INV-005, INV-010–016; QA-SCN-REVERSE; QA-SCN-QC-HOLD; QA-SCN-SOD* |
+| REQ-OBJ-004 | INV-005, INV-011–016; QA-SCN-REVERSE; QA-SCN-SOD*; INV-010 / QA-SCN-QC-HOLD future only |
 | REQ-OBJ-005 | QG-ARCH only; ADR-0001; runner/CI stay OQ-018 |
 
 ## Must not do here

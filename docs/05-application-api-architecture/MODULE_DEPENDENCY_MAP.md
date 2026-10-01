@@ -3,10 +3,10 @@ id: APP-MOD-001
 title: Application Module Dependency Map
 phase: 05-application-api-architecture
 status: approved
-version: 0.2.0
+version: 0.3.0
 owners: [solution-architect]
 depends_on: [DOM-OWN-001, APR-006, APR-007]
-last_reviewed: 2026-09-18
+last_reviewed: 2026-10-01
 approval: APR-007
 supersedes: null
 ---
@@ -20,15 +20,20 @@ layout stay OQ-018 residual.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
+Quality interactions below are future/deferred architecture only (OQ-005).
+The current MVP has no Quality module dependency, QC execution, or Quality
+role. Procurement and Production command Inventory posting without a QC
+prerequisite; Shipping does not require Quality release.
+
 ## Modules
 
 | Module | Writes | May command | Must not depend on |
 | --- | --- | --- | --- |
 | Sales | Inquiry, Quotation, Order, Assessment, Unfulfilled Demand | Inventory (reservation), Procurement, Production | Ledger/Balance tables |
-| Procurement | Supplier, PO, GR orchestration | Inventory posting, Quality inbound | Ledger/Balance |
+| Procurement | Supplier, PO, GR orchestration | Inventory posting; Quality inbound **future only** | Ledger/Balance |
 | Inventory Posting | Ledger, Balance, Unit qty, Reservation rows | none for policy | Sales/Production internals |
-| Production | Order, Operation, Allocation, consumption/output/residual/scrap facts | Inventory posting, Quality | Ledger/Balance tables |
-| Quality | Inspection | Inventory hold/release | Ledger/Balance |
+| Production | Order, Operation, Allocation, consumption/output/residual/scrap facts | Inventory posting; Quality **future only** | Ledger/Balance tables |
+| Quality (**future only**) | Inspection | Inventory hold/release if later enabled | Ledger/Balance |
 | Shipping | Package, Shipment | Inventory pack/exit | Ledger/Balance |
 | Finance-Lite | Invoice, Payment | none for stock | legal GL, Sales Invoice write |
 | Identity / Audit | later Phase 06 | none for stock | stock tables |
@@ -42,10 +47,10 @@ flowchart TB
   S --> P[Procurement]
   S --> PR[Production]
   P --> IP
-  P --> Q[Quality]
+  P -->|future only| Q[Quality future / outside MVP]
   PR --> IP
-  PR --> Q
-  Q --> IP
+  PR -->|future only| Q
+  Q -->|future only| IP
   SH[Shipping] --> IP
   SH --> F[Finance-Lite]
   R[Reporting] --> PR

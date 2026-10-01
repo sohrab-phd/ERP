@@ -205,12 +205,19 @@ corpus. They did **not** unlock implementation.
 - `ACT-IPS` (`mod-inventory-posting`) is the sole stock writer. No direct
   Balance edits. No negative inventory.
   [MODULE_OWNERSHIP_MATRIX.md](docs/02-domain-business-architecture/MODULE_OWNERSHIP_MATRIX.md).
+- Current-MVP architecture rule (INV-003): valid normal stock-in creates
+  the resulting Inventory Unit as `AVAILABLE` in the posting transaction;
+  normal use is eligible after commit under existing guards. This is an
+  architecture reconciliation after removing mandatory QC, not a factory
+  quote or a second quantity truth. Coil → Sheet and Opening Stock posting
+  boundaries remain separately unresolved.
 - `CompleteProductionOperation` is the exclusive production posting boundary
   ([OQ-003](docs/00-governance/team-answers/OQ-003.md),
   [TRANSITION_TABLES.md](docs/03-state-machines-invariants/TRANSITION_TABLES.md)).
 - Consumption, good output/WIP, reusable residual **or** scrap, residual
-  identity, scrap quantity, genealogy source facts, Ledger posts, validations,
-  and optional QC request belong in **one** business transaction (DATA-TX-001).
+  identity, scrap quantity, genealogy source facts, Ledger posts, and validations
+  belong in **one** business transaction (DATA-TX-001). A QC request is
+  future-only and is not a current-MVP completion dependency.
 - Nested primitives (`ConsumeUnitPartial` / `ConsumeUnitComplete`,
   `CreateResidualUnit`, `PostScrapMovement`, `ScrapUnit` as destiny) are **not**
   independent production posting flows.
@@ -309,7 +316,7 @@ Canonical recording:
 | --- | --- | --- |
 | **FACT-01** | kg is the only official stock quantity for incoming material and customer orders. Length, thickness, width, and material/type are secondary, not stock quantities. Weight measurement: 0 decimal places, 1 kg, rounding not needed. Weight↔count conversion is not required. Weight↔length may be needed; formula undefined. A measured-vs-expected weight difference must be shown; no automatic measurement tolerance is defined. That is not OQ-006. | kg↔length formula and factors; technical storage scale; scope of the 0-decimal rule; any automatic weight-difference threshold. [OQ-001](docs/00-governance/team-answers/OQ-001.md) stays `treating`. [OQ-006](docs/00-governance/team-answers/OQ-006.md) stays `answered` and unchanged. |
 | **FACT-02** | Cut pieces and order scrap carry the customer **order code**; unique ID per tiny piece is not feasible | Exact order-code identity (DB id vs human-visible number vs shop code). Inventory Unit is **retained**. [OQ-004](docs/00-governance/team-answers/OQ-004.md). Glossary distinctions: [BUSINESS_GLOSSARY.md](docs/00-governance/registers/BUSINESS_GLOSSARY.md). |
-| **FACT-03** | Warehouse conversion of an opened Coil into Sheets. Factory: inventory transformation in the workshop; may occur with **no** customer order and **no** Production Order; separate from customer-order production; one Coil leaves and many Sheets enter; Coil Code retained; Sheet Code = Coil Code + Sheet number; Order Code only when applicable; measured kg is stock quantity; 6 m/12 m are examples; cutting loss is Residual or Scrap by human decision; standalone incoming Sheets are not Coil-derived. Mr. Dinavand decides organizationally (title wording varies). | Posting command **not** accepted. Conflicts with nesting production residual/scrap inside `CompleteProductionOperation`. Not added to DATA-TX-001. [PROCESS_MAPS_AS_IS_TO_BE.md](docs/02-domain-business-architecture/PROCESS_MAPS_AS_IS_TO_BE.md). [OQ-009](docs/00-governance/team-answers/OQ-009.md) stays `treating`. |
+| **FACT-03 / C-07** | Initial Coil opening/use requires a Customer Order. An already opened Coil remainder may later become warehouse Sheets with **no new** Customer Order and **no Production Order for that remainder transformation**. This is an inventory transformation in the workshop, not permission to open intact Coils speculatively. One Coil leaves and many Sheets enter; Coil Code is retained; Sheet Code = Coil Code + Sheet number; Order Code applies when relevant; measured kg is stock quantity; 6 m/12 m are examples; cutting loss is Residual or Scrap by human decision; standalone incoming Sheets are not Coil-derived. Mr. Dinavand decides organizationally (title wording varies). | Posting command **not** accepted. Conflicts with nesting production residual/scrap inside `CompleteProductionOperation`. Not added to DATA-TX-001. [PROCESS_MAPS_AS_IS_TO_BE.md](docs/02-domain-business-architecture/PROCESS_MAPS_AS_IS_TO_BE.md). [OQ-009](docs/00-governance/team-answers/OQ-009.md) stays `treating`. |
 | **FACT-04** | **Eleven-person organizational roster** (see [section 9](#9-factory-personnel-fact-04)) | Not RBAC. Not `ACT-*`. Not SoD. Not delegates. Operators still missing. [OQ-019](docs/00-governance/team-answers/OQ-019.md) stays `treating`. |
 | **FACT-05** | 2026-09-23 preferred a station account. Clarification 2026-09-30 **supersedes** that: no shared Station account; personal operator accounts; Station is not a user; a person may work at several Stations. Ten current physical Stations are listed on OQ-003. Route is per order and may skip Stations. No separate factory Work Center. | Not RBAC. Not a fixed route. Architecture "work center" wording is not deleted; alias is open. [SESSION_AND_IDENTITY.md](docs/06-security-rbac-audit/SESSION_AND_IDENTITY.md). |
 | **FACT-06** | Entry = the order reaches the defined user role or Station. Referral = assignment to the next user role or Station. System clock timestamps both. Referral time usually matches next arrival; that is not an invariant. Operators declare completion; the manager refers. | Not `StartProductionOperation` and not `CompleteProductionOperation`. No invented timestamp columns. [STATE_MACHINE_CATALOGUE.md](docs/03-state-machines-invariants/STATE_MACHINE_CATALOGUE.md). |
@@ -431,8 +438,10 @@ Commands that need a missing number, name, plan, or device must reject with
 
 - `CompleteProductionOperation` is the atomic posting boundary for
   consume/output/residual/scrap of **that** operation.
-- FACT-03 warehouse Coil→Sheet is factory-described as an inventory
-  transformation that may have no Production Order. It is **not** accepted
+- FACT-03 / C-07 requires a Customer Order for initial Coil opening/use. Later
+  conversion of that opened remainder to warehouse Sheets needs no new
+  Customer Order or Production Order for the remainder transformation.
+  It is factory-described as an inventory transformation and is **not** accepted
   as `CompleteProductionOperation` or as a new command. The conflict is open.
 - [OQ-003](docs/00-governance/team-answers/OQ-003.md),
   [SIDE_EFFECT_MATRIX.md](docs/03-state-machines-invariants/SIDE_EFFECT_MATRIX.md).
@@ -474,10 +483,10 @@ After restore: `BalanceRebuild` (Ledger → Balance); `GenealogyRebuild`
   Future architecture still says required QC can block availability and
   shipment, and exceptional release needs two distinct people
   ([OQ-005](docs/00-governance/team-answers/OQ-005.md)). That future
-  capability is not current factory operation. Quality would command
-  Inventory and would not write Ledger.
+  capability is not current factory operation or a current-MVP gate.
+  Quality would command Inventory and would not write Ledger.
   [AUTHORIZATION_SOD.md](docs/03-state-machines-invariants/AUTHORIZATION_SOD.md)
-  was not rewritten.
+  retains the future SoD labels.
   Station accounts are **not** assumed sufficient for that two-person release.
 - Weighbridge is a commander only
   ([OQ-011](docs/00-governance/team-answers/OQ-011.md),
@@ -502,7 +511,7 @@ After restore: `BalanceRebuild` (Ledger → Balance); `GenealogyRebuild`
 | Shipment dispatch | Shipping command + IPS stock exit | Shipping does not write Ledger |
 | Sales Order | Sales | Must not write Invoice/Ledger qty |
 | Invoice / payment | Finance-Lite | Does not close SO |
-| QC | Quality commands IPS | [ROLE_PERMISSION_MATRIX.md](docs/06-security-rbac-audit/ROLE_PERMISSION_MATRIX.md) |
+| QC (future only) | Quality would command IPS if later enabled; no current-MVP Quality actor | [ROLE_PERMISSION_MATRIX.md](docs/06-security-rbac-audit/ROLE_PERMISSION_MATRIX.md) |
 | Weighbridge | `ADP-WEIGHBRIDGE` commander | Never a Ledger writer |
 | Rebuilds | `BalanceRebuild` / `GenealogyRebuild` | Reconstruction |
 | Opening stock | `OpeningStockImport` | Blocked until [OQ-015](docs/00-governance/team-answers/OQ-015.md) / OQ-019 |

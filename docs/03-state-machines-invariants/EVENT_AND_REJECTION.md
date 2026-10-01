@@ -3,10 +3,10 @@ id: SM-EVT-001
 title: Event and Rejection Catalogue
 phase: 03-state-machines-invariants
 status: approved
-version: 0.3.0
+version: 0.4.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-TRANS-001, SM-INV-001, APR-004, APR-005]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: APR-005
 supersedes: null
 ---
@@ -20,6 +20,10 @@ select a broker or package (OQ-018 packages remain residual; Modular
 Monolith and PostgreSQL are accepted).
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+Current MVP has no QC execution or Quality actor (OQ-005). References
+below to QC guards or `ACT-QC` apply only to a separately approved future
+Quality scope.
 
 ## Rejection
 
@@ -36,7 +40,7 @@ Common reason families (proposed):
 | Family | When |
 | --- | --- |
 | `GUARD_OPEN_POLICY` | The guard is an unanswered OQ or recorded `workshop-commercial-practice`, and the command needs that value |
-| `GUARD_INVARIANT` | A closed INV-* failed (negative stock, QC gate, one location, independent production consume/leftover post) |
+| `GUARD_INVARIANT` | A closed INV-* failed (negative stock, one location, independent production consume/leftover post); a QC gate applies only in a future Quality scope |
 | `GUARD_ACTOR` | Actor is not the allowed role, or is a temporary identity |
 | `GUARD_STATE` | Command is illegal in the current state |
 | `GUARD_IDEMPOTENT_DUP` | The same command was already accepted (INV-016) |
@@ -96,8 +100,9 @@ Events that must never be independently editable source truth:
 
 - Human Actor must be an `ACT-*` role, not a Temporary \* (temporary) name.
 - `ACT-IPS` may execute stock writes and never owns business policy.
-- `ACT-QC` and `ACT-SHIP` may command Inventory and must not write stock
-  tables (INV-017).
+- `ACT-SHIP` may command Inventory and must not write stock tables.
+  `ACT-QC` is a future-only actor and has no current-MVP user or delegate
+  (INV-017).
 - Backend authorization is required (INV-015). UI-only checks are not enough.
 
 ## Correction path

@@ -3,10 +3,10 @@ id: APP-CMD-001
 title: Application Command Catalogue
 phase: 05-application-api-architecture
 status: approved
-version: 0.2.8
+version: 0.4.0
 owners: [solution-architect, api-architect]
 depends_on: [SM-TRANS-001, SM-EVT-001, APR-006, APR-007]
-last_reviewed: 2026-09-30
+last_reviewed: 2026-10-01
 approval: APR-007
 supersedes: null
 ---
@@ -23,6 +23,15 @@ Every command requires a caller-supplied idempotency key and a backend
 `OQ-002`. Portal order commands are rejected in MVP (INV-020).
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+Quality commands listed below are future/deferred architecture under
+OQ-005. They are not current-MVP commands or dependencies. No current
+Goods Receipt, production completion, availability, or shipment command
+requires a Quality approver or inspection.
+For current-MVP normal stock-in, `CreateUnitFromPosting` sets the
+resulting Inventory Unit to `AVAILABLE` within the valid `ACT-IPS`
+posting transaction (INV-003); no separate `ReleaseUnit` call is needed.
+This is architecture reconciliation, not a factory-named procedure.
 
 ## Shared contract
 
@@ -117,7 +126,7 @@ ReserveUnit, IssueUnit, IssueUnitFromAllocation, ConsumeUnitPartial
 (nested IPS primitive), ConsumeUnitComplete (nested IPS primitive),
 PackUnit, ShipUnit, ScrapUnit (unit destiny; not a scrap-qty post),
 ReturnUnit, CloseUnit, CreateResidualUnit (nested residual identity),
-PlaceResidualUnit (placement/QC; no second residual qty),
+PlaceResidualUnit (follow-on placement where applicable; future QC only; no second residual qty),
 PostScrapMovement (authoritative scrap **quantity** Ledger post).
 
 Quantity consume/complete stays `open: OQ-001`, `OQ-002`. Production
@@ -157,7 +166,7 @@ Canonical contract:
 | Command | Status | Purpose | May post Ledger? | Independently callable? | Relation to `CompleteProductionOperation` |
 | --- | --- | --- | --- | --- | --- |
 | `CompleteProductionOperation` | Business command | Exclusive production posting boundary | Via nested `ACT-IPS` only | Yes, as the architecture posting command. Not the operator's station-completion declaration. | — |
-| `CreateResidualUnit` | Nested IPS command | Residual **identity**, parent close/split, residual on-hand once (OQ-009, INV-008) | Yes, once, for the child unit | No for leftover of this operation | Nested inside the bundle when leftover is reusable |
+| `CreateResidualUnit` | Nested IPS command | Residual **identity**, parent close/split, residual on-hand once (OQ-009, INV-008); valid normal child Unit `AVAILABLE` on commit (INV-003) | Yes, once, for the child unit | No for leftover of this operation | Nested inside the bundle when leftover is reusable |
 | `RecordResidualFact` | Nested Production fact | Residual domain fact, not stock tables | No | No for that leftover | Nested |
 | `PostScrapMovement` | Authoritative scrap qty command (OQ-009) | Scrap **quantity** Ledger | Yes, once per scrap fact | Not for leftover already in the bundle. Yes for a **new** Quality/abort scrap with a new key | Nested for production leftover |
 | `ScrapUnit` | Unit state transition | Destiny `SCRAPPED`; paired scrap fact required | No second qty; Ledger qty is `PostScrapMovement` | Only with paired scrap fact; never a second qty | Nested when parent destiny is `SCRAPPED` |
@@ -165,12 +174,12 @@ Canonical contract:
 | `ConsumeUnitPartial` | Nested IPS primitive | Parent unit partial consume state | Yes, as the consume side of this bundle | **No** (INV-006) | Nested only |
 | `ConsumeUnitComplete` | Nested IPS primitive | Parent unit fully consumed | Yes, as the consume side of this bundle | **No** (INV-006) | Nested only |
 | `ConvertResidualToScrap` | Nested classification | Leftover fails reuse policy → scrap path | No; scrap qty is `PostScrapMovement` | No for that leftover | Nested branch |
-| `PlaceResidualUnit` | Follow-on placement | Child unit location / QC hold | No residual qty | Yes, after the child exists | After the bundle; not a posting |
+| `PlaceResidualUnit` | Follow-on placement where applicable; future QC branch | Child unit location; future-only QC hold | No residual qty | Yes, after the child exists; not needed for current-MVP availability | After the bundle; not a posting |
 | `CompleteOperationPartial` | Order lifecycle | Production Order `PARTIALLY_COMPLETED` | No | Yes, after at least one operation completed via the bundle | Must not post stock |
 
 ## Quality, Shipping, Finance-Lite
 
-Quality: PlanInspection, StartInspection, CompleteInspection,
+Quality (**future only, outside current MVP**): PlanInspection, StartInspection, CompleteInspection,
 AcceptInspection, ConditionallyRelease, QuarantineFromInspection,
 RejectInspection, HoldInboundForQc. Commands Inventory; no stock write
 (INV-017). Limits/people `open: OQ-005`.

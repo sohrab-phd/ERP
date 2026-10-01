@@ -3,7 +3,7 @@ id: DATA-POST-001
 title: Inventory Posting Kernel and Alternatives
 phase: 04-database-architecture
 status: approved
-version: 0.1.6
+version: 0.3.0
 owners: [data-architect, inventory-domain-owner]
 depends_on: [SM-INV-001, SM-CONC-001, APR-005]
 last_reviewed: 2026-10-01
@@ -28,10 +28,10 @@ syntax, ORM, or package is frozen here (OQ-018 residual).
 - On-hand, reserved, and available cannot go negative; active
   reservations cannot exceed free stock under concurrency; at most one
   `ACTIVE` reservation per Inventory Unit (INV-002)
-- Availability = on-hand − reservations − quality hold (INV-003)
+- Availability = on-hand − reservations; a Quality hold applies only in a later approved QC scope (INV-003, OQ-005)
 - One unit, one active location, no incompatible destinies (INV-004)
 - Correction = new reversing evidence, not delete (INV-005)
-- Quality/Shipping command; ACT-IPS writes stock (INV-017)
+- Shipping commands Inventory lifecycle changes; future Quality may do so only if separately authorized. ACT-IPS writes stock (INV-017).
 - Procurement orchestrates receipt; Inventory posts quantity (INV-018)
 - Retry must not duplicate a posted fact (INV-016)
 
@@ -40,6 +40,18 @@ Type at one warehouse station. That evidence does not add a writer.
 `PostGoodsReceipt` remains the receiving quantity command. Count is not
 a second Ledger quantity. A weighbridge or warehouse screen must not
 write the Ledger directly. No generic inventory-update command is added.
+The current MVP does not require QC acceptance for this receipt or
+Quality release before posted stock may be available. As the current-MVP
+architecture consequence of INV-003, a valid normal stock-in creates or
+increases stock whose resulting Inventory Unit is `AVAILABLE` within the
+posting transaction; normal use is eligible after commit. This includes
+`PostGoodsReceipt` and
+valid good/reusable output and residual stock-in within
+`CompleteProductionOperation`. Scrap does not become normal available
+stock. Existing posting and downstream guards still apply. This rule does
+not define the Coil → Sheet posting command or OQ-015 opening-stock
+mechanism; valid stock-in through either later accepted boundary has the
+same no-QC-release availability consequence.
 An operator's Station completion declaration is also not a posting.
 Production quantity remains inside `CompleteProductionOperation`.
 The factory has not named `ConsumeUnitPartial` or `ConsumeUnitComplete`.
@@ -69,6 +81,8 @@ import or migration mechanism is added here.
 
 A Balance row is never independently editable source truth. If Ledger and
 Balance disagree, Ledger wins and Balance is rebuilt.
+`AVAILABLE` is Inventory Unit lifecycle eligibility, not a second
+quantity truth or a substitute for Ledger-derived on-hand and reserved kg.
 
 ## Production leftover posting (FIND-G-001 / FIND-G-002)
 
@@ -105,7 +119,7 @@ later work. Repeating “Ledger + Balance” does not freeze syntax.
   or not at all
 - INV-016 holds: same idempotency key does not create a second posted
   fact
-- Quality and Shipping cannot write Ledger or Balance
+- Shipping and any future Quality capability cannot write Ledger or Balance
 - A rejected command writes no Ledger row
 
 That proof is a separately authorized evidence spike, not this draft.

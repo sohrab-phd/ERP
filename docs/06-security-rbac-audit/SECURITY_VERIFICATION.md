@@ -3,10 +3,10 @@ id: SEC-VER-001
 title: Security Verification Catalogue
 phase: 06-security-rbac-audit
 status: approved
-version: 0.2.0
+version: 0.3.0
 owners: [security-architect, qa-architect]
 depends_on: [SEC-THREAT-001, SEC-RBAC-001, SEC-ISO-001, SEC-ID-001, SEC-AUD-001, APR-007, APR-008]
-last_reviewed: 2026-09-06
+last_reviewed: 2026-10-01
 approval: APR-008
 supersedes: null
 ---
@@ -25,7 +25,7 @@ package (OQ-018).
 | --- | --- | --- |
 | `SV-001` | A caller who only claims `ACT-SALES` in the UI cannot write Ledger | INV-015, INV-017, THR-001 |
 | `SV-002` | Temporary identity is rejected as `GUARD_ACTOR` | SEC-002, THR-002 |
-| `SV-003` | `ACT-QC` / `ACT-SHIP` command hold or dispatch; stock row writer is `ACT-IPS` | INV-017, THR-003 |
+| `SV-003` | Current Shipping or future-only `ACT-QC` commands; stock row writer is `ACT-IPS`. No current-MVP QC hold. | INV-017, THR-003, OQ-005 |
 | `SV-004` | Same idempotency key does not post twice | INV-016, THR-004 |
 | `SV-005` | Customer A query cannot return customer B payload | INV-015, THR-005 |
 | `SV-006` | `PortalPlaceOrder` is rejected in MVP | INV-020, THR-006 |
@@ -42,7 +42,7 @@ package (OQ-018).
 | Intent | Why it stays open |
 | --- | --- |
 | Named SoD person present | OQ-019 |
-| QC conditional-release named person | OQ-005 |
+| Future QC conditional-release named person; not current-MVP input | OQ-005 future residual |
 | Portal authenticated customer read | OQ-010 |
 | Site-scoped isolation | OQ-013 |
 | Weighbridge device key | OQ-011 |

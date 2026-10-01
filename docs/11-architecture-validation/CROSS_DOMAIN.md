@@ -3,10 +3,10 @@ id: VAL-XDOM-001
 title: Cross-Domain Contradiction and Dependency Analysis
 phase: 11-architecture-validation
 status: approved
-version: 0.3.0
+version: 0.5.0
 owners: [chief-solution-architect]
 depends_on: [VAL-INT-001, APR-012, APR-013, ASM-024]
-last_reviewed: 2026-09-18
+last_reviewed: 2026-10-01
 approval: APR-013
 supersedes: null
 ---
@@ -17,6 +17,15 @@ Where approved phases must stay aligned. Tensions that are registered
 open questions are gaps, not silent contradictions.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+Current factory evidence on OQ-005 supersedes any Phase 11 proposal
+that made Quality inspection or release mandatory for the current MVP.
+`BC-QUALITY`, `ACT-QC`, and INV-010 remain future/deferred only. Current
+production completion, Goods Receipt, inventory availability, and
+shipment cannot depend on a Quality actor. INV-003 now resolves the
+current-MVP normal stock-in state: the resulting Inventory Unit is
+`AVAILABLE` on valid posting commit, subject to existing guards. This
+is architecture reconciliation, not a factory-stated release procedure.
 
 ## Dependencies that must remain true
 

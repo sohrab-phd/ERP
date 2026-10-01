@@ -3,10 +3,10 @@ id: GOV-SLICE-HOMES-001
 title: Slice Homes for Approved Commands Adapters and Scenes
 phase: 00-governance
 status: in_review
-version: 0.1.0
+version: 0.3.0
 owners: [chief-solution-architect]
 depends_on: [PLAN-SLICE-001, PLAN-WI-001, APP-CMD-001, APP-QRY-001, INT-CAT-001, QA-SCN-001, APR-014, CHK-0013, ASM-025]
-last_reviewed: 2026-09-16
+last_reviewed: 2026-10-01
 approval: null
 supersedes: null
 ---
@@ -27,6 +27,11 @@ INT-CAT-001, APP-BG-001, and QA-SCN-001.
 No new `SLICE-*` is created. Inquiry, quotation, and fulfillment
 assessment sit on `SLICE-STOCK` as the Sales commercial prefix. They
 are not extra SEQ-STOCK steps and they must not write Ledger.
+
+OQ-005 excludes QC execution from the current MVP. Quality commands,
+queries, and scenarios named below are deferred homes only, not required
+contents or guards of any current slice. No Quality role or module is
+implemented by these homes.
 
 ## Standing rules
 
@@ -73,7 +78,8 @@ Inventory posting kernel commanded by others: PostGoodsReceipt (as
 executor of `WI-BUNDLE-GR`), ReverseGoodsReceipt (executor of reverse),
 RequestReservation (commanded), ActivateReservation (executor of
 `WI-BUNDLE-RESERVE`), ConsumeReservation, ReleaseReservation,
-ExpireReservation, CreateUnitFromPosting, ReleaseUnit, QuarantineUnit,
+ExpireReservation, CreateUnitFromPosting, ReleaseUnit and QuarantineUnit
+(future Quality only),
 ReserveUnit, IssueUnit, IssueUnitFromAllocation, ConsumeUnitPartial
 (nested in complete-op; independent production consume forbidden),
 ConsumeUnitComplete (nested; independent forbidden), PackUnit, ShipUnit,
@@ -130,13 +136,14 @@ DraftPurchaseOrder, SubmitPurchaseOrder, ApprovePurchaseOrder
 (`GUARD_OPEN_POLICY` until OQ-019), SendPurchaseOrder,
 RecordPartialReceipt, RecordFullReceipt, ClosePurchaseOrder,
 HoldPurchaseOrder, CancelPurchaseOrder, DraftGoodsReceipt,
-ReceiveGoods. `PostGoodsReceipt` as `WI-BUNDLE-GR`. Inbound QC
+ReceiveGoods. `PostGoodsReceipt` as `WI-BUNDLE-GR`. **Future Quality only:** inbound QC
 commanders: PlanInspection, StartInspection, CompleteInspection,
 AcceptInspection, ConditionallyRelease, QuarantineFromInspection,
 RejectInspection, HoldInboundForQc (Quality commands; IPS posts).
 
-Procurement must not post quantity (INV-018). Open: OQ-011, OQ-005,
-OQ-019.
+Procurement must not post quantity (INV-018). Current slice open:
+OQ-011, OQ-019. OQ-005 is future Quality detail only, not a current
+purchase guard.
 
 ### `SLICE-MAKE`
 
@@ -152,10 +159,12 @@ CloseProductionOrder, PauseProductionOrder, ResumeProductionOrder,
 HoldProductionOrder, CancelProductionOrder, AbortProductionOrder
 (routing names still OQ-003), RecordResidualFact (nested),
 ConvertResidualToScrap (nested),
-RecordScrapFact (nested leftover **or** later Quality/abort scrap),
+RecordScrapFact (nested leftover **or** later abort scrap; Quality scrap
+is future-only),
 `CreateResidualUnit` nested as `WI-BUNDLE-RESIDUAL`.
-In-process QC commanders use the same Quality commands as purchase;
-they still do not write stock.
+**Future Quality only:** in-process QC commanders would use the same
+deferred Quality commands as purchase; they do not write stock and are
+not current `SLICE-MAKE` contents.
 
 Open: OQ-003, OQ-009, OQ-006. Production must not write Ledger.
 
@@ -205,7 +214,7 @@ kernel. Transport and cache package stay OQ-018.
 | GetPurchaseOrder / GetGoodsReceipt | Procurement | `SLICE-PURCHASE` |
 | GetInventoryUnit / GetLot / GetLedger / GetBalance | Inventory | `SLICE-IPS` |
 | GetProductionOrder / GetOperation / GetAllocation | Production | `SLICE-MAKE` |
-| GetInspection | Quality | `SLICE-PURCHASE` or `SLICE-MAKE` |
+| GetInspection (**future only**) | Quality (deferred) | Deferred home with `SLICE-PURCHASE` or `SLICE-MAKE`; not a current-slice query |
 | GetPackage / GetShipment | Shipping | `SLICE-STOCK` |
 | GetInvoice / GetPayment | Finance-Lite | `SLICE-STOCK` |
 | TraceForward / TraceBackward | Genealogy projection | `SLICE-RESTORE` if stale; else owning walk |
@@ -251,13 +260,13 @@ kernel. Transport and cache package stay OQ-018.
 | `QA-SCN-IDEMPOTENT` | `SLICE-ENVELOPE` plus every bundle |
 | `QA-SCN-SOD` / `QA-SCN-SOD-GR` | `SLICE-REVERSE` |
 | `QA-SCN-ISOLATION` / `QA-SCN-EVENT-ISO` | Every outbound path |
-| `QA-SCN-QC-HOLD` | `SLICE-PURCHASE` / `SLICE-MAKE` blocking ship |
+| `QA-SCN-QC-HOLD` (**future only**) | Deferred with `SLICE-PURCHASE` / `SLICE-MAKE`; no current-MVP shipment gate or required scenario |
 | `QA-SCN-SHIP-NO-DEMAND` | `SLICE-STOCK`; person OQ-019 |
 | `QA-SCN-UNFULFILLED` | `SLICE-STOCK` |
 | `QA-SCN-PAUSE-RESUME` | `SLICE-MAKE` |
 | `QA-SCN-REJECT-GENEALOGY` / `QA-SCN-REJECT-ADJUST` | No passing home |
 | `QA-SCN-UI-LEDGER` | `SLICE-IPS` keep-rule |
-| `QA-SCN-QC-COMMAND` | Quality/Shipping command; IPS posts |
+| `QA-SCN-QC-COMMAND` (**Quality portion future only**) | Deferred Quality command; current Shipping command remains separate. IPS posts stock. No current QC scenario required. |
 | `QA-SCN-WORKER` | `WI-WORKER` on the original slice |
 | `QA-SCN-AUDIT` | `SLICE-ENVELOPE` |
 
@@ -269,7 +278,7 @@ kernel. Transport and cache package stay OQ-018.
 | OQ-002 | Answered: Coil qty is measured kg |
 | OQ-003 residual | Named routing steps; abort role on `SLICE-MAKE` |
 | OQ-004 | Answered: hybrid grain; catalogue is configuration |
-| OQ-005 residual | Quality Plans/limits/names on `SLICE-PURCHASE` / `SLICE-MAKE` |
+| OQ-005 future residual | Quality Plans/limits/names only if a future Quality scope is authorized; no current-MVP guard on `SLICE-PURCHASE` / `SLICE-MAKE` |
 | OQ-006 | Answered: default tolerance 0; family % is configuration |
 | OQ-007 | Answered: close SO on fulfilled, cancelled, or authorized unfulfilled remainder; not payment |
 | OQ-008 | Answered: one Coil one reservation; no confirmed-SO timer |

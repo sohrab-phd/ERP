@@ -3,10 +3,10 @@ id: SM-CONC-001
 title: Concurrency and Interlock Catalogue
 phase: 03-state-machines-invariants
 status: approved
-version: 0.1.0
+version: 0.2.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-INV-001, SM-TRANS-001, SM-EVT-001, APR-004, APR-005, ASM-016]
-last_reviewed: 2026-09-17
+last_reviewed: 2026-10-01
 approval: APR-005
 supersedes: null
 ---
@@ -151,6 +151,9 @@ Procurement never posts quantity (INV-018).
   Sales Order. `CloseInvoice` must not close the Sales Order.
 
 ## Quality
+
+Future/deferred architecture only (OQ-005); no current-MVP QC hold or
+Quality release participates in these interlocks.
 
 - A unit required to stay in QC cannot become `AVAILABLE` or shippable
   (INV-010).

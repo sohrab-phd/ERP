@@ -54,7 +54,7 @@ dictionary concepts, not a new schema.
 | Consumption | Input consumed by production | ENT-MATERIAL-CONSUMPTION; ENT-PRODUCTION-OPERATION; consumed ENT-INVENTORY-UNIT | Production |
 | Output | Production output / WIP | ENT-PRODUCTION-OUTPUT; ENT-PRODUCTION-OPERATION; resulting ENT-INVENTORY-UNIT and/or ENT-PRODUCT-BATCH | Production |
 | Residual | Child residual lineage | ENT-RESIDUAL fact; parent and child ENT-INVENTORY-UNIT | Production fact; Inventory child identity |
-| Scrap | Disposition lineage | ENT-SCRAP fact; Inventory scrap movement via `ACT-IPS` | Production fact (including Quality/abort-**commanded** scrap); Inventory movement. Quality does not write stock tables (INV-017). |
+| Scrap | Disposition lineage | ENT-SCRAP fact; Inventory scrap movement via `ACT-IPS` | Production fact (including abort-commanded scrap); Inventory movement. Quality-commanded scrap is future-only architecture; Quality does not write stock tables (INV-017). |
 | Package | Product/package relationship | ENT-PACKAGE contents refs | Shipping |
 | Shipment | Package/customer shipment relationship | ENT-SHIPMENT; ENT-PACKAGE; customer/order on the shipment | Shipping |
 | Rework | Rework lineage | New Production facts plus reversals of prior posted facts (`StartReworkOperation`); ENT-PRODUCTION-OPERATION | Production. No separate ENT-REWORK is minted here. |
