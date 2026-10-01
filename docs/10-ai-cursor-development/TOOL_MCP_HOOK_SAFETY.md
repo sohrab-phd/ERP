@@ -3,11 +3,11 @@ id: AI-TOOL-001
 title: Tool MCP Hook and Safety Labels
 phase: 10-ai-cursor-development
 status: approved
-version: 0.4.0
+version: 0.5.0
 owners: [chief-solution-architect]
 depends_on: [AI-RULE-001, AI-AUTH-001, APR-011, APR-012]
-last_reviewed: 2026-09-07
-approval: APR-012
+last_reviewed: 2026-10-02
+approval: APR-016
 supersedes: null
 ---
 
@@ -19,15 +19,30 @@ or checkpoint file.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
+Codex is the active AI development agent. The existing `.cursor/` path remains
+the canonical physical location for the architecture gate, human checkpoint
+marker, and human implementation unlock. No second authorization state exists.
+The `.cursor/hooks.json` registration and PowerShell hook use Cursor events;
+they do not establish technical interception of Codex tool calls. Codex must
+perform the explicit policy self-check in AGENT_AUTHORITY.md before a protected
+action. Implementation authorization remains blocked until equivalent Codex
+write/shell enforcement is installed, trusted, and verified or separately
+accepted through governance. Repository instructions alone are not technical
+interception. [OpenAI Docs on Codex hooks](https://learn.chatgpt.com/docs/hooks)
+describe project hooks, trust requirements, and tool-path limitations; this
+repository has no Codex project hook binding. OpenAI Docs also describe
+`AGENTS.md` as a project instruction surface; this repository has no such
+file, and the current architecture write allowlist does not include one.
+
 ## Present controls
 
 | Control | Safety rule |
 | --- | --- |
 | `.cursor/architecture-gate.json` | Protected policy; architecture-only; implementation locked |
-| Architecture write-gate | Allows docs Markdown and approved Cursor rules/skills; denies application trees, manifests, Docker, CI, and protected unlock/marker files |
+| Architecture write-gate | Cursor hook for covered Cursor tool calls; allows docs Markdown and approved Cursor rules/skills and denies protected or implementation paths. Codex coverage is not verified. |
 | Human checkpoint marker generator | Human-only; empty index; binds the complete changed-file set; expires |
 | Implementation unlock file | **Must be human-created**; currently absent |
-| Architecture-first + question-pack rules | Always applied; current-phase work only; do not invent `OQ-*` answers |
+| Architecture-first + question-pack rules | Always applied in Cursor; their automatic application in Codex is not established. The underlying phase and OQ rules remain binding project policy. |
 
 IDE session tools used for architecture work (browser snapshot, app
 control) are not `MCP-EXTRA` products and may not create application

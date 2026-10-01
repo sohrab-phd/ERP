@@ -536,9 +536,14 @@ $cursorCommitObject.allowedGitCommands = @(
 )
 $cursorCommitCheckpoint = $cursorCommitObject | ConvertTo-Json -Compress -Depth 5
 Set-TestCheckpoint $cursorCommitCheckpoint $checkpointManifest
-Invoke-GateCase "protected checkpoint permits exact Cursor commit trailer" @'
+Invoke-GateCase "future checkpoint denies Cursor identity in marker" @'
 {"hook_event_name":"beforeShellExecution","command":"git commit --trailer \"Co-authored-by: Cursor <cursoragent@cursor.com>\" -m \"docs: approve phase 00 governance foundation\""}
-'@ "allow"
+'@ "deny"
+
+Set-TestCheckpoint $validCheckpoint $checkpointManifest
+Invoke-GateCase "valid plain checkpoint denies Cursor trailer" @'
+{"hook_event_name":"beforeShellExecution","command":"git commit --trailer \"Co-authored-by: Cursor <cursoragent@cursor.com>\" -m \"docs: approve phase 00 governance foundation\""}
+'@ "deny"
 
 Invoke-GateCase "protected checkpoint denies arbitrary commit trailer" @'
 {"hook_event_name":"beforeShellExecution","command":"git commit --trailer \"Reviewed-by: Someone <other@example.com>\" -m \"docs: approve phase 00 governance foundation\""}

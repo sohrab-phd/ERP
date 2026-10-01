@@ -3,11 +3,11 @@ id: PLAN-READY-001
 title: Implementation Readiness Checklist
 phase: 12-implementation-planning
 status: approved
-version: 0.5.0
+version: 0.6.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [APR-013, APR-014, CHK-0012, CHK-0013, ASM-025, CONF-UNLOCK]
-last_reviewed: 2026-10-01
-approval: APR-014
+last_reviewed: 2026-10-02
+approval: APR-016
 supersedes: null
 ---
 
@@ -53,6 +53,7 @@ the unlock and not a `TEST-*` catalogue.
 | Backup product and retention days | OQ-016 residual. RPO 60 min / RTO 8 h / daily / offsite are recorded. |
 | PostgreSQL functions ADR + spike; ORM/package choices | OQ-017 residual (functions); OQ-018 residual (packages). Posting style and PostgreSQL are recorded. |
 | Human `.cursor/IMPLEMENTATION_UNLOCK.json` with exact paths | Project Owner after this gate |
+| Codex write/shell governance coverage | Current `.cursor/hooks.json` is a Cursor integration. No Codex project hook is installed, trusted, and verified; policy self-check is not technical interception. Resolve or explicitly accept this limitation through governance before implementation authorization. |
 | `BR-IMPL` | Exists only after a valid unlock |
 
 Phase 12 approval does **not** tick the unlock or `BR-IMPL` rows.

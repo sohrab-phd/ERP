@@ -1,8 +1,12 @@
 param(
-    [string]$ApprovedBy = "Project Owner (explicit approval in Cursor session)",
-    [string]$CommitMessage = "docs: approve phase 01 project assimilation",
-    [string]$Phase = "01-project-assimilation",
-    [string]$ApprovalManifest = "docs/00-governance/approved-baselines/APR-003-project-assimilation.md"
+    [Parameter(Mandatory = $true)]
+    [string]$ApprovedBy,
+    [Parameter(Mandatory = $true)]
+    [string]$CommitMessage,
+    [Parameter(Mandatory = $true)]
+    [string]$Phase,
+    [Parameter(Mandatory = $true)]
+    [string]$ApprovalManifest
 )
 
 $ErrorActionPreference = "Stop"
@@ -96,7 +100,7 @@ $marker = [ordered]@{
     approvedArtifacts = @($approvedArtifacts)
     allowedGitCommands = @(
         "git add -A",
-        "git commit --trailer `"Co-authored-by: Cursor <cursoragent@cursor.com>`" -m `"$CommitMessage`""
+        "git commit -m `"$CommitMessage`""
     )
 }
 

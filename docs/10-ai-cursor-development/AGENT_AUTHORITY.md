@@ -3,11 +3,11 @@ id: AI-AUTH-001
 title: Agent Authority and Escalation
 phase: 10-ai-cursor-development
 status: approved
-version: 0.4.0
+version: 0.5.0
 owners: [chief-solution-architect]
 depends_on: [REPO-BR-001, REPO-CONF-001, APP-ORCH-001, APR-011, APR-012]
-last_reviewed: 2026-09-18
-approval: APR-012
+last_reviewed: 2026-10-02
+approval: APR-016
 supersedes: null
 ---
 
@@ -19,12 +19,23 @@ authorize implementation.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
+Codex is the current AI development agent. The `.cursor/` control paths remain
+canonical legacy physical paths; their names do not make Cursor the active
+agent. The rules below apply to Codex without granting new permissions.
+Cursor's hook registration does not demonstrate interception of Codex tools.
+Until a Codex binding is installed, trusted, and verified, Codex must check the
+current phase, gate, exact write-path scope, and any required human marker
+before each protected action and stop on a mismatch. This is policy compliance,
+not verified technical interception. Codex must never use a Cursor identity or
+co-author trailer. Future checkpoints use the configured Git author plus
+APR/CHK and marker evidence.
+
 ## Authority kinds (labels)
 
 | Kind | Agent may | Agent must not |
 | --- | --- | --- |
 | `AG-ARCH` | Draft architecture Markdown and register rows in the current authorized phase | Approve a gate; close an `OQ-*`; invent an accepted ADR; treat chat as a decision |
-| `AG-CHK` | After a valid human marker, run only the marked `git add` / `git commit` | Invent or edit `.cursor/PHASE_CHECKPOINT_APPROVAL.json`; amend a frozen `CHK-*`; `git push`; `git restore`; `git reset` |
+| `AG-CHK` | After a valid human marker, run only the marked `git add` / `git commit` | Invent or edit `.cursor/PHASE_CHECKPOINT_APPROVAL.json`; use a false agent identity; amend a frozen `CHK-*`; `git push`; `git restore`; `git reset` |
 | `AG-IMPL` | Later, only under a valid implementation unlock and the exact named paths | Create `package.json`, app folders, or any path outside the unlock |
 | `AG-UNLOCK` | Never | Invent or edit `.cursor/IMPLEMENTATION_UNLOCK.json` |
 

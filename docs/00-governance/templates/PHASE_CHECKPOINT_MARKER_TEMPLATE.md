@@ -3,11 +3,11 @@ id: TEMPLATE-CHECKPOINT-MARKER
 title: Phase Checkpoint Marker Template
 phase: 00-governance
 status: approved
-version: 0.3.0
+version: 0.4.0
 owners: [project-sponsor]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-04
-approval: APR-002
+last_reviewed: 2026-10-02
+approval: APR-016
 supersedes: null
 ---
 
@@ -62,6 +62,9 @@ Requirements:
 - Expiration is later than approval and no more than two hours afterward.
 - Commands are exact; separators, pipes, redirects, and arbitrary Git commands
   are rejected.
+- For future Codex actions, the human-approved command uses the configured Git
+  author and no Cursor co-author trailer. APR/CHK and the protected marker carry
+  the governance audit evidence. No Codex email or agent identity is inferred.
 - Both authorization markers are ignored by Git and must never enter a checkpoint.
 - The human removes the marker after the checkpoint and updates the manifest with
   the resulting commit in a separately approved follow-up checkpoint record.

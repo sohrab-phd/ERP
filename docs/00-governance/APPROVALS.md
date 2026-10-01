@@ -3,11 +3,11 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: approved
-version: 0.11.0
+version: 0.12.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-09-07
-approval: APR-011
+last_reviewed: 2026-10-02
+approval: APR-016
 supersedes: null
 ---
 
@@ -111,9 +111,10 @@ For a new phase baseline approval, complete the checkpoint sequence:
 3. record accepted residual risks and non-blocking questions;
 4. update `CURRENT_PHASE.md`;
 5. have a human create the Git-ignored checkpoint marker containing the manifest
-   digest, complete changed-file set, and exact commands; the agent submits plain
-   `git commit -m ...`, Cursor transforms it to its exact fixed co-author-trailer
-   form before hook evaluation, and the marker stores that transformed form;
+   digest, complete changed-file set, and exact commands; the agent submits only
+   the exact Git command in that marker. Future Codex checkpoints use the normal
+   configured Git author and the APR/CHK, marker, and commit as audit evidence.
+   Codex must not add a Cursor co-author trailer or invent an agent identity;
 6. create a new Git checkpoint without rewriting prior checkpoints;
 7. record the resulting commit through a separately approved follow-up checkpoint.
 
@@ -565,3 +566,39 @@ approval authority. These recording edits enter a later checkpoint.
 Approving Phase 12 accepts ASM-025. It is not an implementation unlock.
 Temporary identities still have no approval authority. These recording
 edits enter a later checkpoint.
+
+### APR-015 — Reconciled Governance Baseline
+
+- Phase: `12-implementation-planning`
+- Status: `approved`; checkpoint completed
+- Approval manifest:
+  [APR-015-governance-reconciliation.md](approved-baselines/APR-015-governance-reconciliation.md)
+- Checkpoint record:
+  [CHK-0014-apr-015.md](approved-baselines/CHK-0014-apr-015.md)
+- Approver: Project Owner (recorded in APR-015)
+- Approval scope: Reconciled governance content at parent
+  `ecbe67b00bfe077a44e54e20961ed1f941bfed70`; no implementation
+- Git checkpoint: completed successfully; 1 file changed
+- Git commit: `bb2fb692481ec4d8154cbca8cd694c033883eb05`
+- Git commit subject: `governance: establish APR-015 reconciliation checkpoint`
+- Audit note: the historical Cursor co-author trailer is inaccurate for the
+  Codex-performed action; CHK-0014 records the discrepancy forward
+- Next phase: none
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+### APR-016 — Codex Tooling Governance Migration
+
+- Phase: `12-implementation-planning`
+- Status: `approved`; checkpoint pending
+- Approval manifest:
+  [APR-016-codex-tooling-migration.md](approved-baselines/APR-016-codex-tooling-migration.md)
+- Approver: Project Owner (explicit tooling-migration approval in the current
+  Codex request)
+- Approval scope: Forward checkpoint recording and minimum Codex governance
+  migration; Codex technical interception remains unverified
+- Git checkpoint: pending human marker and commit
+- Git commit: pending
+- Next phase: none
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`

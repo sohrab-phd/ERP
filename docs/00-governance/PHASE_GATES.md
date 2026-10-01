@@ -3,11 +3,11 @@ id: GOV-GATES-001
 title: Phase Gate Policy
 phase: 00-governance
 status: approved
-version: 0.3.1
+version: 0.4.0
 owners: [chief-solution-architect, project-sponsor]
 depends_on: [GOV-CHARTER-001, ASM-015]
-last_reviewed: 2026-09-06
-approval: APR-004
+last_reviewed: 2026-10-02
+approval: APR-016
 supersedes: null
 ---
 
@@ -35,7 +35,9 @@ Project Owner made the team question-pack handoff a standing rule (ASM-015).
 9. **Freeze** — record an approval manifest with exact artifact hashes; a human
    creates the short-lived, Git-ignored protected checkpoint marker binding that
    manifest and the complete changed-file set to SHA-256 digests; create only the
-   authorized local Git checkpoint.
+    authorized local Git checkpoint. The command must match the marker exactly;
+    future Codex commits use the configured Git author and governance records for
+    attribution, with no Cursor co-author trailer.
 10. **Advance** — authorize only the next phase.
 
 ## Gate results

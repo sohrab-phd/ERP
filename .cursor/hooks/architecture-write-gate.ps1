@@ -266,7 +266,7 @@ function Get-CheckpointAuthorization {
     foreach ($command in $allowedCommands) {
         $trimmed = "$command".Trim()
         $validAdd = $trimmed -in @('git add -A', 'git add --all')
-        $validCommit = $trimmed -match '^git commit(?: --trailer "Co-authored-by: Cursor <cursoragent@cursor\.com>")? -m "[A-Za-z0-9 .:_-]{1,120}"$'
+        $validCommit = $trimmed -match '^git commit -m "[A-Za-z0-9 .:_-]{1,120}"$'
         if (-not $validAdd -and -not $validCommit) {
             return [pscustomobject]@{ Authorized = $false; AllowedCommands = @() }
         }

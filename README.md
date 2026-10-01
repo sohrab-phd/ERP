@@ -7,8 +7,9 @@ operational monitoring.
 
 If you opened this repository expecting application source, you are in the
 right place at the wrong stage. **There is no implemented application yet.**
-What exists is a gated architecture, a set of canonical registers, and Cursor
-controls that **forbid** writing application code until a human unlock exists.
+What exists is a gated architecture, a set of canonical registers, and a
+protected policy that keeps implementation locked until a human unlock exists.
+The legacy Cursor hook does not establish technical interception for Codex.
 
 ```text
 IMPLEMENTATION_AUTHORIZED: false
@@ -30,7 +31,7 @@ Full document index:
 | --- | --- |
 | The architecture and governance baseline for the ERP/MES | A running NestJS / React / Prisma application |
 | Markdown design artefacts under `docs/` | A place to invent factory numbers, role mappings, or package choices |
-| Cursor lock files under `.cursor/` that keep implementation locked | An implementation unlock |
+| The canonical gate and legacy Cursor controls under `.cursor/` | An implementation unlock |
 | A Modular Monolith design on Node.js + TypeScript + PostgreSQL | A microservices, Kafka, Kubernetes, or Event Sourcing design |
 
 **Runtime technology that is accepted**
@@ -111,7 +112,7 @@ fully closed** from that evidence.
 | Factory meeting FACT-01–FACT-06 | Recorded as business evidence (`2026-09-23`) |
 | FACT-04 roster | **11 people**, including Mr. Dinavand — Workshop Manager |
 | Clarification assessment | No additional OQ fully closable from current factory evidence |
-| Next authorized step | Explicit **human** implementation authorization against a **current** approved baseline — **or** further factory answers onto matching `OQ-*` rows |
+| Next authorized step | Complete the separately authorized Codex governance migration and verify technical enforcement before any implementation authorization decision; factory answers still go onto matching `OQ-*` rows |
 
 **Ready for authorization is not authorized.** Gate 6 allows a human to decide
 whether to unlock. Phase 12 approval ([CHK-0013](docs/00-governance/approved-baselines/CHK-0013-phase-12.md)
@@ -394,7 +395,8 @@ Required unlock fields: `approvedBy`, `approvedAt`, `approvedBaseline`,
 Agent rule: `AG-UNLOCK` never
 ([AGENT_AUTHORITY.md](docs/10-ai-cursor-development/AGENT_AUTHORITY.md)).
 
-While locked, Cursor agents may write only:
+While locked, AI development agents may write only the paths in the protected
+policy. Its current allowlist is:
 
 - `README.md`, `.gitignore`, `docs/**/*.md`
 - `.cursor/rules/**/*.mdc`, `.cursor/skills/**/*.md`
@@ -403,7 +405,13 @@ Protected (never agent-created/edited while locked):
 `.cursor/architecture-gate.json`, `.cursor/hooks.json`, `.cursor/hooks/**`,
 `.cursor/IMPLEMENTATION_UNLOCK.json`, `.cursor/PHASE_CHECKPOINT_APPROVAL.json`.
 
-Cursor controls:
+The `.cursor/` directory is the legacy physical location of the one canonical
+gate and human markers. Codex is the current AI development agent. These Cursor
+hook and rule files are not verified technical interception for Codex; see
+[AGENT_AUTHORITY.md](docs/10-ai-cursor-development/AGENT_AUTHORITY.md) and
+[TOOL_MCP_HOOK_SAFETY.md](docs/10-ai-cursor-development/TOOL_MCP_HOOK_SAFETY.md).
+
+Current control files:
 
 - [.cursor/architecture-gate.json](.cursor/architecture-gate.json)
 - [.cursor/rules/00-architecture-first.mdc](.cursor/rules/00-architecture-first.mdc)
@@ -1109,7 +1117,7 @@ This folder plans future implementation slices. Planning is not authorization. `
 | [GATE_CHECKLIST.md](docs/12-implementation-planning/GATE_CHECKLIST.md) | Phase gate checklist |
 | [CHECKPOINT_APR-014.md](docs/12-implementation-planning/CHECKPOINT_APR-014.md) | Checkpoint procedure for this phase |
 
-### 14.14 Repository root and Cursor controls
+### 14.14 Repository root and legacy Cursor controls
 
 These files sit outside `docs/` and control, or explain, the repository itself.
 

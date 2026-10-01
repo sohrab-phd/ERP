@@ -3,15 +3,22 @@ id: PHASE-10
 title: AI and Cursor Development Architecture
 phase: 10-ai-cursor-development
 status: approved
-version: 0.5.0
+version: 0.5.1
 owners: [chief-solution-architect, development-lead]
 depends_on: [PHASE-09, APR-011, APR-012, REPO-P10-HANDOFF-001, ASM-023]
-last_reviewed: 2026-09-07
-approval: APR-012
+last_reviewed: 2026-10-02
+approval: APR-016
 supersedes: null
 ---
 
 # Phase 10 — AI/Cursor Development Architecture
+
+Codex is the current AI development agent. This directory retains its
+historical Phase 10 name and the legacy Cursor tooling paths. Its agent
+authority rules still apply as project policy; Cursor hooks and rules have
+not been verified as Codex technical interception. See
+[AGENT_AUTHORITY.md](AGENT_AUTHORITY.md) and
+[TOOL_MCP_HOOK_SAFETY.md](TOOL_MCP_HOOK_SAFETY.md).
 
 ## Gate
 
