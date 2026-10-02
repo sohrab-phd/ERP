@@ -3,11 +3,11 @@ id: GOV-BASELINES-001
 title: Approved Architecture Baselines
 phase: 00-governance
 status: approved
-version: 0.3.1
+version: 0.3.2
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001, GOV-APPROVALS-001]
 last_reviewed: 2026-10-02
-approval: APR-016
+approval: APR-017
 supersedes: null
 ---
 
@@ -29,7 +29,14 @@ supersedes: null
 - [CHK-0014 — APR-015 Governance Reconciliation Checkpoint](CHK-0014-apr-015.md)
   — records that commit and its Cursor-attribution discrepancy forward
 - [APR-016 — Codex Tooling Governance Migration](APR-016-codex-tooling-migration.md)
-  — approved for governance only; new checkpoint pending human marker
+  — approved for governance only; checkpoint completed at
+  `02163debe68f29800c6986015e81eea027547c60`
+- [CHK-0015 — APR-016 Codex Tooling Governance Checkpoint](CHK-0015-apr-016.md)
+  — records the completed checkpoint forward; APR-017 approves the
+  post-commit record, with its checkpoint pending a human marker
+- [APR-017 — APR-016 Checkpoint Recording Follow-up](APR-017-apr-016-checkpoint-recording.md)
+  — approves only the five-file forward record; follow-up checkpoint pending
+  human marker
 - [CHK-0013 — Phase 12 Implementation Planning Checkpoint](CHK-0013-phase-12.md)
   — completed at `a6b893095af7c9d14f342371fb6e4ef9c6d833df`; subject
   `docs: approve phase 12 implementation planning`; 30 files changed

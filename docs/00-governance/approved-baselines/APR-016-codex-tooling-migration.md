@@ -3,7 +3,7 @@ id: APR-016
 title: Codex Tooling Governance Migration Approval
 phase: 12-implementation-planning
 status: approved
-version: 0.1.0
+version: 0.1.1
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001, AI-AUTH-001, APR-015, CHK-0014]
 last_reviewed: 2026-10-02
@@ -21,8 +21,8 @@ supersedes: null
 - Scope authorized: Agent-authority documentation, truthful future Git attribution, legacy checkpoint-generator and validator alignment, and forward checkpoint evidence. No Codex technical interception is claimed without verification.
 - Authorized next phase: none; there is no Phase 13
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains `false`
-- Git checkpoint: pending
-- Git commit: pending
+- Git checkpoint: completed successfully; 16 files changed
+- Git commit: `02163debe68f29800c6986015e81eea027547c60`
 - Supersedes approval: none
 
 The timestamp records this approval during the migration work, not an exact
@@ -81,9 +81,10 @@ a self-referential digest.
 
 - Codex repository instructions and technical write/shell interception are not
   installed, trusted, and verified under the present gate allowlist.
-- The current human checkpoint marker is for the completed APR-015 commit and
-  cannot authorize this changed-file set. A new human marker is required before
-  staging or committing this migration.
+- The human marker authorized exactly the 16 approved files and the plain
+  Codex-migration commit. It was still present immediately after the
+  checkpoint; the Project Owner must retire or replace it. It cannot
+  authorize a follow-up commit.
 - Existing ERP OQs and domain workflow gaps remain as recorded in the live
   register. This tooling approval changes no business rule.
 - `.cursor/IMPLEMENTATION_UNLOCK.json` remains absent, and
@@ -97,3 +98,14 @@ added, the canonical gate or marker path changes, technical enforcement is
 claimed without verification, a future agent identity is fabricated, the
 changed-file set differs from the human marker, or an ERP/OQ/ADR decision is
 changed through this tooling record.
+
+## Post-checkpoint audit note
+
+The APR-016 checkpoint completed at
+`02163debe68f29800c6986015e81eea027547c60`, with parent
+`bb2fb692481ec4d8154cbca8cd694c033883eb05`. CHK-0015 records this
+result forward. The checkpoint used the configured Git author and has no
+Cursor co-author trailer. These factual recording edits were prepared after
+the checkpoint and approved as the narrow APR-017 follow-up. A new
+human-created marker is required before their checkpoint. They do not amend
+the frozen commit or grant implementation authority.

@@ -3,11 +3,11 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: approved
-version: 0.12.0
+version: 0.12.1
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-10-02
-approval: APR-016
+approval: APR-017
 supersedes: null
 ---
 
@@ -590,15 +590,40 @@ edits enter a later checkpoint.
 ### APR-016 — Codex Tooling Governance Migration
 
 - Phase: `12-implementation-planning`
-- Status: `approved`; checkpoint pending
+- Status: `approved`; checkpoint completed
 - Approval manifest:
   [APR-016-codex-tooling-migration.md](approved-baselines/APR-016-codex-tooling-migration.md)
+- Checkpoint record:
+  [CHK-0015-apr-016.md](approved-baselines/CHK-0015-apr-016.md)
 - Approver: Project Owner (explicit tooling-migration approval in the current
   Codex request)
 - Approval scope: Forward checkpoint recording and minimum Codex governance
   migration; Codex technical interception remains unverified
-- Git checkpoint: pending human marker and commit
-- Git commit: pending
+- Git checkpoint: completed successfully; 16 files changed
+- Git commit: `02163debe68f29800c6986015e81eea027547c60`
+- Git commit subject: `governance: checkpoint Codex tooling migration`
+- Checkpoint marker: APR-016 marker was present immediately after commit;
+  Project Owner must retire or replace it before the follow-up checkpoint
+- Next phase: none
+- Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
+  `false`
+
+APR-017 approves this narrow post-commit recording, which still requires a
+new human-created marker and local checkpoint. It does not authorize Codex
+project hooks, a root `AGENTS.md`, an accepted technology ADR, or ERP
+implementation.
+
+### APR-017 — APR-016 Checkpoint Recording Follow-up
+
+- Phase: `12-implementation-planning`
+- Status: `approved`; follow-up checkpoint pending human marker
+- Approval manifest:
+  [APR-017-apr-016-checkpoint-recording.md](approved-baselines/APR-017-apr-016-checkpoint-recording.md)
+- Approved scope: the five-file forward record of the completed APR-016
+  checkpoint only
+- Approver: Project Owner (current Codex request authorizing the separately
+  required forward CHK recording)
+- Git checkpoint: pending
 - Next phase: none
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
