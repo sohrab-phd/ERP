@@ -1,5 +1,16 @@
 # Repository instructions for Codex
 
+## Project Owner platform decision (2026-10-04)
+
+Future development and validation are Windows-only. Do not install, launch or
+use Ubuntu/WSL/Linux for this project or add Linux CI jobs. The Owner is removing
+Ubuntu. Prior Linux results are historical evidence, not a continuing requirement.
+Keep all mandatory PostgreSQL integration/concurrency/crash tests; run them against
+PostgreSQL18.6 on Windows with the existing isolated-role/database safeguards.
+Windows CI covers static/build/unit checks; database tests remain required locally
+until a Windows database CI environment is explicitly configured. This changes
+platform policy, not dependency pins, test semantics or implementation scope.
+
 ## Current Project Owner authorization (2026-10-04)
 
 The Owner accepted final readiness and explicitly stated "I AUTHORIZE ERP

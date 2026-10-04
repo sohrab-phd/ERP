@@ -78,10 +78,13 @@ npm run verify
 
 Tests use real PostgreSQL clients/processes with serial fixtures and explicit
 concurrency barriers. All seven compiled unit files and six integration files
-are mandatory; missing, zero-test or skipped proof fails the runners. CI runs
-Windows/Linux build/unit checks and real PG18.6 integration, pinned publisher
-actions, no publish/deploy or production secrets. Local evidence must not be
-described as a remote CI run without a real remote run.
+are mandatory; missing, zero-test or skipped proof fails the runners. The Owner
+has selected Windows-only validation. CI runs Windows static/build/unit checks
+with pinned publisher actions; Linux jobs were removed. PostgreSQL18.6 integration
+tests remain required locally on Windows. Automated Windows database CI is not
+yet configured; this does not permit skipping database acceptance before a
+code change is declared complete. No Ubuntu/WSL dependency is required. Local
+evidence must not be described as a remote CI run without a real remote run.
 
 No business posting is implemented by this foundation. Current acceptance
 evidence and independent review are recorded in the implementation report;

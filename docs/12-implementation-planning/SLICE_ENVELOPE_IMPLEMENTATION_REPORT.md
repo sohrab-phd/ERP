@@ -12,6 +12,14 @@ approval: null
 
 # SLICE-ENVELOPE implementation evidence
 
+Subsequent Owner platform decision (2026-10-04): future validation is Windows-only;
+Ubuntu/WSL/Linux testing is unnecessary and must not be resumed. Existing Linux
+results below remain historical. Linux CI jobs are retired; automated Windows
+static/unit checks remain, with mandatory PostgreSQL18.6 integration tests run
+locally on Windows until Windows database CI is configured. All exact pins and
+database acceptance semantics remain unchanged. The temporary Ubuntu test server
+was stopped before the Owner's uninstall; committed code resides on D:.
+
 SLICE-ENVELOPE IMPLEMENTATION: COMPLETE
 Acceptance / Definition of Done: PASS
 Architecture conformance: PASS

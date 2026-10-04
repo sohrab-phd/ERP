@@ -12,6 +12,12 @@ approval: null
 
 # SLICE-ENVELOPE physical design
 
+Owner platform amendment after completion (2026-10-04): future execution/validation
+is Windows-only. No Ubuntu/WSL/Linux dependency or Linux CI test is required.
+Retain the complete real PostgreSQL18.6 acceptance suite on Windows; CI currently
+covers Windows static/unit checks, with database automation awaiting a Windows
+test environment. Historical Linux validation does not create a future obligation.
+
 Current authority: APR-018 records the Owner's accepted baseline and explicit
 SLICE-ENVELOPE implementation authorization. The planned tree, technical
 contracts and acceptance intents below are binding for that grant. Statements
