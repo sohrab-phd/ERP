@@ -2,16 +2,20 @@
 id: SEC-AUD-001
 title: Audit and Evidence Taxonomy
 phase: 06-security-rbac-audit
-status: approved
-version: 0.2.0
+status: in_review
+version: 0.3.0
 owners: [security-architect, business-control-owner]
 depends_on: [SM-EVT-001, APP-ENV-001, DATA-TX-001, APR-007, APR-008]
-last_reviewed: 2026-09-06
-approval: APR-008
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Audit and Evidence Taxonomy
+
+APR-008 remains historical structure approval. This delegated ADR-0011 technical
+extension adds explicit conflict/admission attempt kinds and atomic storage;
+it is not human baseline approval.
 
 What must be retained as security and correction evidence. Retention
 day-counts stay OQ-016. This is not a SIEM or logging package
@@ -26,6 +30,8 @@ day-counts stay OQ-016. This is not a SIEM or logging package
 | `AUD-CMD-ACCEPTED` | Command accepted; includes command name, key, actor, fact identity, states | no — reversal is a new command |
 | `AUD-CMD-REJECTED` | Command rejected; includes family and `open_item` if `GUARD_OPEN_POLICY` | no |
 | `AUD-CMD-REPLAYED` | Same key returned the first result | no |
+| `AUD-CMD-CONFLICT` | Occupied scoped key mismatched bound intent/principal; safe attempt evidence, no second original outcome | no |
+| `AUD-CMD-ADMISSION-DENIED` | Malformed/unbounded/unknown/unbindable request refused before key admission; safely bounded attempt evidence | no |
 | `AUD-SOD` | Second human recorded on a sensitive command | no |
 | `AUD-REVERSAL` | Compensating command linked to the original fact (INV-005) | no |
 | `AUD-OPEN-POLICY` | Rejection because an OQ or `workshop-commercial-practice` was required | no |
@@ -61,7 +67,25 @@ and why a command was refused.
 | `linked_fact` | reversals |
 | `customer_scope` | customer-bearing items |
 
-How these fields are stored (table, file, log shipper) stays OQ-018.
+Generic decision/attempt storage is frozen below. Later log shipper/SIEM product
+choice remains OQ-018.
+For SLICE-ENVELOPE ADR-0011 selects append-only PostgreSQL `kernel.audit_event`
+in the owning transaction, with execution/attempt UUIDs, installation/authority
+scope, trusted issuer/subject, original actor role/customer scope when relevant,
+command and allowlisted safe metadata. Original accepted/rejected execution
+audit commits atomically with complete terminal outcome and owner facts. Outcome
+references the matching original audit; exactly one original decision per execution.
+Replay/conflict attempts are separate, never another original decision. Their audit
+commit precedes response; failed/uncertain audit is technical failure. Original
+outcome remains unchanged. No circular outcome↔audit insert dependency is needed.
+Security/admission events have no outcome and may lack identity/command/key when
+unverifiable. Never fabricate those fields or disclose foreign references.
+
+The quoted open storage label applies to later log shipping/SIEM products only;
+foundation decision-audit persistence is now frozen. No full material request,
+saved response, token, credential, SQL or connection string enters safe_details.
+Deduplication outcome/binding retention has no automatic TTL; audit retention
+days stay OQ-016 and cannot silently permit old command reexecution.
 How long they are kept (retention days) stays OQ-016 residual. RPO/RTO
 and offsite copy are recorded. ASM-012 (historical snapshots
 are kept) remains an assumption, not a day count.

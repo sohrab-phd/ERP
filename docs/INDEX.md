@@ -2,16 +2,35 @@
 id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
-status: approved
-version: 0.8.0
+status: in_review
+version: 0.9.0
 owners: [chief-solution-architect]
 depends_on: []
-last_reviewed: 2026-09-06
-approval: APR-006
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## Current engineering package (2026-10-04)
+
+These delegated technical artifacts refine historical structure approvals. They
+do not authorize ERP implementation or assert a human-approved baseline.
+
+- [Trusted-agent operating model](10-ai-cursor-development/TRUSTED_AGENT_OPERATING_MODEL.md)
+- [Live readiness](12-implementation-planning/IMPLEMENTATION_READINESS.md)
+- [ADR-0011: durable command outcomes](00-governance/adrs/ADR-0011-command-idempotency.md)
+- [ADR-0013: first-slice stack](00-governance/adrs/ADR-0013-slice-envelope-stack.md)
+- [Binding command contract](12-implementation-planning/COMMAND_IDEMPOTENCY_SPEC.md)
+- [Technical freeze and scripts](12-implementation-planning/TECHNICAL_FREEZE.md)
+- [Physical design and Definition of Done](12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md)
+- [Capability backlog](12-implementation-planning/IMPLEMENTATION_BACKLOG.md)
+- [Independent domain/testing review](12-implementation-planning/REVIEW_INDEPENDENT_DOMAIN_TESTING.md)
+- [Final readiness review](12-implementation-planning/REVIEW_FINAL_READINESS.md)
+
+Historical phase self-checks, handoffs and APR/CHK snapshots describe their dates;
+live registers and current reconciled contracts control later answers/decisions.
 
 ## Governance and canonical records
 

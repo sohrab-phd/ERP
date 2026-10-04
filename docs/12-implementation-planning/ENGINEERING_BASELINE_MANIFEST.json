@@ -1,0 +1,1462 @@
+{
+  "kind": "agent-engineering-working-tree-snapshot",
+  "createdAtUtc": "2026-10-04T17:06:47.4005048Z",
+  "reviewDate": "2026-10-04",
+  "repository": "D:\\projects\\NavardKaran\\Design-ERP",
+  "parentHead": "fc6b761a371f06491e4ea94df01af3fc380cb8a3",
+  "humanApproved": false,
+  "implementationAuthorized": false,
+  "approvedBaseline": null,
+  "finalUnlockPresent": false,
+  "purpose": "Reviewable checkpoint preparation only; not an APR, CHK, human authorization or committed baseline",
+  "hashConvention": "SHA-256 of exact file bytes; Git blob hash with --no-filters, no object writes",
+  "excludedSelf": "docs/12-implementation-planning/ENGINEERING_BASELINE_MANIFEST.json",
+  "fileCount": 289,
+  "files": [
+    {
+      "path": ".codex/hooks.json",
+      "sha256": "1974ab3dfe2f382fa4c0010df54da8e61bf52ef4b4f494aefae945fcab6d035f",
+      "gitBlob": "70bc9accb13418f5f071dc9164ae7270b55849a0"
+    },
+    {
+      "path": ".codex/hooks/architecture-write-gate.ps1",
+      "sha256": "412297dc63477cbd604e3e86876fe00bc5f6677a37d8ee1255f2227d03cf7c6a",
+      "gitBlob": "15ec508160f50d41900319e71edc05943f2f9787"
+    },
+    {
+      "path": ".codex/hooks/test-architecture-write-gate.ps1",
+      "sha256": "6440f46231caac992c6f0d640538bce0657b7b998593e86974be4ac02205a730",
+      "gitBlob": "1f355b58a6a4c9a3a0edf6c924098b0dfd879dbd"
+    },
+    {
+      "path": ".cursor/architecture-gate.json",
+      "sha256": "b41e7e9fc437b5ae13c4411a4ac9e7b8d921802d395b5dcade09d465d9f02ea3",
+      "gitBlob": "b1a67f73e8d1877aa2f9c7105e075153e2817c6a"
+    },
+    {
+      "path": ".cursor/hooks/architecture-write-gate.ps1",
+      "sha256": "28b11329fbf1781caa8457e2fd56f6e9e90a621ad35c8f02df4af213d62b46bc",
+      "gitBlob": "71d6a079ff765c218de58a6461bc7b578ec644ce"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "a214329d18971910e922e233c3bcc2fd77191fafa8326f08b70108acef81fcc3",
+      "gitBlob": "467243aeeebc140cf84487c383a69dc23c1b3181"
+    },
+    {
+      "path": "docs/00-governance/adrs/ADR-0011-command-idempotency.md",
+      "sha256": "6d4da2a44e61a0402a62ad86c8c983176c5bf26d748afe94260c78841284c628",
+      "gitBlob": "ea318f923a1656fbe17883449d9c8292c2491423"
+    },
+    {
+      "path": "docs/00-governance/adrs/ADR-0013-slice-envelope-stack.md",
+      "sha256": "567a84f44d5a59b5798dcfae3dcb571ee7f320b5de531df86fbd3382b6d4b8b8",
+      "gitBlob": "effc13fd843b6f23d5db543986adfca6b17e9fd6"
+    },
+    {
+      "path": "docs/00-governance/APPROVALS.md",
+      "sha256": "513fc7e5d8cad94db175add5fe9cb3b84eb0c15e58afc74c5eb6e4a25a1d1448",
+      "gitBlob": "4a90c30d2c38feb073b97324b14ad3d32b0a2369"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-000-governance.md",
+      "sha256": "a9e8a2dd1795c12b8f0200a294b551ca2ed53aff05be41b7c130eb4145f0a7a8",
+      "gitBlob": "ceb48d0e2518b7ba531366084446976e0ce00540"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-001-governance.md",
+      "sha256": "c18c16a21ff2268075f39fc0935d506f9abaaf71d29da7297b3db4285d3d978d",
+      "gitBlob": "d6eb36c38e848dcb7a4e6dbb9ab047201e85c102"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-002-governance.md",
+      "sha256": "42f81e7a1ef1410f1272deaff53457b6e0371e3135bd45823d5071ff61772759",
+      "gitBlob": "3d11897dc7b11bb7ae0f73aba3eba440595c509b"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-003-project-assimilation.md",
+      "sha256": "dc5ebb7985475bd730c86689033e7565cf67413627f1b48de5a1635b2d99e918",
+      "gitBlob": "19640b4bf8c2bee9eba2248f08fc34275c719c8d"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-004-domain-business-architecture.md",
+      "sha256": "585a140d22ff3a5851d8ddac01ef66d0b3d56a2f2b1e2415d9bce37014c7fac3",
+      "gitBlob": "6a1a20df35a031750fe0aefb3ad3c77e4f2ddbfc"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-005-state-machines-invariants.md",
+      "sha256": "6165e7097a5855983d586b4452577c84e2a7f7935dfcccedc9dfc39f4d44c958",
+      "gitBlob": "70e8fabcbe1877f541fecdb5a58b12f9dbe5c281"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-006-database-architecture.md",
+      "sha256": "49fb5135cd9015714f45ec16c51cb158aaabde72170bf155661fd9b8ce70f096",
+      "gitBlob": "e7fbe4e14e62c8ff4675730b2c61074a1472c1ca"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-007-application-api-architecture.md",
+      "sha256": "b1ed1e0f56897a9ee2cee43525e1d71ada485388a656f267589ce169d5529af0",
+      "gitBlob": "fc2a4c8cea9a528cae8872802845388155787be6"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-008-security-rbac-audit.md",
+      "sha256": "98c0fe392b4a0afe182800ec89bfe36b0f8f63ed59bd458c71f1c62462f93986",
+      "gitBlob": "728bf372e7ad9e99a41e7e0e2fdb438e2c171a00"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-009-testing-quality-architecture.md",
+      "sha256": "91c9f37ca09bc402860fd47a56cdba6adb450d87353cbcc648bb14d6726ce6f5",
+      "gitBlob": "493431cebd5bf27ac7a2b8009ac5e7fb6142c0cc"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-010-integration-deployment.md",
+      "sha256": "fbce0eb910be7343635fd050580987675d4539fb9dfae4250e1868b4ce18a3d2",
+      "gitBlob": "5709ae73d1d77c6094c02f67b083460b5b050b50"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-011-repository-documentation.md",
+      "sha256": "27dbc5d90f511796df2e82d2247cfc855b2c2f3df2bbe14b39be106c62dfd3e2",
+      "gitBlob": "efed7389c0a51e16866ceccaa1ef3b02a5e9d18e"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-012-ai-cursor-development.md",
+      "sha256": "3b544f3d65e7ed56d027302123c35d1f0a85b02a9abd336ea89242686cc50cf9",
+      "gitBlob": "e649fe135db05e0b490eafdd16470fb9f672d4c9"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-013-architecture-validation.md",
+      "sha256": "70204fda271021a5d2ac8607c36392c33dd8f0e195e87c85af9964bb1b2287e1",
+      "gitBlob": "a3e54d3a97da8184d72dabca65a22101532057b0"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-014-implementation-planning.md",
+      "sha256": "287ee1ced068dfef1b7b14bb1eb318c8a79d3bf93535fca4b5d0b4d63541acfb",
+      "gitBlob": "a391f39ff4648ad5f3ef1fa70de3749890bc405f"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-015-governance-reconciliation.md",
+      "sha256": "411b142f08383d84e61452d0a5b5c2b20e937c4a3b3bfe95c83b4f234aeb356f",
+      "gitBlob": "25861fd0c66a6c46ba6ba1befff5abaf3af4c061"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-016-codex-tooling-migration.md",
+      "sha256": "5169672abd44c43cba5008d0e80637c8536bb5326ab7eafa9652cb40eebfa4bf",
+      "gitBlob": "95f4dd044f8b35992996b9a4ad80395405f0cd14"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/APR-017-apr-016-checkpoint-recording.md",
+      "sha256": "bcbf0773d7ac5e8bb09e14c8170c0bd5b3c1f9f5c37a4ff5d3a5be5ba77a1c15",
+      "gitBlob": "30eeb890e7d532b28607dede564d65e39cb5366b"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0001-phase-00.md",
+      "sha256": "68d7d4ffeb40ed49a17f2bf1a9fd3f1a69fd9bec531d5e0cedadd85fc3e849ef",
+      "gitBlob": "ac63fe7fbb51a1cfbc2362ad279d697df017db16"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0002-phase-01.md",
+      "sha256": "24c883b42093ef3a6693014c80c06728d279306eb81e5bff2f0f4eb83f436cfd",
+      "gitBlob": "6de9d0dff5aa5c8c3884e609c1b42c024ca990dd"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0003-phase-02.md",
+      "sha256": "8caa34b644a4faab9e47edf4785e4c7ad7c8e8c3f32e7657eff9ca59393f668e",
+      "gitBlob": "fbcc61dba0c25eda0d5efa176bdb9fabe067ac9c"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0004-phase-04.md",
+      "sha256": "72ec00949d88562b97d42dbba3b54e3f3337658812bcb3a53d65af74a92b9efc",
+      "gitBlob": "846da3a88d2b4e83b52b59af0bba5b056924f776"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0005-phase-05.md",
+      "sha256": "170f3937f343f0a1673d3a2eeba84c1c9b5f7ca840816e082d06dc9c9113e4b2",
+      "gitBlob": "aa4e2f3abbf3cb162592e4b00e270c20565814c1"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0006-phase-03.md",
+      "sha256": "fcb588fe8bf9c5646e19b286c95e1750ccd0efaed3b9d7e7369f6311bfe030a5",
+      "gitBlob": "f95a314a27bd8fdd03a7d307cc97794e68a3898f"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0007-phase-06.md",
+      "sha256": "53ec86566942eb8f4248aea495d9c8814b8fd0e0fbe5410966258aae7023f604",
+      "gitBlob": "f2340df8d760c3428e196792e2532b6120180e6a"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0008-phase-07.md",
+      "sha256": "be4a41281f62296d38987cb13cc3a4cedf4876a3f46e39abd07b44bb21bea1ec",
+      "gitBlob": "bef47c138eb0d9fce6c205bf3c36b75c328dd95e"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0009-phase-08.md",
+      "sha256": "1371d766dcec3c25eb8b2cecaa9f0cf5083b875e213ace685abe788a84383476",
+      "gitBlob": "5e6682ff67639b0f72bada491a557e0b27b34ae1"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0010-phase-09.md",
+      "sha256": "e1b487df790f1eed10c21060513013b7cff0861317272aa35a3d6c2129ec2eb3",
+      "gitBlob": "65e8f1b559a17af61602a7aaadf5f35e0877a510"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0011-phase-10.md",
+      "sha256": "2269a93620cb501ea7aa12ace8ac16a310da578a371a9538e1cc968d13d0b34f",
+      "gitBlob": "42bc98ff41af96565481345a0c2821d790708b06"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0012-phase-11.md",
+      "sha256": "aa3e8e920a0249d23aaa169eb1faa9404cf8d62227e604787a819d27814ab842",
+      "gitBlob": "0806ba29e3ed27cce1c72eeeef7f84c81a80ec0c"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0013-phase-12.md",
+      "sha256": "10d4e6b0ae725a91c109942d534a98fad668728efdcde604ba71baa52570efcc",
+      "gitBlob": "a5a97b96a045a24bf4e0d43f94ec9a1443ead5f1"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0014-apr-015.md",
+      "sha256": "241751faf80d3219dd64f468a299eed48346ff2708e59e9ac0e64a82b9abc55f",
+      "gitBlob": "af52a9daaa4fe54977899ad7ebe205a3a28a2d26"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/CHK-0015-apr-016.md",
+      "sha256": "2d7af4c1d52b03e89ea336ceef145f083cbf8a763055a1a61a7e398eac8ba6d2",
+      "gitBlob": "5a47913027ed720b4bf0f05deeacaf74e8e1d530"
+    },
+    {
+      "path": "docs/00-governance/approved-baselines/README.md",
+      "sha256": "bf0f4f82b1dee7d47e6568fd02c14edf536b0886d30de165d00078099b513f1a",
+      "gitBlob": "b7dcdfe42212a9129aaaaa8a44fa4478ba67a052"
+    },
+    {
+      "path": "docs/00-governance/ARCHITECTURE_CHARTER.md",
+      "sha256": "6dafddd060267bf2eca5ed51d88040d990297f9c7380bce6d60a6692332b2336",
+      "gitBlob": "2c5c8b542c9abcb870a39cc1b0ae24d7477a4056"
+    },
+    {
+      "path": "docs/00-governance/CHECKPOINT_APR-000.md",
+      "sha256": "5341b8abbd05c0792fee5f756247a36ee37cd0ac5abaa6a1a957f95f9a94715f",
+      "gitBlob": "b4c1a020a8ca37f828b3007823bda1113df003b8"
+    },
+    {
+      "path": "docs/00-governance/CHECKPOINT_APR-001.md",
+      "sha256": "4555f3d74c4161608210bd1f65a1af0beba90e2d84b636d8ca88172b74f30a68",
+      "gitBlob": "95eca49b493ee1b6438bb24e7150dec0a7e3d698"
+    },
+    {
+      "path": "docs/00-governance/CHECKPOINT_APR-002.md",
+      "sha256": "ada72cba460ae2bdd80e554f134c1419b01044cfbfae4f4c7910e61f375aae5a",
+      "gitBlob": "93c3e9515fed1bceb5e5adc74a9072433b4e856f"
+    },
+    {
+      "path": "docs/00-governance/CURRENT_PHASE.md",
+      "sha256": "a8f3f6f089c8097f73fec797aa1db3607834a95d3fd8bc4da81433da88139e3b",
+      "gitBlob": "f5320588dc9598006783a74dd56d3a15456d4322"
+    },
+    {
+      "path": "docs/00-governance/DOCUMENTATION_STANDARD.md",
+      "sha256": "8b1d709a4bee0df1b30c352e45207a57b65d6be5b0a2b3a8fc0ee3ee04525a16",
+      "gitBlob": "5663d511c3ef16a958e628a2538a71f50447bd4c"
+    },
+    {
+      "path": "docs/00-governance/GATE_CHECKLIST.md",
+      "sha256": "e59932b7146d8a0fbacbee20f798310f51361b2d3dc7240e645da6262186c938",
+      "gitBlob": "b8c055c29a55bc3e86d44abded2a8b6503e94cff"
+    },
+    {
+      "path": "docs/00-governance/HOOK_VALIDATION.md",
+      "sha256": "6107f5e85b5dde6ee2b7ae3fe10eea47a3a8c9b45af53388464202bc4cb29d44",
+      "gitBlob": "3b09d3a83d0efcb2e1a430f9b8a643e2585dcf37"
+    },
+    {
+      "path": "docs/00-governance/INDEPENDENT_REVIEW.md",
+      "sha256": "958cf1238441acfbb2bf0bfd7c258553a6a00dde8b8d28ac95e55ebf5a602cb2",
+      "gitBlob": "f79d07925b0c64d9d92f428f2829cdb11a9059ed"
+    },
+    {
+      "path": "docs/00-governance/PHASE_GATES.md",
+      "sha256": "6cf588946ece64377e5c728a7ec6ed96765863123ba7097caa78e9a284e07119",
+      "gitBlob": "d7709f2a56f011fcf8fb05e7626f39c15a276710"
+    },
+    {
+      "path": "docs/00-governance/README.md",
+      "sha256": "37a2a15af1ef24ac5ee0a8a92a153688227bd7fd57670b253fe4ed7c17748088",
+      "gitBlob": "19d47e2bbb9685b04f7773a5be8007212786001a"
+    },
+    {
+      "path": "docs/00-governance/RECONCILIATION.md",
+      "sha256": "4b4dcd26d01c32818016ad7deaddc061c37e57f9da7ee8e4ddad4dc9ef4a9593",
+      "gitBlob": "a9e27b4f31ee91c6630375a70874afcb4f02e32f"
+    },
+    {
+      "path": "docs/00-governance/registers/ASSUMPTIONS.md",
+      "sha256": "f133a442fb4cb4ce986253a7c8acf25ff8b2d9ca33c25a9f2cdbc813d9535258",
+      "gitBlob": "7c83d1f93ccd8e19e1c4a783e9fd7f6014634874"
+    },
+    {
+      "path": "docs/00-governance/registers/BUSINESS_GLOSSARY.md",
+      "sha256": "627f2f248850707284a5aa46e675108f3bb9369acc66c9cd3d76cbc5ecdcaed9",
+      "gitBlob": "f79448bc814ba0e398583491950c500e956cc9a6"
+    },
+    {
+      "path": "docs/00-governance/registers/CANONICAL_DATA_DICTIONARY.md",
+      "sha256": "66ca017c4df1acf3f33ac26bb03fd7c150739a558c71991e16065845a9d62c15",
+      "gitBlob": "95eea7f78b4e8827c515489d3bc1edb51f12ca76"
+    },
+    {
+      "path": "docs/00-governance/registers/CANONICAL_DOMAIN_MODEL.md",
+      "sha256": "11c5bc8c9f1086417bb84a7ceebc67e8c6c42bc8afe72f847241d72215facd11",
+      "gitBlob": "f75f8f92a421f932359a6d9c875e58cf526b1d6d"
+    },
+    {
+      "path": "docs/00-governance/registers/DECISIONS.md",
+      "sha256": "cb29bcad0a838c20b3a588adaee3063292711c98c52753a359d778fa6e10c101",
+      "gitBlob": "ba75ea5c2ce7b70131c1afe2f3f8e65dda0d4ff6"
+    },
+    {
+      "path": "docs/00-governance/registers/INTEGRATION_CATALOGUE.md",
+      "sha256": "9db98be8c6c08b68b1fc9c44b16d7af19532b0812a4ebe6ed98814d13bb4a861",
+      "gitBlob": "784e97767fc0d82b810ccdc7453bb986ac1f2299"
+    },
+    {
+      "path": "docs/00-governance/registers/OPEN_QUESTIONS.md",
+      "sha256": "8aadab85bb29b7bc0395123e1ae32039c7f07d242c9625311d1ffac4dbb60494",
+      "gitBlob": "6a47a1c3a806ea277199e65e82099d7b9c3f5466"
+    },
+    {
+      "path": "docs/00-governance/registers/README.md",
+      "sha256": "49ad5993bcd2c6dde48e2678bd6e98cc6addf506668908cb9d6d97f65fec4822",
+      "gitBlob": "d33c62bf244b19461497e5342ee577638d78044f"
+    },
+    {
+      "path": "docs/00-governance/registers/REQUIREMENTS_TRACEABILITY.md",
+      "sha256": "59f9a311cb0536c3439183c6fb6a819701bdf107ca56e7f42c2645660021d1b1",
+      "gitBlob": "1685b6afc973283941fcd86e7b7a40b5154edd98"
+    },
+    {
+      "path": "docs/00-governance/registers/REVIEW_FINDINGS.md",
+      "sha256": "d86fc5c9639f860d566d3e91b4890e88379721c4595295a9c7809e3f34f52b1a",
+      "gitBlob": "e5e70e44477bc4ca00d0b79b2eef934b1d35e839"
+    },
+    {
+      "path": "docs/00-governance/registers/RISKS.md",
+      "sha256": "7a0020543812de20d6eac8206f17d7e9454f10b3d61795e9e52fe666ced41d71",
+      "gitBlob": "25de10d2bd17e2bd2f001cb82a30fc0ab05a9b3d"
+    },
+    {
+      "path": "docs/00-governance/registers/SLICE_HOMES.md",
+      "sha256": "c3db47408950db19a8c9a17a86909241b704df9bce1e69a8b09a8a5558ef2bf1",
+      "gitBlob": "2d7246ba25410a95348220d676c67b0928e54c8c"
+    },
+    {
+      "path": "docs/00-governance/registers/STAKEHOLDERS_RACI.md",
+      "sha256": "ba252b123fb9e0c486e5b971fe060918122a6c083e7f6b55460a2f2db417689a",
+      "gitBlob": "9dad56d69b1c5bcb749f86ba5052a1b8dd843b82"
+    },
+    {
+      "path": "docs/00-governance/registers/STATE_TRANSITION_CATALOGUE.md",
+      "sha256": "6ff7e4e30b514442df4dcd07c4b1c804bc0141490fb76d22ca682be2f26ef07b",
+      "gitBlob": "5589c8e90d214b485dc0ed1cc5f5a520b0478d04"
+    },
+    {
+      "path": "docs/00-governance/SELF_CHECK.md",
+      "sha256": "3b0b35f49a1903a8d4dc0d308e8ea9d97a0d38f544d5fbf6950038d72bf48791",
+      "gitBlob": "fcb9d17f39efac4f0321ab0104427961bb1ecbd8"
+    },
+    {
+      "path": "docs/00-governance/SOURCE_REGISTER.md",
+      "sha256": "8442b788186373b8714a7b29a12e3ce3e49d56ca9b3d42d4ce5de1b4ba99ee4a",
+      "gitBlob": "07dfd51633d4fbf6a7998a39e9e05d801c824b4d"
+    },
+    {
+      "path": "docs/00-governance/TEAM_ANSWER_SHEET.md",
+      "sha256": "140ffc2da0c7e52b3b14d7b5fb4c2997a579d6cac7ab612b3fe2a63ee0e49dff",
+      "gitBlob": "467faa0631f7b634884a04e82dee1d9c8589590e"
+    },
+    {
+      "path": "docs/00-governance/TEAM_QUESTION_PACK.md",
+      "sha256": "891498e1444308d7d7219554ab146a527b9bea5b3d0f4996488362c57facbad6",
+      "gitBlob": "0d0308aa5dbc9e1501dfc785f677662547c9e67c"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-001.md",
+      "sha256": "4853cc725b6fe9c1e36a6a618e6cfefad0e3b6e0468edd22defdeecc6ea6bb2f",
+      "gitBlob": "b44e34f99a7e7b5576d168ecb8ea8fd7a90e1207"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-002.md",
+      "sha256": "ccc581b15819e5cc49c09758b5755261c21ac90840b34f70746b1ea106f095f4",
+      "gitBlob": "1c26673ab86ce4d096c0c8fc8bb6855987647d81"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-003.md",
+      "sha256": "6fb45d787cca9fb996836050a01141cc4b4c6cf498bf1696deeea76ea8685192",
+      "gitBlob": "6e47e397d5ac9c28b50c85e35dfc34a96bf5c8f7"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-004.md",
+      "sha256": "b469710459645dfb78f9efb3c1cfd6e63c65be3c141a67e0793be60b680bcc87",
+      "gitBlob": "e164f9026d0e56cbbd9d20d513dfc2cb4f2f5d01"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-005.md",
+      "sha256": "0639b7c200b3f51016311a3ca2181c86b0f089301e6c6fbf543a1976cb094d26",
+      "gitBlob": "487a630a0fe5e3a3b1176d516469a9bcbf8800d0"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-006.md",
+      "sha256": "efbe1171f3db9f50efba5a0315eec5411e04a13fc859353fb57623d7574e4750",
+      "gitBlob": "421083d0f96a7176010112879ef11c3011129210"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-007.md",
+      "sha256": "705daa98e7fbe797192ccb89e892a29c2d3cae6f15a882bd15bfe9696cf212fc",
+      "gitBlob": "0d8c5bd5581930bc77a3caf36ba3c79db7090e6b"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-008.md",
+      "sha256": "be89db43ebac267d24dd00ef9eed68e182888932c9c323b89e798baada9d04f3",
+      "gitBlob": "b37a4c03000724c233d06340fa42510afe08fbd4"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-009.md",
+      "sha256": "b49a882d303d4683bddf2014aeac85022ca414aa055da96497d2f86782af1b31",
+      "gitBlob": "5db14473afa687d0d5823eb08d9dd5b760f7a8e2"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-010.md",
+      "sha256": "e3d5d24630c8c8effc2d99af645577f41622b2763cd483cc9711c98505ce6c69",
+      "gitBlob": "b1934921e2f9c031920369e6d66086fd97010cc6"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-011.md",
+      "sha256": "16606a51b64d41e833a14b9802b359c88c9b1766df393d438951d30f351d7d98",
+      "gitBlob": "a55a1ee7aa3bc51b57f110d8135def5502f0a36d"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-012.md",
+      "sha256": "137ab791d12f26d81f5fd05f489d630a6d7a55c83a3863f3e7bf2c37eebb8343",
+      "gitBlob": "0265948a8b4ef2315f4bb4260bc1bc664a8ca1c5"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-013.md",
+      "sha256": "55655e786927eb2abcfce24e75f39673253329579fc7af6aee9826b2d83459d0",
+      "gitBlob": "ca27d95250ec705bc5f8daec0ed470773d926191"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-014.md",
+      "sha256": "c99192f6aa34775851a4832e3888e820aa887091f5a8e342baf3500d0fa50978",
+      "gitBlob": "6fd441acba2e822ec14246ec7be96dea5b503f57"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-015.md",
+      "sha256": "7404ff2373ec989161dfefb61e1b93e8725e016f5ee20031e929af19a18e838c",
+      "gitBlob": "2beaeda656756ca10a06b83e3f60991414802f16"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-016.md",
+      "sha256": "347d3900c3439709b32dfc6a65a016f7f637c0315a05a9d58357dd0dddbea1d0",
+      "gitBlob": "a0f85e81709d0f188ec025c66cb13f449773b1ce"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-017.md",
+      "sha256": "2b6a337d3279621c88283171c373926307d781e83d6f0ce3d810f081d7467b46",
+      "gitBlob": "fc1ddc16748f50dcf3faa7704b0a177bbeef467b"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-018.md",
+      "sha256": "ba8c68fdad676ac0dca4e07a972867b7b7bd3b595f0c5e509de5b96dc3aba26c",
+      "gitBlob": "f0be4c26dfd877a81476fcd54b1803ddcd7b7dac"
+    },
+    {
+      "path": "docs/00-governance/team-answers/OQ-019.md",
+      "sha256": "d6e4d024dcc3012e145b9fdb8c8064ad73e62afa9077a43f4b926ea71de73eec",
+      "gitBlob": "861ec3078074b08fbe427f5053c77ae0bdfd06bf"
+    },
+    {
+      "path": "docs/00-governance/team-answers/README.md",
+      "sha256": "343522720c77c7fa7e56330ef295963b266ebf07bbda6dfedec58554ef54144a",
+      "gitBlob": "34996e2650a1d43bd92528bdb9832295bad9628e"
+    },
+    {
+      "path": "docs/00-governance/templates/ADR_TEMPLATE.md",
+      "sha256": "72acaa80341a8622366decda8f1c9cb98f20bdf1dda1bba4072ff5c52930ecdc",
+      "gitBlob": "4b1bde4cf04bc6edee36da414ff0c44a6ab8b0df"
+    },
+    {
+      "path": "docs/00-governance/templates/APPROVAL_TEMPLATE.md",
+      "sha256": "ee962caf4cd7fbacd3f3a69afa87551eb769e4c5ef1ba59d4cffeb7d2597aa08",
+      "gitBlob": "a2d48f78e50d00c6013c1ef54c473fa083f516b4"
+    },
+    {
+      "path": "docs/00-governance/templates/ARTIFACT_TEMPLATE.md",
+      "sha256": "f13cb888bbe3041d2dabe94367946e37a3d6cc63037aa01dbe6bdba0ac7301c1",
+      "gitBlob": "1985f410a25de0fd1efd8d260174c86e0cb2a61a"
+    },
+    {
+      "path": "docs/00-governance/templates/GATE_CHECKLIST_TEMPLATE.md",
+      "sha256": "29d8a0e397b1ea5f5981dceb0ac6d2b83db4323e9b5e950205e9e639dcc451ad",
+      "gitBlob": "ae876589bae4747e431413f67c3152e1baf3eeca"
+    },
+    {
+      "path": "docs/00-governance/templates/IMPLEMENTATION_UNLOCK_TEMPLATE.md",
+      "sha256": "38d3c9b3ce94876134fd94488d573581d2dced040b3fc66bea4b79f5e1eb17e8",
+      "gitBlob": "c1d4a1bc092d172e391b83dd347c80c61a7ba6d3"
+    },
+    {
+      "path": "docs/00-governance/templates/OPEN_QUESTION_TEMPLATE.md",
+      "sha256": "6d04b68680dc736aa4e5948fb9e59ed63910a115175a80a9110ad98d8d4b2744",
+      "gitBlob": "8e590c5358434bd625bcd0ca1eb8861ed660604c"
+    },
+    {
+      "path": "docs/00-governance/templates/PHASE_CHECKPOINT_MARKER_TEMPLATE.md",
+      "sha256": "f5254841a0e60ffa32e171c9d316c8305b3326c58d0253be45e33b7eeda2c17c",
+      "gitBlob": "c27a96e27897a5b8f7e17dbbb988aa2329a672b2"
+    },
+    {
+      "path": "docs/00-governance/templates/PHASE_TEMPLATE.md",
+      "sha256": "1eb99768ea5fe1bb008153b2b9f214a32b8966e1fb30f071df165dee7860eba6",
+      "gitBlob": "eeea594ab13d3719d878969b559f92359a3757f7"
+    },
+    {
+      "path": "docs/00-governance/templates/README.md",
+      "sha256": "c9cffdc5ac87f7992de39ebf9687485af3fcea58a980cda5888ece8c444475c5",
+      "gitBlob": "5c5ac605df4bb61fd9ff0b3385905625d3f74f6f"
+    },
+    {
+      "path": "docs/00-governance/templates/RECONCILIATION_TEMPLATE.md",
+      "sha256": "0ee585c680e55686d73fc40e046e980bfd9d67e4b99b5f6e467f5244436ac4e9",
+      "gitBlob": "e272829365c9e46a016346e8e0fe410b49741b52"
+    },
+    {
+      "path": "docs/00-governance/templates/REVIEW_TEMPLATE.md",
+      "sha256": "422bf8f8be70dd5b2e0c4c5bf5050ed90e99ec84b1e9ebab37e0cbcb5e2697f7",
+      "gitBlob": "cd6f11174abe3378eee329a1381855397bc0f10d"
+    },
+    {
+      "path": "docs/00-governance/templates/RISK_TEMPLATE.md",
+      "sha256": "f28feeeec8f943f6cfb7d066dd016850cf3db1b73ffd1c4573ca3511d518b275",
+      "gitBlob": "279e5afc974f0bf8564d78221acf1bf197f57d85"
+    },
+    {
+      "path": "docs/00-governance/templates/TEAM_QUESTION_PACK_TEMPLATE.md",
+      "sha256": "420b1a59a5e82ac55dcb5c335e347c67cd57c6b0b7fcb482e5abd213e6bbd106",
+      "gitBlob": "062d6549ee00ec867c4f6b47ced5cebcd4e34d1b"
+    },
+    {
+      "path": "docs/01-project-assimilation/ARCHITECTURE_ASSIMILATION_REPORT.md",
+      "sha256": "0ed1107e6240d766bd29b9f1050ebe7250e015d0d9568a5d886c9223e8b23bdf",
+      "gitBlob": "5f33548f43f4999ca9aa6b5a35dfecd8783d59c6"
+    },
+    {
+      "path": "docs/01-project-assimilation/CHECKPOINT_APR-003.md",
+      "sha256": "d117cc132abd580efdeaa5df28ba34c2246c41bb0fbb746a559563d4237e496f",
+      "gitBlob": "48b2ba5c8c255c6ca512064b79158d1a0fc8dd17"
+    },
+    {
+      "path": "docs/01-project-assimilation/GATE_CHECKLIST.md",
+      "sha256": "11e5826fb1739591c495c13ea4dff7b5fbbd3556346c953a55e5f9d0d3c99540",
+      "gitBlob": "c469acd686eb43127f94cf55f5ea063b3abc1793"
+    },
+    {
+      "path": "docs/01-project-assimilation/INDEPENDENT_REVIEW.md",
+      "sha256": "9e2be25816269ac07994c9da9004f49cf6b24051d34edd16ddf8bfce52e8e1b3",
+      "gitBlob": "9766585662917ddbf6194b481e72ceb39b4c425d"
+    },
+    {
+      "path": "docs/01-project-assimilation/MULTI_AGENT_METHOD.md",
+      "sha256": "1348cf5195dcd181f3c522d8abdc305c2accb55e0d71cf6c77b53bdb88e8d764",
+      "gitBlob": "90b505a3be18e0d65079393fa30db1ef60bdd0ef"
+    },
+    {
+      "path": "docs/01-project-assimilation/PROVENANCE_CLASSIFICATION.md",
+      "sha256": "8476aa5f4eff2947988cf3303f103fd0a93ca59e1d3a6ff08d154c4807e06861",
+      "gitBlob": "297be68cf1618c40f44561ea08e3cb64ccd46f85"
+    },
+    {
+      "path": "docs/01-project-assimilation/README.md",
+      "sha256": "bc594b0c422d2fff2bd459789e3d4e3235eb4052344f6615ded0263201a76caa",
+      "gitBlob": "e03ddf10d31829fefa61460c3cfb6c12e012295b"
+    },
+    {
+      "path": "docs/01-project-assimilation/RECONCILIATION.md",
+      "sha256": "8270c732310ce410835dd01629e40767592c44d1cb0d0cf807ff74dadc9698f9",
+      "gitBlob": "bb3342142165e3ce654db32dd9b61402d17a0575"
+    },
+    {
+      "path": "docs/01-project-assimilation/SELF_CHECK.md",
+      "sha256": "129739cc84f60ec5c543b68f71d879a60a0134d4b811b7dd5494fe01eef1e079",
+      "gitBlob": "df278e56e70137022994722723751186b0467ba9"
+    },
+    {
+      "path": "docs/01-project-assimilation/SOURCE_BIBLIOGRAPHY.md",
+      "sha256": "b6030a392926b7efca77ab461c8f78fbb6c3801e3fa1c787981e778d32439b72",
+      "gitBlob": "3330431fa3667d5f9703038a1da42fe97cf6a0d7"
+    },
+    {
+      "path": "docs/01-project-assimilation/WORKSHOP_AGENDA.md",
+      "sha256": "16eef32a375cf6919a34a6075392e0406ff4864f8106456540757d9f9bd99b9f",
+      "gitBlob": "172fb08b7bb3238e35b79a6c8945b27e7d909888"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/ACTOR_RESPONSIBILITY_CATALOGUE.md",
+      "sha256": "00947a5e3014c8f283f29fbc317be7ed70f07099b1eecefab1d78e504c325afc",
+      "gitBlob": "10ed49fa9f98b14c5d71d2446f24db95f3006e8b"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/CAPABILITY_BOUNDED_CONTEXT_MAP.md",
+      "sha256": "c9964c08f3a8f356c2c7524420e965867a7bb456c4f1ea7178fe55465c4cf927",
+      "gitBlob": "7a05d6a15ce5e9ecdfd367354db24f10ebf1b1b7"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/CHECKPOINT_APR-004.md",
+      "sha256": "9d2bf89e7710747b273d275794bc711fdeb201dee2d8a75524523e275b38ba51",
+      "gitBlob": "65dba0db424ecfb47c9c4a8c7f2da6395d8b019f"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/GATE_CHECKLIST.md",
+      "sha256": "b593c1627bda7d4e3725248858c9ef20f813e36959d5724f5b05207270a6e6b1",
+      "gitBlob": "ffe1ba068e63cb4e583c16cba3f2ba5b25c6f9ac"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/INDEPENDENT_REVIEW.md",
+      "sha256": "789a550c4d7edd7af9bb43e3fb8ed2de86564b3d70f926db451ef3963dee3463",
+      "gitBlob": "edf8f43dc742191ce286fee942278fd0a7c95144"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/MODULE_OWNERSHIP_MATRIX.md",
+      "sha256": "d67f073e4b1250e78626e1bbab6acf6367a312efa73bec2540f9aed14d9603cc",
+      "gitBlob": "216c0e02573338251c007a5292349a1fe14af664"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/MVP_SCOPE_AND_BUSINESS_RULES.md",
+      "sha256": "9b0448bb0093eef3974576ab7a7ae910b73ded028b41e412a7be0aba69f3fa0d",
+      "gitBlob": "fb4dbddd962b6726b01005e6546fb2ac6b9e4511"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/PHASE03_HANDOFF.md",
+      "sha256": "8f837c7203b2dc1288f048eba64826ccea49ca40efe070a2f6e0b50861adf4aa",
+      "gitBlob": "5c55849fb93e281c04ccab943222b6d797d0ef28"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/PROCESS_MAPS_AS_IS_TO_BE.md",
+      "sha256": "9fb9d452e5d761d6e5532015208209f940cc95f0f95ee9ccfeb44d52bde5a500",
+      "gitBlob": "ba90fa53d8a158343fe5046a0f6578f7003c69c8"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/README.md",
+      "sha256": "66cc874091046d10625e9c5020f7eb90d733d45af6164e6e893147909677c516",
+      "gitBlob": "3b93980eb21d5910fa74191cd021adcde4b19749"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/RECONCILIATION.md",
+      "sha256": "1d5d2803905af40097fd92dfd80605d59024ae1844522e441084134c03b5422f",
+      "gitBlob": "c59483be280af12c5cb406b5475629714f4a6c7f"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/SELF_CHECK.md",
+      "sha256": "1cc13d8eddc54885d5d5cfffb48630e1e6c3847bfb44c426cff5a322fe149a9d",
+      "gitBlob": "d0722a4b963ec7672cf17efbd16413998db4b4f4"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/WORKSHOP_COLLECTION_MAP.md",
+      "sha256": "44873095f6662362f157898b68f2163104ae2581da7d362dffe2e1cbcda9d30c",
+      "gitBlob": "6420e733f8ad6f15a6931636a7113229dc927b7e"
+    },
+    {
+      "path": "docs/02-domain-business-architecture/WORKSHOP_ROSTER.md",
+      "sha256": "5b5737ae7ef22b0484363446368a19f48732f3a8dd8511933bd752589577fba8",
+      "gitBlob": "c9d4549ec00f868544b9b8baa6981689d29393f1"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/AUTHORIZATION_SOD.md",
+      "sha256": "5600ee590a7ac9d2c8c4f3d30734a250f57058c69103d0bc2f89a0c7aa15fb42",
+      "gitBlob": "b7df9de6e1381e9484a914bc97c8630cb7b60910"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/CHECKPOINT_APR-005.md",
+      "sha256": "ab5602431069ce52999f36e2ae354d441805179a5bbaa94d578c0ecdd5ce1ac2",
+      "gitBlob": "ee3a642439cacf9533b113f98267e25cd5f6e8f4"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/CONCURRENCY_AND_INTERLOCK.md",
+      "sha256": "2a6dde0c1c6da4e55bce0118c59593abfc2923785d31c7c3ac2299c31c68c93b",
+      "gitBlob": "c6d24987a93b81156d2ba7056c217e40d2a4f284"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/CROSS_MACHINE_SEQUENCES.md",
+      "sha256": "7800e1a2ff1af7fdbd4cd34ab487e47afac8af2857bfb212f376602f80823487",
+      "gitBlob": "26bc368480ca9a16ac35e3fd5f106536d16d898d"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/EVENT_AND_REJECTION.md",
+      "sha256": "c73910a166dda5f4b9c69b543f0b6ed8903decb749f1532e2913720f7557e5ec",
+      "gitBlob": "10722393ef62d81f93bc0ab24b41d05b6c783ae8"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/EXCEPTION_CORRECTION.md",
+      "sha256": "cd283f085f652500101b079b6e9e233e16feaf4155fa17e5f8b9f8880d59e19e",
+      "gitBlob": "c90a2ffd5bf0203d77736abb5fb24fd42b46d2c8"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/GATE_CHECKLIST.md",
+      "sha256": "b6b1ae43342e1f45b623fa0b8833ff4491f31710fdb29585c6b1d5994e17f8cd",
+      "gitBlob": "cb362816f25a21ebf3757d282470f0f82f19e242"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/INDEPENDENT_REVIEW.md",
+      "sha256": "107a6657f64c802ced9eda59141f6c8c6dd8831fe7968758a665d3329ad4a782",
+      "gitBlob": "6d84e8dd7eb12a7f192b867fd8fc6af19714a073"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/INVARIANT_CATALOGUE.md",
+      "sha256": "d4e9a66a7256b35f6f6a317bea86c9d97988ca68319cf517d0e53a844412652b",
+      "gitBlob": "b4510701e4dadacfb22ecbf45df3cc0a5b70a57d"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/PHASE04_HANDOFF.md",
+      "sha256": "ed894fedd39fdc816365bdc858fe802ae616560db685c9c3c3f9753a5833a0bb",
+      "gitBlob": "c7ff4f94f87fb1c92a438636217ae93b80f1df98"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/README.md",
+      "sha256": "faecfcd005a17bd4192e9ce4f0f60cd69561fe1a916bf9ae0f6853ef6b245d66",
+      "gitBlob": "13bf113611a3aef63ce78f0bcf32873e0a254314"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/RECONCILIATION.md",
+      "sha256": "2006dc9cd22478ace95fcf24751994d2ab6807e9a3c12c7762035b338b64e8e1",
+      "gitBlob": "abca7b253b620866e074fca980c0dad52979474f"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/SELF_CHECK.md",
+      "sha256": "74de1639d1a6378252157425eb616b987249d55acc4be009f7c478abb9ea59f7",
+      "gitBlob": "1526c7a3227996176d90ca43be26736926082d14"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/SIDE_EFFECT_MATRIX.md",
+      "sha256": "11becb425c923a174c2cef6fde4d3432ac996741c4777ff31e602adca4d7d9b5",
+      "gitBlob": "dbc2cefe57f125d445306bf125f9f2f50e514c01"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/STATE_MACHINE_CATALOGUE.md",
+      "sha256": "7b8208d2252605399b19ff34a0ceb0cee7b3f33df36113fae33cae5272244b68",
+      "gitBlob": "3a91bad9390b6f6e4023d895858490674ac065bf"
+    },
+    {
+      "path": "docs/03-state-machines-invariants/TRANSITION_TABLES.md",
+      "sha256": "9a0ae7185917951a3c5f10964d5e8c9b020c713fbf9120363933530b3e89382d",
+      "gitBlob": "e9420849d0e527573f390b25471afb9219e73230"
+    },
+    {
+      "path": "docs/04-database-architecture/CHECKPOINT_APR-006.md",
+      "sha256": "323d100082deb71d6782b73a30f703acf53dffee3af6374d21466e9b90687afc",
+      "gitBlob": "6d4ddc216006cb68671716c1b39c72024a31a017"
+    },
+    {
+      "path": "docs/04-database-architecture/ENFORCEMENT_ASSIGNMENT.md",
+      "sha256": "4150286cadb23d346f850529f9efc03cd7ace400378b5371b14593cf78293212",
+      "gitBlob": "e2dd4543268d4975cc1c931ac617ddfadce28999"
+    },
+    {
+      "path": "docs/04-database-architecture/GATE_CHECKLIST.md",
+      "sha256": "b2ccc95741f722d6e6041a844d23e7ab45680c6595ab0e7dcbe45985929100fd",
+      "gitBlob": "cfaa3c83ca8858c6aded81e72f5a76f099b10f33"
+    },
+    {
+      "path": "docs/04-database-architecture/GENEALOGY_PROJECTION.md",
+      "sha256": "15f798f09e500249e8d685acaae7c280df7aa7324e32c95792226ff87ce9de5b",
+      "gitBlob": "45fccec1fd722e9e9eea8bf83e1d3e09e37d6352"
+    },
+    {
+      "path": "docs/04-database-architecture/INDEPENDENT_REVIEW.md",
+      "sha256": "0294c280c7d39909823e3a5a1c697a14859c35ff9c4af3b786a6c1a5eca84062",
+      "gitBlob": "511cff5b98a93db75ad6080555f1c30f02f4e176"
+    },
+    {
+      "path": "docs/04-database-architecture/LOGICAL_ATTRIBUTE_CATALOGUE.md",
+      "sha256": "a590c339612fe754b799b81beb9cb516732226be412b55fdb9715d47a9f4a202",
+      "gitBlob": "46ae1460eb89ed5a2ba980398356cbf445ecf6e0"
+    },
+    {
+      "path": "docs/04-database-architecture/LOGICAL_MODEL.md",
+      "sha256": "f1882fa03f249ebd48f9b8d45c08cef006dade66a0c556d9d18065000cd6a304",
+      "gitBlob": "9eec0c43a9fae1863906902f0e195206edb8d200"
+    },
+    {
+      "path": "docs/04-database-architecture/PHASE05_HANDOFF.md",
+      "sha256": "33472107051e05b6d4715d08f06095798c52dba4be3c13eaf50fc1c42fdee8ca",
+      "gitBlob": "d4e2bb1a3f7aa62129976e8883b5fc14297c94e7"
+    },
+    {
+      "path": "docs/04-database-architecture/POSTING_KERNEL.md",
+      "sha256": "6fccc6b734233c87c8df51e2cd7a33eef2f9520e00c57e228c70efbfc06ddb6f",
+      "gitBlob": "34f780b920243a24ff2332e0ec8fbce22129969c"
+    },
+    {
+      "path": "docs/04-database-architecture/README.md",
+      "sha256": "1ed8b604a1af6b4d084a4618a4834b2310d6522a22ea4a4fcae54838c77c0a97",
+      "gitBlob": "841177c2772b5857eea4913552f1fce922c33f0f"
+    },
+    {
+      "path": "docs/04-database-architecture/RECONCILIATION.md",
+      "sha256": "4be830bff0d3c27ad8590bce95d4c7446b992864f06c693feaca02a4b8afcd18",
+      "gitBlob": "e160b9cc42ab0e428bb31c2eecfc1cefd5eae0cb"
+    },
+    {
+      "path": "docs/04-database-architecture/RETENTION_MIGRATION_OPENING_STOCK.md",
+      "sha256": "414c5ce66318f700e427547211ce351ee85dd887094dc5bf16feac85c18a04f6",
+      "gitBlob": "1f26f08d2fff66df2949e217ed343ab22113c3a0"
+    },
+    {
+      "path": "docs/04-database-architecture/SELF_CHECK.md",
+      "sha256": "98f42655907fd5bbd2e231c6f1fd6ecf6495c4652553886fc3b7a4d7297becaf",
+      "gitBlob": "e526b3cc9f09822f1071177078ce04c6afb60dc7"
+    },
+    {
+      "path": "docs/04-database-architecture/TRANSACTION_AND_IDEMPOTENCY.md",
+      "sha256": "83623a6cac83cf2110fb0a6292a7e7c704dd8013012b09281ec5e61180eb0de5",
+      "gitBlob": "45abef5a89410730b7bbd65b1ff9e73023fdcfa4"
+    },
+    {
+      "path": "docs/05-application-api-architecture/API_ENVELOPE.md",
+      "sha256": "4df8890e0f362c79cbd62913207f9276a12c3a2edddbe9e8a40cb3afe4e656f0",
+      "gitBlob": "11acb848140a64693af7194ac381d5c0d7794239"
+    },
+    {
+      "path": "docs/05-application-api-architecture/BACKGROUND_AND_REALTIME.md",
+      "sha256": "a9b49ea5c95c8bb868e6c60552b36ad13f390f25a8ae242b06407227cf85f328",
+      "gitBlob": "71a456ef5fe1770add9dbc7047a042723df70e77"
+    },
+    {
+      "path": "docs/05-application-api-architecture/CHECKPOINT_APR-007.md",
+      "sha256": "bd742e2d21558463b2c6ae348d82db80447480a6f644035a723e12971daeff9d",
+      "gitBlob": "21bfa6d5200d96364024b36e0e0edaf3d8981921"
+    },
+    {
+      "path": "docs/05-application-api-architecture/COMMAND_CATALOGUE.md",
+      "sha256": "a55c0f780584bdede443b171a3b2d14d824b363007a5b2ddb7c6b23dcdd211b6",
+      "gitBlob": "0b87e2df200f441198fe30d1508e7f58d7e64971"
+    },
+    {
+      "path": "docs/05-application-api-architecture/GATE_CHECKLIST.md",
+      "sha256": "ac34609edb61597487d84cc5e41544b8fc60a083d57ee93db4bff95ac0717bab",
+      "gitBlob": "54f56e57b1b2f6d16af868588179de855e44a3be"
+    },
+    {
+      "path": "docs/05-application-api-architecture/INDEPENDENT_REVIEW.md",
+      "sha256": "3919068cf27ff5d4d11985b2f928dc77147366578bb6db9784ae222b5fbf7293",
+      "gitBlob": "96993199ba7a37227724e329de51ff39ac71363e"
+    },
+    {
+      "path": "docs/05-application-api-architecture/MODULE_DEPENDENCY_MAP.md",
+      "sha256": "9d3412b6bbc918f47501ae148b63d776ba8a441dd0fdf82c4aca010ce500a0ff",
+      "gitBlob": "bfc1b42c56e4895733421a2e542f760bb3f4416e"
+    },
+    {
+      "path": "docs/05-application-api-architecture/ORCHESTRATION.md",
+      "sha256": "80c96746bc739521c9293b98ddc456bde204a76966b8834b4e0133a15d76d7fa",
+      "gitBlob": "3e17f9891051bf211b30f369021f5db04d4b6b57"
+    },
+    {
+      "path": "docs/05-application-api-architecture/PHASE06_HANDOFF.md",
+      "sha256": "f8ee9b05f9982cbfa07739e7759437670bd715fa94c9637777a752660e9822ed",
+      "gitBlob": "0855f5d907224d6fcade9397e830ebc834399b50"
+    },
+    {
+      "path": "docs/05-application-api-architecture/QUERY_CATALOGUE.md",
+      "sha256": "f7d5f464c9ceb7305dce97dbc1ba7864612e0e0000c22b5fd054b30a3c8a302b",
+      "gitBlob": "707ae16bf5947d27d9abd0aca3c4a3d1654dd7a1"
+    },
+    {
+      "path": "docs/05-application-api-architecture/README.md",
+      "sha256": "ad00a64c14dd06d573656a97d3f0c8a9ab8ed906d2b46bbbeb29a178f8d78a3e",
+      "gitBlob": "dfa1581b918445e0e1f12d9cf6cc64e146164bec"
+    },
+    {
+      "path": "docs/05-application-api-architecture/RECONCILIATION.md",
+      "sha256": "a76fe3fc3610d97dbe7765aae7d94aa2e4bee8793ff79f72c2d5dc35ec0e9117",
+      "gitBlob": "0eefad27779cdf014f667bf3ec5fbe11ad67c404"
+    },
+    {
+      "path": "docs/05-application-api-architecture/SELF_CHECK.md",
+      "sha256": "6b24a0b9ff022511b8bad97eebc5d682daa32c4dbdb53f04683acb6451f8b573",
+      "gitBlob": "dd1b654b6e71b4446eff7786cc2aa760d8dee655"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/AUDIT_TAXONOMY.md",
+      "sha256": "e740dc5dd24e788d1c345f7113352d9d624bc7b21ce17686030b1d93fb2546fb",
+      "gitBlob": "314260346719cdfb96d156c9d759a07a0394a891"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/CHECKPOINT_APR-008.md",
+      "sha256": "694ce007f5dc6035d42adec217cae9507d61cb63f7eb5357b24d168ca78ce889",
+      "gitBlob": "67296b893c4d16c0a2216e3354b512642b9a197b"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/CUSTOMER_ISOLATION.md",
+      "sha256": "cb66c5691174a137ea812e147940937e7bda2360680f8f31bc5d4b705a6a4313",
+      "gitBlob": "f24323c5614d72f466d2ff4df03e76167112759a"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/GATE_CHECKLIST.md",
+      "sha256": "c4b6483dd29c4ceb5b679f15ac98208e5bac1ad6d998ba521546a08694b77fc3",
+      "gitBlob": "d64649d7ca8baad7600a0d2cd627d34b34e14a30"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/INDEPENDENT_REVIEW.md",
+      "sha256": "adcdade5128cc06dd06543cff27c5018cd3004dffe7f8611bd73a482da006271",
+      "gitBlob": "b86c6b6efab023b7ce18abab772d3a6a3dc9b7ce"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/PHASE07_HANDOFF.md",
+      "sha256": "e5d7263ef91593224adfe788e5d38509d3f05a992750102e19f99d39ab302e28",
+      "gitBlob": "fe779cff4283f4c8f21a5c69d13578cbb99a7326"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/README.md",
+      "sha256": "c3ea59dd0a1456b9cc507d662a14ffd728f5697e124fe9db9166242902ad37e2",
+      "gitBlob": "336bd6d7d6e3712fad176888cae4f8d44d57a972"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/RECONCILIATION.md",
+      "sha256": "7cfdfc8af789b77fb46c7ecd2aca4a1b035daca0171ca78b17acee110a4f1719",
+      "gitBlob": "dd9076129de05e2a2b82167d93a462b19a796cf0"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/ROLE_PERMISSION_MATRIX.md",
+      "sha256": "36abed2ed3cafec5c1b86e84ebb1283ff8cc7aa059fb7b9a503d45e5d78c5678",
+      "gitBlob": "915c6768925ca88574ca29aafe470081deaa529b"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/SECURITY_VERIFICATION.md",
+      "sha256": "0ec9105a4dca6829eb744ae8f0b63b9644d33209715e9f85570ccb9b1d2bbfb6",
+      "gitBlob": "0e83dd0f54cde1a56cec66db5dc4418d121f0ed5"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/SELF_CHECK.md",
+      "sha256": "666abd757556312106ace650d6e261926d8364ffeed49575f9495964e119d3bf",
+      "gitBlob": "d189b6b9b18838d16d417c0c05c14935ab6fecd0"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/SESSION_AND_IDENTITY.md",
+      "sha256": "cd8eceef6878cf3d09b83cdb623a382c00883281bfd1fda550f9d775c73f88c4",
+      "gitBlob": "a18aefccf9077c4bb26f0cc9a27589794b8405db"
+    },
+    {
+      "path": "docs/06-security-rbac-audit/THREAT_MODEL.md",
+      "sha256": "67633b14e3786c74f4208ca70ec4d7737760255094c02abe3528306d6a8c98fd",
+      "gitBlob": "6dcc578d82dfa67267c86145c63264ffc16576bb"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/CHECKPOINT_APR-009.md",
+      "sha256": "2fab842b140ffd9901c4075cd0343514d44a608eacef36db68ae7c0cc77bdb95",
+      "gitBlob": "472975d0039131768c70373a1ad9c81ee93a4383"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/GATE_CHECKLIST.md",
+      "sha256": "616386ad7b27df262a6478f2dae9f7ab7eeaa6d0e4576d561d058f5171ef2949",
+      "gitBlob": "eb1f382e82a7229b5812811003c5ff2442875dce"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/INDEPENDENT_REVIEW.md",
+      "sha256": "15d9c14a382c2e3e6c560be274c95e322648313581a4e11345d94ce20e29efe8",
+      "gitBlob": "955891faee365ff4ca079110673e8c03764b39c0"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/NFR_AND_UAT.md",
+      "sha256": "b004ef383fe6a2459cf8981b0c19b7fb7565e89fc4f6657543c8206b28285fd1",
+      "gitBlob": "727654faaf847ad893f80cd9e0257c26a1ba6729"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/PHASE08_HANDOFF.md",
+      "sha256": "c42c5f3d17215ea5961a3e8acd9e1775cca6b60fc2cbafbe945c771fa4d4090e",
+      "gitBlob": "8408b84335c18dd9562aca76cfdc5e49789309dd"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/PROPERTY_AND_KERNEL_INTENTS.md",
+      "sha256": "d0eedbaa8b98f0624839a13820a98158936e66b87d756d2902ee64e2696adc45",
+      "gitBlob": "4449acc1b11fc608c47fc044a50fda5419c6824d"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/QUALITY_GATES.md",
+      "sha256": "7f419cd9d9768008e690608a5cbdca70b94a59ea30bb5a9bef9875e81a1162f5",
+      "gitBlob": "39f5011c551188c843a3e948daf6b5b696511811"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/README.md",
+      "sha256": "01789b6d7f9caa4930a2362053187fd784f00acdce7de6fce0f3a64a1c3944ed",
+      "gitBlob": "13badbf1fd8a732b821a241a68f4f7e66f3ac7e7"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/RECONCILIATION.md",
+      "sha256": "71892c78226ee2e3308bc606b788cabf6028c1e08d1ac93313f433490e707539",
+      "gitBlob": "ea3777fadbad3be0c89c1316e5d5332d879fc384"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/SCENARIO_CATALOGUE.md",
+      "sha256": "b72b7450400b09050c90f0d96dc224725ecac59c99bd12877826a832435243c8",
+      "gitBlob": "857ac9795e98fdd0b63d413eadd3d1775321e63c"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/SELF_CHECK.md",
+      "sha256": "1570b1c6aac0cb846fa39af92a89ba9dd620419ba055170edb790ce990390f63",
+      "gitBlob": "5e0b14e60c251d591bab27e3fefc0edcd77a9ad3"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/TEST_STRATEGY.md",
+      "sha256": "cf2c723a1bff970b751ae045475516784c0241a50765afd9c0d55bd5df82a325",
+      "gitBlob": "e92ab8e2d65bbdffce416dad7ac29ac695cc0ee1"
+    },
+    {
+      "path": "docs/07-testing-quality-architecture/VERIFICATION_TRACE.md",
+      "sha256": "ea6b2b663bcadca8a76fb93de084f2efe292a5cc6fd7715a9d24a515d591746b",
+      "gitBlob": "7d9ecd5371cc66624b8e2d85fba481700f281c0b"
+    },
+    {
+      "path": "docs/08-integration-deployment/BACKUP_AND_RECOVERY.md",
+      "sha256": "cfee801ec0be05bd1897fd78c281bbdff9d12f1de20218a555bfc174f5d78def",
+      "gitBlob": "228efb7ff48f3b9b331cdcb27b7708d84e385338"
+    },
+    {
+      "path": "docs/08-integration-deployment/CHECKPOINT_APR-010.md",
+      "sha256": "fb73114c86cba4065d2a56a1c186d8c167cd99fa782f5d393c0919909520b66b",
+      "gitBlob": "b34846eff308483794307743e0347c5727a6e69c"
+    },
+    {
+      "path": "docs/08-integration-deployment/DEPLOYMENT_TOPOLOGY.md",
+      "sha256": "7e39cc323d18f738dd005bf28753e4217433e5435c52e0c2ca7549de9c4e6adb",
+      "gitBlob": "4ad652942d6e202c8004f6fa5b85cc37d3ea2866"
+    },
+    {
+      "path": "docs/08-integration-deployment/EXTERNAL_BOUNDARIES.md",
+      "sha256": "6acd82e0f08a1dbe3818a56c51e20e875aee77b71631ff8cf878aa635183f7af",
+      "gitBlob": "0451eeb01512953f6d5ac30757366ec80ab26510"
+    },
+    {
+      "path": "docs/08-integration-deployment/GATE_CHECKLIST.md",
+      "sha256": "54eff0ada48ca69f35ab135d0cac9aa0645b8ab6f568415d8ebfd94306776804",
+      "gitBlob": "69ec554a6f5bf4d266ea4bed8cd54621b0d82098"
+    },
+    {
+      "path": "docs/08-integration-deployment/INDEPENDENT_REVIEW.md",
+      "sha256": "58494b070165f7ebe5fd4256e79ef1c6c5a95b90510391bbba8caba0a9a00a9b",
+      "gitBlob": "7067aefda0b4855bbd8e2b08e3bda0a6e2bd7b10"
+    },
+    {
+      "path": "docs/08-integration-deployment/INTEGRATION_CATALOGUE.md",
+      "sha256": "7f276b606d6a7dbc4885f6bfc7108cef95565f54c5a3c9118e2997352026b330",
+      "gitBlob": "a4646856e6315025ea5e187cbee0904c2db3a76d"
+    },
+    {
+      "path": "docs/08-integration-deployment/OBSERVABILITY.md",
+      "sha256": "4cdfda212ca80f5e552450c57c637ca94e442ca31f32a6ec5e9deb58d5d336b1",
+      "gitBlob": "ad302ab0ed1695fafa25d4aaac24620d2652bcde"
+    },
+    {
+      "path": "docs/08-integration-deployment/PHASE09_HANDOFF.md",
+      "sha256": "fec2c1d1a06e403ba0e4713697de40a4e98a1be55055818814f441e7731dc819",
+      "gitBlob": "ced01d1ac1e10e033e84fac79f73435153c598bd"
+    },
+    {
+      "path": "docs/08-integration-deployment/README.md",
+      "sha256": "4da48a6cda135c7ba40d8999d2b795316dba9fac4992b6eaaf17c04b81f2a221",
+      "gitBlob": "db623c0cac36a76db04fc2a1a848d88a423745d7"
+    },
+    {
+      "path": "docs/08-integration-deployment/RECONCILIATION.md",
+      "sha256": "99c407a4c1b54e60795046861029465eebf1df4fae1ba46cf1dd803386e95c7a",
+      "gitBlob": "7bf23cd437a67148b9c439944da928c372a73c1f"
+    },
+    {
+      "path": "docs/08-integration-deployment/RUNBOOK_CATALOGUE.md",
+      "sha256": "004873cf81961d0a436611a9e07070545e4482442d5539b874f2bc98419a6d43",
+      "gitBlob": "12ebfa028ec3c5c759eb4f1a8010a49881a3511e"
+    },
+    {
+      "path": "docs/08-integration-deployment/SELF_CHECK.md",
+      "sha256": "67128c57410e795121f4ac718de96608d0fa9a1aa98dfda06a12628974d31e20",
+      "gitBlob": "90268d1db229aa072b82b0159ecdb943c2775be2"
+    },
+    {
+      "path": "docs/09-repository-documentation/BRANCHING_AND_RELEASE.md",
+      "sha256": "c0aef5f669973797ed8820815d7d41c230dcc55e69880bbaffeb7a0d8956449a",
+      "gitBlob": "72e3d98319b6dfe884cfa089c0d38b77cfa6bd88"
+    },
+    {
+      "path": "docs/09-repository-documentation/CHECKPOINT_APR-011.md",
+      "sha256": "e4ba38f82eb48ca78ef80a62390dc993da59511b2968fd59b145110bf5bbf30f",
+      "gitBlob": "2d786b0334fe18fed6ecc1b302d04e7d548f083c"
+    },
+    {
+      "path": "docs/09-repository-documentation/CONFORMANCE_CHECKS.md",
+      "sha256": "85d3ab447b475a2416fb0d0e9151ed0c72c07e9a0e873899574f1c0cf66a472d",
+      "gitBlob": "38ad10b8ef7c480e612c2617e805d7f8c8049ede"
+    },
+    {
+      "path": "docs/09-repository-documentation/DEPENDENCY_AND_IMPORT_RULES.md",
+      "sha256": "bd96edf19f5a74385dc86f01e37f85d8de399ae70db706fe07572284cc4e97ab",
+      "gitBlob": "4999a9e9b82dd0b720442114a5959e14d137392d"
+    },
+    {
+      "path": "docs/09-repository-documentation/DOCUMENTATION_OWNERSHIP.md",
+      "sha256": "17cc403fcabf07cdf398de178b963ab706bf80ace6fbb0b9b83d84bda6ed77cf",
+      "gitBlob": "cce1c2945ba4c3fea7632354d97f521d06f5c64b"
+    },
+    {
+      "path": "docs/09-repository-documentation/GATE_CHECKLIST.md",
+      "sha256": "75e168f97f27e61293f417cb9ac35d951152caa0051d1d14f62ba0c543d89e4d",
+      "gitBlob": "2ad36bd2607d0423384360fc2518c5077ef18235"
+    },
+    {
+      "path": "docs/09-repository-documentation/GENERATED_VS_AUTHORED.md",
+      "sha256": "b8a625bbf7d6ae5ac1fd91cb8407fca9cdfdec75cb61a71f8b4a1e8ce5b20977",
+      "gitBlob": "9925bcde8f241d57bce66dfa5c57639bb29cbacd"
+    },
+    {
+      "path": "docs/09-repository-documentation/INDEPENDENT_REVIEW.md",
+      "sha256": "aa4f0d6fa2cdc175827ee8885495d91107bd13ca5aa7ed03a6ae28184b644198",
+      "gitBlob": "20ee0b06e528a92fbc24079726575d4599cb0baa"
+    },
+    {
+      "path": "docs/09-repository-documentation/PHASE10_HANDOFF.md",
+      "sha256": "94731c1f01e65948ddf69aae225847cddfb434a6e4c6848c071cc75d4c543e01",
+      "gitBlob": "e4917409f7aa0a110368a1630c37ee7cf1e5d341"
+    },
+    {
+      "path": "docs/09-repository-documentation/README.md",
+      "sha256": "baffd37e8b930fa1f52924199d305772132be448432d2660b7f03215e0faf292",
+      "gitBlob": "0d58a143a11e37fc2d3d170eb7254848b03fc15e"
+    },
+    {
+      "path": "docs/09-repository-documentation/RECONCILIATION.md",
+      "sha256": "abd96312f589c465f982c5149924de1b256891da4642bb827503f271b5da75b7",
+      "gitBlob": "6498e5b23e43a8b4ccc899558a3d6419b51a9eca"
+    },
+    {
+      "path": "docs/09-repository-documentation/REPOSITORY_LAYOUT.md",
+      "sha256": "673ee5dad81b11f95e998178feac36c346877066daafe821ca1aedca3e3dc5e9",
+      "gitBlob": "a9cb7031851330943d19b7be0f276b1e81facc60"
+    },
+    {
+      "path": "docs/09-repository-documentation/SELF_CHECK.md",
+      "sha256": "419d417b416571c2040a6c3c170ea6b4cfe6d9518ff3945ae271cafe542c67e0",
+      "gitBlob": "c430ca1b57509372a1fe70db0cb0f0d6b42d1d98"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/AGENT_AUTHORITY.md",
+      "sha256": "e1c1a0be12d8432bc4a2ecba24cc3ccf02c88869eb5ab827579d313d1ada5247",
+      "gitBlob": "cfdb4a37274684a75a045744c21eacde79328324"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/AUTONOMOUS_PRE_IMPLEMENTATION_BOOTSTRAP_PACK.md",
+      "sha256": "ae4736ad324343aa195ff07dfea2d469aab705d022e327b2414de846be93368f",
+      "gitBlob": "05fb131719e24746ed2e2e490077928b90a3a760"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/AUTONOMOUS_PRE_IMPLEMENTATION_OBJECTIVE.md",
+      "sha256": "629798d1e6ae1310118fa83377ed0bc70b9d4b0ec9e7a51d0df6eed1470a4460",
+      "gitBlob": "0d476f3563f8517560f07c2a8211287679ba0812"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/CHECKPOINT_APR-012.md",
+      "sha256": "06acde94f5f4a3dee3e41d3c069bbfbc485e7ed941d68471d6dd8c489c90193a",
+      "gitBlob": "6fe0a65b3d7a2620a221ab5a632933ca7656b5df"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/CODEX_CONTROL_BOOTSTRAP.md",
+      "sha256": "e9c6cf741a783b8a38f891f304854083172a762298d77d55b9c97fe9eceb10b6",
+      "gitBlob": "7c90f9b23cbfe89921761a0238a5ffba3ab3b8fa"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/CODEX_READINESS_READ_REVIEW.md",
+      "sha256": "17a88a4dbc33c77ad07d76e3e434d41ccd753761eae846a005a182f166ad75b6",
+      "gitBlob": "415bb741448f067e340180e27549b12f4304ca4b"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/FINAL_AUTONOMY_TRANSITION_PATCH.md",
+      "sha256": "0744042c9eb9c2190b984fb7c428fb0388199a40a0343198ced0ede7b5b99b47",
+      "gitBlob": "35f15374c7715e8e9ba0440ad0935a43b9960a3c"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/GATE_CHECKLIST.md",
+      "sha256": "192e30cc09b251481ad391b40b1e10d46ac3fc3fe1cc9965e50daa2366f6a48f",
+      "gitBlob": "971685198a2f2d6a1e1c6672d5ef7090fc09bbb4"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/GENERATED_CODE_ACCEPTANCE.md",
+      "sha256": "ba4693152f4cc6e20680901cb3bb7b60f35089769d7c5d8407a3a299400c7491",
+      "gitBlob": "ccd26fc5ccc4226b4cb863263ac8ab37b921c20e"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/HUMAN_AND_INDEPENDENT_REVIEW.md",
+      "sha256": "5b166e114d93cdac72a5a7487a28db48e4cd1f61cc2ad6da45a16230fcbec762",
+      "gitBlob": "f74733b91110168bbae5ab884737d3f3d7fa3eb2"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/IMPLEMENTATION_PROMPT_STANDARDS.md",
+      "sha256": "5973e7dedb15922caee51e4c076872b693755c8c323f9695a962c721c737d837",
+      "gitBlob": "aa4813f64b90aabb4450d52754d2cea9d4758e1a"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/INDEPENDENT_REVIEW.md",
+      "sha256": "05b137266332991569ff6f9ad1b37e0e3f721cd2eba19bafc80f85ec2a3d32bf",
+      "gitBlob": "c1b9b88b078237aa2055be5e543fb7ef3e249826"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/install-native-autonomy-transition.md",
+      "sha256": "9e2d3e22a08bfd5e35f022da56938555c2fd1527b45f711b0abb09ca7d89dcc9",
+      "gitBlob": "17e22c5b26c0aefae8c92fc2416281dc9430397e"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/NATIVE_AUTONOMY_TRANSITION.md",
+      "sha256": "627d55ad61a9f46ff232e2c4e9be18e761d01a7898f24a5ba68052e1ed185ec0",
+      "gitBlob": "fdc69f8f0106fdbe6f8e4513614e76ae62872ca1"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/PHASE11_HANDOFF.md",
+      "sha256": "a03f21cd2509fdf8bd0be7394b4ae033aed80ff7d3562c57b00691c3e439c52e",
+      "gitBlob": "868ea941c03dd2b924b92465ecaae38fb0cf2272"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/README.md",
+      "sha256": "24e50e093006fee5ea747c9678bb4fe808ab66fd5597f118192844f7ba502023",
+      "gitBlob": "3cf28f3659b51101615dbe1585afe99505b4099c"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/RECONCILIATION.md",
+      "sha256": "cf126256e4d080a3ce6e994b7d0b2c7e5c254f1d2a0a1fab4c9cabbcc7dcf030",
+      "gitBlob": "173d54c1e07cfd069b5395bb5ce0d2a80728d834"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/RULE_AND_SKILL_CATALOGUE.md",
+      "sha256": "acc719a5678df5163033f8b418601d45d590ed293fe1533fcc9ad9c4dd223457",
+      "gitBlob": "aaef97b1138f47635a566460f3c70b04ead14e68"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/SELF_CHECK.md",
+      "sha256": "359efd2f86e3c9b111a9da2770cdbde4788331027fde4c4815600c6efb82bb49",
+      "gitBlob": "677aa4392cdf7535455b0b037d7aa31a2ca02bab"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/TOOL_MCP_HOOK_SAFETY.md",
+      "sha256": "fb5f5d4dd7a8e2acd7c53e93371dc14595f9fb3d7c874c7a6eda5d8a0b39b212",
+      "gitBlob": "e106d0f6e9b51556bac4df1a9a234b4a0dcb611d"
+    },
+    {
+      "path": "docs/10-ai-cursor-development/TRUSTED_AGENT_OPERATING_MODEL.md",
+      "sha256": "fc5388aa8cd3eeddf0c50a348220a018ff54eaef89f20b14b4043621c612f62f",
+      "gitBlob": "ab17e9279dafb7fff925abd06bd7762c25a06a10"
+    },
+    {
+      "path": "docs/11-architecture-validation/CHECKPOINT_APR-013.md",
+      "sha256": "bcd4a1373365b4e0996e48307728be76d9662be215fc3f4f9d2c0219f8190ffd",
+      "gitBlob": "771511c84107d7adaee053c9b3abe3e57674cda6"
+    },
+    {
+      "path": "docs/11-architecture-validation/CORRECTIVE_ACTIONS.md",
+      "sha256": "e6ca8aa33a0f7cd3cabaade4512de13dd6fab5cd173bebc30a8d45805d7c6496",
+      "gitBlob": "5a567f9d8f0d1dbb0688848e17e5997f8e74fced"
+    },
+    {
+      "path": "docs/11-architecture-validation/CROSS_DOMAIN.md",
+      "sha256": "d51727da2c7a3b4f611b8c35d9140347ec6541f525f18b7b59de807159a0e94e",
+      "gitBlob": "f267aacc87f82240d5ecc3cccb08087eac6cee9a"
+    },
+    {
+      "path": "docs/11-architecture-validation/GATE_CHECKLIST.md",
+      "sha256": "c925735b9718192c49ef82c021f8fd911ed5d5db4082bd8190d8456580c052a5",
+      "gitBlob": "e4f4147b273d1d10387192edb889d48867925ed9"
+    },
+    {
+      "path": "docs/11-architecture-validation/INDEPENDENT_REVIEW.md",
+      "sha256": "f381bcd743af79e141237e15ed0556d300f72fa995e01d3d608f7939c9ea0093",
+      "gitBlob": "439644c1d9617af4d0ccee79fa46d213d2ce47b5"
+    },
+    {
+      "path": "docs/11-architecture-validation/INTEGRATED_REVIEW.md",
+      "sha256": "5aa980d27b960724da0a8ad1de42c521ee1a4b217e11a49e3cdf3231fcb9560b",
+      "gitBlob": "564717ff80dbf03f55fb2847b06823e6a33fad78"
+    },
+    {
+      "path": "docs/11-architecture-validation/PHASE12_HANDOFF.md",
+      "sha256": "4b27290e89d5470bfb06f61b47b55abaf17267fa40c8a8f503084775c5bcfac0",
+      "gitBlob": "790e18bfbbaca2248c2b553bab922df0548a8bbc"
+    },
+    {
+      "path": "docs/11-architecture-validation/README.md",
+      "sha256": "b8bb4cedb60935af4fca697616cb57615b523e501c67ef528871d4daf44a998a",
+      "gitBlob": "f2c6f6d9a169d9d70e770ab328aa7fb1bf066e7b"
+    },
+    {
+      "path": "docs/11-architecture-validation/RECONCILIATION.md",
+      "sha256": "fef20d04ef749f6dcd169fbe94483e3cd1c38a049106a9ac88ab12525bd0b4da",
+      "gitBlob": "dcdf278e2e8e91cbf8c3af547381caba571d0589"
+    },
+    {
+      "path": "docs/11-architecture-validation/RISK_OPERABILITY.md",
+      "sha256": "296002699cb448e12520d377f2cec70fd9f04f61384f465a66e2aca89c2fce86",
+      "gitBlob": "6d719aabae9d3f7d573d167ceb52b2e51c5b9cae"
+    },
+    {
+      "path": "docs/11-architecture-validation/SELF_CHECK.md",
+      "sha256": "64826920d5a2f144e0df45e1790b9a60728aa73bf2fc34f441cabdcef0e75325",
+      "gitBlob": "b56eefff9960336ece8593a0ce3f308da35dc087"
+    },
+    {
+      "path": "docs/11-architecture-validation/TRACEABILITY_COVERAGE.md",
+      "sha256": "a82d59fb82544fb857ebf2cc0dc4d97134f1efd1777a1e43d47c7146b8da3f3d",
+      "gitBlob": "762749741fa58ec302ee20b3b2edf94383c1c08c"
+    },
+    {
+      "path": "docs/11-architecture-validation/WALKTHROUGHS.md",
+      "sha256": "000d818c22086e8cb61b76e5456621bffa10af331322b36d2c673528b6d634ca",
+      "gitBlob": "7b18c6d0a55fe2abb57dceb4b71632cdfee88bf1"
+    },
+    {
+      "path": "docs/12-implementation-planning/AUTHORIZATION_RECORD.md",
+      "sha256": "f0d6555e8c75b2899238ca203bbd06e4e3e37db8d4e385eeb79d4318e57c4420",
+      "gitBlob": "1bb7055c30bc07e36bade3e60bc1e8ed6ca3ddcb"
+    },
+    {
+      "path": "docs/12-implementation-planning/CANONICAL_RECONCILIATION.md",
+      "sha256": "6a1f7e577dfd95f70dfadfd2015e20b62e6b815234a9f62f089488d02253940b",
+      "gitBlob": "0a1d5cb69a4b995ae8c0c345dca3f04b7783af3e"
+    },
+    {
+      "path": "docs/12-implementation-planning/CHECKPOINT_APR-014.md",
+      "sha256": "b60d5f4cc7e1956c75775fb070ffee7628455b144e1a5a99c21100d1936506d8",
+      "gitBlob": "c0343cdf6a2a5af476d6428e85d035cc7880b08a"
+    },
+    {
+      "path": "docs/12-implementation-planning/COMMAND_IDEMPOTENCY_SPEC.md",
+      "sha256": "f847da660ef2f1d5a1d1f775ada9aa3476d70f593e30f0233407a8753b9a1dd3",
+      "gitBlob": "722479660fad9618c1cfe8d376bf70cde35bc768"
+    },
+    {
+      "path": "docs/12-implementation-planning/CUTOVER_TRAINING_ROLLOUT.md",
+      "sha256": "e69017cb420165a936cccea9da2fff17519e5049771df5380b03d0f21ec7ecb4",
+      "gitBlob": "9cc370833b8ffc9d00d8ad5bf75560f0a17f0be1"
+    },
+    {
+      "path": "docs/12-implementation-planning/ENGINEERING_VALIDATION.md",
+      "sha256": "5665fc4514bdae00c7f03dd8377a1d5dcbb12cedcf5eb7a2d3b3a78fe670fd67",
+      "gitBlob": "e59b600befd3abf83c2b83ccdf2abc0bf5172331"
+    },
+    {
+      "path": "docs/12-implementation-planning/GATE_CHECKLIST.md",
+      "sha256": "8923f3a4df564f9d000a64bfa6dbf414e29c46451280d0b486327a23f14fb732",
+      "gitBlob": "c9d227525971cf8085f074a515bac4c9b6a9ff6e"
+    },
+    {
+      "path": "docs/12-implementation-planning/HUMAN_AUTHORIZATION_PACKAGE.md",
+      "sha256": "f49f58833f1b27585de81137fb23cdee9fe4f132b24ea93e0a7218a5faaad803",
+      "gitBlob": "8d19b74ea4d16f8e51e71789d6df792fd3d82584"
+    },
+    {
+      "path": "docs/12-implementation-planning/IDEMPOTENCY_DESIGN_DRAFT.md",
+      "sha256": "1f509758587adff16e9d6b1fb86919da2d599e79ed6711e1b0f4b3e9298aba58",
+      "gitBlob": "26e901b628fb25ef74c828b658f014b25cd8d1c3"
+    },
+    {
+      "path": "docs/12-implementation-planning/IMPLEMENTATION_BACKLOG.md",
+      "sha256": "1cbbe6f2c39707d2833aab765cf57b4d7363c3ee1c60f94b8a64c1640d93143b",
+      "gitBlob": "7768aaaef050f4846f679a321e018049b8ff0053"
+    },
+    {
+      "path": "docs/12-implementation-planning/IMPLEMENTATION_READINESS.md",
+      "sha256": "adaa3ebb7602482d6b6b47365f32e7a9bff0f7af7a7c03499d0cd8a19e013dfd",
+      "gitBlob": "5bc10cd1ec6fab1e95982aca4a40700ae2356cdd"
+    },
+    {
+      "path": "docs/12-implementation-planning/INDEPENDENT_REVIEW.md",
+      "sha256": "f968bf5cc33ba2e457eb964db6246bc6dc4dae64cbd5453d2fe7a65cee77a881",
+      "gitBlob": "3d7e22fc40e71a8e124fa204f14298a42d17b6f3"
+    },
+    {
+      "path": "docs/12-implementation-planning/README.md",
+      "sha256": "fe13de1d6b31d0945aae72e091a3bf314ac38e3981b98e23b1dfb76fecb8ed12",
+      "gitBlob": "72a231166da64b3e56567c5c966f096b6ac5b541"
+    },
+    {
+      "path": "docs/12-implementation-planning/RECONCILIATION.md",
+      "sha256": "25ad3998bc8a69f929dc3ec304be8e792e3ed2f007fcd994bf3fa76deaf04085",
+      "gitBlob": "6423e0c422ee60639f199c4e95dd97d62d25436d"
+    },
+    {
+      "path": "docs/12-implementation-planning/REVIEW_ARCHITECTURE_TOOLING.md",
+      "sha256": "d61f54343249b233c90170cf71cfb11ee67ec8d928f543d9d8ca7d6e46350d15",
+      "gitBlob": "daad00b3ca2b230c601255d6a46b64e4a15fbed7"
+    },
+    {
+      "path": "docs/12-implementation-planning/REVIEW_DATABASE_IDEMPOTENCY_SECURITY.md",
+      "sha256": "84867997210aac1b6cc79f16384055d8a6c949a7d3d42acab10cec7d2cfa19bf",
+      "gitBlob": "1441d76fafeb0e659ea4ff06619ab74d25aaed47"
+    },
+    {
+      "path": "docs/12-implementation-planning/REVIEW_DOMAIN_BACKLOG.md",
+      "sha256": "e576cd0909e32f5603f8eb911e54c46f6d934d64ff15575c7f44f6addd1f7bee",
+      "gitBlob": "b9b9f6bb8117af390a9b2a5a4ac5e6153525fe57"
+    },
+    {
+      "path": "docs/12-implementation-planning/REVIEW_FINAL_READINESS.md",
+      "sha256": "3450396b029b0986417edb187ec77037bcf053d6621810af980931b83e40a1e1",
+      "gitBlob": "c3122b625fc17b8b6a2f5171ead8665fd153ff02"
+    },
+    {
+      "path": "docs/12-implementation-planning/REVIEW_INDEPENDENT_DATABASE_SECURITY.md",
+      "sha256": "28a940dc8c56897cb49f18dc1d872348242d0c78b588c6c48a791ccdf679d875",
+      "gitBlob": "6b8d499a5cc4293020827d079f14c6d43b4183ad"
+    },
+    {
+      "path": "docs/12-implementation-planning/REVIEW_INDEPENDENT_DOMAIN_TESTING.md",
+      "sha256": "91414e08aef589a9768ed3ddb5bc3f8c0a2e2eaab4aa50f0dfe9f0da48679f0a",
+      "gitBlob": "d73926e187c398967f156496a00f26dd0a5b8efb"
+    },
+    {
+      "path": "docs/12-implementation-planning/ROADMAP_AND_SLICES.md",
+      "sha256": "1298d6fbd51d5017d7e1537452b2bb6645be2ca90ba4143a47102eb355463196",
+      "gitBlob": "3a5e5fe3565386ef6e74c8390b21583f8b862487"
+    },
+    {
+      "path": "docs/12-implementation-planning/SELF_CHECK.md",
+      "sha256": "32d87f12d45402ef63a774e39510904633b154f52af4ed09a258b0e8cffd0df4",
+      "gitBlob": "4eb8a9a1f92bb0bbdbdf534e69128479b6079257"
+    },
+    {
+      "path": "docs/12-implementation-planning/SLICE_ENVELOPE_CONCURRENCY_DECISION.md",
+      "sha256": "ee4670f3867f3ddec2d1f2f18db11664e3ea18f474d68c6740c20e3ac3c28cfc",
+      "gitBlob": "4a74699fcdfc92ee96b450782fa2c380ee9e677a"
+    },
+    {
+      "path": "docs/12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md",
+      "sha256": "24b6d31bbc68c7181f207fc359764f82d33297ebb489b78535b52d7bdcaa9875",
+      "gitBlob": "9da363d00ebf1f1696a30c18ebf2e734d0779259"
+    },
+    {
+      "path": "docs/12-implementation-planning/SPIKES_AND_ACCEPTANCE.md",
+      "sha256": "1fc785550e023a742235db562881e3bdea88679816a4ec883f7970cf5e28cf36",
+      "gitBlob": "8f384e0a753f1e00770be567855a2fe20a7b9e11"
+    },
+    {
+      "path": "docs/12-implementation-planning/TECHNICAL_FREEZE.md",
+      "sha256": "58c07d410a61ac3de1d1aed3fe936574e4608f6908ba4eb913ad7e20ef4d9c59",
+      "gitBlob": "1976de506d1d595bcc0c57d55cd75d9408469c6d"
+    },
+    {
+      "path": "docs/12-implementation-planning/WORK_ITEMS.md",
+      "sha256": "14b4a31d633b53d96fba3e6d483860c99f8500936f805f66b9ed6a7926637387",
+      "gitBlob": "6f627fb341307e64ece9a074615263d40c211bc8"
+    },
+    {
+      "path": "docs/INDEX.md",
+      "sha256": "991b6ead62bc14c6a02413817bf6e73015403ff82335d736a167ceeb10fa35b9",
+      "gitBlob": "44b17ce946a8ff0480ff2df556eaa7ef61e08305"
+    },
+    {
+      "path": "README.md",
+      "sha256": "04a14f326fcf933d834311249e541a544d2a98e84ae83f2521ced2653c696839",
+      "gitBlob": "8d8f312cead17c5eabfa270164c3f6cff09ac175"
+    }
+  ]
+}

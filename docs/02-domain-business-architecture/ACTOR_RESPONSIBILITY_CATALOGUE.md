@@ -2,16 +2,30 @@
 id: DOM-ACTORS-001
 title: Actor and Responsibility Catalogue
 phase: 02-domain-business-architecture
-status: approved
-version: 0.2.1
+status: in_review
+version: 0.3.0
 owners: [business-process-owner]
 depends_on: [GOV-RACI-001, DOM-ROSTER-001]
-last_reviewed: 2026-09-06
-approval: APR-004
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Actor and Responsibility Catalogue
+
+## Current evidence precedence (2026-10-04)
+
+APR-004 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 ## Purpose
 
@@ -76,7 +90,7 @@ Glossary terms are linked on first use.
 | ACT-WH | Warehouse | human role | `BC-INVENTORY` operational handling of [Material Lot](../00-governance/registers/BUSINESS_GLOSSARY.md#term-006--material-lot) (TERM-006), [Inventory Unit](../00-governance/registers/BUSINESS_GLOSSARY.md#term-007--inventory-unit) (TERM-007) / [Coil](../00-governance/registers/BUSINESS_GLOSSARY.md#term-008--coil) (TERM-008), location, [Reservation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-009--reservation) (TERM-009) requests | Temporary Inventory Owner (temporary) | **none** |
 | ACT-PLAN | Production planner | human role | `BC-PRODUCTION` planning of [Production Order](../00-governance/registers/BUSINESS_GLOSSARY.md#term-011--production-order) (TERM-011) and [Material Allocation](../00-governance/registers/BUSINESS_GLOSSARY.md#term-010--material-allocation) (TERM-010) | Temporary Production Owner (temporary) | **none** |
 | ACT-OP | Production operator | human role | Shop-floor recording of consumption, output, [Residual](../00-governance/registers/BUSINESS_GLOSSARY.md#term-012--residual) (TERM-012), [Scrap](../00-governance/registers/BUSINESS_GLOSSARY.md#term-013--scrap) (TERM-013), rework; evidence only | Temporary Production Operator (temporary) | **none** — roster already limits this row to shop-floor practice evidence; no policy approval |
-| ACT-QC | Quality | human role | `BC-QUALITY` inspection and [Released](../00-governance/registers/BUSINESS_GLOSSARY.md#term-016--released) (TERM-016) disposition; commands inventory hold/release | Temporary Quality Owner (temporary) | **none** |
+| ACT-QC (future only) | Quality | deferred human-role label, no current factory person | Future `BC-QUALITY` inspection and [Released](../00-governance/registers/BUSINESS_GLOSSARY.md#term-016--released) (TERM-016); no current-MVP dependency | Historical Temporary Quality Owner placeholder; not staffed | **none** |
 | ACT-SHIP | Shipping | human role | `BC-SHIPPING` [Package](../00-governance/registers/BUSINESS_GLOSSARY.md#term-023--package) (TERM-023), [Shipment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-017--shipment) (TERM-017), dispatch, delivery; commands stock exit | Temporary Shipping Owner (temporary) | **none** |
 | ACT-FIN | Finance-lite | human role | `BC-FINANCE-LITE` ([Finance-Lite](../00-governance/registers/BUSINESS_GLOSSARY.md#term-018--finance-lite), TERM-018) operational Invoice, [Payment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-024--payment) (TERM-024), allocation | Temporary Finance-Lite Owner (temporary) | **none** |
 | ACT-SEC | Security | human role | `BC-IDENTITY` / `BC-AUDIT` identity, RBAC, isolation, evidence | Temporary Security Representative (temporary) | **none** |
@@ -119,7 +133,7 @@ execution where a stock movement is authorized.
 | Execute operation, consumption, output, rework | I | I | C | C | R | C | I | I | C | — | R for stock effects |
 | Residual identity and quantity | I | I | C | C | R fact | C | I | I | I | — | R for resulting unit |
 | Scrap disposition and stock effect | I | I | C | C | R fact | C | I | I | C | — | R for stock movement |
-| Pack / Shipment / dispatch | C | I | C | I | I | C — release gate | A/R | C | C | I — optional deferred visibility | R for definitive stock exit |
+| Pack / Shipment / dispatch | C | I | C | I | I | future QC only; no current release gate | A/R | C | C | I — isolated visibility | R for definitive stock exit |
 | Shipment without demand | C | I | C | I | I | C | R — may not proceed without explicit authority | I | C | — | R only after authorized command |
 | Operational Invoice / Payment | C | I | I | I | I | I | C | A/R | C | I — optional deferred visibility | — |
 | Identity, RBAC, customer isolation | C | C | C | C | C | C | C | C | A/R | constrained subject if portal later exists | I |
@@ -129,20 +143,20 @@ Cells marked "—" mean no proposed participation in that process.
 
 ### Portal party rule
 
-ACT-CUST is catalogued because a future customer channel is a known product
-capability (INT-007). This catalogue **does not decide OQ-010**.
+ACT-CUST represents the visibility-only customer channel accepted on OQ-010.
+The exact document list remains a later-slice input; this catalogue does not
+invent it or assign any customer write authority.
 
-- Ordering via portal: **formally deferred from MVP** (proposed scope pending
-  OQ-010).
-- Visibility and request: **optional deferred**; shown as **I** where a future
-  channel might notify or submit a request into Sales-owned processes.
+- Ordering and request submission: **outside current MVP**, not pending choice.
+- Visibility: authenticated isolated read-only MVP capability; prices are not
+  shown by default and internal genealogy is not dumped to customers.
 - ACT-CUST is never **A** or **R** for core writes. Submissions, if later
   authorized, become `BC-SALES` commands.
 
 ### Inventory Posting Service rule
 
 ACT-IPS is the proposed unique writer of Ledger, Balance, and stock movements
-(ASM-REPORT-001; OQ-017 open on mechanism). Human actors authorize or request;
+(ASM-REPORT-001; answered OQ-017 application-owned PostgreSQL transaction). Human actors authorize or request;
 they do not become a second stock writer. Warehouse accountability is for
 physical handling and requesting authorized postings, not for updating stock
 tables directly.
@@ -164,9 +178,9 @@ falsely close OQ-019.
 
 ## Open items
 
-- Questions: OQ-005 (QC and exceptional authority), OQ-010
-  (`treating`; portal party actions), OQ-012 (finance vs legal accounting),
-  OQ-015 (cutover RACI), OQ-019 (`treating`). OQ-007 Sales Order close is
+- Questions: OQ-005 future QC only; OQ-010 answered visibility-only with document
+  list remaining; OQ-012 answered no legal GL with external upload unspecified;
+  OQ-015 cutover RACI and OQ-019 people/permissions remain treating. OQ-007 Sales Order close is
   recorded. Remaining treating/unanswered IDs are those in OPEN_QUESTIONS.md.
 - Assumptions: ASM-013 and ASM-014 proposed; temporary roster is not validation
   of ASM-001 through ASM-012.

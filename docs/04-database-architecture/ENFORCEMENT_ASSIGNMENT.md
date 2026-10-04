@@ -2,21 +2,25 @@
 id: DATA-ENF-001
 title: Invariant Enforcement Assignment
 phase: 04-database-architecture
-status: approved
-version: 0.2.0
+status: in_review
+version: 0.3.0
 owners: [data-architect, chief-solution-architect]
 depends_on: [SM-INV-001, DATA-POST-001, DATA-TX-001, APR-005]
-last_reviewed: 2026-10-01
-approval: APR-006
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Invariant Enforcement Assignment
 
+APR-006 remains historical structure approval. This source/ADR-0011
+reconciliation is delegated technical work, not human baseline approval.
+
 Where each INV-* must be enforced. “Logical” means the rule is already
 decided as structure. “Application” and “database” are later assignment
-targets. They are not an accepted mechanism (OQ-017) and not an accepted
-platform (OQ-018).
+targets. OQ-017 accepts application-owned transactions/locks and ADR-0007
+accepts PostgreSQL. ADR-0011 freezes generic key/outcome enforcement; domain
+SQL/locks/constraints remain before each affected slice.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -33,17 +37,17 @@ future-only enforcement assignments; they are not current guards or actors.
 | INV-003 | Availability formula; three distinct facts | Derive available; do not store a fourth truth | Optional check that reserved ≤ on-hand | none as a rule |
 | INV-004 | One location; incompatible destinies | `GUARD_STATE` / `GUARD_CONFLICT` | Unique active location per unit if later proven | ASM-005 |
 | INV-005 | No physical delete; reversal rows | New compensating command | No UPDATE-in-place of posted evidence | OQ-015 cutover authority |
-| INV-006 | One business transaction at `CompleteProductionOperation` (OQ-003 recorded) | Orchestrate the exclusive bundle; reject independent production consume | Atomic commit of facts + stock | Routing step names OQ-003; leftover cutoff numbers OQ-009 |
-| INV-007 | Mass-balance equation | Reject close if out of tolerance | Optional check once the number exists | OQ-006 family % residual; default 0 recorded |
-| INV-008 | Child unit + parent close/split **nested in** INV-006 when leftover is production residual | Same transaction as residual fact and completion | Identity uniqueness | OQ-009 cutoff |
+| INV-006 | One business transaction at `CompleteProductionOperation` (OQ-003 recorded) | Orchestrate exclusive bundle; reject independent production consume | Atomic facts + stock + original audit + outcome | Workflow/routing OQ-003; human reusability recording OQ-009 |
+| INV-007 | Mass-balance equation | Reject when required production loss/tolerance policy is missing or fails | Later check after policy/scale is specified | Production evidence Class B; not OQ-006 fulfillment default zero |
+| INV-008 | Child unit + parent close/split **nested in** INV-006 when leftover is production residual | Same transaction as residual fact and completion | Identity uniqueness | OQ-009 human disposition/return posting, no automatic cutoff |
 | INV-009 | Source facts immutable | No edit-genealogy command | Projection rebuildable | OQ-004 recorded hybrid grain; family catalogue is configuration |
 | INV-010 | **Future Quality only:** QC gate before available/shippable | Future `GUARD_INVARIANT` only | Future optional state check | OQ-005 future plans/people; no current-MVP gate |
-| INV-011 | Authorized customer/order or exceptional flag | `GUARD_OPEN_POLICY` if person missing | none required | OQ-006, OQ-019 |
+| INV-011 | Authorized customer/order or exceptional flag | `GUARD_OPEN_POLICY` if required authority missing | none required | OQ-019 mappings; shipment operational evidence; OQ-006 nondefault configuration only |
 | INV-012 | Allocation ≤ payment and ≤ open balance | Reject over-allocation | Optional numeric check | OQ-012 answered: no Legal-GL in MVP |
 | INV-013 | Unfulfilled Demand ≠ overdue; may exist without a Sales Order; remainder-close of an SO requires that fact (OQ-007) | Do not require an order FK for standalone unfulfilled; `CloseSalesOrder` from `PARTIALLY_FULFILLED` requires the remainder fact | none required | none for the close rule |
 | INV-014 | Snapshot at post; later master-data does not rewrite | Copy snapshot onto the document | none | OQ-016 retention days |
 | INV-015 | Backend auth; SoD pairs; customer isolation | Enforce roles; Phase 06 `SEC-*` | none as stock kernel | OQ-010, OQ-019 |
-| INV-016 | Caller idempotency key | Return first result | Unique key store | OQ-011 device identity |
+| INV-016 | UUID v4 key and immutable request binding | Return first accepted/rejected result after current authorization; conflict mismatched binding | ADR-0011 full installation/authority/key uniqueness, advisory serialization, terminal outcome/original audit atomicity | OQ-011 receipt natural identity later; no generic persistence ambiguity |
 | INV-017 | Shipping commands Inventory; Quality command authority is future only | Deny direct stock writes | Deny Ledger/Balance grants | No current Quality actor |
 | INV-018 | GR split | Procurement cannot post qty | Deny Procurement Ledger grants | none |
 | INV-019 | Genealogy is a projection | Deny write API | Allow drop/rebuild | none |
@@ -53,8 +57,8 @@ future-only enforcement assignments; they are not current guards or actors.
 
 - **Later application** is the Phase 05/06 command path. It is not
   NestJS or any package.
-- **Later database / kernel** is whichever OQ-017 option is later
-  accepted. Listing a kernel check does not accept option A, B, or C.
+- **Later database / kernel** follows accepted application-owned PostgreSQL
+  transactions (OQ-017); stored functions require later ADR + spike.
 - An invariant with an open numeric guard cannot gain a stored constant.
   The later check is “reject if the number is required and missing.”
 - INV-002’s one-`ACTIVE`-reservation rule is a **logical invariant**, an
@@ -65,6 +69,6 @@ future-only enforcement assignments; they are not current guards or actors.
 
 ## Must not do with this table
 
-- Treat a kernel check as proof that PostgreSQL is chosen
+- Treat a proposed domain kernel check as proof its concrete SQL is frozen
 - Store a guessed tolerance, expiry, or UOM so a check can run
 - Move Quality or Shipping onto Ledger grants

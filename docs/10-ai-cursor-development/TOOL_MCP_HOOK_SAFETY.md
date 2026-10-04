@@ -2,51 +2,47 @@
 id: AI-TOOL-001
 title: Tool MCP Hook and Safety Labels
 phase: 10-ai-cursor-development
-status: approved
-version: 0.5.0
+status: in_review
+version: 0.10.0
 owners: [chief-solution-architect]
 depends_on: [AI-RULE-001, AI-AUTH-001, APR-011, APR-012]
-last_reviewed: 2026-10-02
-approval: APR-016
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Tool, MCP, Hook, and Safety Labels
 
-Which tools already exist, and what stays open. This does not install
-an MCP server or weaken the write-gate. It does not create an unlock
-or checkpoint file.
+## Current decision (2026-10-04)
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+ADR-0012 and [trusted-agent governance](TRUSTED_AGENT_OPERATING_MODEL.md) control.
+The Owner retired the obsolete Codex micro-governance registration: `.codex/hooks.json`
+has `"PreToolUse": []`. After Codex restarted, repository search and canonical
+source reads succeeded. Ordinary research, diagnostics, tests, subagents and
+planning use native Codex permissions; no new hook or exact tool/read allowlist.
 
-Codex is the active AI development agent. The existing `.cursor/` path remains
-the canonical physical location for the architecture gate, human checkpoint
-marker, and human implementation unlock. No second authorization state exists.
-The `.cursor/hooks.json` registration and PowerShell hook use Cursor events;
-they do not establish technical interception of Codex tool calls. Codex must
-perform the explicit policy self-check in AGENT_AUTHORITY.md before a protected
-action. Implementation authorization remains blocked until equivalent Codex
-write/shell enforcement is installed, trusted, and verified or separately
-accepted through governance. Repository instructions alone are not technical
-interception. [OpenAI Docs on Codex hooks](https://learn.chatgpt.com/docs/hooks)
-describe project hooks, trust requirements, and tool-path limitations; this
-repository has no Codex project hook binding. OpenAI Docs also describe
-`AGENTS.md` as a project instruction surface; this repository has no such
-file, and the current architecture write allowlist does not include one.
+The implementation lock is trusted-agent governance, not adversarial OS proof.
+No native installer, ACL, ProgramData, task/pipe/process or reparse attack work is
+required or authorized. [Native evidence](NATIVE_AUTONOMY_TRANSITION.md) is retired
+history, not a current blocker. Actual native tool denials must still be honored.
 
-## Present controls
+Canonical gate, human baseline/approval, final unlock and checkpoint evidence
+remain human-only. Codex never synthesizes or activates them. Tool access or
+readiness is not authorization. Implementation remains false/null, unlock absent.
+ADR-0011/0013 govern delegated technical design, not human baseline acceptance.
 
-| Control | Safety rule |
+APR-016 approved earlier historical tooling bytes, not this current revision.
+
+## Present governance controls
+
+| Control | Current obligation |
 | --- | --- |
-| `.cursor/architecture-gate.json` | Protected policy; architecture-only; implementation locked |
-| Architecture write-gate | Cursor hook for covered Cursor tool calls; allows docs Markdown and approved Cursor rules/skills and denies protected or implementation paths. Codex coverage is not verified. |
-| Human checkpoint marker generator | Human-only; empty index; binds the complete changed-file set; expires |
-| Implementation unlock file | **Must be human-created**; currently absent |
-| Architecture-first + question-pack rules | Always applied in Cursor; their automatic application in Codex is not established. The underlying phase and OQ rules remain binding project policy. |
-
-IDE session tools used for architecture work (browser snapshot, app
-control) are not `MCP-EXTRA` products and may not create application
-source.
+| .cursor/architecture-gate.json | Canonical authorization; implementation false, approvedBaseline null |
+| Implementation unlock | Human-created, matching approved baseline and exact grant; absent |
+| Human approval/checkpoint evidence | Never agent-fabricated or changed; separate human procedure |
+| AGENTS.md / current phase / live registers | Trusted engineering instructions; preserve business answers and scoped technical decisions |
+| Native Codex permissions | Ordinary sandbox/reviewer/audit; no claim malicious-agent containment |
+| Legacy Cursor/Codex hook scripts | Historical sources; Codex micro-governance registration retired, not an ERP readiness test |
 
 ## Later human unlock (labels; file absent)
 
@@ -62,8 +58,10 @@ created it and it names at least:
 | `allowedShellCommands` | Exact commands; no `;`, `|`, or redirection |
 
 The agent (`AG-UNLOCK`) must not invent, edit, or complete this file.
-An unlock that names `package.json`, Docker, CI, or a path outside the
-approved baseline is invalid.
+An unlock that names a path/dependency outside the human-approved exact
+first-slice baseline is invalid. Proposed root package/config files may appear
+in that future baseline only after technical freeze and final human approval.
+They do not exist under the current lock.
 
 ## Later human checkpoint marker (labels)
 
@@ -79,14 +77,23 @@ The agent runs only the marked `git add` and the exact commit string.
 3. Do not skip hooks (`--no-verify` is forbidden unless a later human
    rule explicitly says otherwise; none does).
 4. Extra MCP/tool products stay OQ-018 (`MCP-EXTRA`).
-5. Browser or shell tools used in this architecture phase may not
-   create application source, `package.json`, Dockerfiles, or CI.
+5. Browser or shell tools may not create ERP application source, root/product
+   package files, Dockerfiles or product CI. Confined non-product tooling is
+   permitted only within its effective authorization.
 6. A write-gate deny is not a prompt to work around the hook.
 7. After a valid marker, the agent may run only the marked `git add`
    and the exact `allowedGitCommands` string.
 8. Frozen `CHK-*` commits are not amended.
 9. `git push`, `git restore`, and `git reset` are not `AG-CHK`.
 10. Secrets and `.env` stay out of the tree (`CONF-SECRET` / `HH-SECRET`).
+
+Rules requiring human markers apply to human-approved baseline checkpoints;
+ordinary delegated GCP governance records follow the current APPROVALS policy.
+Operational read/diagnostic/test policy maintenance is delegated only within
+functioning controls, not permission to bypass a denial. Final human package
+must expand external write rights to exactly the first slice as well as create
+matching gate/unlock state. No technical enforcement or security PASS is claimed
+from a proposed permission contract.
 
 ## MCP and tool extensions (open)
 
@@ -102,7 +109,9 @@ Installing any of those now would silently close OQ-018.
 ## Must not decide here
 
 - Datadog, GitHub, Slack, or other MCP products
-- A replacement for the architecture write-gate
+- Agent activation of a protected Tier-0 replacement; preparing a reviewed
+  replacement proposal is permitted
 - Browser automation as a substitute for Phase 07 `QG-*` evidence
 - A secret-store or identity-provider product
-- Unlock path lists
+- Agent creation/activation of the final unlock; proposed exact future scopes
+  are permitted planning work

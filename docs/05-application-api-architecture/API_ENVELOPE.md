@@ -2,16 +2,19 @@
 id: APP-ENV-001
 title: API Envelope and Error-Shape Sketch
 phase: 05-application-api-architecture
-status: approved
-version: 0.2.0
+status: in_review
+version: 0.3.0
 owners: [api-architect, solution-architect]
 depends_on: [APP-CMD-001, APP-QRY-001, SM-EVT-001, APR-006, APR-007]
-last_reviewed: 2026-09-06
-approval: APR-007
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # API Envelope and Error-Shape Sketch
+
+APR-007 retains historical structure approval. Current generic contract is
+reconciled under delegated ADR-0011/0012, without human baseline approval.
 
 Logical request and result shape for Phase 05 commands and queries. This
 is not an OpenAPI file, not an HTTP path list, and not a transport
@@ -27,11 +30,20 @@ Every write from [COMMAND_CATALOGUE.md](COMMAND_CATALOGUE.md) carries:
 | Field | Rule |
 | --- | --- |
 | `command` | Exact catalogue name |
-| `idempotency_key` | Caller-supplied; INV-016 |
-| `actor_role` | `ACT-*`; Temporary \* `(temporary)` → `GUARD_ACTOR` |
-| `actor_identity` | Backend-authenticated identity; UI claim is not enough (INV-015) |
+| `contract_version` | Positive int32 version of the registered command contract; immutable request binding |
+| `idempotency_key` | Caller UUID v4; canonical lowercase; full installation/authority/key tuple (ADR-0011) |
+| `actor_role` | Backend-resolved current `ACT-*`; Temporary \* `(temporary)` → `GUARD_ACTOR`; body is not authority |
+| `actor_identity` | Trusted issuer + subject; UI claim is not enough (INV-015), bound separately from key namespace |
 | `target` | Document, unit, or fact identity the command acts on |
 | `payload` | Command-specific fields; quantity members stay `open: OQ-001` / `OQ-002` |
+| `preconditions` | Registered effect-bearing expected version/conditions, materially bound |
+
+Installation/authority scope is trusted context, never a client override.
+Customer/resource visibility remains independently required. Material binding,
+canonical JSON limits, scalar rules and version readers are fixed by
+[COMMAND_IDEMPOTENCY_SPEC](../12-implementation-planning/COMMAND_IDEMPOTENCY_SPEC.md).
+First slice tests an in-process envelope only; production exposes health and no
+business/fixture command routes. This does not choose later business HTTP routes.
 
 Transport headers versus body placement is not chosen. A queue or RPC
 carrier must still present these fields to the owning module.
@@ -43,6 +55,8 @@ carrier must still present these fields to the owning module.
 | `outcome` | `accepted` |
 | `command` | Echo |
 | `idempotency_key` | Echo |
+| `execution_id` | Stable original committed execution UUID; same on replay |
+| `attempt_id` | Current attempt UUID; changes per transport attempt |
 | `fact_identity` | Posted document or movement identity |
 | `source_state` / `target_state` | From the owning machine |
 | `event` | Proposed name from the transition Event column |
@@ -71,13 +85,26 @@ Allowed families: `GUARD_OPEN_POLICY`, `GUARD_INVARIANT`,
 A rejected command writes no posted fact. HTTP status numbers, problem+json,
 and exception class names are not chosen (OQ-018).
 
+Accepted AND rejected first outcomes are durable. Matching retry does not repeat
+effects or evaluate guards. Different bound intent/principal at an occupied key
+returns safe GUARD_CONFLICT with no new outcome or foreign execution ID/result.
+GUARD_IDEMPOTENT_DUP is a distinct-key owner-mapped business duplicate, never a
+replacement for accepted replay. Current permission/result visibility is checked
+on every attempt, including after key-lock wait.
+
+Malformed/unbounded/unbindable, unauthenticated or forbidden input is an
+admission/security failure, not a terminal command-outcome row. Infrastructure
+timeout/deadlock/outage and unknown commit are explicitly retryable/uncertain;
+they must not be serialized as durable business `rejected`. An uncertain caller
+resubmits the SAME key/binding. Errors exclude tokens, SQL and foreign data.
+
 ## Query request and result
 
 | Field | Rule |
 | --- | --- |
 | `query` | Exact name from [QUERY_CATALOGUE.md](QUERY_CATALOGUE.md) |
 | `actor_role` / `actor_identity` | Backend-authenticated; customer isolation required (INV-015) |
-| `scope` | Customer and, when answered, site (OQ-013) |
+| `scope` | Trusted customer/resource visibility and recorded single legal-entity/principal site (OQ-013 answered); no caller-selected new tenancy |
 | `result` | Snapshot or projection; not a write |
 | `stale_rebuild` | Allowed on genealogy reads (INV-019) |
 

@@ -54,7 +54,9 @@ function Test-ProtectedPath {
         $RelativePath -ieq ".cursor/hooks.json" -or
         $RelativePath -ieq ".cursor/IMPLEMENTATION_UNLOCK.json" -or
         $RelativePath -ieq ".cursor/PHASE_CHECKPOINT_APPROVAL.json" -or
-        $RelativePath.StartsWith(".cursor/hooks/", [StringComparison]::OrdinalIgnoreCase)
+        $RelativePath -ieq ".codex/hooks.json" -or
+        $RelativePath.StartsWith(".cursor/hooks/", [StringComparison]::OrdinalIgnoreCase) -or
+        $RelativePath.StartsWith(".codex/hooks/", [StringComparison]::OrdinalIgnoreCase)
     )
 }
 
@@ -82,6 +84,10 @@ function Test-AllowedArchitecturePath {
     ) {
         return $true
     }
+    if ($RelativePath -ieq "AGENTS.md") {
+        return $true
+    }
+
     return $false
 }
 
@@ -601,7 +607,7 @@ try {
         Emit-Permission deny "Unknown tool blocked by the architecture gate: $toolName" "Register and review the tool classification before use."
     }
 
-    if ($toolName -match '(?i)(delete|remove)' -or "$rawInput" -match '(?m)^\*\*\*\s+Delete File:') {
+    if ($toolName -match '(?i)(delete|remove)') {
         Emit-Permission deny "Delete/rename operations are blocked during architecture-only work." "Preserve history and use supersession records."
     }
 
@@ -618,6 +624,11 @@ try {
     } else {
         $rawInput
     }
+
+    if ($patchText -match '(?m)^\*\*\*\s+(?:Delete File:|Move to:)') {
+        Emit-Permission deny "Delete/rename operations are blocked during architecture-only work." "Preserve history and use supersession records."
+    }
+
     foreach ($match in [regex]::Matches($patchText, '(?m)^\*\*\*\s+(?:Add|Update) File:\s*(.+?)\s*$')) {
         $candidatePaths.Add($match.Groups[1].Value)
     }

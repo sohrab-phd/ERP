@@ -2,12 +2,12 @@
 id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
-status: approved
-version: 0.9.0
+status: in_review
+version: 0.9.1
 owners: [requirements-owner, qa-architect]
 depends_on: [SRC-001, SRC-002, DOM-MVP-RULES-001, SM-INV-001, APR-005]
-last_reviewed: 2026-10-01
-approval: APR-005
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
@@ -111,8 +111,9 @@ evidence and Phase 07.
   [Provenance Classification](../../01-project-assimilation/PROVENANCE_CLASSIFICATION.md),
   and
   [Workshop Agenda section 4](../../01-project-assimilation/WORKSHOP_AGENDA.md)
-- Open questions: OQ-003 residual (step names), OQ-009 residual (cutoff
-  numbers). OQ-004 hybrid grain is recorded.
+- Open questions: OQ-003 residual (routing/lifecycle recording), OQ-009 residual
+  (recording the human reusability disposition). No universal numeric cutoff is
+  assumed. OQ-004 hybrid grain is recorded.
 - Risk: RISK-005
 - Phase 02 design evidence:
   [Process maps](../../02-domain-business-architecture/PROCESS_MAPS_AS_IS_TO_BE.md)
@@ -132,8 +133,9 @@ evidence and Phase 07.
   prompts and acceptance reject `EditGenealogy`; generated genealogy
   stays a DATA-GEN-001 source-fact rebuild
 - Status: proposed; routing **step names** remain treating (OQ-003).
-  Tracking grain is recorded (OQ-004). Residual cutoff **numbers** remain
-  treating (OQ-009). Posting boundary is `CompleteProductionOperation`.
+  Tracking grain is recorded (OQ-004). Residual/Scrap is classified by human
+  reusability decision; recording policy remains treating (OQ-009), not a request
+  for automatic cutoff numbers. Posting boundary is `CompleteProductionOperation`.
 
 ### REQ-OBJ-004 — Controlled and auditable business lifecycles
 

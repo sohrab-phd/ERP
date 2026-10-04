@@ -2,16 +2,22 @@
 id: QA-GATE-001
 title: Quality Gates and Evidence
 phase: 07-testing-quality-architecture
-status: approved
-version: 0.2.0
+status: in_review
+version: 0.2.1
 owners: [qa-architect, chief-solution-architect]
 depends_on: [QA-STRAT-001, QA-TRACE-001, QA-SCN-001, APR-008]
-last_reviewed: 2026-09-06
-approval: APR-009
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Quality Gates and Evidence
+
+Current delegated reconciliation: APR-009 remains historical structure approval.
+ADR-0011 and ADR-0013 now fix foundation contract/tooling; detailed first-slice
+acceptance and DoD live in [physical design](../12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md).
+Earlier 'must not decide here' clauses describe the original structure scope,
+not a new prohibition on delegated technical choices. No product tests run yet.
 
 What must be true before a later implementation unlock can even be
 proposed. This is not a CI pipeline and not Phase 12.

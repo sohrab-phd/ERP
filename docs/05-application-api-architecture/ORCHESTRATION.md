@@ -2,16 +2,19 @@
 id: APP-ORCH-001
 title: Command Orchestration and Idempotency
 phase: 05-application-api-architecture
-status: approved
-version: 0.2.0
+status: in_review
+version: 0.3.0
 owners: [solution-architect]
 depends_on: [DATA-TX-001, SM-CONC-001, APP-CMD-001, APR-006, APR-007]
-last_reviewed: 2026-09-16
-approval: APR-007
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Command Orchestration and Idempotency
+
+APR-007 remains historical structure approval. This technical reconciliation
+under ADR-0011/0012 is not human baseline approval.
 
 How a Phase 05 command uses Phase 04 transaction boundaries. This does
 not choose a unit-of-work library, outbox, or broker (OQ-017, OQ-018).
@@ -20,18 +23,24 @@ not choose a unit-of-work library, outbox, or broker (OQ-017, OQ-018).
 
 ## Orchestration rule
 
-1. Authenticate the `ACT-*` role on the backend (INV-015).
-2. Load the idempotency key. If already accepted, return the first
-   result (INV-016).
-3. Evaluate guards. On failure, write no posted fact; return the
-   rejection family from
-   [EVENT_AND_REJECTION.md](../03-state-machines-invariants/EVENT_AND_REJECTION.md).
-4. Perform the owning-BC write and any commanded Inventory posting in
-   **one business transaction** when
-   [TRANSACTION_AND_IDEMPOTENCY.md](../04-database-architecture/TRANSACTION_AND_IDEMPOTENCY.md)
-   requires it.
-5. Emit the proposed event only after that transaction succeeds.
-6. Store the idempotency result.
+1. Authenticate trusted identity/role/scope and validate bounded bindable input
+   and current command/resource access (INV-015).
+2. Begin one READ COMMITTED transaction/client, acquire full scoped-key advisory
+   lock and read outcome in a separate statement; recheck current authorization.
+3. Identical accepted OR rejected outcome replays with durable attempt audit;
+   changed principal/intent returns nondisclosing GUARD_CONFLICT. No handler runs.
+4. For absent key, savepoint precedes handler work. Owning BCs and commanded
+   Inventory participants write their own facts in the same transaction; domain
+   resource locks and constraints remain necessary for different-key races.
+5. Accepted owner facts, original decision audit and terminal outcome commit
+   together. Recognized business rejection rolls tentative facts to savepoint,
+   then commits rejection/outcome/audit. Technical errors abort the whole bundle.
+6. Return terminal outcome only after confirmed COMMIT. Unknown commit resolves
+   with the SAME bound key against the primary. Event notices may be emitted only
+   afterwards, never before outcome storage/commit. No outbox/broker is selected.
+
+Binding, bounds, guards, audit/crash and replay retention:
+[COMMAND_IDEMPOTENCY_SPEC](../12-implementation-planning/COMMAND_IDEMPOTENCY_SPEC.md).
 
 `ACT-IPS` executes stock writes. Quality and Shipping only reach step 4
 as commanders.
@@ -54,7 +63,8 @@ as commanders.
 after `CompleteProductionOperation`. Splitting residual identity onto
 a second commit is a split of INV-006.
 
-How the bundle is committed stays OQ-017.
+OQ-017 selects application-owned PostgreSQL transactions. ADR-0011 freezes the
+generic outer transaction; domain-specific locks/constraints belong to later slices.
 
 Independent `ConsumeUnitPartial` / `ConsumeUnitComplete` for production
 is rejected (`GUARD_INVARIANT` INV-006). Those names are nested IPS

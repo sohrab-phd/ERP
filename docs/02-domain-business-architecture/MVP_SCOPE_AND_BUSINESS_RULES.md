@@ -2,16 +2,30 @@
 id: DOM-MVP-RULES-001
 title: MVP Scope and Business-Rule Catalogue
 phase: 02-domain-business-architecture
-status: approved
-version: 0.5.0
+status: in_review
+version: 0.6.0
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, DOM-CAP-BC-001, DOM-PROCESS-001, DOM-OWN-001, ASM-014]
-last_reviewed: 2026-10-01
-approval: APR-004
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # MVP Scope and Business-Rule Catalogue
+
+## Current evidence precedence (2026-10-04)
+
+APR-004 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 ## Purpose
 
@@ -72,8 +86,9 @@ sign-off, and not implementation authorization.
   personnel. This future architecture creates no current-MVP dependency.
   OQ-005 stays treating for future detail only.
 - Customer Portal **ordering** and any customer-facing commercial write path
-  until OQ-010 / FIND-001 is decided. Visibility/request/document features may
-  be evaluated later; they are not in the current MVP cut.
+  under answered OQ-010. Authenticated isolated visibility is current MVP scope;
+  the exact document list remains a later-slice prerequisite. Requests, prices
+  and ordering remain future scope.
 - Full legal accounting, taxation, and general ledger (ASM-010, OQ-012).
 - Microservices, Kubernetes, Event Sourcing, Kafka/RabbitMQ without a driver,
   Redis as stock truth, PLC telemetry, offline-first inventory, time-series
@@ -97,21 +112,20 @@ These stay open. MVP architecture must leave explicit extension points rather
 than inventing values.
 
 - OQ-001 UOM/conversion/precision matrix
-- OQ-002 Coil weight versus length semantics
-- OQ-003 production routing and tracking granularity
-- OQ-004 finished-product identity (batch vs unit)
-- OQ-006 over-production / over-delivery tolerances
-- OQ-009 residual usability threshold
-- OQ-010 portal phase (`treating`; ordering formally deferred from MVP; does
-  not block the internal purchase-to-delivery cycle)
+- OQ-002 measured-kg rule is answered; actual scale tickets are validation input
+- OQ-003 versioned per-order routing, Entry/Referral persistence and lifecycle
+- OQ-004 hybrid identity is answered; first-family catalogue and code relationships remain
+- OQ-006 default fulfillment tolerance zero is answered; non-default configuration remains
+- OQ-009 human reusability-disposition recording and authority; no automatic numeric cutoff
+- OQ-010 visibility-only portal is answered; exact permitted document list remains
 - OQ-011 equipment/weighbridge integration
-- OQ-012 finance-lite versus legal accounting interface
-- OQ-013 legal entity / site / tenancy
-- OQ-014 volume and cutover
-- OQ-015 correction/reversal authority matrix
-- OQ-016 backup, recovery, support
-- OQ-017 Inventory Posting mechanism
-- OQ-018 architecture style, data platform, frontend, packages, deployment
+- OQ-012 no statutory GL is answered; unnamed external upload remains separate
+- OQ-013 one entity/site is answered; multiple-site support is future
+- OQ-014 actual volumes are UAT/capacity input
+- OQ-015 opening-stock mechanism/evidence/signers remain unresolved
+- OQ-016 RPO 60 min/RTO 8 h is answered; backup product/retention remain go-live input
+- OQ-017 application-owned PostgreSQL transaction is answered; optional stored functions deferred
+- OQ-018 Node/TypeScript/Modular Monolith/PostgreSQL is answered; first-slice toolchain ADRs refine it
 - OQ-019 real named workshop participants (workshop execution still blocked)
 
 ## Proposed business-rule catalogue
@@ -128,8 +142,8 @@ identities cannot approve them.
 | BR-004 | One Inventory Unit has one active physical location and cannot be simultaneously issued, shipped, quarantined, or consumed incompatibly. | BC-INVENTORY | ASM-005 |
 | BR-005 | Posted operational and financial records are not physically deleted; corrections use reversal with reason, actor, authority, and audit. | cross-cutting | ASM-006, ASM-012, OQ-015 |
 | BR-006 | Operation completion atomically records Consumption, Output/WIP, Residual, Scrap, process loss, genealogy, and inventory postings. | BC-PRODUCTION | OQ-003 |
-| BR-007 | Mass balance holds within approved tolerance: consumed weight equals good output plus WIP plus residual plus scrap plus approved process loss. | BC-PRODUCTION | OQ-006 |
-| BR-008 | A usable residual receives a new Inventory Unit identity linked to its parent; the parent is closed or split. Minimum usable threshold is OQ-009. | BC-PRODUCTION, BC-INVENTORY | OQ-009 |
+| BR-007 | Mass balance holds within approved tolerance: consumed weight equals good output plus WIP plus residual plus scrap plus approved process loss. | BC-PRODUCTION | Production/process-loss evidence on OQ-009; mass-balance policy unresolved, separate from OQ-006 |
+| BR-008 | A usable residual receives a new Inventory Unit identity linked to its parent; the parent is closed or split. Human reusability disposition and its recording/authority remain OQ-009; no measurement-based classifier. | BC-PRODUCTION, BC-INVENTORY | OQ-009 |
 | BR-009 | Genealogy source facts are immutable and support supplier-to-customer and customer-to-source tracing, including merge, split, rework, and defective-lot impact. | BC-PRODUCTION, BC-REPORTING | TERM-015 |
 | BR-010 | **Future Quality only:** if a later approved scope requires QC, pending/quarantined/rejected Quality disposition blocks availability or shipment and Product Batch release follows that plan. No QC gate or Quality `Released` state is required in the current MVP. | BC-QUALITY, BC-SHIPPING | OQ-005 future residual, TERM-016 |
 | BR-011 | Shipment content belongs to the authorized customer/order and references permitted Package or Product Batch form. Shipment without demand requires explicit authority. | BC-SHIPPING | OQ-006 |
@@ -175,8 +189,9 @@ stay nested. The factory has not named them.
 ## Success criterion for this MVP
 
 A real purchase-to-delivery cycle can run without parallel Excel, and balances,
-audit trail, and genealogy reconcile. Numeric UOM, routing, QC, and
-fulfillment-limit **numbers** remain workshop-owned. Sales Order close and
+audit trail, and genealogy reconcile. Missing UOM/routing/production policy stays
+explicitly guarded; QC is outside current MVP. Default fulfillment tolerance is
+zero; only non-default configured limits need further input. Sales Order close and
 reservation uniqueness are recorded (OQ-007, OQ-008).
 
 ## Formal scoping for the Phase 02 design-gate

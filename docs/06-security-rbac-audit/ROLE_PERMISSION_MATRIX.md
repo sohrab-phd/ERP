@@ -2,16 +2,19 @@
 id: SEC-RBAC-001
 title: Role Permission and Scope Matrix
 phase: 06-security-rbac-audit
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.4.0
 owners: [security-architect, business-control-owner]
 depends_on: [DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
-last_reviewed: 2026-10-01
-approval: APR-008
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Role Permission and Scope Matrix
+
+APR-008 retains historical structure approval. Current live OQ/source
+reconciliation is delegated work, not human baseline approval.
 
 Which `ACT-*` role may present which Phase 05 command family. This is
 a permission catalogue, not an RBAC library and not named people
@@ -71,13 +74,14 @@ with the owning bounded context.
 | Query family | May read | Isolation |
 | --- | --- | --- |
 | Own-BC documents | owning `ACT-*` | customer scope required |
-| GetAvailability / GetLedger / GetBalance / GetUnit | ACT-WH, ACT-SALES (availability), ACT-PLAN (allocation context), ACT-SEC (audit) | customer and, when answered, site (OQ-013) |
-| TraceForward / TraceBackward | ACT-QC, ACT-WH, ACT-SALES, ACT-SEC | rebuild-only; no write |
+| GetAvailability / GetLedger / GetBalance / GetUnit | ACT-WH, ACT-SALES (availability), ACT-PLAN (allocation context), ACT-SEC (audit) | customer/resource visibility and recorded single organizational site scope (OQ-013) |
+| TraceForward / TraceBackward | ACT-WH, ACT-SALES, ACT-SEC; ACT-QC only if future Quality separately enabled | rebuild-only; no source write |
 | GetInvoice / GetPayment | ACT-FIN; ACT-SALES may see own-order invoices | customer isolation |
-| Portal customer reads | not in MVP | OQ-010 |
+| Portal customer reads | ACT-CUST through Sales-owned read port, only explicitly approved document whitelist before portal slice | Own customer only; OQ-010 visibility-only MVP, document list residual |
 
-A role that cannot present a command also cannot obtain a query
-result that would disclose another customer’s payload.
+Query permission is evaluated independently from write-command permission.
+Read-only portal visibility does not grant ordering. No role receives another
+customer's payload by merely holding a command permission or claiming a role.
 
 ## Must not decide here
 

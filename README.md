@@ -43,8 +43,14 @@ Full document index:
 
 **Not accepted unless a later ADR says so:** NestJS, Prisma, React, Socket.IO,
 JWT, Keycloak, Jest, Playwright, Docker Compose / Nginx ([ADR-0008 remains
-proposed](docs/00-governance/registers/DECISIONS.md)), npm/pnpm, extra MCP.
+proposed](docs/00-governance/registers/DECISIONS.md)), pnpm, extra MCP.
 .NET / C# / ASP.NET are superseded.
+
+ADR-0011 and ADR-0013 now accept the delegated technical foundation: bound durable
+command outcomes; supported pinned Node/TypeScript, npm workspaces, direct pg SQL,
+SQL migrations, node:test and ESLint/Prettier. The backend host is health-only
+node:http. See [technical freeze](docs/12-implementation-planning/TECHNICAL_FREEZE.md).
+These decisions are not human approval of an implementation baseline.
 
 **Not required for MVP:** Kafka, RabbitMQ, Kubernetes, Event Sourcing, a
 time-series database, a service-per-domain mesh.
@@ -94,6 +100,26 @@ When they disagree, the live files in step 2–5 win.
 
 ## 3. Where we are now
 
+Current 2026-10-04 work is **ERP pre-implementation design and review**.
+The Owner terminated native/OS autonomy containment and selected conventional
+trusted-agent governance. Codex obeys the implementation lock; proving resistance
+to malicious-agent/shared-parent substitution is not a project objective.
+[Trusted-agent model](docs/10-ai-cursor-development/TRUSTED_AGENT_OPERATING_MODEL.md)
+and ADR-0012 record the decision. The native installer payload is removed and all
+prior execution commands withdrawn. No administrator or ACL action is requested.
+
+The live [readiness checklist](docs/12-implementation-planning/IMPLEMENTATION_READINESS.md)
+tracks generic idempotency, foundation-only SLICE-ENVELOPE technical/physical
+freeze and useful engineering review. New working designs:
+[command idempotency](docs/12-implementation-planning/COMMAND_IDEMPOTENCY_SPEC.md),
+[technical freeze](docs/12-implementation-planning/TECHNICAL_FREEZE.md),
+[physical design](docs/12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md)
+and [capability backlog](docs/12-implementation-planning/IMPLEMENTATION_BACKLOG.md).
+The Owner retired the legacy PreToolUse registration and restarted Codex;
+repository search and canonical-source access now work. Source reconciliation,
+current version evidence and independent reviews govern the live readiness
+result. No human baseline approval or implementation authorization is claimed.
+
 The project completed **architecture phases 00–12** as **structure**, then six
 **reconciliation gates**, then recorded **factory-site business evidence**, then
 ran a **clarification-assessment** that concluded **no additional OQ can be
@@ -104,7 +130,8 @@ fully closed** from that evidence.
 | Architecture phases 00–12 | Approved as structure ([APR-002](docs/00-governance/approved-baselines/APR-002-governance.md) through [APR-014](docs/00-governance/approved-baselines/APR-014-implementation-planning.md)) |
 | Gates 1–5 (architecture consistency) | Completed |
 | Gate 6 (implementation-readiness) | Completed |
-| Gate 6 result | `READY FOR HUMAN IMPLEMENTATION AUTHORIZATION` |
+| Historical Gate 6 result | Structure readiness only; it did not authorize implementation |
+| Current engineering readiness (2026-10-04) | `READY FOR HUMAN IMPLEMENTATION AUTHORIZATION`; implementation-start blockers: NONE for frozen SLICE-ENVELOPE; independent final review PASS |
 | `IMPLEMENTATION_AUTHORIZED` | **`false`** |
 | [architecture-gate.json](.cursor/architecture-gate.json) | `"implementationAuthorized": false`; `"approvedBaseline": null` |
 | `.cursor/IMPLEMENTATION_UNLOCK.json` | **Absent** (human-only; agents must never create it) |
@@ -112,7 +139,7 @@ fully closed** from that evidence.
 | Factory meeting FACT-01–FACT-06 | Recorded as business evidence (`2026-09-23`) |
 | FACT-04 roster | **11 people**, including Mr. Dinavand — Workshop Manager |
 | Clarification assessment | No additional OQ fully closable from current factory evidence |
-| Next authorized step | Complete the separately authorized Codex governance migration and verify technical enforcement before any implementation authorization decision; factory answers still go onto matching `OQ-*` rows |
+| Next step | Project Owner reviews the consolidated human decision package, approves the actual baseline/checkpoint and explicitly authorizes the frozen first slice; Codex remains stopped before implementation |
 
 **Ready for authorization is not authorized.** Gate 6 allows a human to decide
 whether to unlock. Phase 12 approval ([CHK-0013](docs/00-governance/approved-baselines/CHK-0013-phase-12.md)
@@ -192,8 +219,9 @@ Answered vs treating is summarized in [section 8](#8-open-questions-oq-001-throu
 
 ### 4.3 Reconciliation Gates 1–6
 
-After Phase 12, six architecture/governance reviews aligned the **live**
-corpus. They did **not** unlock implementation.
+After Phase 12, six architecture/governance reviews aligned the then-live
+corpus. The results and residual labels below are historical; current live
+registers/readiness govern later clarifications. They did **not** unlock implementation.
 
 #### Gate 1 — Inventory / production integrity
 
@@ -228,7 +256,8 @@ corpus. They did **not** unlock implementation.
   (FIND-G-014).
   [GENEALOGY_PROJECTION.md](docs/04-database-architecture/GENEALOGY_PROJECTION.md).
 
-Residuals: routing step names (OQ-003); residual/scrap cutoff numbers (OQ-009);
+Residuals: routing storage/version/lifecycle (OQ-003); human Residual/Scrap
+disposition recording and affected production policy (OQ-009);
 UOM scale (OQ-001).
 
 #### Gate 2 — Sales closure / reservation
@@ -395,15 +424,26 @@ Required unlock fields: `approvedBy`, `approvedAt`, `approvedBaseline`,
 Agent rule: `AG-UNLOCK` never
 ([AGENT_AUTHORITY.md](docs/10-ai-cursor-development/AGENT_AUTHORITY.md)).
 
-While locked, AI development agents may write only the paths in the protected
-policy. Its current allowlist is:
+The installed obsolete bootstrap currently permits only these write paths.
+This describes actual enforcement, not the new delegated operating policy:
 
 - `README.md`, `.gitignore`, `docs/**/*.md`
+- `AGENTS.md`
 - `.cursor/rules/**/*.mdc`, `.cursor/skills/**/*.md`
 
-Protected (never agent-created/edited while locked):
+Installed technical protection currently covers:
 `.cursor/architecture-gate.json`, `.cursor/hooks.json`, `.cursor/hooks/**`,
-`.cursor/IMPLEMENTATION_UNLOCK.json`, `.cursor/PHASE_CHECKPOINT_APPROVAL.json`.
+`.cursor/IMPLEMENTATION_UNLOCK.json`, `.cursor/PHASE_CHECKPOINT_APPROVAL.json`,
+`.codex/hooks.json`, `.codex/hooks/**`.
+
+The Project Owner delegates Tier-1 Codex hook/configuration maintenance. The
+installed bootstrap protection still denies that maintenance; its current file
+classification does not rescind the delegation. Only implementation authorization,
+final unlock and human approval provenance remain routine human-only authority.
+Do not request incremental filename/tool allowances. Native sandbox/security
+handles Tier 1; a minimal independent Tier-0 boundary must remain effective.
+Installed host support, configuration/trust and live coverage remain unverified.
+The old broker candidate is retired.
 
 The `.cursor/` directory is the legacy physical location of the one canonical
 gate and human markers. Codex is the current AI development agent. These Cursor
@@ -628,15 +668,20 @@ Template: [ADR_TEMPLATE.md](docs/00-governance/templates/ADR_TEMPLATE.md).
 | --- | --- | --- |
 | ADR-0001 | Accepted | Node.js + TypeScript |
 | ADR-0002 | Accepted | English documentation + glossary |
-| ADR-0003 | Accepted | Phase approval cadence |
-| ADR-0004 | Accepted | Git checkpoints after approved phases |
+| ADR-0003 | Accepted | Historical phase cadence; ADR-0012 supersedes ordinary pre-implementation approval stops |
+| ADR-0004 | Accepted | Historical human phase checkpoints; ordinary delegated GCP work follows ADR-0012 |
 | ADR-0005 | Accepted | Premature-implementation safeguard |
 | ADR-0006 | Accepted | Modular Monolith |
 | ADR-0007 | Accepted | PostgreSQL transactional SoR |
 | ADR-0008 | **Proposed** | Candidate Ubuntu / Docker Compose / Nginx topology |
+| ADR-0009 | Historical accepted bootstrap | Exact-path operating restrictions are superseded; installation evidence stays historical |
+| ADR-0010 | Superseded by ADR-0012 | Abandoned native-autonomy experiment, historical evidence only |
+| ADR-0011 | Accepted delegated technical decision | Bound durable accepted/rejected outcomes, replay, concurrency/crash/audit contract |
+| ADR-0012 | Accepted Owner operating decision | Trusted-agent ERP engineering; no OS-containment requirement |
+| ADR-0013 | Accepted delegated technical decision | Foundation-only technical stack, physical scope, scripts and tests |
 
-Candidate packages appearing in planning documents are **not** accepted
-architecture.
+Only the exact choices recorded by accepted ADRs are binding. Other candidate
+packages remain proposals; delegated decisions do not approve an implementation baseline.
 
 ---
 
@@ -650,8 +695,12 @@ Cutover labels: [CUTOVER_TRAINING_ROLLOUT.md](docs/12-implementation-planning/CU
 
 This sequence is **not** permission to execute it.
 
-0. Human unlock
-1. Runtime/package ADR if packages are introduced
+Before any unlock, finish generic idempotency, the evidence-backed technical
+freeze, exact first-slice physical/command/script scope and independent readiness
+review. Required material human ADR acceptance is consolidated with final approval.
+
+0. Final human baseline approval and matching gate/unlock
+1. Deterministic foundation under the already frozen runtime/package decisions
 2. `SLICE-ENVELOPE` (command envelope, idempotency, `AUD-CMD-*`; no Ledger)
 3. PostgreSQL foundation for Ledger / Unit / Reservation
 4. `SLICE-IPS`
@@ -825,7 +874,7 @@ This folder says how the project is controlled: what phase is active, how a phas
 | [OQ-006.md](docs/00-governance/team-answers/OQ-006.md) | Fulfillment tolerance. Default is zero |
 | [OQ-007.md](docs/00-governance/team-answers/OQ-007.md) | Sales Order closure. Payment does not close the order |
 | [OQ-008.md](docs/00-governance/team-answers/OQ-008.md) | One active reservation per inventory unit |
-| [OQ-009.md](docs/00-governance/team-answers/OQ-009.md) | Residual and Scrap. Numeric cutoff remains open |
+| [OQ-009.md](docs/00-governance/team-answers/OQ-009.md) | Residual and Scrap. Human reusability disposition; recording/guard/posting reconciliation remains open. No universal numeric cutoff |
 | [OQ-010.md](docs/00-governance/team-answers/OQ-010.md) | Customer portal is visibility only |
 | [OQ-011.md](docs/00-governance/team-answers/OQ-011.md) | Weighbridge. It must not write the Ledger. Device identity is open |
 | [OQ-012.md](docs/00-governance/team-answers/OQ-012.md) | Finance-Lite is operational. It is not a legal general ledger |
@@ -1159,6 +1208,11 @@ Superseded governance approvals:
 **If you are implementing software:** stop. There is no unlock.
 
 **If you are continuing architecture/governance:**
+
+Follow CURRENT_PHASE and the trusted-agent operating model. Native containment
+is abandoned; do not run or repair its installers. Complete the ERP working
+designs and useful reviews above. The factory-answer steps below remain useful
+for later affected slices, not a requirement to invent or close business policy.
 
 1. Take [TEAM_QUESTION_PACK.md](docs/00-governance/TEAM_QUESTION_PACK.md) to
    the factory/sponsor.

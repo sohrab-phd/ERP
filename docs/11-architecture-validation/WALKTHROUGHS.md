@@ -2,12 +2,12 @@
 id: VAL-WALK-001
 title: End-to-End and Exceptional-Flow Walkthroughs
 phase: 11-architecture-validation
-status: approved
-version: 0.5.0
+status: in_review
+version: 0.5.1
 owners: [independent-reviewer, qa-architect]
 depends_on: [QA-SCN-001, SM-SEQ-001, APP-ORCH-001, APR-012, APR-013, ASM-024]
-last_reviewed: 2026-10-01
-approval: APR-013
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
@@ -35,7 +35,7 @@ after the posting transaction commits, subject to existing guards
 | --- | --- | --- | --- | --- |
 | `WALK-STOCK` | SEQ-STOCK / QA-SCN-STOCK | Inquiry/Quotation optional → fulfillment STOCK → confirm Sales Order → `RequestReservation` / `ActivateReservation` (one `ACTIVE` per unit) → pack → `DispatchShipment` → invoice → `AllocatePayment`. `CloseSalesOrder` after `FULFILLED` (remaining demand already zero) / authorized remainder / cancelled; payment and shipment `DELIVERED` are not close guards. | `ACT-IPS` on reservation and exit | OQ-006 family %; no current-MVP QC gate |
 | `WALK-PURCHASE` | SEQ-PURCHASE / QA-SCN-PURCHASE | Fulfillment PURCHASE → confirm Sales Order (purchase-need) → PO send → `ReceiveGoods` → `PostGoodsReceipt` (`ADP-WEIGHBRIDGE` may command) → resulting normal Unit `AVAILABLE` on valid commit → continue SEQ-STOCK from reservation. `HoldInboundForQc` is future-only. | `ACT-IPS` posts GR bundle; Procurement does not write quantity (INV-018) | OQ-019 (PO approve), OQ-011; OQ-005 future only. OQ-015 cutover is separate. |
-| `WALK-MAKE` | SEQ-MAKE / QA-SCN-MAKE | Fulfillment MAKE → `StartOrderProduction` → release Production Order → allocation issue (`IssueUnitFromAllocation`) → `CompleteProductionOperation` bundle (nested residual identity / scrap qty) → valid normal good/reusable output Units `AVAILABLE` on commit → `PlaceResidualUnit` where applicable → SEQ-STOCK from pack. Scrap is not available. No current-MVP QC request or release. `CloseSalesOrder` independent of payment (OQ-007). | `ACT-IPS` on consume/output/residual/scrap qty; Production writes facts, not Ledger tables | OQ-003 names, OQ-009 cutoff numbers, OQ-006; OQ-005 future only |
+| `WALK-MAKE` | SEQ-MAKE / QA-SCN-MAKE | Fulfillment MAKE → `StartOrderProduction` → release Production Order → allocation issue (`IssueUnitFromAllocation`) → `CompleteProductionOperation` bundle (nested residual identity / scrap qty) → valid normal good/reusable output Units `AVAILABLE` on commit → `PlaceResidualUnit` where applicable → SEQ-STOCK from pack. Scrap is not available. No current-MVP QC request or release. `CloseSalesOrder` independent of payment (OQ-007). | `ACT-IPS` on consume/output/residual/scrap qty; Production writes facts, not Ledger tables | OQ-003 lifecycle, OQ-009 human disposition recording; production mass-balance policy unresolved; OQ-006 fulfillment only; OQ-005 future only |
 | `WALK-NOT-FEASIBLE` | SEQ-NOT-FEASIBLE / QA-SCN-NOT-FEASIBLE | `RecordFulfillmentNotFeasible` → `RecordUnfulfilledDemand` (INV-013). No Sales Order required. Not overdue. | none | — |
 
 Each accepted command uses one idempotency key (INV-016). Bundles in
@@ -50,7 +50,7 @@ APP-ORCH-001 must not split.
 | `WALK-BUNDLE-GR` | `PostGoodsReceipt` + Lot/Unit/Ledger | Weighbridge or Procurement writes quantity |
 | `WALK-BUNDLE-RESERVE` | `ActivateReservation` + reserved state + reserved qty | Balance-only reserved qty |
 | `WALK-BUNDLE-PAY` | `AllocatePayment` + invoice open-balance reduction | Finance-Lite as legal GL |
-| `WALK-BUNDLE-RESIDUAL` | Nested `CreateResidualUnit` + parent close/split **inside** complete-op | Later residual commit; guessed residual cutoff (OQ-009) |
+| `WALK-BUNDLE-RESIDUAL` | Nested `CreateResidualUnit` + parent close/split **inside** complete-op | Later residual commit; automatic cutoff instead of human reusability decision (OQ-009) |
 
 How the bundle is committed stays OQ-017.
 

@@ -2,16 +2,30 @@
 id: DOM-PROCESS-001
 title: As-Is and To-Be Process Maps
 phase: 02-domain-business-architecture
-status: approved
-version: 0.5.0
+status: in_review
+version: 0.6.0
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, DOM-CAP-BC-001]
-last_reviewed: 2026-10-01
-approval: APR-004
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # As-Is and To-Be Process Maps
+
+## Current evidence precedence (2026-10-04)
+
+APR-004 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 ## Purpose
 
@@ -225,7 +239,7 @@ authority, and posting points are **not** decided here.
 A Sales Order may be partially reserved, partially produced, and partially
 shipped (SM-SALES-ORDER includes PARTIALLY_FULFILLED; SM-SHIPMENT includes
 PARTIALLY_DELIVERED). Over-production and over-delivery tolerances are
-unapproved (OQ-006, FIND-003). Workshop must confirm what "partial" means per
+governed by the answered OQ-006 default-zero rule. Non-default limits require evidence per
 product family.
 
 #### Unfulfilled demand without a Sales Order
@@ -279,7 +293,7 @@ flowchart TD
 ```
 
 Rework, residual, and scrap after reject remain workshop-unvalidated. Residual
-versus scrap threshold is OQ-009.
+versus scrap is the human reusability decision recorded on OQ-009; its recording/authority remains open.
 
 #### Rework
 
@@ -293,7 +307,7 @@ rework routing is not in the sources as a validated map (OQ-003).
 Usable remainder after consumption/splitting becomes a **new child Inventory
 Unit** linked to its parent; the parent is closed/split (TERM-012). Production
 writes the residual fact; Inventory writes resulting identity and quantity.
-Minimum usable dimensions/weight are not approved (OQ-009). Factory
+Automatic usable-dimension/weight classification is prohibited (OQ-009). Factory
 clarification: reusable waste is Residual and returns to the warehouse
 as a business disposition. The Production/Workshop Manager decides
 reusability. The system must not classify from weight or dimensions.
@@ -404,7 +418,8 @@ regression. Responsible roles and guards are unvalidated.
 Posted inventory, operational, and financial records are not physically deleted
 or silently edited. Corrections use reversal/correction with reason, authority,
 timestamp, and linked evidence (ASM-006, ASM-012). Inventory Posting mechanism
-for reversals remains open (OQ-017).
+for reversals uses the answered OQ-017 app-owned PostgreSQL transaction; affected
+correction policy/authority remains open.
 
 #### Shipment without demand — explicit authority required
 
@@ -442,7 +457,7 @@ are specifically evidence-gated and must not be treated as confirmed:
 | Partial fulfillment / over-delivery numeric limits | Family/customer % | OQ-006 answered default 0 |
 | Sales Order closure vs payment | Recorded policy | OQ-007 answered |
 | Reservation uniqueness and confirmed-SO expiry | Recorded policy | OQ-008 answered |
-| Residual vs scrap cutoff numbers | Reusable = Residual and returns to the warehouse; non-reusable = Scrap; person decides; no universal cutoff; do not classify from measurements | OQ-009 still treating. Conflict with `GUARD_OPEN_POLICY` and the below-threshold branch left open |
+| Residual vs scrap disposition | Reusable = Residual and returns to the warehouse; non-reusable = Scrap; person decides; no universal cutoff; do not classify from measurements | OQ-009 still treating for recording/authority and affected policy. Numeric classifier and below-threshold branch are superseded for current MVP; missing human disposition still rejects |
 | Opened-Coil remainder → Sheet warehouse conversion | Factory: initial opening/use requires a Customer Order; later remainder conversion needs no new Customer Order and is an inventory transformation; posting command not accepted | FACT-03 / C-07. Not nested into `CompleteProductionOperation` or DATA-TX-001 |
 | Portal visibility document list | Sponsor residual list | OQ-010 answered visibility-only; no `PortalPlaceOrder` |
 | Weighbridge identity and fallback | Equipment evidence | OQ-011 residual. Commander only. |

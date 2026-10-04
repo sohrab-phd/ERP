@@ -2,16 +2,30 @@
 id: SM-CATALOGUE-001
 title: State Machine Catalogue
 phase: 03-state-machines-invariants
-status: approved
-version: 0.6.0
+status: in_review
+version: 0.7.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [GOV-STATES-001, SM-INV-001, DOM-ACTORS-001, APR-004, APR-005]
-last_reviewed: 2026-10-01
-approval: APR-005
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # State Machine Catalogue
+
+## Current evidence precedence (2026-10-04)
+
+APR-005 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 Proposed lifecycle structure for Phase 03. Seeds come from GOV-STATES-001 and
 Phase 02 concepts that had no SM-* yet. These are **not** executable machines.
@@ -157,7 +171,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Additional: `PACKED`, `SHIPPED`, `RETURNED`, `SCRAPPED`, `CLOSED`; `QUARANTINED` is future Quality only
 - Commands / actors: ACT-IPS writes stock; ACT-QC / ACT-SHIP / ACT-OP command only
 - Invariants: INV-001 through INV-004, INV-017
-- Open guards: UOM (OQ-001); Coil weight vs length (OQ-002); official issue point (OQ-003); future QC only (OQ-005)
+- Open guards: UOM (OQ-001); Coil quantity is measured kg (OQ-002 answered); kg↔length factors/arithmetic remain OQ-001; official issue point (OQ-003); future QC only (OQ-005)
 
 ## SM-MATERIAL-ALLOCATION
 
@@ -177,7 +191,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Branches: `SKIPPED`, `REWORK`
 - Commands / actors: ACT-PLAN plans; ACT-OP records; ACT-IPS posts stock effects. `ACT-OP` is an architecture actor. It is not a named operator, not a Station identity, and not the operator's station-completion declaration.
 - Invariants: INV-006, INV-007, INV-009
-- Open guards: real step list as a versioned mechanism (OQ-003). Posting
+- Open guards: routing storage/version/lifecycle (OQ-003); ten Stations and per-order route are recorded. Posting
   boundary is `CompleteProductionOperation` (recorded OQ-003).
 - Factory clarification (`2026-09-30`): Station is physical and, in factory
   wording, the Production Step. No separate Work Center in factory
@@ -207,7 +221,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - `PAUSED` returns to the prior live state by resume; it is not a silent skip
 - Commands / actors: ACT-PLAN plans/releases; ACT-OP records execution; ACT-IPS posts stock effects
 - Invariants: INV-006, INV-007, INV-009
-- Open guards: routing step names (OQ-003); residual cutoff numbers (OQ-009); QC gates (OQ-005) only in a future Quality scope
+- Open guards: routing storage/version/lifecycle (OQ-003; ten Stations recorded); human disposition recording/authority and required mass-balance policy (OQ-009 residuals); QC gates (OQ-005) only in a future Quality scope
 
 ## SM-RESIDUAL
 
@@ -215,12 +229,14 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Write owner: Production fact; Inventory resulting unit
 - Current reusable path: `FACT_RECORDED → UNIT_CREATED`; valid nested residual stock-in makes the resulting child Inventory Unit `AVAILABLE` when `CompleteProductionOperation` commits. Scrap does not become `AVAILABLE`.
 - Historical/future placement/QC branch: `UNIT_CREATED → AVAILABLE_OR_QUARANTINE`; it is not a current-MVP availability prerequisite, and its quarantine branch is future Quality only.
-- Branches: `BELOW_THRESHOLD_TO_SCRAP`
+- Historical superseded branch: `BELOW_THRESHOLD_TO_SCRAP` is not a current
+  executable path; numeric measurement never decides reusability. Non-reusable
+  material follows the existing Scrap fact path under attributable human disposition.
 - Commands / actors: ACT-OP records residual fact nested in
   `CompleteProductionOperation`; ACT-IPS creates child unit in the same
   transaction
 - Invariants: INV-008, INV-006
-- Open guards: threshold numbers (OQ-009). Independent residual qty after
+- Open guards: human disposition recording and authorization (OQ-009). Independent residual qty after
   completion is forbidden.
 - Coil → Sheet clarification (`2026-09-30`): reusable cutting waste of that
   conversion is called Residual. Factory warehouse conversion is described
@@ -232,9 +248,10 @@ command is rejected with a reason. Posted states use reversal, not delete
   Residual and returns to the warehouse as a business disposition.
   Non-reusable waste is Scrap. A person decides. The system must not
   classify from weight or dimensions. No universal numeric cutoff is
-  supplied. The `BELOW_THRESHOLD_TO_SCRAP` branch is **not** deleted.
-  It conflicts with "no universal cutoff" and stays an open OQ-009
-  conflict. No new posting command is added. A weight difference is not
+  supplied. `BELOW_THRESHOLD_TO_SCRAP` is retained as historical proposal
+  evidence only and must not run in current MVP. OQ-009 remains treating for
+  disposition recording/authority and affected family policy. No new posting
+  command, state or event is added. A weight difference is not
   this machine.
 
 ## SM-SCRAP
@@ -245,7 +262,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Commands / actors: ACT-OP nested leftover, or ACT-QC/abort new scrap;
   ACT-IPS `PostScrapMovement` posts quantity once
 - Invariants: INV-001, INV-009, INV-017
-- Open guards: residual cutoff numbers when the source is leftover (OQ-009).
+- Open guards: recorded human non-reusability disposition and its authority when the source is leftover (OQ-009).
   Coil → Sheet clarification: non-reusable cutting waste of that conversion
   is called Scrap. That name mapping does not add a new scrap command.
 
@@ -280,7 +297,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Happy path: `DRAFT → READY → LOADING → DISPATCHED → PARTIALLY_DELIVERED|DELIVERED → CLOSED`
 - Commands / actors: ACT-SHIP; ACT-IPS posts definitive stock exit on dispatch
 - Invariants: INV-011, INV-017
-- Open guards: partial/over-delivery (OQ-006); shipment-without-demand named person (OQ-019)
+- Open guards: OQ-006 answered partial permission/default 0, explicit nondefault family configuration before use; shipment-without-demand named person (OQ-019)
 - Factory evidence (`2026-09-30`) does not name a shipper, loader, carrier,
   or delivery confirmer. This machine is not deleted. `DELIVERED` is not
   Sales Order closure. Stock exit stays `ACT-IPS`. No shipment screen
@@ -295,7 +312,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Branches: `OVERDUE`, `VOID_PENDING → VOIDED`
 - Commands / actors: ACT-FIN
 - Invariants: INV-012, INV-014
-- Open guards: legal books (OQ-012). Sales Order closure is not an invoice guard (OQ-007).
+- Open guards: OQ-012 excludes legal GL; commercial invoice/pricing/upload policy needed by the later Finance-Lite slice. Sales Order closure is not an invoice guard (OQ-007).
 - Factory evidence: Mr. Pour-Ebrahim issues the customer invoice;
   Mr. Ghaffari records it and uploads the record to an unnamed external
   system. That handoff does not add a state and does not make the upload
@@ -309,7 +326,7 @@ command is rejected with a reason. Posted states use reversal, not delete
 - Branches: `UNALLOCATED`, `REVERSED`
 - Commands / actors: ACT-FIN
 - Invariants: INV-012, INV-016
-- Open guards: legal-accounting export (OQ-012)
+- Open guards: OQ-012 legal-GL boundary answered; external upload system/adapter details remain later inputs
 - Factory payment methods, not new states: deposit with remainder after
   delivery; cheque or promissory note; known-customer credit. No credit
   limit or aging rule. Allocation is unchanged. Payment does not close

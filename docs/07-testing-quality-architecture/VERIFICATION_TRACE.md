@@ -2,16 +2,20 @@
 id: QA-TRACE-001
 title: Verification Trace
 phase: 07-testing-quality-architecture
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.4.0
 owners: [qa-architect, requirements-owner]
 depends_on: [GOV-TRACE-001, SM-INV-001, SEC-VER-001, APR-008]
-last_reviewed: 2026-10-01
-approval: APR-009
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Verification Trace
+
+Current delegated reconciliation retains APR-009 as historical structure approval,
+not approval of these revised bytes. Foundation acceptance tests are planned in
+[physical design](../12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md).
 
 How Phase 07 attaches verification **intents** to existing IDs. This
 does not mint a detailed `REQ-*` or `TEST-*` catalogue (FIND-021,
@@ -24,18 +28,18 @@ FIND-028). Canonical objective rows stay in
 
 | Invariant | Primary level | Intent | Open |
 | --- | --- | --- | --- |
-| INV-001 | L-BUNDLE, L-PROPERTY | One posting path; immutable Ledger row | OQ-017 |
-| INV-002 | L-COMMAND, L-PROPERTY | No negative on-hand/reserved/available; one `ACTIVE` reservation per Inventory Unit | OQ-008 residual TTL |
-| INV-003 | L-COMMAND | Availability = on-hand − reserved − hold | none as a rule |
+| INV-001 | L-BUNDLE, L-PROPERTY | One posting path; immutable Ledger row | OQ-017 application-owned transaction answered; optional functions deferred |
+| INV-002 | L-COMMAND, L-PROPERTY | No negative on-hand/reserved/available; one `ACTIVE` reservation per Inventory Unit; confirmed-SO has no expiry | OQ-008 answered |
+| INV-003 | L-COMMAND | Availability = on-hand − reserved; lifecycle eligibility separately guarded; Quality hold only in future approved QC | none as a rule |
 | INV-004 | L-COMMAND | One unit, one location; incompatible states reject | ASM-005 |
 | INV-005 | L-COMMAND | Reversal is a new accepted command | OQ-015 authority |
 | INV-006 | L-BUNDLE | Operation complete posts consume/output/residual/scrap together | OQ-003 |
-| INV-007 | L-PROPERTY | Mass-balance within tolerance | OQ-006 |
+| INV-007 | L-PROPERTY | Production mass-balance and displayed measured difference; no inferred process-loss policy | Production policy before SLICE-MAKE; OQ-006 is fulfillment only |
 | INV-008 | L-BUNDLE | Residual gets a new unit; parent closed/split | OQ-009 |
-| INV-009 | L-PROPERTY | Genealogy facts immutable; traces both ways | OQ-004 |
+| INV-009 | L-PROPERTY | Genealogy facts immutable; traces both ways | OQ-004 hybrid grain answered; dependent catalogue later |
 | INV-010 (**future only**) | L-COMMAND | If future Quality is enabled, QC pending blocks available/ship; no current-MVP gate | OQ-005 future residual |
 | INV-011 | L-SEQUENCE | Shipment belongs to authorized demand | OQ-006, OQ-019 |
-| INV-012 | L-BUNDLE | Payment allocation cannot exceed open balance | OQ-012 |
+| INV-012 | L-BUNDLE | Payment allocation cannot exceed open balance | OQ-012 excludes legal GL; external integration residual later |
 | INV-013 | L-COMMAND | Unfulfilled demand is not overdue; remainder-close uses that fact | none for OQ-007 close rule |
 | INV-014 | L-COMMAND | Posted snapshots do not rewrite | OQ-016 days |
 | INV-015 | L-SECURITY | Backend auth, SoD, customer isolation | OQ-010, OQ-019 |
@@ -74,15 +78,15 @@ an OQ remains. Named scenarios (where one exists) are in
 | Sequence | Scenario | Open stops stay on the SEQ row |
 | --- | --- | --- |
 | SEQ-STOCK | `QA-SCN-STOCK` | OQ-006 |
-| SEQ-PURCHASE | `QA-SCN-PURCHASE` | OQ-019, OQ-005 |
-| SEQ-MAKE | `QA-SCN-MAKE` | OQ-003, OQ-009, OQ-006 |
+| SEQ-PURCHASE | `QA-SCN-PURCHASE` | OQ-019; OQ-005 future-only QC |
+| SEQ-MAKE | `QA-SCN-MAKE` | OQ-003/009 production residual; OQ-006 fulfillment-only default/configuration |
 | SEQ-NOT-FEASIBLE | `QA-SCN-NOT-FEASIBLE` | none as a path |
 | SEQ-REVERSE | `QA-SCN-REVERSE` | OQ-015, OQ-017 |
 
 ## Bundles (DATA-TX-001)
 
 Each unsplittable bundle is `L-BUNDLE`. `QA-SCN-BUNDLE` is the shared
-split-failure intent. Mechanism stays OQ-017.
+split-failure intent. OQ-017 selects application-owned PostgreSQL transactions; named business locking details freeze before each dependent slice.
 
 | Bundle | Invariant |
 | --- | --- |

@@ -2,20 +2,24 @@
 id: SEC-ISO-001
 title: Customer Isolation Policy
 phase: 06-security-rbac-audit
-status: approved
-version: 0.2.0
+status: in_review
+version: 0.3.0
 owners: [security-architect]
 depends_on: [SEC-RBAC-001, APP-QRY-001, APP-ENV-001, APR-007, APR-008]
-last_reviewed: 2026-09-06
-approval: APR-008
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Customer Isolation Policy
 
+APR-008 remains historical structure approval. This live OQ/source reconciliation
+is delegated technical work, not human baseline approval.
+
 How INV-015 applies to reads, exports, files, events, and reports.
-This is not a multi-tenant product choice. Site/legal-entity split
-stays OQ-013. Portal exposure stays OQ-010.
+This is not a multi-tenant product choice. OQ-013 records one legal entity and
+principal site; another site requires architecture reopen. OQ-010 records
+visibility-only portal MVP, with the approved document whitelist still unresolved.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -38,7 +42,7 @@ here.
 | GetInquiry / GetQuotation / GetSalesOrder | Customer A never sees customer B |
 | GetShipment / GetPackage / GetInvoice / GetPayment | Same |
 | GetAvailability when scoped to a demand | Demand’s customer only |
-| GetLedger / GetUnit when the unit is allocated or reserved | Owning demand’s customer; unallocated mill stock is not a customer document and uses site scope when OQ-013 is answered |
+| GetLedger / GetUnit when the unit is allocated or reserved | Owning demand's customer; unallocated mill stock is not a customer document and uses recorded single-site organizational scope (OQ-013) |
 | TraceForward / TraceBackward | Same customer constraint as the starting fact |
 | Exports and printed documents | Same key as the source query |
 | `EventNotice` / `LiveNotice` | Subscriber may receive only events for allowed customers |
@@ -50,14 +54,16 @@ here.
 - Unscoped “all customers” search for ACT-CUST
 - Cross-customer recommendation or availability leak through a portal
 
-If a later portal read is allowed (OQ-010), it remains a Sales-owned
-query with the same isolation key. It is not a new write owner.
+MVP portal visibility uses Sales-owned authorized read queries with the same
+customer isolation key; it is not a new write owner. Exact allowed document list
+must be frozen before the portal slice. An unlisted document is denied, not an
+implicit all-document grant. No portal ordering/request write is added.
 
 ## Site scope
 
-ASM-001 (one legal entity, one principal site) is unconfirmed. Until
-OQ-013 is answered, site is an open extension on list queries. Do not
-invent a second tenant model.
+OQ-013 answered one legal entity and one principal site. The configured trusted
+organizational scope applies to mill stock and list queries; no second tenant or
+site role is invented. A future site expansion reopens architecture explicitly.
 
 ## Files and attachments
 

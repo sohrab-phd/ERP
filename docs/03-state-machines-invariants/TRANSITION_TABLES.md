@@ -2,16 +2,30 @@
 id: SM-TRANS-001
 title: Transition Tables
 phase: 03-state-machines-invariants
-status: approved
-version: 0.5.0
+status: in_review
+version: 0.6.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-CATALOGUE-001, SM-INV-001, SM-SIDE-001, APR-004, APR-005]
-last_reviewed: 2026-10-01
-approval: APR-005
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Transition Tables
+
+## Current evidence precedence (2026-10-04)
+
+APR-005 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 Per-transition structure for every machine in
 [STATE_MACHINE_CATALOGUE.md](STATE_MACHINE_CATALOGUE.md). These rows are
@@ -81,7 +95,7 @@ state or approval command is introduced.
 | DRAFT | SUBMITTED | SubmitSalesOrder | ACT-SALES | items exist | Sales writes Order | SalesOrderSubmitted |
 | SUBMITTED | CONFIRMED | ConfirmSalesOrder | ACT-SALES | Fulfillment Assessment recorded | Sales writes Order; commands Reservation / PO / Production as assessed | SalesOrderConfirmed |
 | CONFIRMED | IN_PRODUCTION | StartOrderProduction | ACT-PLAN / ACT-SALES | production path selected | Sales writes Order; Production may release | SalesOrderInProduction |
-| CONFIRMED or IN_PRODUCTION | PARTIALLY_FULFILLED | RecordPartialFulfillment | ACT-SALES | `open: OQ-006`; STOCK/PURCHASE stay CONFIRMED; MAKE may be IN_PRODUCTION | Sales writes Order | SalesOrderPartiallyFulfilled |
+| CONFIRMED or IN_PRODUCTION | PARTIALLY_FULFILLED | RecordPartialFulfillment | ACT-SALES | Line permits partial shipment; OQ-006 default tolerance 0 or explicit configured limit; STOCK/PURCHASE stay CONFIRMED; MAKE may be IN_PRODUCTION | Sales writes Order | SalesOrderPartiallyFulfilled |
 | CONFIRMED or IN_PRODUCTION or PARTIALLY_FULFILLED | FULFILLED | RecordFullFulfillment | ACT-SALES | remaining demand is zero within OQ-006 tolerance (default 0); IN_PRODUCTION is not required for STOCK/PURCHASE | Sales writes Order | SalesOrderFulfilled |
 | FULFILLED | CLOSED | CloseSalesOrder | ACT-SALES | Remaining valid demand is zero within OQ-006 tolerance (default 0). Shipment `DELIVERED` is **not** an independent close prerequisite. Payment and invoice status are **not** guards. | Sales writes Order + closure reason/qty snapshot; must not write Invoice or Payment; may command `ReleaseReservation` if any ACTIVE reservation remains | SalesOrderClosed |
 | PARTIALLY_FULFILLED | CLOSED | CloseSalesOrder | ACT-SALES | Remaining demand is covered by an authorized `RecordUnfulfilledDemand` fact (TERM-005 / INV-013). Outstanding **valid** remaining demand forbids close (OQ-007). Payment/invoice are not guards. | Sales writes Order + closure reason/fulfilled and unfulfilled qtys; must not write Invoice; commands `ReleaseReservation` for remaining ACTIVE reservations on this order | SalesOrderClosed |
@@ -170,7 +184,7 @@ Shipment completion does not by itself close the Sales Order.
 | AVAILABLE | RESERVED | ReserveUnit | ACT-IPS | Nested in `ActivateReservation` bundle; INV-002, INV-003; one ACTIVE reservation per unit (OQ-008) | Inventory writes Unit reserved-state | InventoryUnitReserved |
 | RESERVED | ISSUED_TO_PRODUCTION | IssueUnit | ACT-IPS | Production Order released; INV-004 | Inventory writes Unit/Ledger | InventoryUnitIssued |
 | AVAILABLE | ISSUED_TO_PRODUCTION | IssueUnitFromAllocation | ACT-IPS | SM-MATERIAL-ALLOCATION is ISSUED; INV-003, INV-004; `open: OQ-003` | Inventory writes Unit/Ledger | InventoryUnitIssued |
-| ISSUED_TO_PRODUCTION | PARTIALLY_CONSUMED | ConsumeUnitPartial | ACT-IPS nested inside `CompleteProductionOperation` | INV-006; independent call `GUARD_INVARIANT`; `open: OQ-001`, `open: OQ-002` | Inventory writes Unit/Ledger consume side of the completion bundle; Production writes consumption fact | InventoryUnitPartiallyConsumed |
+| ISSUED_TO_PRODUCTION | PARTIALLY_CONSUMED | ConsumeUnitPartial | ACT-IPS nested inside `CompleteProductionOperation` | INV-006; independent call `GUARD_INVARIANT`; `open: OQ-001` arithmetic policy; OQ-002 measured kg answered | Inventory writes Unit/Ledger consume side of the completion bundle; Production writes consumption fact | InventoryUnitPartiallyConsumed |
 | ISSUED_TO_PRODUCTION or PARTIALLY_CONSUMED | CONSUMED | ConsumeUnitComplete | ACT-IPS nested inside `CompleteProductionOperation` | same; independent production consume forbidden | Inventory writes Unit/Ledger consume side of the completion bundle | InventoryUnitConsumed |
 | AVAILABLE or RESERVED | PACKED | PackUnit | ACT-IPS commanded by ACT-SHIP | INV-017; `open: OQ-004` | Inventory writes Unit | InventoryUnitPacked |
 | PACKED | SHIPPED | ShipUnit | ACT-IPS commanded by ACT-SHIP | SM-SHIPMENT dispatched; INV-011 | Inventory writes Unit/Ledger exit | InventoryUnitShipped |
@@ -191,10 +205,10 @@ Shipment completion does not by itself close the Sales Order.
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | PLANNED | PlanProductionOperation | ACT-PLAN | `open: OQ-003` real step list | Production writes Operation | ProductionOperationPlanned |
+| (none) | PLANNED | PlanProductionOperation | ACT-PLAN | `open: OQ-003` routing storage/version/lifecycle; ten Stations recorded | Production writes Operation | ProductionOperationPlanned |
 | PLANNED | IN_PROGRESS | StartProductionOperation | ACT-OP | order is RELEASED or IN_PROGRESS | Production writes Operation | ProductionOperationStarted |
-| IN_PROGRESS | COMPLETED | CompleteProductionOperation | ACT-OP | INV-006 exclusive posting boundary; step names `open: OQ-003`; mass-balance number `open: OQ-006`; residual cutoff number `open: OQ-009`; no current-MVP QC guard | One transaction: consume/output/leftover residual **or** scrap, process loss, genealogy source facts, nested IPS identity/qty posts. Valid normal good/reusable output Units are `AVAILABLE` on commit; Scrap is not. QC request is deferred to a future Quality scope only. See DATA-TX-001. | ProductionOperationCompleted |
-| PLANNED | SKIPPED | SkipProductionOperation | ACT-PLAN | `open: OQ-003` whether skip is allowed | Production writes Operation; no silent stock change | ProductionOperationSkipped |
+| IN_PROGRESS | COMPLETED | CompleteProductionOperation | ACT-OP | INV-006 exclusive posting boundary; routing storage/version/lifecycle `open: OQ-003` (ten Stations already recorded); production mass-balance policy and human disposition recording/authority `open: OQ-009` (OQ-006 is fulfillment tolerance, not mass balance); no current-MVP QC guard | One transaction: consume/output/leftover residual **or** scrap, process loss, genealogy source facts, nested IPS identity/qty posts. Valid normal good/reusable output Units are `AVAILABLE` on commit; Scrap is not. QC request is deferred to a future Quality scope only. See DATA-TX-001. | ProductionOperationCompleted |
+| PLANNED | SKIPPED | SkipProductionOperation | ACT-PLAN | Factory per-order route may skip Stations; operation skip lifecycle/authority remains OQ-003/OQ-019, no inventory post implied | Production writes Operation; no silent stock change | ProductionOperationSkipped |
 | COMPLETED | REWORK | StartReworkOperation | ACT-OP | INV-005, INV-009; `open: OQ-003` | new operation/fact; prior posted facts reverse, not edit | ProductionOperationRework |
 
 ## SM-PRODUCTION-ORDER
@@ -206,7 +220,7 @@ Shipment completion does not by itself close the Sales Order.
 | PLANNED | RELEASED | ReleaseProductionOrder | ACT-PLAN | `open: OQ-003` | Production writes PO; commands issue | ProductionOrderReleased |
 | RELEASED | IN_PROGRESS | StartProductionOrder | ACT-OP | issued material or allowed start | Production writes PO | ProductionOrderInProgress |
 | IN_PROGRESS | PARTIALLY_COMPLETED | CompleteOperationPartial | ACT-OP | At least one operation `COMPLETED` via `CompleteProductionOperation`; remaining operations exist | Production writes PO state only; **no** Ledger, residual, or scrap post | ProductionOrderPartiallyCompleted |
-| IN_PROGRESS or PARTIALLY_COMPLETED | COMPLETED | CompleteProductionOrder | ACT-OP / ACT-PLAN | remaining operations done; mass balance `open: OQ-006` | Production writes PO | ProductionOrderCompleted |
+| IN_PROGRESS or PARTIALLY_COMPLETED | COMPLETED | CompleteProductionOrder | ACT-OP / ACT-PLAN | remaining operations done; mass-balance policy open under production evidence/OQ-009, separate from OQ-006 | Production writes PO | ProductionOrderCompleted |
 | COMPLETED | CLOSED | CloseProductionOrder | ACT-PLAN | none for stock | Production writes PO | ProductionOrderClosed |
 | live | PAUSED | PauseProductionOrder | ACT-PLAN / ACT-OP | none numeric | Production writes PO | ProductionOrderPaused |
 | PAUSED | prior live state | ResumeProductionOrder | ACT-PLAN / ACT-OP | change record exists; QC hold applies only in future Quality scope | Production writes PO | ProductionOrderResumed |
@@ -220,7 +234,7 @@ Shipment completion does not by itself close the Sales Order.
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | FACT_RECORDED | RecordResidualFact | ACT-OP nested inside `CompleteProductionOperation` | parent Unit known; leftover of this operation is not independently postable (INV-006) | Production writes residual fact, not Ledger | ResidualFactRecorded |
 | FACT_RECORDED | UNIT_CREATED | CreateResidualUnit | ACT-IPS nested inside `CompleteProductionOperation` | INV-008; `open: OQ-009` usable; not a second qty post after completion | Inventory creates child Unit as `AVAILABLE` for current-MVP normal use on valid commit; parent closed/split; residual on-hand Ledger **once** | ResidualUnitCreated |
-| FACT_RECORDED | BELOW_THRESHOLD_TO_SCRAP | ConvertResidualToScrap | ACT-OP / ACT-IPS nested inside `CompleteProductionOperation` | `open: OQ-009`; same leftover must not also keep residual qty | start SM-SCRAP inside the same completion transaction | ResidualBelowThreshold |
+| FACT_RECORDED | BELOW_THRESHOLD_TO_SCRAP (**historical superseded proposal only**) | ConvertResidualToScrap (historical numeric-branch mapping only) | no current-MVP executable actor mapping | Forbidden as automatic threshold classification; OQ-009 human disposition/authority remains required | No current transition or write; non-reusable leftover uses existing nested RecordScrapFact/PostScrapMovement under human disposition | ResidualBelowThreshold (historical, not emitted) |
 | UNIT_CREATED | AVAILABLE_OR_QUARANTINE | PlaceResidualUnit | ACT-IPS | Historical/future placement/QC branch; not required to make a valid current-MVP child Unit `AVAILABLE`. Quarantine applies only in future Quality scope (INV-010). | Follow-on placement where applicable may change location without a second quantity post; no current-MVP release effect | ResidualUnitPlaced |
 
 ## SM-SCRAP
@@ -257,11 +271,11 @@ Shipment completion does not by itself close the Sales Order.
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | DRAFT | DraftShipment | ACT-SHIP | authorized customer/order or INV-011 exceptional authority; named person `open: OQ-019`; not OQ-005 | Shipping writes Shipment | ShipmentDrafted |
-| DRAFT | READY | MarkShipmentReady | ACT-SHIP | authorized contents and `open: OQ-006`; Quality `Released` only in future QC scope, not current MVP | Shipping writes Shipment | ShipmentReady |
+| DRAFT | READY | MarkShipmentReady | ACT-SHIP | authorized contents and OQ-006 fulfillment tolerance default 0 or explicit configuration; shipment procedure/authority remains later policy; Quality `Released` only in future QC scope, not current MVP | Shipping writes Shipment | ShipmentReady |
 | READY | LOADING | StartLoading | ACT-SHIP | none numeric | Shipping writes Shipment | ShipmentLoading |
 | LOADING | DISPATCHED | DispatchShipment | ACT-SHIP | commands ACT-IPS stock exit (INV-017) | Shipping writes Shipment; Inventory posts exit | ShipmentDispatched |
-| DISPATCHED | PARTIALLY_DELIVERED | RecordPartialDelivery | ACT-SHIP | `open: OQ-006` | Shipping writes Shipment | ShipmentPartiallyDelivered |
-| DISPATCHED or PARTIALLY_DELIVERED | DELIVERED | ConfirmDelivery | ACT-SHIP | remaining qty `open: OQ-006` | Shipping writes Shipment; commands Finance-Lite facts | ShipmentDelivered |
+| DISPATCHED | PARTIALLY_DELIVERED | RecordPartialDelivery | ACT-SHIP | OQ-006 partial fulfillment permission/default 0 where applicable; actual delivery attribution/procedure remains later policy | Shipping writes Shipment | ShipmentPartiallyDelivered |
+| DISPATCHED or PARTIALLY_DELIVERED | DELIVERED | ConfirmDelivery | ACT-SHIP | remaining fulfillment qty within OQ-006 default 0 or explicit configuration; delivery confirmation procedure/authority remains later policy | Shipping writes Shipment; commands Finance-Lite facts | ShipmentDelivered |
 | DELIVERED | CLOSED | CloseShipment | ACT-SHIP | none for stock | Shipping writes Shipment | ShipmentClosed |
 
 ## SM-INVOICE
@@ -289,13 +303,14 @@ Shipment completion does not by itself close the Sales Order.
 
 ## Still not filled on purpose
 
-- Exact decimal precision and rounding (OQ-001, OQ-002)
-- Official shop-floor posting **step names** (OQ-003). Posting **boundary** is `CompleteProductionOperation` (recorded).
-- Batch vs piece identity on every output (OQ-004)
+- Technical arithmetic/persistence scale (OQ-001); OQ-002 measured kg answered
+- Routing storage/version/lifecycle (OQ-003); ten physical Stations are recorded. Posting **boundary** is `CompleteProductionOperation` (recorded).
+- Dependent catalogue/order identity mapping (OQ-004 hybrid grain is answered)
 - Named QC releasers and numeric limits (OQ-005)
 - Percent or weight tolerances (OQ-006)
 - Family %/kg over-delivery (OQ-006 configuration; default 0 is answered)
 - Future temporary-hold reservation TTL (OQ-008 residual only)
-- Residual cutoff dimensions (OQ-009)
+- Human reusability disposition recording and authority; no automatic cutoff (OQ-009)
+- Required production mass-balance/process-loss policy (OQ-009 production evidence), distinct from fulfillment tolerance
 - Named workshop approvers and exceptional-shipment person (OQ-019)
 - Inquiry and Quotation expiry day counts (`workshop-commercial-practice`)

@@ -2,16 +2,30 @@
 id: SM-SIDE-001
 title: Cross-State Side-Effect Matrix
 phase: 03-state-machines-invariants
-status: approved
-version: 0.5.0
+status: in_review
+version: 0.6.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-CATALOGUE-001, DOM-OWN-001, APR-004, APR-005]
-last_reviewed: 2026-10-01
-approval: APR-005
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Cross-State Side-Effect Matrix
+
+## Current evidence precedence (2026-10-04)
+
+APR-005 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 Which write owner is commanded when a source machine moves. This is a command
 map, not a table-write map. Quality and Shipping never write stock tables
@@ -36,7 +50,7 @@ Ledger remains stock quantity truth.
 | SM-SALES-ORDER fulfilled on STOCK or PURCHASE | none for Production | Production Order | OQ-006 |
 | SM-MATERIAL-ALLOCATION issued | Inventory issue posting | Production writing Ledger | OQ-003 |
 | SM-INVENTORY-UNIT issued from allocation | Inventory issue from AVAILABLE, not from Reservation | Reservation required | OQ-003 |
-| SM-PRODUCTION-OPERATION completed | Nested IPS consume/output/residual identity or scrap qty inside the same transaction; valid normal good/reusable output Units become `AVAILABLE` on commit; QC request only in a future Quality scope | Ledger by Production table write; later independent leftover post; Scrap becoming `AVAILABLE` | OQ-003 names, OQ-006 number, OQ-009 cutoff number; no current QC guard |
+| SM-PRODUCTION-OPERATION completed | Nested IPS consume/output/residual identity or scrap qty inside the same transaction; valid normal good/reusable output Units become `AVAILABLE` on commit; QC request only in a future Quality scope | Ledger by Production table write; later independent leftover post; Scrap becoming `AVAILABLE` | OQ-003 lifecycle; OQ-009 human disposition recording/authority and production mass-balance policy; no current QC guard |
 | SM-SALES-ORDER closed | may `ReleaseReservation` for remaining ACTIVE rows; none for Ledger qty | Invoice / Payment rows; auto-close from shipment `DELIVERED` | OQ-007 recorded: payment and shipment `DELIVERED` are not close effects |
 | SM-UNFULFILLED-DEMAND recorded | Reporting projection; may cover an SO remainder | treating Unfulfilled as overdue; requiring a Sales Order FK | none |
 | SM-PURCHASE-ORDER sent / received | GoodsReceipt orchestration may start | Ledger, Balance | none |
@@ -46,8 +60,8 @@ Ledger remains stock quantity truth.
 | SM-QUALITY-INSPECTION hold / quarantine / reject / Released (**future only**) | Inventory hold/release/reject command if future Quality is enabled | Ledger, Balance, Unit quantity | OQ-005 future only |
 | SM-PRODUCTION-ORDER released | Allocation in Production; issue command to Inventory | Ledger, Balance | OQ-003 |
 | SM-PRODUCTION-ORDER resumed | none for stock | silent skip of pause | none |
-| SM-PRODUCTION-ORDER operation complete | Same nested INV-006 bundle as the operation; order `CompleteOperationPartial` writes PO state only | Ledger by Production table write; stock post on the order command | OQ-003 names, OQ-006 number, OQ-009 cutoff number |
-| SM-RESIDUAL fact recorded | Nested `CreateResidualUnit` inside `CompleteProductionOperation` when leftover is reusable; child Unit is `AVAILABLE` on valid commit | Production writing Unit identity; second residual qty after completion; `PlaceResidualUnit` as availability gate | OQ-009 cutoff number |
+| SM-PRODUCTION-ORDER operation complete | Same nested INV-006 bundle as the operation; order `CompleteOperationPartial` writes PO state only | Ledger by Production table write; stock post on the order command | OQ-003 lifecycle; OQ-009 human disposition recording/authority and production mass-balance policy |
+| SM-RESIDUAL fact recorded | Nested `CreateResidualUnit` inside `CompleteProductionOperation` when leftover is reusable; child Unit is `AVAILABLE` on valid commit | Production writing Unit identity; second residual qty after completion; `PlaceResidualUnit` as availability gate | OQ-009 human disposition recording/authority |
 | SM-SCRAP fact recorded | Nested `PostScrapMovement` for production leftover, or Quality/abort scrap with a new key | Quality writing stock; second scrap qty for the same leftover | OQ-009 when leftover classification |
 | SM-PACKAGE packed | Optional Inventory pack-state command | Inventory writing Package | OQ-004 |
 | SM-SHIPMENT dispatched | Inventory definitive stock exit | Ledger/Balance by Shipping | OQ-006 |

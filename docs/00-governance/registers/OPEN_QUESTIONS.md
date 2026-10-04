@@ -2,16 +2,95 @@
 id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
-status: approved
-version: 0.25.0
+status: in_review
+version: 0.29.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
-last_reviewed: 2026-10-01
-approval: APR-005
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Open Questions Register
+
+APR-005 remains historical approval evidence. This 0.29.0 revision records
+delegated pre-implementation blocking-scope classification, now under ADR-0012;
+it does not change any recorded answer, OQ status, or factory decision and
+does not claim human approval of these new bytes.
+
+## Current residual blocking scopes (2026-10-04)
+
+A = implementation-start blocker; B = slice-specific prerequisite;
+C = UAT evidence; D = cutover/go-live prerequisite; E = safe technical defer;
+F = future/outside current MVP. A classification describes when an unresolved
+item is needed, not its answer or closure. Multiple classes apply when design
+and later operational evidence are distinct. This classification covers all
+nineteen rows and the additional residual sections recorded below. Architecture
+propagation and first-slice freeze are completed after hook retirement under
+ADR-0011/0013; final independent readiness is recorded in the live checklist.
+
+The implementation-start reference is the proposed minimal SLICE-ENVELOPE:
+generic envelope, caller idempotency, rejection families, audit evidence and
+minimal persistence. No business command is implemented in that slice.
+If its scope expands, reassess dependencies before authorization.
+
+| Source | Unresolved item | Class / required boundary |
+| --- | --- | --- |
+| OQ-001 | kg/length formula and factors; technical decimal/arithmetic scale; applicability of measurement precision beyond measured kg; descriptive-UOM scales | B before quantity/conversion/commercial calculations; no quantities in envelope |
+| OQ-001 | measured-versus-expected difference threshold | B only before any automatic acceptance/classification; display evidence must not invent a threshold |
+| OQ-002 | confirmation against actual scale tickets | C; validation of the accepted kg rule |
+| OQ-003 | Entry/Referral persistence beside operation lifecycle; stop/cancel semantics; versioned per-order routing; Station/work-center reconciliation | B before production/workflow; factory routing/Stations remain recorded facts |
+| OQ-003 / FACT-05 / FACT-06 | attributable-command inventory; login/logout persistence and domain authorization mapping | B for identity/workflow/domain slices; C for attribution verification; no shared accounts |
+| OQ-004 | product-family tracking catalogue; Order Code identity and relationship to inventory identity | B before identity/genealogy/production; C/D validate first-go-live catalogue |
+| OQ-005 | future Quality plans, limits, personnel, exceptional release | F; no current-MVP Quality prerequisite |
+| OQ-006 | configured non-default fulfillment tolerances | B when non-default configuration is introduced; C validate configured cases; accepted default zero remains usable |
+| OQ-007 | commercial amendment/cancellation/unfulfilled-demand authorities and effects | B before affected sales/reservation/production commands; close rule remains answered |
+| OQ-008 | temporary planning-hold TTL | F unless that separate reservation type is explicitly introduced |
+| OQ-009 | human disposition recording; family policy beyond recorded reusability; return posting; consumption timing/partial-versus-complete conditions | B before production/residual handling; no invented numeric classifier or independent production post |
+| OQ-009 / FACT-03 | historical numeric branch reconciled to human reusability; missing decision recording/authority remains | B before affected inventory/production slice; no automatic cutoff or invented recording policy |
+| OQ-009 / production evidence | good output/WIP operational distinction; process-loss/mass-balance policy | B before affected production behavior; measurement difference is not a loss/disposition rule |
+| OQ-010 | approved portal document list/security visibility | B before portal; C verify isolation; future request/price/order-write phases F |
+| OQ-011 | make/model/location/protocol/device identity and named receiving operator | B for device integration; C/D validate device/fallback and attribution; human ticket fallback remains accepted |
+| OQ-012 | unnamed external invoice-upload system, protocol, legal role and manual/automatic boundary | B before that integration; no assumed Legal-GL connector |
+| OQ-012 | later accounting product/version/API | F; statutory/legal GL remains outside current MVP |
+| OQ-013 | second legal entity or site | F; explicit architecture reopen, not current tenancy |
+| OQ-014 | twelve-month counts/capacity; actual operator population | C for load/UAT evidence; D for capacity/sign-off; role names handled by OQ-019 |
+| OQ-015 | files/materials/codes/identities/opening Residual or Scrap; candidate import/receipt boundary | B before opening-stock tooling/design; D for source files, counts, freeze, signers and reconciliation |
+| OQ-016 | retention days and backup product | D; C/D restore/recovery verification; accepted RPO/RTO unchanged |
+| OQ-017 | optional PostgreSQL stored functions | E/F; not a prerequisite to accepted application-owned PostgreSQL transactions |
+| OQ-018 | envelope-required runtime/toolchain/package/install/test/database choices | Resolved technical prerequisite by evidenced ADR-0013 freeze; no OQ answer/status or human baseline approval changed |
+| OQ-018 | frontend/authentication products, deployment topology, other slice packages | B/E as their slice requires; ADR-0008 remains proposed |
+| OQ-018 | extra MCP products | E/F; none by default; available session review/research tools are not a product integration decision |
+| OQ-019 | workshop/sign-off mappings, delegates, attendance, domain ACT permissions and operator names | B for affected domain authorization; C for UAT people; D for cutover signers; future Quality assignments F |
+| FACT-03 | Sheet Code uniqueness and relationship to Inventory Unit; triggering Order Code on later Sheets; title wording | B before warehouse transformation/identity/genealogy; title and authority confirmation also OQ-019 |
+| FACT-03 | command/atomic transaction for opened-remainder warehouse Coil-to-Sheet transformation without a new order | B before that transformation; not silently added to DATA-TX-001 |
+| Commercial evidence | price ownership/version/customer pricing; tax/discount/currency/money rounding; cutting fee formula/authority; invoice numbering/timing | B before affected sales/Finance-Lite; C validate commercial examples; no invented tax/legal rule |
+| Payment evidence / OQ-012 | payment recorder, invoice/order links and allocations, partial payments, cheque/promissory-note recording/settlement | B before payments; architecture states do not supply factory procedure |
+| Payment evidence / OQ-012 | credit authority/limits; shipment dependency; customer-balance meaning; correction/reversal | B before affected Finance-Lite/shipment behavior; payment remains independent of SO closure |
+| Payment methods | deposit percentage and settlement deadline; credit aging policy; cheque/promissory-note operational treatment | B before affected Finance-Lite behavior; no invented percentage/deadline/lifecycle; any statutory/legal-GL treatment F |
+| Intake / procurement evidence | code/identity relationships; scale/feed; discrepancies/tolerance; receiving authority and mandatory purchase link | B before receipt/procurement; C/D for actual device/people; no second quantity writer |
+| Shipment evidence | preparation/authorization/loading/recording/delivery actors, documents/carrier/evidence/signature, invoice timing/payment prerequisite | B before shipment; C/D for operational verification/people; no invented logistics role |
+| Order-change evidence | change/cancel requests and approvals, confirmed-order editing, demand/material changes, route/reservation/allocated-or-produced effects, post-start/post-ship cancellation, customer evidence/reasons/reopen | B before affected commercial commands; no automatic stock reversal or demand discard |
+| Procurement evidence | supplier identity/master-data owner/selection/approval; purchase-request/PO existence/creator/approver; proforma and supplier confirmation | B before procurement; C/D for authorized personnel |
+| Procurement evidence | quantity change/cancel/return and downstream effects; price/currency/tax/payment terms; acceptance/discrepancy/partial/over/under receipt/correction | B before affected procurement/receipt commands; no invented purchase tolerance/payment workflow |
+| FIND-026 referenced below | Inquiry/Quotation expiry commercial practice | B before expiry behavior; evidence stays at existing finding home |
+
+No factory residual above requires business behavior in the frozen generic
+envelope. ADR-0011 resolves generic idempotency/transaction/admission, trusted
+principal/target/scope, current-access, bounds, concurrency/deadline and retention
+contracts. ADR-0013 freezes the supported stack, physical scope and test strategy;
+useful independent domain/testing and database/security reviews passed. Current
+Class A state and the final independent verdict are controlled by
+[IMPLEMENTATION_READINESS](../../12-implementation-planning/IMPLEMENTATION_READINESS.md),
+not historical source-access limits. Actual domain permission/person mappings
+remain B/C/D. Factory volume counts remain C/D and were not fabricated to choose
+technical limits. This technical propagation does not close any treating OQ.
+Each later slice must preserve GUARD_OPEN_POLICY for its unresolved inputs.
+
+The Owner abandoned native/OS containment on 2026-10-04. Native installers,
+shared-parent ACLs, anchors and malicious-agent resistance are not start
+blockers. This changes planning classification only; all recorded business
+answers, OQ statuses and factory evidence below remain unchanged.
 
 Status values: `open`, `investigating`, `treating`, `answered`, `deferred`,
 `superseded`. Severity and blocking scope are independent.

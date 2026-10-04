@@ -2,12 +2,12 @@
 id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
-status: approved
-version: 0.12.1
+status: in_review
+version: 0.13.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-10-02
-approval: APR-017
+last_reviewed: 2026-10-03
+approval: null
 supersedes: null
 ---
 
@@ -15,6 +15,9 @@ supersedes: null
 
 This is an append-only index. An AI recommendation, completed draft, or Git
 commit does not constitute human approval.
+
+This `0.13.0` factual post-checkpoint/mandate revision is in review. APR-017 approved
+and checkpointed the prior `0.12.1` bytes; it did not approve this revision.
 
 ### APR-000 — Governance Foundation Gate
 
@@ -103,6 +106,26 @@ Mixed, duplicate, missing, and unpaired forms fail closed. The first predicate
 revision's mixed-state edge was caught during independent review.
 
 ## Recording policy
+
+### Current delegated pre-implementation checkpoints
+
+The explicit 2026-10-03 Project Owner mandate delegates ordinary governance
+checkpoint preparation and local commits where no separate human approval is
+required. After the bootstrap controls function, use GCP evidence: exact
+artifact list, raw SHA-256/Git blob IDs, parent commit, validation, independent
+review, author and resulting commit. Record pending/current evidence honestly.
+GCP is an agent checkpoint, never an APR/CHK, Project Owner approval or a final
+implementation baseline. No push, rewrite, amend, reset or restore is delegated.
+
+Never create/edit the existing human checkpoint marker. Required human material
+ADR approvals and final approved-baseline selection stay in the final package.
+Protected human bootstrap changes need a human receipt and exact approved
+manifest; ordinary delegated commits cannot silently stage them. Existing
+historical APR/CHK approvals below remain unchanged. Writable local Git is not
+an immutable audit store; preserve human receipts outside agent-writable paths.
+
+The earlier sequence below remains the procedure for a **human-approved phase
+baseline** and human marker, rather than for every ordinary delegated GCP.
 
 For a new phase baseline approval, complete the checkpoint sequence:
 
@@ -616,14 +639,22 @@ implementation.
 ### APR-017 — APR-016 Checkpoint Recording Follow-up
 
 - Phase: `12-implementation-planning`
-- Status: `approved`; follow-up checkpoint pending human marker
+- Status: `approved`; follow-up checkpoint completed
 - Approval manifest:
   [APR-017-apr-016-checkpoint-recording.md](approved-baselines/APR-017-apr-016-checkpoint-recording.md)
 - Approved scope: the five-file forward record of the completed APR-016
   checkpoint only
 - Approver: Project Owner (current Codex request authorizing the separately
   required forward CHK recording)
-- Git checkpoint: pending
+- Git checkpoint: completed successfully; 5 files changed
+- Git commit: `fc6b761a371f06491e4ea94df01af3fc380cb8a3`
+- Git commit subject: `governance: record APR-016 checkpoint`
+- Checkpoint marker: human-created APR-017 marker was used; Project Owner must
+  retire it
 - Next phase: none
 - Implementation authorization: none; `IMPLEMENTATION_AUTHORIZED` remains
   `false`
+
+APR-017 is the separately approved forward recording checkpoint and does not
+require a recursive CHK record. Later Codex-control changes need their own
+review and authorization.

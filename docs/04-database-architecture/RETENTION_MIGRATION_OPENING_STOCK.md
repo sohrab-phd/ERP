@@ -2,16 +2,19 @@
 id: DATA-CUTOVER-001
 title: Retention, Migration, and Opening Stock
 phase: 04-database-architecture
-status: approved
-version: 0.1.0
+status: in_review
+version: 0.2.0
 owners: [data-architect, inventory-domain-owner]
 depends_on: [SM-INV-001, APR-005]
-last_reviewed: 2026-09-06
-approval: APR-006
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Retention, Migration, and Opening Stock
+
+APR-006 retains the historical structure approval. This factory/ADR-0011
+reconciliation is delegated technical work, not human baseline approval.
 
 Logical cutover and retention rules. Named people, freeze procedures,
 and source-system lists stay OQ-015 treating. OQ-016 RPO ≤ 60 minutes,
@@ -33,9 +36,9 @@ Required logical facts when cutover runs — values not invented:
 | --- | --- | --- |
 | Freeze instant | recorded on the cutover command | who freezes stays OQ-015 / OQ-019 |
 | Source identity of each opening unit | Inventory | source list stays OQ-015 |
-| Opening Ledger row (direction = opening) | ACT-IPS | qty type OQ-001, OQ-002 |
+| Opening Ledger row (direction = opening) | ACT-IPS | official kg (OQ-002 answered); technical scale/conversion residual OQ-001 |
 | Matching Balance projection | ACT-IPS | rebuilt from Ledger |
-| Discrepancy record if count ≠ source | Inventory / Quality as commanded | workflow stays OQ-015 |
+| Discrepancy record if physical stock differs from source | Inventory through authorized cutover | workflow stays OQ-015; kg authoritative, count descriptive; no current Quality role |
 | Sign-off role | audit on the command | named person OQ-019 |
 
 Until those answers exist, an opening-stock command that needs a named
@@ -81,6 +84,13 @@ Until retention days exist as an operational input:
 - A projection (Balance, Genealogy Link, KPI) may be dropped and rebuilt
   from its canonical source (`Ledger → Balance`; DATA-GEN-001 →
   Genealogy). Rebuild must not create Ledger movements.
+
+ADR-0011 retains generic outcome/key-binding evidence without automatic TTL or
+recycling. Future archive/privacy policy cannot silently permit old requests to
+execute again. Consistent restore includes owner facts, original audits and
+outcomes; if acknowledged writes may be lost under recorded RPO, disable command
+admission and reconcile before writes. Retention product/day counts are Go-Live
+inputs, not foundation-start blockers.
 
 ## What this does not authorize
 

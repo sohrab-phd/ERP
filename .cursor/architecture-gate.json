@@ -8,19 +8,22 @@
   "unlockMarker": ".cursor/IMPLEMENTATION_UNLOCK.json",
   "checkpointMarker": ".cursor/PHASE_CHECKPOINT_APPROVAL.json",
   "allowedWritePathsWhileLocked": [
-    "README.md",
-    ".gitignore",
-    "docs/**/*.md",
-    ".cursor/rules/**/*.mdc",
-    ".cursor/skills/**/*.md"
-  ],
-  "protectedPaths": [
-    ".cursor/architecture-gate.json",
-    ".cursor/hooks.json",
-    ".cursor/hooks/**",
-    ".cursor/IMPLEMENTATION_UNLOCK.json",
-    ".cursor/PHASE_CHECKPOINT_APPROVAL.json"
-  ],
+  "README.md",
+  ".gitignore",
+  "docs/**/*.md",
+  ".cursor/rules/**/*.mdc",
+  ".cursor/skills/**/*.md",
+  "AGENTS.md"
+],
+"protectedPaths": [
+  ".cursor/architecture-gate.json",
+  ".cursor/hooks.json",
+  ".cursor/hooks/**",
+  ".cursor/IMPLEMENTATION_UNLOCK.json",
+  ".cursor/PHASE_CHECKPOINT_APPROVAL.json",
+  ".codex/hooks.json",
+  ".codex/hooks/**"
+],
   "unknownWriteOperation": "deny",
   "deleteOrRenameWhileLocked": "deny",
   "unlockRequirements": {
@@ -57,7 +60,7 @@
     "approvalManifestPrefix": "docs/00-governance/approved-baselines/"
   },
   "notes": [
-    "This policy constrains covered Cursor agent actions, not manual editor changes.",
+    "This architecture-only policy is canonical; Codex tool interception is unverified until a project hook is installed, trusted, and tested.",
     "Implementation remains locked until a human-created marker references an approved baseline and exact allowed paths."
   ]
 }

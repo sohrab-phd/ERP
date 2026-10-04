@@ -2,16 +2,24 @@
 id: PLAN-SLICE-001
 title: Roadmap and Vertical Slices
 phase: 12-implementation-planning
-status: approved
-version: 0.4.0
+status: in_review
+version: 0.5.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [SM-SEQ-001, APP-ORCH-001, REPO-LAY-001, APR-013, APR-014, ASM-025]
-last_reviewed: 2026-10-01
-approval: APR-014
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Roadmap and Vertical Slices
+
+APR-014 approved the historical structure. The delegated technical foundation
+is now specified by ADR-0011/0013 and
+[physical design](SLICE_ENVELOPE_PHYSICAL_DESIGN.md). These are technical decisions,
+not human approval of an implementation baseline. No package or source exists.
+[Capability backlog](IMPLEMENTATION_BACKLOG.md) refines the ordering while retaining
+all named bundle homes below. A logical home does not authorize all its capabilities
+in the first foundation implementation grant.
 
 Named slices for later unlock work. This is not a calendar, staffing
 plan, or application tree. Later folders stay labels from REPO-LAY-001;
@@ -51,11 +59,11 @@ kernel.
 
 | Slice | Walks / commands | Host / module labels | Must not | Open |
 | --- | --- | --- | --- | --- |
-| `SLICE-ENVELOPE` | Command/query envelope, idempotency key, rejection families, `AUD-CMD-*` | `kern-command`, `host-backend`, `mod-identity-audit` | Write Ledger; choose NestJS/Prisma | OQ-018 residual packages |
+| `SLICE-ENVELOPE` | Command/query envelope, bound durable accepted/rejected outcomes, rejection families, `AUD-CMD-*` | `kern-command`, `host-backend`, `mod-identity-audit` | Write Ledger or business posting; production synthetic/auth shortcut | Technical stack ADR-0013 and contract ADR-0011; identity product belongs to its later slice |
 | `SLICE-IPS` | Inventory Posting kernel commanded by others | `mod-inventory-posting` | Second writer; Balance-only API | OQ-001 residual; OQ-017 functions later ADR |
 | `SLICE-STOCK` | SEQ-STOCK: `ActivateReservation` bundle → pack → `DispatchShipment` bundle → invoice → `AllocatePayment` bundle; `CloseSalesOrder` per OQ-007 | `mod-sales`, `mod-shipping`, `mod-finance-lite`, commands IPS | Steal an `ACTIVE` reservation; split any named bundle; close SO because invoice is paid | OQ-006 |
 | `SLICE-PURCHASE` | SEQ-PURCHASE: PO → `PostGoodsReceipt` bundle; `ADP-WEIGHBRIDGE` commander | `mod-procurement`, `host-adapter`, IPS posts; no current Quality dependency | Device writes quantity | OQ-011, OQ-019; OQ-005 future Quality only, not a current guard |
-| `SLICE-MAKE` | SEQ-MAKE: allocation issue → `CompleteProductionOperation` bundle (nested residual identity / scrap qty) | `mod-production` commands IPS; `mod-quality` deferred outside MVP | Guess routing or residual cutoff; split the complete-op bundle or post leftover after commit | OQ-003 names, OQ-009 cutoff numbers, OQ-006; OQ-005 future Quality only |
+| `SLICE-MAKE` | SEQ-MAKE: allocation issue → `CompleteProductionOperation` bundle (nested residual identity / scrap qty) | `mod-production` commands IPS; `mod-quality` deferred outside MVP | Guess routing or automatically classify reusability; split the complete-op bundle or post leftover after commit | OQ-003 lifecycle; OQ-009 human disposition recording/authority and production policy; OQ-006 fulfillment only; OQ-005 future Quality only |
 | `SLICE-REVERSE` | SEQ-REVERSE compensating commands; SV-013 on ReverseGoodsReceipt | owning BC commands; IPS on stock reverse | Device replay; `REV-AGENT` waiving SoD | OQ-015, OQ-019 |
 | `SLICE-RESTORE` | Restore: `BalanceRebuild` from Ledger; `GenealogyRebuild` from DATA-GEN-001 source facts | `host-worker` rebuild kinds | `AdjustBalance` / `EditGenealogy`; Ledger-only genealogy | OQ-016 residual retention/product. RPO/RTO recorded. |
 | `SLICE-CUTOVER` | `ADP-CUTOVER` / `OpeningStockImport` | `host-adapter` | Bypass OQ-015; post Balance-only | OQ-015, OQ-019 |

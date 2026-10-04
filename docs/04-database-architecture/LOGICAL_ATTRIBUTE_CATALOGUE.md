@@ -2,21 +2,24 @@
 id: DATA-ATTR-001
 title: Logical Attribute Catalogue
 phase: 04-database-architecture
-status: approved
-version: 0.1.0
+status: in_review
+version: 0.2.0
 owners: [data-architect, domain-leads]
 depends_on: [DATA-LOGICAL-001, GOV-DATA-DICT-001, SM-INV-001, APR-005]
-last_reviewed: 2026-09-06
-approval: APR-006
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Logical Attribute Catalogue
 
+APR-006 remains historical structure approval; current source/technical
+reconciliation is delegated work without human baseline approval.
+
 Named logical attributes for each ENT-*. This is not a column list. No
 type, length, decimal scale, index, or nullability-as-storage is decided.
-Quantity and UOM attributes are named only; their type stays OQ-001 /
-OQ-002.
+Quantity and UOM attributes are named only; official stock UOM kg is answered
+OQ-002. Technical decimal scale/conversion details remain OQ-001 residual.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -33,7 +36,9 @@ on every posted or reversed record: reason, authority role, link to the
 prior posted identity. Shared on every retryable command result:
 caller-supplied idempotency key.
 
-Site / legal-entity discriminator is **O** on every record (OQ-013).
+One legal entity/principal site is answered OQ-013. Future multi-site remains
+an explicit architecture reopen; foundation installation/authority IDs are
+technical stable configuration, not additional factory tenants.
 
 ## Sales
 
@@ -71,13 +76,14 @@ Site / legal-entity discriminator is **O** on every record (OQ-013).
 | --- | --- | --- | --- |
 | ENT-MATERIAL-LOT | supplier/certificate/receipt refs | R | write owner proposed Inventory |
 | ENT-INVENTORY-UNIT | lot ref, kind (including Coil), location, state | R | one active location (INV-004, ASM-005) |
-| ENT-INVENTORY-UNIT | on-hand qty, reserved qty | R | type OQ-001; Coil length OQ-002 |
+| ENT-INVENTORY-UNIT | on-hand qty, reserved qty | R | authoritative kg; length/count/dimensions descriptive, exact technical scale OQ-001 |
 | ENT-INVENTORY-LEDGER | unit/lot ref, direction, qty, reason, actor role, prior-row link | R / S / C | immutable; mechanism OQ-017 |
 | ENT-INVENTORY-BALANCE | unit/lot ref, on-hand, reserved, held | R | projection of Ledger; not independently editable |
 | ENT-RESERVATION | demand ref, unit/lot ref, claimed qty, state | R | distinct from Allocation (INV-003); at most one `ACTIVE` per Inventory Unit (OQ-008); partial claimed qty is not a second slot |
 | ENT-RESERVATION | confirmed-SO timer expiry | — | **Not a required attribute.** Confirmed-SO reservations do not auto-expire (OQ-008). TTL only if a later temporary-hold type is added. |
 
-Available qty is derived: on-hand − reserved − quality hold (INV-003).
+Current-MVP available qty is derived: on-hand − reserved (INV-003).
+Quality hold participates only in a separately approved future QC scope.
 Do not store a third independent quantity as truth.
 
 ## Production
@@ -86,15 +92,17 @@ Do not store a third independent quantity as truth.
 | --- | --- | --- | --- |
 | ENT-PRODUCTION-ORDER | demand or make-need ref, state | R | |
 | ENT-MATERIAL-ALLOCATION | order/operation ref, unit/lot ref, state | R | not a Reservation |
-| ENT-PRODUCTION-OPERATION | order ref, state | R | step name OQ-003 |
+| ENT-PRODUCTION-OPERATION | order ref, state | R | ten Station/Step names recorded; versioned routing and Entry/Referral/lifecycle remain OQ-003 |
 | ENT-MATERIAL-CONSUMPTION | operation ref, unit ref, qty | R / S | qty type OQ-001; posting point OQ-003 |
 | ENT-PRODUCTION-OUTPUT | operation ref, unit or batch ref, qty | R / S | tracking grain OQ-004 |
-| ENT-RESIDUAL | parent unit, fact qty, child unit ref | R / S | usable cutoff OQ-009 |
+| ENT-RESIDUAL | parent unit, fact qty, child unit ref, attributable human reusability decision | R / S | OQ-009 human decision recording remains unresolved; no numeric classifier |
 | ENT-SCRAP | origin, reason, fact qty | R / S | stock movement is a Ledger row |
-| ENT-PRODUCT-BATCH | output refs, Released flag | R | grain OQ-004; release person OQ-005 |
+| ENT-PRODUCT-BATCH | output refs, lifecycle eligibility | R | hybrid grain OQ-004; Quality Released/releaser only in a later QC scope |
 
-Process-loss qty is a named consumption/output fact. Its approved
-tolerance stays OQ-006 (INV-007).
+Process-loss qty is a named consumption/output fact. Production process-loss and
+mass-balance policy remains unresolved in live production evidence (Class B before
+that behavior); OQ-006 default-zero fulfillment tolerance is not that policy.
+Measured-vs-expected difference display is not loss/disposition classification.
 
 ## Quality, shipping, finance
 

@@ -3,15 +3,22 @@ id: GOV-SLICE-HOMES-001
 title: Slice Homes for Approved Commands Adapters and Scenes
 phase: 00-governance
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [chief-solution-architect]
 depends_on: [PLAN-SLICE-001, PLAN-WI-001, APP-CMD-001, APP-QRY-001, INT-CAT-001, QA-SCN-001, APR-014, CHK-0013, ASM-025]
-last_reviewed: 2026-10-01
+last_reviewed: 2026-10-04
 approval: null
 supersedes: null
 ---
 
 # Slice Homes for Approved Commands, Adapters, and Scenes
+
+Current delegated foundation refinement: ADR-0011/0013 and
+[physical design](../../12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md)
+freeze the exact first implementation scope. The broader logical ENVELOPE homes
+for print/report/live notices do not require implementing those adapters now;
+they remain later dependent capabilities. Named business bundle homes below
+are unchanged. No human approval or implementation authorization is created.
 
 Canonical homes for already-approved IDs after CHK-0013. This register
 does **not** reopen APR-014, add a Phase 13, mint `TEST-*` IDs, or
@@ -69,8 +76,9 @@ owning bounded context; stock executor remains `ACT-IPS`.
 
 ### `SLICE-ENVELOPE`
 
-Envelope, idempotency, rejection families, and `AUD-CMD-*` for every
-command. No Ledger write. Open: OQ-018.
+Envelope, bound durable command outcomes, rejection families, and `AUD-CMD-*`
+for every command. No Ledger write. ADR-0011/0013 fix the technical foundation;
+later identity and domain policy are excluded from the first foundation grant.
 
 ### `SLICE-IPS`
 
@@ -89,7 +97,7 @@ inside `WI-BUNDLE-COMPLETE-OP`),
 PlaceResidualUnit (no second residual qty), PostScrapMovement
 (authoritative scrap qty; nested for production leftover).
 
-Open: OQ-017, OQ-001, OQ-002. Must not: second writer; Balance-only API.
+Open: OQ-001 arithmetic/scale. OQ-002 measured Coil kg and OQ-017 application-owned transaction are answered; optional stored functions are deferred. Must not: second writer; Balance-only API.
 
 ### `SLICE-STOCK` — Sales commercial prefix (not SEQ-STOCK steps)
 
@@ -166,21 +174,22 @@ is future-only),
 deferred Quality commands as purchase; they do not write stock and are
 not current `SLICE-MAKE` contents.
 
-Open: OQ-003, OQ-009, OQ-006. Production must not write Ledger.
+Open: OQ-003 lifecycle and OQ-009 human disposition recording/production policy.
+OQ-006 is fulfillment tolerance only. Production must not write Ledger.
 
 ### `SLICE-REVERSE`
 
 Compensating **new** commands with **new** keys: ReverseGoodsReceipt
 (SV-013 second distinct human), ReversePayment, ReturnUnit,
 RequestInvoiceVoid, VoidInvoice (SV-007). Original posted rows stay.
-Open: OQ-015 authority, OQ-017 mechanism, OQ-019 names. Must not:
+Open: OQ-015 authority and OQ-019 names; OQ-017 application-owned transaction answered. Must not:
 device replay; `REV-AGENT` waiving SoD.
 
 ### `SLICE-RESTORE`
 
 `BalanceRebuild` (from Ledger) and `GenealogyRebuild` (from DATA-GEN-001
 source facts, FIND-G-014) only. Must not:
-`AdjustBalance`, `EditGenealogy`. Open: OQ-016.
+`AdjustBalance`, `EditGenealogy`. OQ-016 RPO ≤60 minutes/RTO ≤8 hours answered; retention days/product and recovery rollout evidence remain later inputs.
 
 ### `SLICE-CUTOVER`
 
@@ -276,13 +285,13 @@ kernel. Transport and cache package stay OQ-018.
 | --- | --- |
 | OQ-001 residual | Decimal scale/rounding/factors on quantity posts |
 | OQ-002 | Answered: Coil qty is measured kg |
-| OQ-003 residual | Named routing steps; abort role on `SLICE-MAKE` |
+| OQ-003 residual | Ten Stations recorded; routing storage/version/lifecycle and abort authority on `SLICE-MAKE` |
 | OQ-004 | Answered: hybrid grain; catalogue is configuration |
 | OQ-005 future residual | Quality Plans/limits/names only if a future Quality scope is authorized; no current-MVP guard on `SLICE-PURCHASE` / `SLICE-MAKE` |
 | OQ-006 | Answered: default tolerance 0; family % is configuration |
 | OQ-007 | Answered: close SO on fulfilled, cancelled, or authorized unfulfilled remainder; not payment |
 | OQ-008 | Answered: one Coil one reservation; no confirmed-SO timer |
-| OQ-009 residual | Residual cutoff numbers on `SLICE-MAKE` |
+| OQ-009 residual | Human reusability disposition recording/authority and affected production policy on `SLICE-MAKE`; no universal automatic numeric cutoff |
 | OQ-010 | Answered: visibility-only portal; no order-write slice |
 | OQ-011 residual | `ADP-WEIGHBRIDGE` auto-path / `SPIKE-DEVICE` |
 | OQ-012 | Answered: no Legal-GL in MVP |

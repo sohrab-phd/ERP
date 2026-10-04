@@ -2,16 +2,19 @@
 id: QA-SCN-001
 title: Scenario Catalogue
 phase: 07-testing-quality-architecture
-status: approved
-version: 0.4.0
+status: in_review
+version: 0.5.0
 owners: [qa-architect, domain-leads]
 depends_on: [SM-SEQ-001, SM-EXC-001, QA-STRAT-001, APR-008]
-last_reviewed: 2026-10-01
-approval: APR-009
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Scenario Catalogue
+
+APR-009 remains historical structure approval. Current reconciliation uses
+recorded factory evidence and ADR-0011; these bytes are not human-approved.
 
 Named golden-path and exception scenarios. They are the Phase 03
 sequences plus rejection and correction cases. They are not executable
@@ -28,7 +31,7 @@ not current-MVP gates. No executable tests are created here.
 | --- | --- | --- |
 | `QA-SCN-STOCK` | SEQ-STOCK sell available stock through invoice/payment | Over-delivery OQ-006; CloseSalesOrder uses OQ-007 (not payment) |
 | `QA-SCN-PURCHASE` | SEQ-PURCHASE buy then fulfill | ApprovePurchaseOrder OQ-019; inbound QC OQ-005 only in future Quality scope |
-| `QA-SCN-MAKE` | SEQ-MAKE allocate, produce (`CompleteProductionOperation` exclusive post including leftover residual/scrap), then ship | Routing names OQ-003; residual cutoff numbers OQ-009; mass balance OQ-006 |
+| `QA-SCN-MAKE` | SEQ-MAKE allocate, produce (`CompleteProductionOperation` exclusive post including leftover residual/scrap), then ship | Routing/lifecycle OQ-003; recorded human reusability disposition OQ-009; production mass-balance/process-loss policy unresolved before MAKE; OQ-006 applies only to fulfillment |
 | `QA-SCN-NOT-FEASIBLE` | SEQ-NOT-FEASIBLE demand without an order | none as a path; not overdue |
 | `QA-SCN-REVERSE` | SEQ-REVERSE compensating command; original posted row stays | OQ-015 authority; OQ-017 mechanism |
 
@@ -49,7 +52,7 @@ A step whose guard is an unanswered OQ is an expected
 | `QA-SCN-REJECT-ACTOR` | Temporary identity → `GUARD_ACTOR` | SEC-002 |
 | `QA-SCN-REJECT-PORTAL` | PortalPlaceOrder → `GUARD_PORTAL_MVP` | INV-020 |
 | `QA-SCN-CONFLICT` | Second concurrent writer on the same unit/order → `GUARD_CONFLICT` or `GUARD_STATE`. Two `ActivateReservation` on the same unit: at most one `ACTIVE`. | SM-CONC-001, INV-002 |
-| `QA-SCN-IDEMPOTENT` | Retry same key returns first result; no second GR/dispatch/payment/completion | INV-016 |
+| `QA-SCN-IDEMPOTENT` | Same scoped key and bound identity returns original accepted or rejected outcome; changed binding conflicts, no second GR/dispatch/payment/completion; current result access checked | INV-016, ADR-0011 |
 | `QA-SCN-REVERSE` | ReverseGoodsReceipt / ReversePayment / ReturnUnit / VoidInvoice is a new command with a new key | INV-005, SEQ-REVERSE |
 | `QA-SCN-SOD` | VoidInvoice or ReversePayment without a second distinct identity rejects | SV-007 |
 | `QA-SCN-SOD-GR` | ReverseGoodsReceipt without a different human than the original post rejects | SV-013 |

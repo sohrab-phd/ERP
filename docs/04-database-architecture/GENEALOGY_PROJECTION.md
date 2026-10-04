@@ -2,16 +2,19 @@
 id: DATA-GEN-001
 title: Genealogy Projection Design
 phase: 04-database-architecture
-status: approved
-version: 0.1.1
+status: in_review
+version: 0.2.0
 owners: [data-architect, domain-leads]
 depends_on: [SM-INV-001, GOV-DATA-DICT-001, APR-005]
-last_reviewed: 2026-09-30
-approval: APR-006
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Genealogy Projection Design
+
+APR-006 retains historical structure approval. Current factory reconciliation
+is delegated technical work, not human baseline approval.
 
 Genealogy Link (TERM-025 / ENT-GENEALOGY-LINK) is a rebuildable query
 projection (INV-019). It is not independently editable source truth.
@@ -72,8 +75,11 @@ reconstruction, not a new business posting and not Event Sourcing.
 
 Tracking granularity is the recorded OQ-004 hybrid grain; the first
 go-live family catalogue remains configuration. Official posting
-**boundary** is `CompleteProductionOperation` (OQ-003 recorded); step
-**names** remain treating. Residual cutoff **numbers** stay OQ-009.
+**boundary** is `CompleteProductionOperation` (OQ-003 recorded); ten physical
+Station/Step names are recorded, while workflow/versioned route/lifecycle remains
+OQ-003. Residual/Scrap follows the human reusability decision;
+recording and return-posting contracts stay OQ-009. No automatic numeric cutoff
+or missing-number classifier is introduced.
 
 ## Projection rules
 

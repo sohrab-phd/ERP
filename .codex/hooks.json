@@ -1,0 +1,6 @@
+{
+  "description": "Project governance guard using the canonical .cursor architecture gate.",
+  "hooks": {
+    "PreToolUse": []
+  }
+}

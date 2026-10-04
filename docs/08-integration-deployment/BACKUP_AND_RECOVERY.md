@@ -2,12 +2,12 @@
 id: DEP-DR-001
 title: Backup Restore and Recovery Labels
 phase: 08-integration-deployment
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.4.0
 owners: [operations-owner]
 depends_on: [QA-NFR-001, DATA-CUTOVER-001, APP-BG-001, APR-009, APR-010]
-last_reviewed: 2026-09-18
-approval: APR-010
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
@@ -51,6 +51,24 @@ Until OQ-015 is answered, `DR-CUTOVER` / `ADP-CUTOVER` reject as
 `GUARD_OPEN_POLICY`.
 
 ## What is source truth after restore
+
+### Durable command outcomes after data-loss recovery
+
+ADR-0011's bound terminal outcomes and audit must be restored consistently with
+business facts. A same-key retry resolves against authoritative PostgreSQL, not
+Balance or a replica. Ordinary crash/connection-loss retry is different from a
+PITR/backup restore that loses acknowledged history within the accepted RPO.
+After such a restore, command admission stays disabled until acknowledged outcome
+history is recovered or a reviewed recovery procedure fences the pre-recovery
+request generation and reconciles uncertain commands. An absent outcome after
+data loss is not proof of nonexecution; old requests are not silently issued with
+new keys. No exactly-once guarantee is asserted across unreconciled backup loss.
+See [command contract](../12-implementation-planning/COMMAND_IDEMPOTENCY_SPEC.md).
+This is a recovery-rollout prerequisite, not a requirement to select a backup
+vendor or retention days before implementing a local command foundation.
+
+APR-010 remains historical approval; this delegated consistency revision does
+not modify its recorded business RPO/RTO or assert human approval of new bytes.
 
 Posted commercial documents, Inventory Ledger rows, Lot/Unit origin
 facts, Production consumption/output/residual/scrap/rework facts,

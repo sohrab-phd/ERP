@@ -2,21 +2,26 @@
 id: DATA-TX-001
 title: Transaction and Idempotency Design
 phase: 04-database-architecture
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.4.0
 owners: [data-architect, chief-solution-architect]
 depends_on: [SM-CONC-001, SM-EVT-001, APR-005]
-last_reviewed: 2026-10-01
-approval: APR-006
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Transaction and Idempotency Design
 
+APR-006 retains the historical structure approval; this reconciled revision is
+delegated technical work under ADR-0011/0012, not human baseline approval.
+
 Logical transaction boundaries taken from Phase 03. Database product is
 PostgreSQL (ADR-0007). Posting **style** is the recorded OQ-017
-application-owned PostgreSQL transaction. Physical isolation/lock/index
-syntax and stored functions remain residual (later ADR + spike).
+application-owned PostgreSQL transaction. ADR-0011 freezes READ COMMITTED,
+transaction-scoped advisory key locks and terminal outcomes for the generic
+envelope. Domain resource locking/indexes are frozen in their later slices;
+stored functions remain optional later ADR + spike, not a prerequisite.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
 
@@ -80,10 +85,14 @@ residual after completion.
    for the issued parent; `ScrapUnit` only when that unit’s destiny is
    `SCRAPPED`.
 10. Mass balance (INV-007): consumed = good output + WIP + residual + scrap
-    + approved process loss, within the OQ-006 tolerance. Missing tolerance
-    when the close needs a number → `GUARD_OPEN_POLICY`. Family residual
-    cutoff numbers remain OQ-009 treating; missing cutoff when
-    classification requires it → `GUARD_OPEN_POLICY`.
+    + approved process loss. Production process-loss/mass-balance tolerance
+    is unresolved in the live production evidence; OQ-006 fulfillment default
+    zero is not that policy. Missing required production policy →
+    `GUARD_OPEN_POLICY`. Residual versus Scrap follows the attributable
+    Production/Workshop Manager human reusability decision, never an automatic
+    weight/dimension cutoff. Recording that decision and later return posting
+    remain OQ-009 slice prerequisites; missing a fabricated numeric cutoff is
+    not a current classifier guard.
 11. QC request only as a future/deferred extension if Quality is later
     enabled. Current-MVP completion has no QC request or approval
     dependency. Future Quality does not write stock (INV-017).
@@ -124,24 +133,31 @@ inventory postings.
 Use the pairs in
 [CONCURRENCY_AND_INTERLOCK.md](../03-state-machines-invariants/CONCURRENCY_AND_INTERLOCK.md).
 First accepted writer wins. Second is `GUARD_CONFLICT`,
-`GUARD_INVARIANT`, or `GUARD_STATE`. The mechanism that serializes them
-stays OQ-017.
+`GUARD_INVARIANT`, or `GUARD_STATE`. Domain resource locks/unique constraints
+are specified before their owning slice. The ADR-0011 key lock prevents duplicate
+command execution; it does not resolve different-key domain races or commercial
+priority by itself.
 
 ## Idempotency
 
-Every command carries a caller-supplied key. Proposed uniqueness scope
-is in the event catalogue. Logical store:
+ADR-0011 and [COMMAND_IDEMPOTENCY_SPEC](../12-implementation-planning/COMMAND_IDEMPOTENCY_SPEC.md)
+bind generic outcomes: full installation/authority/key uniqueness; immutable
+principal/command/version/typed target/precondition/material binding; accepted AND
+rejected replay; mismatch GUARD_CONFLICT; different-key duplicates only under
+owning guard rules. Weighbridge receipt natural identity remains OQ-011.
 
-- key
-- command name
-- accepted/rejected
-- resulting fact identity if accepted
-- first-seen timestamp
+One checked-out PostgreSQL client at READ COMMITTED takes transaction-scoped
+advisory key lock, then a separate fresh-snapshot SELECT. No committed claim or
+PENDING row. Owner facts, complete terminal outcome and original audit commit
+atomically. Savepoint before handler work removes tentative facts on recognized
+business rejection before rejection/audit commit. Infrastructure errors abort the
+whole transaction; terminal delivery follows confirmed commit. Replay audit is
+separate from immutable original execution but commits before replay delivery.
 
-A retry with the same key returns that row. A new key is a new command.
-
-How the key is persisted stays Phase 04 physical / OQ-017. Weighbridge
-identity feeding a receipt key stays OQ-011.
+Unknown COMMIT resolves by SAME bound key against the primary, never new key or
+lagging replica. No automatic key expiry/reuse. Restore command admission stays
+disabled if acknowledged history may be lost until recovery reconciliation;
+consistent restored rows alone do not prove no acknowledged command was lost.
 
 ## Correction
 
@@ -166,7 +182,7 @@ does not require a second operational posting.
 
 ## Must not decide here
 
-- Physical `SERIALIZABLE` versus row-lock SQL syntax
+- Domain-specific resource-lock SQL and unique indexes (before that slice)
 - Prisma or any package
 - Decimal scale
 - Outbox or broker

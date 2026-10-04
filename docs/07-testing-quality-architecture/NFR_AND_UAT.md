@@ -2,16 +2,22 @@
 id: QA-NFR-001
 title: NFR Recovery and UAT Intents
 phase: 07-testing-quality-architecture
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.3.1
 owners: [qa-architect, operations-owner]
 depends_on: [QA-STRAT-001, SEC-VER-001, APR-008]
-last_reviewed: 2026-10-01
-approval: APR-009
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # NFR, Recovery, and UAT Intents
+
+Current delegated reconciliation: APR-009 remains historical structure approval.
+ADR-0011 and ADR-0013 now fix foundation contract/tooling; detailed first-slice
+acceptance and DoD live in [physical design](../12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md).
+Earlier 'must not decide here' clauses describe the original structure scope,
+not a new prohibition on delegated technical choices. No product tests run yet.
 
 Named later proofs for security (already in SV-*), recovery, outage,
 performance, and workshop acceptance. Numbers stay open where an OQ
@@ -28,7 +34,7 @@ invent OQ-018.
 
 | Intent | Statement | Open |
 | --- | --- | --- |
-| `QA-R-RESTORE` | A restore can rebuild Balance from Ledger and Genealogy from DATA-GEN-001 source facts | RPO/RTO OQ-016 |
+| `QA-R-RESTORE` | A restore can rebuild Balance from Ledger and Genealogy from DATA-GEN-001 source facts | OQ-016 recorded RPO ≤60 minutes/RTO ≤8 hours; retention product/days before recovery rollout |
 | `QA-R-DEVICE` | Weighbridge down → human ACT-* command, not silent Ledger write | OQ-011 |
 | `QA-R-WORKER` | Transport retry uses the same idempotency key | OQ-018 scheduler |
 | `QA-R-CUTOVER` | Opening stock is a Ledger fact with named sign-off | OQ-015 |
@@ -46,7 +52,7 @@ cite ASM-002 as `keep`/`replace` only after the team answers.
 | Intent | Statement | Open |
 | --- | --- | --- |
 | `QA-UAT-STOCK` | Workshop walks QA-SCN-STOCK with real roles | OQ-019 names |
-| `QA-UAT-PURCHASE` | Workshop walks QA-SCN-PURCHASE | OQ-019, OQ-005 |
+| `QA-UAT-PURCHASE` | Workshop walks QA-SCN-PURCHASE | OQ-019; no current-MVP QC dependency |
 | `QA-UAT-MAKE` | Workshop walks QA-SCN-MAKE | OQ-003, OQ-019 |
 | `QA-UAT-QC` (**future only**) | If Quality is later enabled, workshop walks hold/release; not a current-MVP acceptance gate | OQ-005 future residual |
 | `QA-UAT-REVERSE` | Workshop walks SEQ-REVERSE compensating commands | OQ-015, OQ-019 |

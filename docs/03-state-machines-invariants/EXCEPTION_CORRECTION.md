@@ -2,16 +2,30 @@
 id: SM-EXC-001
 title: Exception and Correction Workflows
 phase: 03-state-machines-invariants
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.4.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-CATALOGUE-001, SM-INV-001, DOM-PROCESS-001, APR-004, APR-005]
-last_reviewed: 2026-10-01
-approval: APR-005
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Exception and Correction Workflows
+
+## Current evidence precedence (2026-10-04)
+
+APR-005 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 Named exceptions from Phase 02 process maps, stated as lifecycle behavior.
 Numeric policy and named approvers remain open.
@@ -57,9 +71,10 @@ an exception stays OQ-005. No current-MVP exception or release actor is created.
 Leftover material is classified **inside** `CompleteProductionOperation`
 (INV-006, OQ-003). Reusable leftover uses nested `RecordResidualFact` +
 `CreateResidualUnit` (INV-008). Non-reusable leftover uses nested
-`RecordScrapFact` + `PostScrapMovement` (OQ-009). Family cutoff numbers
-stay OQ-009 treating; missing cutoff when classification requires it →
-`GUARD_OPEN_POLICY`. Production writes the fact; Inventory posts identity
+`RecordScrapFact` + `PostScrapMovement` (OQ-009). The attributable human
+reusability decision controls the branch. Do not infer it from weight,
+dimensions or a universal cutoff. Missing disposition recording/authority or
+required family policy → `GUARD_OPEN_POLICY`; OQ-009 stays treating. Production writes the fact; Inventory posts identity
 or scrap quantity **once**. A later independent residual or scrap post
 for the same leftover kg is forbidden.
 

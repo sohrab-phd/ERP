@@ -2,16 +2,30 @@
 id: SM-SEQ-001
 title: Cross-Machine Sequences
 phase: 03-state-machines-invariants
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.4.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-TRANS-001, SM-SIDE-001, SM-INV-001, APR-004, APR-005, ASM-016]
-last_reviewed: 2026-10-01
-approval: APR-005
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Cross-Machine Sequences
+
+## Current evidence precedence (2026-10-04)
+
+APR-005 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 End-to-end command order across machines. These are proposed sequences, not
 executable workflows. A step whose guard is an unanswered OQ stops with
@@ -119,9 +133,11 @@ flowchart LR
    `PostScrapMovement`, `ConsumeUnitPartial` / `ConsumeUnitComplete`,
    `ScrapUnit` when the parent destiny is `SCRAPPED`) run inside this
    transaction. They are not later independent inventory postings.
-   Official step **names** stay OQ-003 treating. Mass-balance tolerance
-   stays OQ-006. Residual cutoff **numbers** stay OQ-009 treating;
-   missing cutoff when classification requires it → `GUARD_OPEN_POLICY`.
+   Official step/lifecycle mechanism stays OQ-003 treating. Mass-balance
+   policy and human disposition recording/authority remain production residuals
+   on OQ-009. OQ-006 supplies fulfillment tolerance, not mass-balance tolerance.
+   Missing required production policy or human disposition → `GUARD_OPEN_POLICY`;
+   no automatic numeric Residual/Scrap classification.
 7. Valid normal good/reusable output Units, including a reusable child
    residual Unit, are `AVAILABLE` when the completion transaction commits
    (INV-003); Scrap is not. Optional later `PlaceResidualUnit` does not
@@ -170,8 +186,8 @@ A rejected command is not this sequence. After a posted write:
 | If this is still unanswered | Sequence stops at |
 | --- | --- |
 | OQ-005 | future Quality hold/release only; no current-MVP sequence stop |
-| OQ-006 | partial/over fulfillment, mass-balance close, over-delivery |
-| OQ-009 | residual versus scrap |
+| OQ-006 | non-default partial/over fulfillment and over-delivery policy; accepted default zero remains usable |
+| OQ-009 | recording/authority for human reusability disposition and required production mass-balance/process-loss policy; no numeric classifier |
 | OQ-003 | production release, operation complete, allocation issue |
 | OQ-019 | Purchase Order approve; shipment without demand |
 | OQ-010 | any portal order command |

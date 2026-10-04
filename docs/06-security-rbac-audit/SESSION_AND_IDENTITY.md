@@ -2,16 +2,19 @@
 id: SEC-ID-001
 title: Session and Identity Policy Labels
 phase: 06-security-rbac-audit
-status: approved
-version: 0.2.2
+status: in_review
+version: 0.3.0
 owners: [security-architect]
 depends_on: [SEC-RBAC-001, SEC-THREAT-001, APR-007, APR-008]
-last_reviewed: 2026-09-30
-approval: APR-008
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Session and Identity Policy Labels
+
+APR-008 remains historical structure approval; generic issuer/principal/replay
+rules are a delegated ADR-0011/0012 revision, not human baseline approval.
 
 Required identity properties for a Phase 05 command. These are labels,
 not a session library, password product, MFA vendor, or equipment
@@ -29,7 +32,7 @@ A backend-authenticated principal must resolve to:
 | `actor_role` | Exactly one current `ACT-*` for the command |
 | `temporary` | If true → `GUARD_ACTOR` |
 | `customer_scope` | Required on customer-bearing commands and queries |
-| `site_scope` | Open until OQ-013 |
+| `site_scope` | One recorded legal entity/principal site (OQ-013); trusted scope, no invented second site |
 | `device_identity` | Optional commander for weighbridge/printer; OQ-011 |
 
 UI cookies, local storage, or a hidden form field are not this record.
@@ -42,6 +45,17 @@ lifetime, rotation, and store product stay OQ-018.
 
 A replay of the same `idempotency_key` does not require a new session.
 It still requires a currently authenticated principal.
+
+ADR-0011 binds trusted immutable issuer+subject to the installation/authority/key
+outcome; principal is not another uniqueness namespace. Another principal's
+same-key attempt is nondisclosing conflict, never independent execution. Current
+command/target/customer/result authorization is evaluated again after key-lock
+wait before execution/disclosure. That is the authorization decision point;
+revocation committed earlier denies, later revocation applies to subsequent
+attempts. Creating a resource once does not grant perpetual replay disclosure.
+Body identity/role/scope is not authority; test identity adapters are not included
+in production composition. Identity provider/session product and real ACT
+assignments remain later slice decisions.
 
 ## Password and MFA (labels only)
 
@@ -57,7 +71,8 @@ any other package here.
 ## Equipment identity
 
 A weighbridge or barcode printer is a commander. It may supply a
-device identity into the Goods Receipt idempotency key (OQ-011). It
+device identity into the Goods Receipt bound request/receipt natural identity
+(OQ-011). It
 must not write Ledger. When the device is down, the fallback is a
 human `ACT-*` command with a new documented reason, not a silent
 bypass.

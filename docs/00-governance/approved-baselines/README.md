@@ -2,16 +2,19 @@
 id: GOV-BASELINES-001
 title: Approved Architecture Baselines
 phase: 00-governance
-status: approved
-version: 0.3.2
+status: in_review
+version: 0.3.3
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001, GOV-APPROVALS-001]
 last_reviewed: 2026-10-02
-approval: APR-017
+approval: null
 supersedes: null
 ---
 
 # Approved Architecture Baselines
+
+This `0.3.3` index update is in review. APR-017 checkpointed the prior
+`0.3.2` bytes; its historical approval and commit remain unchanged.
 
 ## Recorded approvals
 
@@ -32,11 +35,11 @@ supersedes: null
   — approved for governance only; checkpoint completed at
   `02163debe68f29800c6986015e81eea027547c60`
 - [CHK-0015 — APR-016 Codex Tooling Governance Checkpoint](CHK-0015-apr-016.md)
-  — records the completed checkpoint forward; APR-017 approves the
-  post-commit record, with its checkpoint pending a human marker
+  — records the completed checkpoint forward; APR-017 approved the
+  post-commit record
 - [APR-017 — APR-016 Checkpoint Recording Follow-up](APR-017-apr-016-checkpoint-recording.md)
-  — approves only the five-file forward record; follow-up checkpoint pending
-  human marker
+  — approved only the five-file forward record; follow-up checkpoint completed
+  at `fc6b761a371f06491e4ea94df01af3fc380cb8a3`
 - [CHK-0013 — Phase 12 Implementation Planning Checkpoint](CHK-0013-phase-12.md)
   — completed at `a6b893095af7c9d14f342371fb6e4ef9c6d833df`; subject
   `docs: approve phase 12 implementation planning`; 30 files changed

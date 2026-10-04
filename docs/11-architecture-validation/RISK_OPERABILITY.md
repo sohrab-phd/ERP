@@ -2,12 +2,12 @@
 id: VAL-RISK-001
 title: Risk Operability Security and Small-Team Feasibility
 phase: 11-architecture-validation
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.3.1
 owners: [chief-solution-architect, operations-owner]
 depends_on: [GOV-RISKS-001, APR-012, APR-013, ASM-024]
-last_reviewed: 2026-09-16
-approval: APR-013
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
@@ -27,7 +27,7 @@ retention days remain residual.
 | RISK-002 opening inventory | `ADP-CUTOVER` commands Ledger; `GUARD_OPEN_POLICY` until OQ-015 | OQ-015, OQ-019 |
 | RISK-003 concurrency | INV-002/016; QA-SCN-CONFLICT; one `ACT-IPS` writer | OQ-017 stored-function ADR residual. Style recorded. |
 | RISK-004 decimal precision | Exact-decimal ADR still proposed | OQ-001 residual; OQ-018 packages |
-| RISK-005 genealogy divergence | Rebuild-only from DATA-GEN-001 source facts; forbidden edits; atomic CompleteProductionOperation | OQ-003 names; OQ-009 cutoff numbers. OQ-004 recorded. |
+| RISK-005 genealogy divergence | Rebuild-only from DATA-GEN-001 source facts; forbidden edits; atomic CompleteProductionOperation | OQ-003 lifecycle; OQ-009 human disposition recording. OQ-004 recorded. |
 | RISK-006 boundary erosion | `mod-*` / `CONF-IMPORT`; no cross-module table writes | OQ-018 layout product |
 | RISK-007 premature portal | INV-020 / `ADP-PORTAL` reject order write | OQ-010 residual document list. Visibility-only recorded. |
 | RISK-008 customer leakage | SV-005 / SV-012 / `CONF-ISO` | Named isolation testers OQ-019 |

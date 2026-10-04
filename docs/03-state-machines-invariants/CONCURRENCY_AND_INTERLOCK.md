@@ -2,16 +2,30 @@
 id: SM-CONC-001
 title: Concurrency and Interlock Catalogue
 phase: 03-state-machines-invariants
-status: approved
-version: 0.2.0
+status: in_review
+version: 0.3.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-INV-001, SM-TRANS-001, SM-EVT-001, APR-004, APR-005, ASM-016]
-last_reviewed: 2026-10-01
-approval: APR-005
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Concurrency and Interlock Catalogue
+
+## Current evidence precedence (2026-10-04)
+
+APR-005 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 Which commands cannot both succeed against the same unit, reservation, order,
 or payment. This is a conflict catalogue, not a lock-algorithm design.
@@ -121,10 +135,10 @@ close/split inside that transaction, not a later commit. Nested
 | Independent `ConsumeUnitPartial` / `ConsumeUnitComplete` | INV-006 / OQ-003 |
 | Residual qty posted at completion **and** again via later `CreateResidualUnit` | INV-001, FIND-G-001 |
 | Scrap qty posted at completion **and** again via later `PostScrapMovement` / `ScrapUnit` | INV-001, FIND-G-002 |
-| Close the Production Order while mass balance needs a number you do not have | `GUARD_OPEN_POLICY` / OQ-006 |
+| Close the Production Order while mass balance needs a number you do not have | `GUARD_OPEN_POLICY` / production mass-balance residual on OQ-009; OQ-006 is fulfillment tolerance only |
 
 Official posting-step **names** stay OQ-003. Do not invent the shop-floor
-moment. Residual cutoff **numbers** stay OQ-009.
+moment. Human reusability recording/authority stays OQ-009; measurement-based classification is forbidden.
 
 ## Goods receipt and opening stock
 

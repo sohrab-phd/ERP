@@ -2,16 +2,30 @@
 id: DOM-CAP-BC-001
 title: Capability and Bounded-Context Map
 phase: 02-domain-business-architecture
-status: approved
-version: 0.4.0
+status: in_review
+version: 0.5.0
 owners: [chief-solution-architect, business-process-owner]
 depends_on: [GOV-DOMAIN-001, ASM-REPORT-001]
-last_reviewed: 2026-10-01
-approval: APR-004
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Capability and Bounded-Context Map
+
+## Current evidence precedence (2026-10-04)
+
+APR-004 remains historical structure-approval evidence; this technical revision
+is made under delegated ADR-0012 authority and does not approve a new baseline.
+Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
+classification: a person decides reusability; recording and authority stay open.
+OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
+policy remains open under production evidence/OQ-009 and must not inherit its
+zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
+Quality is future-only; portal MVP is isolated visibility-only; personal
+operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
+RACI and historical handoff wording cannot override these live facts.
+
 
 ## Purpose
 
@@ -73,7 +87,7 @@ Terms below use glossary IDs on first use. Conceptual entities remain
 | Operational reporting, KPIs, traceability query | `BC-REPORTING` | all transactional BCs | Read-only projections. |
 | Technical, business, status, and security evidence | `BC-AUDIT` | all BCs | Immutable evidence; not transactional truth. |
 | Outbox delivery and external adapters | `BC-INTEGRATION` | `BC-IDENTITY`, `BC-FINANCE-LITE`, equipment/accounting candidates | Adapters submit core commands; never write core tables (INT-001, adapter rule). |
-| Customer Portal visibility, request, documents, ordering | **unconfirmed** — see proposed/deferred `BC-PORTAL` | `BC-SALES`, `BC-IDENTITY` | Pending OQ-010 / FIND-001. Not a confirmed BC. |
+| Customer Portal visibility and authorized documents | Sales-owned isolated reads; no independent `BC-PORTAL` write owner | `BC-SALES`, `BC-IDENTITY` | OQ-010 answered: visibility-only; document list remains open; requests, prices and ordering future only. |
 
 ### Context map
 
@@ -199,7 +213,7 @@ references or read projections.
 
 - Purpose: principals, roles, sessions, credentials, and authorization scopes.
 - Inbound: authentication/session requests from all operational contexts;
-  optional deferred portal identity if OQ-010 later includes a customer channel.
+  authenticated customer identity for visibility-only portal under OQ-010.
 - Outbound: policy decisions and principal identifiers consumed by all BCs;
   security evidence to `BC-AUDIT`.
 - Write-owned: users, roles, sessions, credentials, scopes, policy bindings.
@@ -224,8 +238,8 @@ references or read projections.
   fulfillment path, and lost-demand capture.
 - Inbound: Customer/Inquiry/Quotation/order commands from internal Sales actors;
   inventory availability and reservation results; procurement and production
-  feasibility signals; optional deferred portal visibility/request if OQ-010
-  later permits them.
+  feasibility signals; isolated authenticated portal reads under answered OQ-010.
+  Customer request submission is outside current MVP.
 - Outbound: reservation commands to `BC-INVENTORY`; purchase-need commands to
   `BC-PROCUREMENT`; production-need commands to `BC-PRODUCTION`; operational
   receivable facts to `BC-FINANCE-LITE`; unfulfilled-demand facts to
@@ -255,7 +269,7 @@ references or read projections.
 - Purpose: physical stock identity, location, quantity, reservation, and every
   inventory movement. Inventory is a shared business capability with one write
   owner. Under the proposed Ledger+Balance pattern, only the Inventory Posting
-  Service mutates stock state (OQ-017 keeps the mechanism open).
+  Service mutates stock state (OQ-017 selects app-owned PostgreSQL transactions).
 - Inbound: reservation commands from Sales; GoodsReceipt posting commands from
   Procurement; issue/consume/output/residual/scrap posting commands from
   Production; future-only hold/quarantine/release commands from Quality;
@@ -367,13 +381,12 @@ references or read projections.
 - Write-owned: outbox/delivery and adapter-run records only.
 - Must not write: Ledger, Balance, orders, inspections, shipments, invoices.
 
-#### BC-PORTAL (proposed/deferred — not confirmed)
+#### BC-PORTAL (historical standalone-context candidate; no MVP write owner)
 
-- Purpose: *if later authorized*, an external customer channel for isolation,
-  visibility, requests, documents, or notifications.
-- Status: **proposed/deferred**. Ordering is formally deferred from MVP pending
-  OQ-010. Visibility and request remain optional deferred. This is not a
-  confirmed bounded context.
+- Purpose: current visibility-only customer channel uses Sales-owned isolated
+  queries. Requests, prices and ordering are future scope.
+- Status: no independent portal write context in current MVP. OQ-010 already
+  accepts visibility, not request submission; approved document list remains open.
 - Write-owned: none in MVP under this proposal. Any future portal submission
   would create or update Sales-owned concepts through `BC-SALES` commands, not
   by writing Sales tables from a portal module.
@@ -381,10 +394,10 @@ references or read projections.
 
 ## Alternatives and consequences
 
-Keeping portal as an unconfirmed/deferred context rather than folding it into
-`BC-SALES` preserves FIND-001 visibility and avoids implying an MVP channel.
-Collapsing portal into Sales internally is compatible later if OQ-010 excludes
-the channel; that would still not authorize ordering in MVP.
+The visibility channel calls Sales-owned published queries and Identity/Audit
+contracts. A separate portal write context is unnecessary in current MVP.
+The historical candidate is retained for future evaluation and cannot authorize
+ordering or request submission.
 
 Merging GoodsReceipt entirely into Inventory would hide commercial receiving
 orchestration; merging stock posting into Procurement would break the one-writer
@@ -419,7 +432,7 @@ Answered rows are recorded policy, not still-open architecture.
 | Partial-shipment / over-production / over-delivery tolerances | OQ-006 answered default 0; family % is configuration |
 | Sales Order closure: fulfilled, cancelled, or authorized unfulfilled remainder; not payment | OQ-007 answered |
 | Reservation: one Inventory Unit → one `ACTIVE`; no confirmed-SO timer | OQ-008 answered |
-| Residual vs scrap threshold | OQ-009 residual numbers. Residual vs scrap composition is recorded. |
+| Residual vs scrap disposition | OQ-009 human reusability decision is recorded; recording/authority and affected family policy remain open. No universal or automatic numeric classifier. |
 | Customer Portal phase and allowed customer actions | OQ-010 answered visibility-only; document list residual; FIND-001, RISK-007 |
 | Weighbridge device, protocol, fallback | OQ-011 residual. Adapter/commander only; never Ledger writer. |
 | Legal accounting system and Finance-Lite boundary | OQ-012 answered: Finance-Lite is not legal GL; no Legal-GL in MVP |

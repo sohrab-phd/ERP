@@ -2,16 +2,19 @@
 id: DATA-LOGICAL-001
 title: Logical Data Model
 phase: 04-database-architecture
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.4.0
 owners: [data-architect, domain-leads]
 depends_on: [GOV-DATA-DICT-001, DOM-OWN-001, APR-005]
-last_reviewed: 2026-10-01
-approval: APR-006
+last_reviewed: 2026-10-04
+approval: null
 supersedes: null
 ---
 
 # Logical Data Model
+
+APR-006 retains historical structure approval. Current factory/source
+reconciliation is delegated pre-implementation work, not human baseline approval.
 
 Conceptual entities and relationships already in
 [CANONICAL_DATA_DICTIONARY.md](../00-governance/registers/CANONICAL_DATA_DICTIONARY.md)
@@ -41,8 +44,9 @@ is defined.
   (FIND-023). Do not mint those ENT-* IDs here.
 - Quantity type, UOM scale, and rounding stay open (OQ-001 residual).
   Official stock UOM is kg (OQ-001/OQ-002 recorded).
-- Official routing **step names** stay open (OQ-003 residual). The
-  posting **boundary** is `CompleteProductionOperation`.
+- Ten physical Station names and Station=Production Step are recorded in OQ-003.
+  Versioned per-order routing, Entry/Referral persistence, lifecycle and stop/cancel
+  semantics remain residual. Posting boundary is `CompleteProductionOperation`.
 - First-go-live family tracking catalogue stays configuration (OQ-004
   recorded hybrid grain).
 - Genealogy Link is rebuilt from DATA-GEN-001 source facts, not from
@@ -140,11 +144,11 @@ state with at most one `ACTIVE` per Inventory Unit (OQ-008).
 | Attribute family | Why open |
 | --- | --- |
 | Quantity type, UOM, decimals, rounding | OQ-001 residual. Official stock UOM is kg (OQ-001/OQ-002 recorded). |
-| Official operation step **name** | OQ-003 residual. Posting **boundary** is `CompleteProductionOperation` (recorded). |
+| Operation workflow/versioned route | OQ-003 residual; ten physical Stations/Step names recorded. Posting **boundary** is `CompleteProductionOperation`. |
 | Batch vs bundle vs piece identity | OQ-004 recorded hybrid grain; first-go-live family catalogue is configuration |
 | QC plan, limit, sample, named releaser | OQ-005 future residual only. Future QC could block and use two-person exceptional release if separately enabled; none is a current-MVP input. |
 | Tolerance percents and over-delivery family % | OQ-006 configuration. Default 0 is recorded. |
-| Residual cutoff | OQ-009 residual numbers |
+| Residual/Scrap human disposition recording | OQ-009: Production/Workshop Manager decides reusability; no automatic weight/dimension cutoff or universal threshold |
 | Site / legal-entity discriminator | Not required for MVP. OQ-013 recorded: one legal entity, one principal site. |
 | Physical types, indexes, volumes | OQ-014 residual |
 | Opening-stock source keys | OQ-015 residual. `OpeningStockImport` is an architecture candidate, not a factory-confirmed Goods Receipt, and not a second Ledger writer. |
