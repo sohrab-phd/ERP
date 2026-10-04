@@ -1,11 +1,31 @@
 # Repository instructions for Codex
 
+## Current Project Owner authorization (2026-10-04)
+
+The Owner accepted final readiness and explicitly stated "I AUTHORIZE ERP
+IMPLEMENTATION", directing Codex to record the committed baseline and update
+canonical authorization. APR-018 records that real human decision. Implementation
+baseline: e80a04b15ddf93451cc79ccf81722f564912596d. Matching gate/unlock now
+authorize SLICE-ENVELOPE only, using the frozen design, exact dependency pins,
+idempotency specification and acceptance tests. The prior implementation lock
+instructions below are historical and superseded for this scope. No business
+slice, push, history rewrite, native containment or fabricated approval is
+authorized. Complete the first-slice DoD and independent implementation review
+before declaring completion; do not start the next slice.
+
+SLICE-ENVELOPE acceptance and independent implementation review now pass.
+Recover the exact implementation evidence from
+docs/12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md and Git
+history. Do not repeat baseline preparation or broaden APR-018 to business work.
+
+
 ## Current operating decision (2026-10-04)
 
 `AUTONOMOUS PRE-IMPLEMENTATION GOVERNANCE ACTIVE` describes delegated authority.
-Master objective: Bring the ERP/MES repository to fully governed, independently
-reviewed and technically frozen PRE-IMPLEMENTATION readiness without beginning
-ERP implementation.
+The pre-implementation master objective is complete and accepted in APR-018.
+Current objective: implement and verify foundation-only SLICE-ENVELOPE against
+the accepted freeze, preserve independent review evidence, and stop before any
+next business slice. Do not repeat the retired native-autonomy experiment.
 
 Use normal Codex workspace-write and supported approval review. Codex is a
 trusted engineering agent. The native/OS containment experiment is retired;
@@ -22,7 +42,7 @@ decision. No package, source, migration, CI or business implementation may start
 without the valid human gate/unlock/baseline. Do not invent new OS or future-slice
 readiness blockers or silently change the frozen design.
 
-## Master objective and current Project Owner authority
+## Historical pre-implementation objective and delegated authority
 
 The Project Owner's 2026-10-03 autonomous PRE-IMPLEMENTATION mandate supersedes
 bootstrap-era routine path/tool/read/research/diagnostic/subagent approvals.

@@ -1,0 +1,65 @@
+name: Verify foundation
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  unit:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.21.0
+          cache: npm
+      - run: npm ci
+      - run: npm run preflight
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run boundaries
+      - run: npm run typecheck
+      - run: npm run test:unit
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18.6
+        env:
+          POSTGRES_PASSWORD: ephemeral-ci-bootstrap-only
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://navard_dev_runtime:ephemeral-ci@127.0.0.1:5432/navard_erp_dev
+      MIGRATION_DATABASE_URL: postgresql://navard_test_migration:ephemeral-ci@127.0.0.1:5432/navard_erp_test
+      TEST_DATABASE_URL: postgresql://navard_test_runtime:ephemeral-ci@127.0.0.1:5432/navard_erp_test
+      TEST_DATABASE_ACK: navard_erp_test
+      INSTALLATION_ID: 00000000-0000-4000-8000-000000000001
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.21.0
+          cache: npm
+      - name: Provision disposable local test roles
+        env:
+          PGPASSWORD: ephemeral-ci-bootstrap-only
+        run: |
+          psql -h 127.0.0.1 -U postgres -d postgres -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE ROLE navard_dev_runtime LOGIN PASSWORD 'ephemeral-ci' NOSUPERUSER NOCREATEDB NOCREATEROLE;
+          CREATE ROLE navard_test_migration LOGIN PASSWORD 'ephemeral-ci' NOSUPERUSER NOCREATEDB NOCREATEROLE;
+          CREATE ROLE navard_test_runtime LOGIN PASSWORD 'ephemeral-ci' NOSUPERUSER NOCREATEDB NOCREATEROLE;
+          CREATE DATABASE navard_erp_dev OWNER navard_test_migration;
+          CREATE DATABASE navard_erp_test OWNER navard_test_migration;
+          REVOKE ALL ON DATABASE navard_erp_test FROM PUBLIC;
+          GRANT CONNECT ON DATABASE navard_erp_test TO navard_test_runtime;
+          SQL
+      - run: npm ci
+      - run: npm run preflight
+      - run: npm run db:test:reset
+      - run: npm run migrate -- --dry-run
+      - run: npm run verify

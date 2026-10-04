@@ -1,0 +1,41 @@
+{
+  "name": "@navard/erp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/backend",
+    "packages/shared-kernel"
+  ],
+  "engines": {
+    "node": "24.21.0",
+    "npm": "11.19.0"
+  },
+  "packageManager": "npm@11.19.0",
+  "scripts": {
+    "preflight": "node tools/build/preflight.mjs",
+    "clean": "node tools/build/clean.mjs",
+    "typecheck": "tsc -b --pretty false",
+    "build": "tsc -b --pretty false",
+    "lint": "eslint apps packages tools eslint.config.mjs --max-warnings 0",
+    "boundaries": "node tools/build/check-boundaries.mjs",
+    "format:check": "prettier --check apps packages tools package.json tsconfig.base.json tsconfig.json eslint.config.mjs .prettierrc.json .github/workflows/verify.yml",
+    "format": "prettier --write apps packages tools package.json tsconfig.base.json tsconfig.json eslint.config.mjs .prettierrc.json .github/workflows/verify.yml",
+    "test:unit": "node tools/test/run-unit.mjs",
+    "test:integration": "node tools/test/run-integration.mjs",
+    "test": "npm run test:unit",
+    "migrate": "node tools/db/migrate.mjs",
+    "db:test:reset": "node tools/db/reset-test.mjs",
+    "start": "node apps/backend/dist/src/main.js",
+    "verify": "npm run preflight && npm run format:check && npm run lint && npm run boundaries && npm run typecheck && npm run test:unit && npm run test:integration"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "@types/pg": "8.23.1",
+    "@types/node": "24.19.1",
+    "eslint": "10.12.0",
+    "@eslint/js": "10.0.1",
+    "typescript-eslint": "8.71.0",
+    "prettier": "3.9.9"
+  }
+}

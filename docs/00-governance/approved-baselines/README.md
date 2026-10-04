@@ -18,6 +18,11 @@ This `0.3.3` index update is in review. APR-017 checkpointed the prior
 
 ## Recorded approvals
 
+- [APR-018 — Final pre-implementation baseline and SLICE-ENVELOPE authorization](APR-018-final-pre-implementation.md)
+  — explicit current Owner acceptance/implementation authorization; baseline
+  `e80a04b15ddf93451cc79ccf81722f564912596d`; foundation only. Recorded under
+  the Owner's explicit delegation; no next business slice or remote push.
+
 - [APR-000 — Governance Foundation](APR-000-governance.md) — superseded by
   APR-001 after FIND-013
 - [APR-001 — Corrected Governance Foundation](APR-001-governance.md) —

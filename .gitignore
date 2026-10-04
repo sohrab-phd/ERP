@@ -9,3 +9,12 @@ Thumbs.db
 *.tmp
 *.bak
 *~
+
+# SLICE-ENVELOPE generated output and local secrets
+node_modules/
+apps/backend/dist/
+packages/shared-kernel/dist/
+apps/backend/.tsbuildinfo
+packages/shared-kernel/.tsbuildinfo
+artifacts/tests/
+.env.local

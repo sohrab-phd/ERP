@@ -13,6 +13,14 @@ supersedes: null
 
 # Current Phase Authorization
 
+Current Owner decision (2026-10-04): ERP implementation AUTHORIZED for
+SLICE-ENVELOPE only. Implementation baseline commit:
+e80a04b15ddf93451cc79ccf81722f564912596d. APR-018 records explicit human
+approval and delegated gate/unlock recording. Canonical gate and local unlock
+must match APR-018. The earlier false/null state below describes the preceding
+readiness snapshot; it is superseded by this narrow current human authorization.
+
+
 CURRENT_PHASE: `12-implementation-planning`
 
 CURRENT_GATE_STATUS: `APPROVED`
@@ -24,27 +32,43 @@ Current technical package: ADR-0011 durable command contract and ADR-0013
 foundation stack/physical freeze are accepted under delegated engineering
 authority. See [live readiness](../12-implementation-planning/IMPLEMENTATION_READINESS.md)
 and the [human decision package](../12-implementation-planning/HUMAN_AUTHORIZATION_PACKAGE.md).
-This is not human baseline approval. The legacy hook registration is empty and
+APR-018 now records the Owner's explicit current baseline approval. The legacy hook registration is empty and
 repository search/source reads work after the Owner's retirement edit and restart.
 
 Current engineering readiness: READY FOR HUMAN IMPLEMENTATION AUTHORIZATION.
 Implementation-start blockers: NONE for the exact frozen SLICE-ENVELOPE;
-final independent engineering review PASS. Human approval of the current
-baseline/checkpoint and matching gate/unlock is still required.
+final independent engineering review PASS. Subsequent explicit Owner approval
+is recorded in APR-018 with matching current gate/unlock.
 
-IMPLEMENTATION_AUTHORIZED: `false`
+IMPLEMENTATION_AUTHORIZED: `true` — SLICE-ENVELOPE only
 
 This Markdown value communicates project status. Technical unlock requires both
 the protected `.cursor/architecture-gate.json` authorization and a valid,
-human-created `.cursor/IMPLEMENTATION_UNLOCK.json` referencing an approved
-baseline and exact allowed paths. Neither condition currently exists.
+human-authorized `.cursor/IMPLEMENTATION_UNLOCK.json` referencing an approved
+baseline and exact allowed paths. Both match APR-018 under the Owner's explicit
+delegation to record that decision.
 
 There is no Phase 13. Architecture phases 00–12 are approved as
-structure. Implementation still waits on a later human unlock citing an
+structure. Current foundation implementation uses the Owner-authorized unlock citing an
 `APR-*` with a recorded Git commit, exact `allowedWritePaths`, exact
 `allowedShellCommands`, and matching architecture-gate policy.
 
-## Permitted work
+## Current implementation scope
+
+APR-018 and the matching canonical gate/local unlock authorize the frozen
+foundation SLICE-ENVELOPE: workspaces, envelope, durable outcomes, audit,
+PostgreSQL transactions, three migrations, health-only host, configuration,
+logging, validation and executable acceptance tests. No ERP business posting,
+next slice, deployment, push or history rewrite is authorized. Follow the exact
+technical/physical freeze and idempotency specification. Completion requires
+executed acceptance proof and independent implementation review, recorded in
+the implementation report. Preserve live OQ answers and all module owners.
+
+SLICE-ENVELOPE implementation/acceptance and independent review are now PASS;
+see the [executed evidence](../12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
+This records foundation completion only, not permission for the next capability.
+
+## Previous pre-implementation permitted work (historical)
 
 The Project Owner's 2026-10-04 instruction supersedes the native-autonomy
 experiment and its OS-containment prerequisite. Codex is a trusted engineering
@@ -73,7 +97,7 @@ Factory counts/UAT inputs and cutover data are not SLICE-ENVELOPE blockers.
 Current-MVP Quality stays deferred. Technical choices do not authorize product
 writes. The final Owner implementation decision remains separate.
 
-## Prohibited work
+## Previous pre-implementation prohibitions (historical)
 
 - Treating Phase 12 approval, CHK-0013, or these OQ recordings as an
   implementation unlock
@@ -97,7 +121,7 @@ writes. The final Owner implementation decision remains separate.
 - Amending commit `a6b893095af7c9d14f342371fb6e4ef9c6d833df`
 - Starting a Phase 13
 
-## Gate condition
+## Historical Phase 12 structure gate condition
 
 Phase 12 is approved as APR-014 at `2026-09-07T23:16:00+03:30`, including
 ASM-025. CHK-0013 records the Git freeze at

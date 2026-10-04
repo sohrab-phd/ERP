@@ -13,6 +13,20 @@ supersedes: null
 
 # Approval and Checkpoint Register
 
+### APR-018 — Final pre-implementation baseline and first-slice authorization
+
+- Explicit approver: Project Owner, current Codex user message accepting final
+  readiness and stating "I AUTHORIZE ERP IMPLEMENTATION".
+- Approval manifest: [APR-018](approved-baselines/APR-018-final-pre-implementation.md)
+- Final implementation baseline: e80a04b15ddf93451cc79ccf81722f564912596d
+- Authorized scope: SLICE-ENVELOPE only; exact frozen paths/commands/scripts and
+  acceptance tests. No next business slice, push or history rewrite.
+- The Owner explicitly delegates recording the commit and canonical gate/unlock
+  from this real human authority. The earlier personal-file-entry requirement is
+  superseded for this decision; no checkpoint marker or fabricated approval is
+  created. Current user authorization is evidence, not an agent recommendation.
+
+
 This is an append-only index. An AI recommendation, completed draft, or Git
 commit does not constitute human approval.
 

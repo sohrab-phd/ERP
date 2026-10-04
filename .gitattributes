@@ -1,0 +1,14 @@
+# Stable authored migration bytes and product formatting across Windows/Linux.
+/apps/** text eol=lf
+/packages/** text eol=lf
+/tools/** text eol=lf
+/database/migrations/*.sql text eol=lf
+/package.json text eol=lf
+/package-lock.json text eol=lf
+/tsconfig*.json text eol=lf
+/eslint.config.mjs text eol=lf
+/.prettierrc.json text eol=lf
+/.github/workflows/verify.yml text eol=lf
+/.node-version text eol=lf
+/.npmrc text eol=lf
+/.env.example text eol=lf

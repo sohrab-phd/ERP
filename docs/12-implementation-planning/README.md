@@ -13,6 +13,13 @@ supersedes: null
 
 # Phase 12 — Implementation Planning
 
+Current implementation authority is
+[APR-018](../00-governance/approved-baselines/APR-018-final-pre-implementation.md),
+from baseline e80a04b15ddf93451cc79ccf81722f564912596d, for SLICE-ENVELOPE only.
+See [live readiness](IMPLEMENTATION_READINESS.md) and the frozen
+[physical design](SLICE_ENVELOPE_PHYSICAL_DESIGN.md). The APR-014 structure gate
+and architecture-only statements below are historical; no Phase 13 is created.
+
 ## Gate
 
 Gate status: `APPROVED`
@@ -37,6 +44,7 @@ labels** without reopening design decisions and without starting coding.
 ## Planned artifacts
 
 - [x] [Implementation readiness checklist](IMPLEMENTATION_READINESS.md)
+- [x] [Authorized SLICE-ENVELOPE implementation evidence](SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md)
 - [x] [Roadmap and vertical slices](ROADMAP_AND_SLICES.md)
 - [x] [Work items linked to approved IDs](WORK_ITEMS.md)
 - [x] [Authorized spike kinds and acceptance labels](SPIKES_AND_ACCEPTANCE.md)

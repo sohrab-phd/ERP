@@ -5,27 +5,94 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, quality, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-If you opened this repository expecting application source, you are in the
-right place at the wrong stage. **There is no implemented application yet.**
-What exists is a gated architecture, a set of canonical registers, and a
-protected policy that keeps implementation locked until a human unlock exists.
-The legacy Cursor hook does not establish technical interception for Codex.
+The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
+2026-10-04 from baseline `e80a04b15ddf93451cc79ccf81722f564912596d`, recorded in
+[APR-018](docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md).
+Foundation implementation and its acceptance tests pass. See the
+[implementation report](docs/12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
+No business
+workflow or next slice is authorized. The legacy Cursor hook does not establish
+technical interception for Codex; agents obey the current human grant.
 
 ```text
-IMPLEMENTATION_AUTHORIZED: false
+IMPLEMENTATION_AUTHORIZED: true (SLICE-ENVELOPE only)
 CURRENT_PHASE: 12-implementation-planning
-NO_IMPLEMENTATION_UNLOCK: true
+NO_IMPLEMENTATION_UNLOCK: false (matching APR-018 local unlock)
 ```
 
 Authoritative work permission:
 [docs/00-governance/CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md).
+
+## Foundation developer workflow
+
+Use Node **24.21.0**, its bundled npm **11.19.0**, and PostgreSQL **18.6** with
+UTF-8 encoding. TypeScript/dependencies are exact root pins and the committed
+root lockfile. No workspace lifecycle scripts or runtime TypeScript loader.
+`npm ci` disables dependency lifecycle scripts through `.npmrc`. Do not upgrade
+pins silently. Product-only `.gitattributes` keeps SQL checksums/formatting LF
+across Windows/Linux; no historical documentation is mass-normalized.
+
+Provision separate local `navard_erp_dev` and disposable `navard_erp_test`
+databases, separate migration-owner and runtime logins for each, no runtime
+ownership/superuser/CREATE DATABASE/CREATE ROLE. The migration owner owns DDL;
+runtime receives CONNECT, kernel USAGE, SELECT/INSERT on audit_event and
+command_outcome only, never the migration ledger or UPDATE/DELETE/TRUNCATE/DDL.
+The acknowledged test DDL role owns the dedicated test database for bounded
+schema reset. These are local development privileges, not production deployment.
+Keep passwords/session URLs in environment or ignored `.env.local`; `.env.example`
+shows names/placeholders only. Node does not automatically load an env file.
+
+Developer sequence in the repository root after matching authorization:
+
+```text
+npm ci
+npm run preflight
+npm run build
+npm run migrate -- --dry-run
+npm run migrate
+npm run test:unit
+```
+
+For those migration commands, MIGRATION_DATABASE_URL selects the dev DDL role;
+DATABASE_URL is the distinct dev runtime role. Set NODE_ENV=development,
+INSTALLATION_ID to the installation's stable UUID and optionally HOST/PORT/
+LOG_LEVEL. After the migration, grant runtime only the above object privileges
+using the local database administrator. `npm run start` exposes GET /health/live
+and /health/ready only. Readiness verifies PG18.6/UTF-8 with a bounded probe;
+there is no production command, synthetic identity, fixture or business route.
+Shutdown closes the listener and pool. JSON logs exclude payload/results/URLs/
+credentials and unknown fields.
+
+Integration sequence: NODE_ENV=test, TEST_DATABASE_URL selects test runtime,
+MIGRATION_DATABASE_URL selects the different test DDL owner,
+TEST_DATABASE_ACK=navard_erp_test, DATABASE_URL still points at the distinct dev
+database. Helpers verify the actual connected database, logins, PG18.6/roles and
+the ACK before changing only kernel/envelope_test schemas.
+
+```text
+npm run db:test:reset
+npm run migrate -- --dry-run
+npm run test:integration
+npm run verify
+```
+
+Tests use real PostgreSQL clients/processes with serial fixtures and explicit
+concurrency barriers. All seven compiled unit files and six integration files
+are mandatory; missing, zero-test or skipped proof fails the runners. CI runs
+Windows/Linux build/unit checks and real PG18.6 integration, pinned publisher
+actions, no publish/deploy or production secrets. Local evidence must not be
+described as a remote CI run without a real remote run.
+
+No business posting is implemented by this foundation. Current acceptance
+evidence and independent review are recorded in the implementation report;
+the next business slice needs a separate Owner decision.
 
 Full document index:
 [docs/INDEX.md](docs/INDEX.md).
 
 ---
 
-## 1. What this repository is (and is not)
+## 1. Historical design-phase overview (before APR-018)
 
 | This repository **is** | This repository **is not** |
 | --- | --- |
@@ -132,14 +199,14 @@ fully closed** from that evidence.
 | Gate 6 (implementation-readiness) | Completed |
 | Historical Gate 6 result | Structure readiness only; it did not authorize implementation |
 | Current engineering readiness (2026-10-04) | `READY FOR HUMAN IMPLEMENTATION AUTHORIZATION`; implementation-start blockers: NONE for frozen SLICE-ENVELOPE; independent final review PASS |
-| `IMPLEMENTATION_AUTHORIZED` | **`false`** |
-| [architecture-gate.json](.cursor/architecture-gate.json) | `"implementationAuthorized": false`; `"approvedBaseline": null` |
-| `.cursor/IMPLEMENTATION_UNLOCK.json` | **Absent** (human-only; agents must never create it) |
-| Application source / packages / migrations | **Must not exist yet** |
+| `IMPLEMENTATION_AUTHORIZED` | **`true` — SLICE-ENVELOPE only**, explicit Owner decision recorded by delegated instruction |
+| [architecture-gate.json](.cursor/architecture-gate.json) | `"implementationAuthorized": true`; APR-018 approved baseline |
+| `.cursor/IMPLEMENTATION_UNLOCK.json` | Present locally; matches APR-018 and exact first-slice grant; Git-ignored |
+| Application source / packages / migrations | Foundation only; no business workflows |
 | Factory meeting FACT-01–FACT-06 | Recorded as business evidence (`2026-09-23`) |
 | FACT-04 roster | **11 people**, including Mr. Dinavand — Workshop Manager |
 | Clarification assessment | No additional OQ fully closable from current factory evidence |
-| Next step | Project Owner reviews the consolidated human decision package, approves the actual baseline/checkpoint and explicitly authorizes the frozen first slice; Codex remains stopped before implementation |
+| Next step | Complete authorized SLICE-ENVELOPE acceptance and independent implementation review; do not start a business slice |
 
 **Ready for authorization is not authorized.** Gate 6 allows a human to decide
 whether to unlock. Phase 12 approval ([CHK-0013](docs/00-governance/approved-baselines/CHK-0013-phase-12.md)

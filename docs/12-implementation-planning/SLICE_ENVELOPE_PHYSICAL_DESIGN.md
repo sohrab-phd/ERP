@@ -12,7 +12,23 @@ approval: null
 
 # SLICE-ENVELOPE physical design
 
-Frozen delegated technical specification, not human baseline/implementation
+Current authority: APR-018 records the Owner's accepted baseline and explicit
+SLICE-ENVELOPE implementation authorization. The planned tree, technical
+contracts and acceptance intents below are binding for that grant. Statements
+about absent source or false/null authorization describe the pre-implementation
+freeze at commit e80a04b15ddf93451cc79ccf81722f564912596d, not current execution.
+
+Implementation-discovered correction (2026-10-04, Owner permits genuine
+contradictions): add `.gitattributes` to the first source grant, scoped only to
+product files with `text eol=lf`. Windows Git core.autocrlf otherwise changes
+authored SQL bytes/checksums and conflicts with the frozen LF formatter in the
+Windows CI job. Raw migration checksums are not normalized or weakened; no
+dependencies, business responsibilities or historical-document bytes change.
+The local unlock records this single path correction under the current human
+implementation authority. The baseline tree below describes the original grant.
+
+
+Historical freeze: delegated technical specification, not human baseline/implementation
 approval. implementationAuthorized=false; approvedBaseline=null; unlock absent.
 No tree/manifests/source/migrations/CI are created by this Markdown.
 

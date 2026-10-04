@@ -232,6 +232,7 @@ live registers and current reconciled contracts control later answers/decisions.
   - [APR-013 Checkpoint Procedure](11-architecture-validation/CHECKPOINT_APR-013.md)
 - [12 — Implementation Planning](12-implementation-planning/README.md)
   - [Implementation readiness checklist](12-implementation-planning/IMPLEMENTATION_READINESS.md)
+  - [SLICE-ENVELOPE implementation and executed acceptance](12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md)
   - [Roadmap and vertical slices](12-implementation-planning/ROADMAP_AND_SLICES.md)
   - [Work items linked to approved IDs](12-implementation-planning/WORK_ITEMS.md)
   - [Authorized spike kinds and acceptance labels](12-implementation-planning/SPIKES_AND_ACCEPTANCE.md)
@@ -276,4 +277,10 @@ ASM-025. CHK-0013 records the checkpoint at
 `a6b893095af7c9d14f342371fb6e4ef9c6d833df`. There is no Phase 13.
 Phase 12 approval is not an implementation unlock. Team answers were
 recorded `2026-09-15`. Workshop execution remains blocked by OQ-019
-names. Implementation remains unauthorized.
+names. These are historical structure-checkpoint statements.
+
+Current Owner decision: [APR-018](00-governance/approved-baselines/APR-018-final-pre-implementation.md)
+accepts baseline e80a04b15ddf93451cc79ccf81722f564912596d and explicitly
+authorizes SLICE-ENVELOPE only. Matching gate/local unlock record that authority.
+The foundation's executed acceptance and independent review pass; no next
+business slice, remote push or deployment is authorized.

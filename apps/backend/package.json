@@ -1,0 +1,10 @@
+{
+  "name": "@navard/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@navard/shared-kernel": "0.1.0",
+    "pg": "8.23.1"
+  }
+}

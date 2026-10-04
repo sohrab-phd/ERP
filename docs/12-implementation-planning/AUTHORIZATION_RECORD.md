@@ -13,6 +13,15 @@ supersedes: null
 
 # Implementation Authorization Record (labels only)
 
+Current authorization is recorded in
+[APR-018](../00-governance/approved-baselines/APR-018-final-pre-implementation.md):
+the Owner accepted baseline e80a04b15ddf93451cc79ccf81722f564912596d, explicitly
+authorized implementation and directed Codex to record that decision in the
+canonical gate and matching local unlock. That explicit delegation supersedes
+the historical personal-entry prohibition below for this recording only.
+SLICE-ENVELOPE is the sole grant; the next business slice remains unauthorized.
+The following labels are the historical APR-014 structure, not current state.
+
 What a later human unlock must contain. The file
 `.cursor/IMPLEMENTATION_UNLOCK.json` remains **absent**. `AG-UNLOCK`
 never invents or edits it.

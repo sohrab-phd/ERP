@@ -13,17 +13,30 @@ supersedes: null
 
 # Implementation Readiness Checklist
 
+Current human decision (2026-10-04): Owner accepts this readiness and authorizes
+SLICE-ENVELOPE implementation from baseline
+e80a04b15ddf93451cc79ccf81722f564912596d, recorded in APR-018.
+implementationAuthorized=true; approvedBaseline=
+docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md;
+matching local final unlock present. The false/null/absent readiness snapshot
+below is historical. Acceptance tests must still pass before implementation
+completion; no later business slice is authorized.
+
+
 PRE-IMPLEMENTATION READINESS: READY FOR HUMAN IMPLEMENTATION AUTHORIZATION
 Implementation-start blockers: NONE
 
 The final independent engineering review is PASS for the exact frozen
-foundation SLICE-ENVELOPE. This is technical readiness, not Project Owner
-approval of these bytes or implementation authorization.
+foundation SLICE-ENVELOPE. Readiness alone did not grant implementation; the
+subsequent explicit Owner decision and current baseline are recorded in APR-018.
 
-implementationAuthorized=false
-approvedBaseline=null
-Final implementation unlock: absent
-ERP implementation has NOT begun.
+Historical readiness snapshot before APR-018: implementationAuthorized=false,
+approvedBaseline=null, unlock absent, ERP implementation not begun. Current
+authorization is true for foundation only. SLICE-ENVELOPE implementation and its
+Definition of Done now pass; see the
+[implementation report](SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md) for 46 unit/
+30 actual PostgreSQL cases on Windows and Linux, independent review and limits.
+No next business slice is authorized.
 
 ## Current operating model
 
