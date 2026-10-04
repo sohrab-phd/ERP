@@ -2,7 +2,7 @@
 id: IMPL-ENVELOPE-001
 title: SLICE-ENVELOPE implementation and acceptance evidence
 phase: 12-implementation-planning
-status: in_review
+status: accepted
 version: 1.0.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [APR-018, ADR-0011, ADR-0013, PLAN-ENVELOPE-PHYSICAL-001]
@@ -128,9 +128,13 @@ also passed fresh npm ci,clean/build/preflight/format/lint/boundaries/unit with
 the repository's actual ignore/LF policies. No parallel database fixture runs
 were used; explicit multiple-client/process barriers exercise concurrency.
 
-The pinned GitHub workflow expresses Windows/Linux unit/static jobs and actual
-PG18.6 integration. These jobs were verified locally with the same commands;
-no remote GitHub run is claimed because remote push is not authorized.
+At the implementation commit the pinned workflow expressed Windows/Linux
+unit/static jobs and PG18.6 integration; those commands passed locally, not
+on remote GitHub. The later Owner platform decision removed Linux jobs.
+Current CI is Windows install/static/typecheck-build/unit and a reliable
+dependency advisory check; PG18.6 integration remains mandatory locally on
+Windows until database CI is provisioned. No remote run or fresh native-Windows
+database execution is claimed by this operating-model update.
 
 Repository consistency also passes:286 Markdown artifacts,1591 local references
 with no missing targets,14 non-generated JSON documents,262 unique artifact IDs,

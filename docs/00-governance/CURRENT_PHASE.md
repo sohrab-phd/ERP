@@ -68,6 +68,13 @@ SLICE-ENVELOPE implementation/acceptance and independent review are now PASS;
 see the [executed evidence](../12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
 This records foundation completion only, not permission for the next capability.
 
+The Owner's subsequent development-operating-model instruction is implemented in
+[DEVELOPMENT_WORKFLOW.md](../12-implementation-planning/DEVELOPMENT_WORKFLOW.md)
+and project-local skills. It directs dependency-aware continuation and practical
+engineering/security acceptance. Prepare next capability scope under that model;
+the current recorded product grant is still APR-018 foundation-only. This process
+record changes no canonical authorization or factory policy.
+
 ## Previous pre-implementation permitted work (historical)
 
 The Project Owner's 2026-10-04 instruction supersedes the native-autonomy

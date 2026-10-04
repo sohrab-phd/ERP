@@ -25,6 +25,13 @@ Authoritative work permission:
 
 ## Foundation developer workflow
 
+For significant capabilities use the
+[ERP development workflow](docs/12-implementation-planning/DEVELOPMENT_WORKFLOW.md):
+bounded design, implementation, relevant tests, independent/security review,
+acceptance, actual documentation and a coherent local commit ready for Owner push.
+Concise AGENTS.md supplies durable rules; specialized project skills in
+.agents/skills load only when relevant. No remote push is automatic.
+
 Use Node **24.21.0**, its bundled npm **11.19.0**, and PostgreSQL **18.6** with
 UTF-8 encoding. TypeScript/dependencies are exact root pins and the committed
 root lockfile. No workspace lifecycle scripts or runtime TypeScript loader.
@@ -80,7 +87,7 @@ Tests use real PostgreSQL clients/processes with serial fixtures and explicit
 concurrency barriers. All seven compiled unit files and six integration files
 are mandatory; missing, zero-test or skipped proof fails the runners. The Owner
 has selected Windows-only validation. CI runs Windows static/build/unit checks
-with pinned publisher actions; Linux jobs were removed. PostgreSQL18.6 integration
+with pinned publisher actions and dependency advisories; Linux jobs were removed. PostgreSQL18.6 integration
 tests remain required locally on Windows. Automated Windows database CI is not
 yet configured; this does not permit skipping database acceptance before a
 code change is declared complete. No Ubuntu/WSL dependency is required. Local

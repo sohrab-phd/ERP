@@ -13,6 +13,15 @@ supersedes: null
 
 # Implementation capability backlog
 
+Current status: the Owner authorized implementation in APR-018 from baseline
+e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers
+SLICE-ENVELOPE, now accepted; historical false/pending statements below are
+the original planning snapshot. Continue dependency-aware scope/design/review
+under [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md), reconcile each next
+bounded product grant with current authorization and resolve only inputs used
+by that behavior. Windows-only validation is effective; no factory answer or
+OQ status changes here.
+
 This is an ordered engineering plan under the Project Owner's trusted-agent
 decision of 2026-10-04. It does not authorize implementation, approve a baseline,
 close an OQ, or require OS adversarial containment. Native-autonomy installers,

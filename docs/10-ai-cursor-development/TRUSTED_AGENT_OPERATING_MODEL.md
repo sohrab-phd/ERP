@@ -1,5 +1,13 @@
 # Trusted-agent ERP engineering operating model
 
+Current execution status: APR-018 records explicit Owner authorization from
+baseline e80a04b15ddf93451cc79ccf81722f564912596d; matching gate/unlock are active
+for the recorded foundation scope. SLICE-ENVELOPE is accepted at 0f722def8fb0296f60f3a444839bfac939c768f7.
+The false/null/absent statements below describe the prior retirement snapshot.
+The current [development workflow](../12-implementation-planning/DEVELOPMENT_WORKFLOW.md)
+and concise AGENTS.md govern incremental engineering; Windows-only validation
+replaces historical Linux testing. This does not invent an expanded product grant.
+
 Effective 2026-10-04 by explicit Project Owner instruction. This supersedes
 ADR-0010's native-containment objective and all active native transition requests.
 It does not retroactively alter historical approvals or factory answers.

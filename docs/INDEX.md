@@ -232,6 +232,7 @@ live registers and current reconciled contracts control later answers/decisions.
   - [APR-013 Checkpoint Procedure](11-architecture-validation/CHECKPOINT_APR-013.md)
 - [12 — Implementation Planning](12-implementation-planning/README.md)
   - [Implementation readiness checklist](12-implementation-planning/IMPLEMENTATION_READINESS.md)
+  - [Professional capability development workflow](12-implementation-planning/DEVELOPMENT_WORKFLOW.md)
   - [SLICE-ENVELOPE implementation and executed acceptance](12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md)
   - [Roadmap and vertical slices](12-implementation-planning/ROADMAP_AND_SLICES.md)
   - [Work items linked to approved IDs](12-implementation-planning/WORK_ITEMS.md)

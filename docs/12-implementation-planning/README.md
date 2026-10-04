@@ -44,6 +44,7 @@ labels** without reopening design decisions and without starting coding.
 ## Planned artifacts
 
 - [x] [Implementation readiness checklist](IMPLEMENTATION_READINESS.md)
+- [x] [Capability development workflow and skill routing](DEVELOPMENT_WORKFLOW.md)
 - [x] [Authorized SLICE-ENVELOPE implementation evidence](SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md)
 - [x] [Roadmap and vertical slices](ROADMAP_AND_SLICES.md)
 - [x] [Work items linked to approved IDs](WORK_ITEMS.md)

@@ -12,6 +12,16 @@ approval: null
 
 # SLICE-ENVELOPE technical freeze
 
+Effective platform/process amendment: the Owner selected Windows-only development
+and validation after foundation completion, and the current
+[development workflow](DEVELOPMENT_WORKFLOW.md) governs delivery. No Linux/WSL
+test dependency remains. Current Windows CI covers install/static/typecheck-build/
+unit and dependency advisories; real PG18.6 acceptance is mandatory locally on
+Windows until Windows DB CI is provisioned. The original cross-platform/CI text
+below is historical. APR-018 subsequently accepted this freeze/baseline and
+authorized SLICE-ENVELOPE; old false/null statements are the pre-implementation
+snapshot. Exact dependency versions and package script bodies remain binding.
+
 Binding delegated technical choices under ADR-0012/ADR-0013, not human approval
 of the implementation baseline. No product files or dependencies are created.
 implementationAuthorized=false; approvedBaseline=null; final unlock absent.

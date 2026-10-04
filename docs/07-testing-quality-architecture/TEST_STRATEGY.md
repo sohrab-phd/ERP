@@ -13,6 +13,12 @@ supersedes: null
 
 # Test Strategy and Levels
 
+Current execution/process note: SLICE-ENVELOPE tests and independent acceptance
+are recorded in the [implementation report](../12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
+The old 'no product tests/false' statements below describe the earlier design
+snapshot. Follow the [current workflow](../12-implementation-planning/DEVELOPMENT_WORKFLOW.md)
+with Windows-only validation, relevant real PostgreSQL proof and honest evidence.
+
 Current delegated reconciliation: APR-009 remains historical structure approval.
 ADR-0011 and ADR-0013 now fix foundation contract/tooling; detailed first-slice
 acceptance and DoD live in [physical design](../12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md).
