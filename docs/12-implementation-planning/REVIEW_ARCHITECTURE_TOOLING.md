@@ -78,4 +78,3 @@ No unresolved architecture/tooling choice requires another design cycle for
 the bounded foundation. Remaining independent reviewer findings, if any, must
 be resolved before the parent declares readiness. This document does not declare
 the whole repository ready or fabricate human acceptance.
-

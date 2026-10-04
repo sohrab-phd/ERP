@@ -80,4 +80,3 @@ the native-containment project. Record review evidence honestly.
 See docs/10-ai-cursor-development/TRUSTED_AGENT_OPERATING_MODEL.md.
 
 ---
-

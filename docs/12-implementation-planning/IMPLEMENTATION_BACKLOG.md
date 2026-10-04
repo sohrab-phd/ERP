@@ -390,4 +390,3 @@ expand them. Real factory policy/principal mappings remain B/C/D; Quality and
 portal requests/order writes remain F. Production human disposition and separate
 mass-balance-policy residuals are explicit, not closed by architectural prose.
 No OQ answer/status, gate, approval evidence, unlock or product file was changed.
-

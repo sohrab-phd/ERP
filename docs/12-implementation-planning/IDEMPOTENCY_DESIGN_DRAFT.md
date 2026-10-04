@@ -31,4 +31,3 @@ Historical text remains recoverable in Git history/diff as drafting evidence,
 without contradictory active instructions. No factory answer or OQ status changes.
 Accepted technical decision is not human implementation baseline approval.
 ERP implementation remains locked; no product code, migration or unlock is created.
-

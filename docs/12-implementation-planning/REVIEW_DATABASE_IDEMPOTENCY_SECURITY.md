@@ -73,4 +73,3 @@ Final source/link/JSON/register/Git verification and independent final review
 are performed at repository level, not asserted by this narrow review.
 
 ERP implementation remains locked. No gate/unlock/approval edits or product files.
-

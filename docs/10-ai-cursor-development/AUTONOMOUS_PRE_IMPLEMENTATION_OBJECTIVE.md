@@ -82,4 +82,3 @@ No product implementation begins. See TRUSTED_AGENT_OPERATING_MODEL.md for the
 current scope, retired artifact classifications and source/access evidence.
 
 ---
-

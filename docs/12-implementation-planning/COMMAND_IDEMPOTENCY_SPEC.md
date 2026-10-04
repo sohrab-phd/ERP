@@ -286,4 +286,3 @@ These are future executable acceptance tests, not tests executed before
 authorization. [Database/idempotency/security review](REVIEW_DATABASE_IDEMPOTENCY_SECURITY.md)
 records observed findings/resolutions. Independent final readiness is separate.
 ERP implementation remains locked.
-

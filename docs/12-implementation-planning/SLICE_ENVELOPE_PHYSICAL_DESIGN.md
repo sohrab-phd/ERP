@@ -345,4 +345,3 @@ Stop for absent/mismatching human grant, business scope expansion, unreviewed ve
 script/dependency/schema changes, direct cross-owner write, fake principal/approval,
 secret exposure, unexpected destructive operation or required unanswered business policy.
 Ordinary authorized diagnosis stays autonomous; it never grants implementation.
-

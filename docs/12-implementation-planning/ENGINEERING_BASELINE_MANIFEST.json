@@ -1,6 +1,6 @@
 {
   "kind": "agent-engineering-working-tree-snapshot",
-  "createdAtUtc": "2026-10-04T17:06:47.4005048Z",
+  "createdAtUtc": "2026-10-04T17:07:55.7580261Z",
   "reviewDate": "2026-10-04",
   "repository": "D:\\projects\\NavardKaran\\Design-ERP",
   "parentHead": "fc6b761a371f06491e4ea94df01af3fc380cb8a3",
@@ -40,13 +40,13 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "a214329d18971910e922e233c3bcc2fd77191fafa8326f08b70108acef81fcc3",
-      "gitBlob": "467243aeeebc140cf84487c383a69dc23c1b3181"
+      "sha256": "ea6680d29ac8b6ed3ea61e0acf48d21d0f59f594da61b4ba60400347cef4fcf7",
+      "gitBlob": "ec747cd2b505afe446bafcb113bc7c1041c9ca27"
     },
     {
       "path": "docs/00-governance/adrs/ADR-0011-command-idempotency.md",
-      "sha256": "6d4da2a44e61a0402a62ad86c8c983176c5bf26d748afe94260c78841284c628",
-      "gitBlob": "ea318f923a1656fbe17883449d9c8292c2491423"
+      "sha256": "99959aa07d86b35b6ea88e56ac3e0cc5f5979900e54482a4211aa010e9ada3ab",
+      "gitBlob": "c35a1a42499a4d1c389a072599fde04bf23e9a95"
     },
     {
       "path": "docs/00-governance/adrs/ADR-0013-slice-envelope-stack.md",
@@ -1150,13 +1150,13 @@
     },
     {
       "path": "docs/10-ai-cursor-development/AUTONOMOUS_PRE_IMPLEMENTATION_BOOTSTRAP_PACK.md",
-      "sha256": "ae4736ad324343aa195ff07dfea2d469aab705d022e327b2414de846be93368f",
-      "gitBlob": "05fb131719e24746ed2e2e490077928b90a3a760"
+      "sha256": "fa464ce99532974046a56b407b1c1036450214d6ecbed7a2c252ad342bb1f7e6",
+      "gitBlob": "5491c16d3d7107611531540a7264838aca3ff905"
     },
     {
       "path": "docs/10-ai-cursor-development/AUTONOMOUS_PRE_IMPLEMENTATION_OBJECTIVE.md",
-      "sha256": "629798d1e6ae1310118fa83377ed0bc70b9d4b0ec9e7a51d0df6eed1470a4460",
-      "gitBlob": "0d476f3563f8517560f07c2a8211287679ba0812"
+      "sha256": "242ab77c5329a259423e2fadb20a2ff3f647953e566bf917c4b09cca03bfea17",
+      "gitBlob": "4d2ddd2ad33343c9ed0a4349a5b0ec27dbdd5c10"
     },
     {
       "path": "docs/10-ai-cursor-development/CHECKPOINT_APR-012.md",
@@ -1165,18 +1165,18 @@
     },
     {
       "path": "docs/10-ai-cursor-development/CODEX_CONTROL_BOOTSTRAP.md",
-      "sha256": "e9c6cf741a783b8a38f891f304854083172a762298d77d55b9c97fe9eceb10b6",
-      "gitBlob": "7c90f9b23cbfe89921761a0238a5ffba3ab3b8fa"
+      "sha256": "37bb64dae5dcc107541f662f618bb3d067c7e83950e84a3dc6c02315adc3e070",
+      "gitBlob": "2e060f64f3f23acd369814113b14da94b9bdcca0"
     },
     {
       "path": "docs/10-ai-cursor-development/CODEX_READINESS_READ_REVIEW.md",
-      "sha256": "17a88a4dbc33c77ad07d76e3e434d41ccd753761eae846a005a182f166ad75b6",
-      "gitBlob": "415bb741448f067e340180e27549b12f4304ca4b"
+      "sha256": "cbaa33195fff022d532030b996391513ffd122ae4c6bf0dcc70a0a3b7797785e",
+      "gitBlob": "6603baaa80b7dc2546432ea6f80691e4af0bd8c6"
     },
     {
       "path": "docs/10-ai-cursor-development/FINAL_AUTONOMY_TRANSITION_PATCH.md",
-      "sha256": "0744042c9eb9c2190b984fb7c428fb0388199a40a0343198ced0ede7b5b99b47",
-      "gitBlob": "35f15374c7715e8e9ba0440ad0935a43b9960a3c"
+      "sha256": "5adbc0856e66fb8d8e45065ba9276bd75e1adff22130b4dec4b6498eb4450daa",
+      "gitBlob": "6d4260ca8e8cbf86edb6968eafb48d8a865afd5b"
     },
     {
       "path": "docs/10-ai-cursor-development/GATE_CHECKLIST.md",
@@ -1205,13 +1205,13 @@
     },
     {
       "path": "docs/10-ai-cursor-development/install-native-autonomy-transition.md",
-      "sha256": "9e2d3e22a08bfd5e35f022da56938555c2fd1527b45f711b0abb09ca7d89dcc9",
-      "gitBlob": "17e22c5b26c0aefae8c92fc2416281dc9430397e"
+      "sha256": "161b7514544dc00e3d66901121117459ccc5db4676f413d60d8d489901a1a43f",
+      "gitBlob": "c305051d166a89d426d5236a0067b9df85729b3a"
     },
     {
       "path": "docs/10-ai-cursor-development/NATIVE_AUTONOMY_TRANSITION.md",
-      "sha256": "627d55ad61a9f46ff232e2c4e9be18e761d01a7898f24a5ba68052e1ed185ec0",
-      "gitBlob": "fdc69f8f0106fdbe6f8e4513614e76ae62872ca1"
+      "sha256": "ee1a1df5376c906e5ae503ef22f90be1c969f2bd0aec66c11b59a87c45cbbac4",
+      "gitBlob": "1eac8b06beebcc095a77dfa5544b95b500777bbd"
     },
     {
       "path": "docs/10-ai-cursor-development/PHASE11_HANDOFF.md",
@@ -1330,8 +1330,8 @@
     },
     {
       "path": "docs/12-implementation-planning/COMMAND_IDEMPOTENCY_SPEC.md",
-      "sha256": "f847da660ef2f1d5a1d1f775ada9aa3476d70f593e30f0233407a8753b9a1dd3",
-      "gitBlob": "722479660fad9618c1cfe8d376bf70cde35bc768"
+      "sha256": "e98a0d0b94a96817bef79057595b6a9c3ebff15f31c925dd1653586f8866713a",
+      "gitBlob": "d215870ba83252a25b218166c0e1f784b0fb4f92"
     },
     {
       "path": "docs/12-implementation-planning/CUTOVER_TRAINING_ROLLOUT.md",
@@ -1355,13 +1355,13 @@
     },
     {
       "path": "docs/12-implementation-planning/IDEMPOTENCY_DESIGN_DRAFT.md",
-      "sha256": "1f509758587adff16e9d6b1fb86919da2d599e79ed6711e1b0f4b3e9298aba58",
-      "gitBlob": "26e901b628fb25ef74c828b658f014b25cd8d1c3"
+      "sha256": "873677eccb9919aa0459bd534691f52d3f01710b0957592548c615d6c4f80118",
+      "gitBlob": "9ede3162d4493e0f12bfbf1f92aa09faeff1eca1"
     },
     {
       "path": "docs/12-implementation-planning/IMPLEMENTATION_BACKLOG.md",
-      "sha256": "1cbbe6f2c39707d2833aab765cf57b4d7363c3ee1c60f94b8a64c1640d93143b",
-      "gitBlob": "7768aaaef050f4846f679a321e018049b8ff0053"
+      "sha256": "5422191e0122496178e84af09e98086b58e5d2050a2ff3d48438a29398ff5e15",
+      "gitBlob": "92bf40504298d52ce47e57f25553efd82842272d"
     },
     {
       "path": "docs/12-implementation-planning/IMPLEMENTATION_READINESS.md",
@@ -1385,18 +1385,18 @@
     },
     {
       "path": "docs/12-implementation-planning/REVIEW_ARCHITECTURE_TOOLING.md",
-      "sha256": "d61f54343249b233c90170cf71cfb11ee67ec8d928f543d9d8ca7d6e46350d15",
-      "gitBlob": "daad00b3ca2b230c601255d6a46b64e4a15fbed7"
+      "sha256": "076cc748c0d98b53fc08fd64dc2e75b58c5138848766b69dd92db6db430da9f3",
+      "gitBlob": "f0ac65b471f3de9785e89cb715779c881727e43a"
     },
     {
       "path": "docs/12-implementation-planning/REVIEW_DATABASE_IDEMPOTENCY_SECURITY.md",
-      "sha256": "84867997210aac1b6cc79f16384055d8a6c949a7d3d42acab10cec7d2cfa19bf",
-      "gitBlob": "1441d76fafeb0e659ea4ff06619ab74d25aaed47"
+      "sha256": "7e4bb8ae7869ea4e3b867410e856d2c2164bc8a8c90a290777c2ffe32a835e10",
+      "gitBlob": "ef1c5629d88cf17a89c18c22a05eebe1a0a00ed4"
     },
     {
       "path": "docs/12-implementation-planning/REVIEW_DOMAIN_BACKLOG.md",
-      "sha256": "e576cd0909e32f5603f8eb911e54c46f6d934d64ff15575c7f44f6addd1f7bee",
-      "gitBlob": "b9b9f6bb8117af390a9b2a5a4ac5e6153525fe57"
+      "sha256": "3a8d5feb2f555d82abba16fff9dd4a746ff49bcf279b8836389b59d2d85a2fe9",
+      "gitBlob": "c6a4bc0db794359e9233002423a2d8405c653479"
     },
     {
       "path": "docs/12-implementation-planning/REVIEW_FINAL_READINESS.md",
@@ -1430,8 +1430,8 @@
     },
     {
       "path": "docs/12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md",
-      "sha256": "24b6d31bbc68c7181f207fc359764f82d33297ebb489b78535b52d7bdcaa9875",
-      "gitBlob": "9da363d00ebf1f1696a30c18ebf2e734d0779259"
+      "sha256": "2431915f5b4eef3f856f2c95f0bb585d03db23a4800baffe980e4e9e0f07be3b",
+      "gitBlob": "5c7c68fdee55c69497e8ca880338ebeedc49f6da"
     },
     {
       "path": "docs/12-implementation-planning/SPIKES_AND_ACCEPTANCE.md",
@@ -1440,8 +1440,8 @@
     },
     {
       "path": "docs/12-implementation-planning/TECHNICAL_FREEZE.md",
-      "sha256": "58c07d410a61ac3de1d1aed3fe936574e4608f6908ba4eb913ad7e20ef4d9c59",
-      "gitBlob": "1976de506d1d595bcc0c57d55cd75d9408469c6d"
+      "sha256": "97b9160c0e7b221c25fef86c424da1720f2d0b36ddedcfc04602f8612f3d2ae7",
+      "gitBlob": "afe42a05a68b4aedbd8c1495fd65eedc65efe029"
     },
     {
       "path": "docs/12-implementation-planning/WORK_ITEMS.md",
