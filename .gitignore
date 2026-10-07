@@ -18,3 +18,7 @@ apps/backend/.tsbuildinfo
 packages/shared-kernel/.tsbuildinfo
 artifacts/tests/
 .env.local
+
+# Graphify local navigation outputs and installer backups
+graphify-out/
+*.graphify-bak

@@ -30,3 +30,4 @@
 - Obey effective Owner authorization, canonical gate/unlock and [current scope](docs/00-governance/CURRENT_PHASE.md).
 - Never self-authorize implementation or fabricate human approval; tool access is not approval.
 - Native/OS containment is retired; do not revive installers, ACL hardening or micro-permission hooks.
+- For graph-assisted impact/navigation use [.agents/skills/graphify](.agents/skills/graphify/SKILL.md); keep indexing local and treat source as authority.

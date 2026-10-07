@@ -1,0 +1,10 @@
+.git/
+.cursor/
+.codex/
+.agents/
+node_modules/
+**/dist/
+artifacts/
+graphify-out/
+.env*
+**/.env*
