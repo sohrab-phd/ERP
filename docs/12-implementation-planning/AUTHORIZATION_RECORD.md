@@ -13,7 +13,16 @@ supersedes: null
 
 # Implementation Authorization Record (labels only)
 
-Current authorization is recorded in
+Current scope is Identity and authorization under [APR-019](../00-governance/approved-baselines/APR-019-identity-authorization.md),
+explicit Owner authorization and delegated gate/unlock recording. Canonical gate
+is true and references APR-019; ignored local unlock exists and matches. Approved
+architecture baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d.
+Standing delegation permits the next approved backlog scope after acceptance and
+local commit; current task stops after Identity commit for Owner push.
+
+## Historical foundation authorization and APR-014 labels
+
+Earlier authorization was recorded in
 [APR-018](../00-governance/approved-baselines/APR-018-final-pre-implementation.md):
 the Owner accepted baseline e80a04b15ddf93451cc79ccf81722f564912596d, explicitly
 authorized implementation and directed Codex to record that decision in the

@@ -14,8 +14,10 @@ supersedes: null
 # Phase 12 — Implementation Planning
 
 Current implementation authority is
-[APR-018](../00-governance/approved-baselines/APR-018-final-pre-implementation.md),
-from baseline e80a04b15ddf93451cc79ccf81722f564912596d, for SLICE-ENVELOPE only.
+[APR-019](../00-governance/approved-baselines/APR-019-identity-authorization.md),
+for Identity and authorization after accepted foundation; architecture baseline
+remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d. See the
+[Identity implementation record](IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md).
 See [live readiness](IMPLEMENTATION_READINESS.md) and the frozen
 [physical design](SLICE_ENVELOPE_PHYSICAL_DESIGN.md). The APR-014 structure gate
 and architecture-only statements below are historical; no Phase 13 is created.
@@ -46,6 +48,8 @@ labels** without reopening design decisions and without starting coding.
 - [x] [Implementation readiness checklist](IMPLEMENTATION_READINESS.md)
 - [x] [Capability development workflow and skill routing](DEVELOPMENT_WORKFLOW.md)
 - [x] [Authorized SLICE-ENVELOPE implementation evidence](SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md)
+- [x] [Authorized Identity technical decision](../00-governance/adrs/ADR-0014-local-identity-authorization.md)
+- [x] [Identity implementation and acceptance evidence](IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md)
 - [x] [Roadmap and vertical slices](ROADMAP_AND_SLICES.md)
 - [x] [Work items linked to approved IDs](WORK_ITEMS.md)
 - [x] [Authorized spike kinds and acceptance labels](SPIKES_AND_ACCEPTANCE.md)

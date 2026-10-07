@@ -22,6 +22,8 @@ do not authorize ERP implementation or assert a human-approved baseline.
 - [Live readiness](12-implementation-planning/IMPLEMENTATION_READINESS.md)
 - [ADR-0011: durable command outcomes](00-governance/adrs/ADR-0011-command-idempotency.md)
 - [ADR-0013: first-slice stack](00-governance/adrs/ADR-0013-slice-envelope-stack.md)
+- [ADR-0014: identity and authorization](00-governance/adrs/ADR-0014-local-identity-authorization.md)
+- [Identity delivery](12-implementation-planning/IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md)
 - [Binding command contract](12-implementation-planning/COMMAND_IDEMPOTENCY_SPEC.md)
 - [Technical freeze and scripts](12-implementation-planning/TECHNICAL_FREEZE.md)
 - [Physical design and Definition of Done](12-implementation-planning/SLICE_ENVELOPE_PHYSICAL_DESIGN.md)

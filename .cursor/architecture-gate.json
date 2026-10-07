@@ -3,7 +3,7 @@
   "mode": "architecture-only",
   "enforcement": "locked",
   "implementationAuthorized": true,
-  "approvedBaseline": "docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md",
+  "approvedBaseline": "docs/00-governance/approved-baselines/APR-019-identity-authorization.md",
   "workspaceRoot": ".",
   "unlockMarker": ".cursor/IMPLEMENTATION_UNLOCK.json",
   "checkpointMarker": ".cursor/PHASE_CHECKPOINT_APPROVAL.json",

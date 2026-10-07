@@ -1,14 +1,22 @@
 import { createServer } from 'node:http';
-import type { Server } from 'node:http';
+import type { Server, IncomingMessage, ServerResponse } from 'node:http';
 import { respond } from './http-errors.js';
 export interface HealthOptions {
   ping: () => Promise<void>;
   probeTimeoutMs?: number;
+  identity?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
 }
 export function createHttpHost(options: HealthOptions): Server {
   const server = createServer(
     { maxHeaderSize: 8192, headersTimeout: 5000, requestTimeout: 10000, keepAliveTimeout: 5000 },
     (request, response) => {
+      if (options.identity && request.url?.startsWith('/identity/')) {
+        void options.identity(request, response).catch(() => {
+          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+          else response.destroy();
+        });
+        return;
+      }
       if (
         request.headers['transfer-encoding'] ||
         Number(request.headers['content-length'] ?? 0) !== 0

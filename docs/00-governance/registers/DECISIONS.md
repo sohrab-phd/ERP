@@ -245,3 +245,15 @@ No new hook, installer or OS-enforcement prerequisite is introduced.
 - Deferred: actual identity provider, domain decimal/arithmetic policy, frontend,
   devices, workers, deployment ADR-0008, backup product/retention and UAT/cutover
   inputs. These do not block the exact nonbusiness foundation.
+
+## ADR-0014 — Local personal identity and transactional authorization
+
+- Status: accepted technical choice within Owner-authorized APR-019 Identity scope.
+- [Decision](../adrs/ADR-0014-local-identity-authorization.md): native scrypt,
+  PostgreSQL digest-only sessions and scoped human grants, private immutable
+  contexts, current target/result policies, account/session locks in command TX,
+  append-only atomic security events and explicit owner-only initial provisioning.
+- Exact original Node/TypeScript/npm/pg pins remain; no new dependencies/provider,
+  QC, station lifecycle, business posting, frontend or infrastructure.
+- Real names/ACT assignments and OQ-019 approval policy are not inferred or closed.
+  [Implementation evidence](../../12-implementation-planning/IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md).

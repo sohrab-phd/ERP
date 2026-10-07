@@ -17,7 +17,10 @@ How INV-015 applies to Phase 03 commands. This is a role-pair catalogue, not
 an RBAC implementation and not Phase 06. Named people remain OQ-019.
 Quality releasers remain OQ-005. Portal actions remain OQ-010.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Current Identity delivery is authorized by APR-019 and technically specified by
+[ADR-0014](../00-governance/adrs/ADR-0014-local-identity-authorization.md). This
+sensitive-command catalogue is unchanged; distinct authenticated people are
+identity evidence, not guessed OQ-019 business approval authority.
 
 `ACT-QC`, Quality releasers, and exceptional QC release are future-only
 labels under OQ-005. There is no current-MVP Quality role, person,

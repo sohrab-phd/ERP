@@ -10,14 +10,18 @@ The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
 [APR-018](docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md).
 Foundation implementation and its acceptance tests pass. See the
 [implementation report](docs/12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
-No business
-workflow or next slice is authorized. The legacy Cursor hook does not establish
+The Owner now explicitly authorizes Identity and authorization under
+[APR-019](docs/00-governance/approved-baselines/APR-019-identity-authorization.md).
+See [delivered Identity behavior, API and operator contracts](docs/12-implementation-planning/IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md)
+and [ADR-0014](docs/00-governance/adrs/ADR-0014-local-identity-authorization.md).
+No business posting is included; stop after this accepted local commit for Owner
+push before the next major slice. The legacy Cursor hook does not establish
 technical interception for Codex; agents obey the current human grant.
 
 ```text
-IMPLEMENTATION_AUTHORIZED: true (SLICE-ENVELOPE only)
+IMPLEMENTATION_AUTHORIZED: true (Identity and authorization)
 CURRENT_PHASE: 12-implementation-planning
-NO_IMPLEMENTATION_UNLOCK: false (matching APR-018 local unlock)
+NO_IMPLEMENTATION_UNLOCK: false (matching APR-019 local unlock)
 ```
 
 Authoritative work permission:
@@ -42,8 +46,11 @@ across Windows/Linux; no historical documentation is mass-normalized.
 Provision separate local `navard_erp_dev` and disposable `navard_erp_test`
 databases, separate migration-owner and runtime logins for each, no runtime
 ownership/superuser/CREATE DATABASE/CREATE ROLE. The migration owner owns DDL;
-runtime receives CONNECT, kernel USAGE, SELECT/INSERT on audit_event and
-command_outcome only, never the migration ledger or UPDATE/DELETE/TRUNCATE/DDL.
+runtime receives CONNECT, kernel/identity USAGE, SELECT/INSERT on kernel audit_event/
+command_outcome and identity.security_event, SELECT/INSERT/UPDATE on identity.account/
+session, SELECT/INSERT/DELETE on identity.role_grant. No migration ledger, audit/
+outcome UPDATE/DELETE/TRUNCATE or DDL. Exact Identity operator and TLS requirements
+are in the delivery record; no administrator is seeded on startup.
 The acknowledged test DDL role owns the dedicated test database for bounded
 schema reset. These are local development privileges, not production deployment.
 Keep passwords/session URLs in environment or ignored `.env.local`; `.env.example`
@@ -1280,7 +1287,11 @@ Superseded governance approvals:
 
 ---
 
-## 16. What to do next
+## 16. Historical pre-authorization next steps
+
+This section records the earlier architecture-only workflow. Current authorized
+implementation follows APR-019 and the development workflow above; these old
+unlock-absent statements are not current scope or a new permission requirement.
 
 **If you are implementing software:** stop. There is no unlock.
 

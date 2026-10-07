@@ -4,7 +4,12 @@ import { createHash } from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 import { TextDecoder } from 'node:util';
-const inventory = ['0001_kernel_schema.sql', '0002_audit_event.sql', '0003_command_outcome.sql'];
+const inventory = [
+  '0001_kernel_schema.sql',
+  '0002_audit_event.sql',
+  '0003_command_outcome.sql',
+  '0004_identity_authorization.sql',
+];
 export async function loadMigrations(
   directory = fileURLToPath(new URL('../../database/migrations/', import.meta.url)),
 ) {

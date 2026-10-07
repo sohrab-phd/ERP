@@ -41,11 +41,16 @@ export interface AuditStore {
   append(context: TransactionContext, event: AuditEvent): Promise<void>;
 }
 export interface AuthorizationPort {
-  canExecute(context: ExecutionContext, request: CommandRequest): Promise<boolean>;
+  canExecute(
+    context: ExecutionContext,
+    request: CommandRequest,
+    transaction?: TransactionContext,
+  ): Promise<boolean>;
   canReplay(
     context: ExecutionContext,
     request: CommandRequest,
     result: StableResult,
+    transaction?: TransactionContext,
   ): Promise<boolean>;
 }
 export interface RecoveryFence {

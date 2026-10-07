@@ -672,3 +672,14 @@ implementation.
 APR-017 is the separately approved forward recording checkpoint and does not
 require a recursive CHK record. Later Codex-control changes need their own
 review and authorization.
+
+### APR-019 — Identity scope and standing backlog progression delegation
+
+- [Authority record](approved-baselines/APR-019-identity-authorization.md): explicit
+  Project Owner message in this task, 2026-10-07; not an agent-created signature.
+- Scope: Identity and authorization, backlog capability 2; approved architecture
+  baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d.
+- Explicit delegation: record matching gate/local unlock and subsequent approved
+  backlog scopes after accepted/tested/reviewed/documented/local-committed slices.
+- No MVP expansion, inferred business authority, push or history rewrite.
+  Current task stops after accepted Identity commit for Owner push.

@@ -43,6 +43,15 @@ for (const file of files) {
       }
       if (!existsSync(target)) issues.push(relative(root, file) + ': unresolved import ' + name);
       else targets.push(target);
+      const moduleRoot = resolve('apps/backend/src/modules') + sep;
+      const moduleName = (f) =>
+        f.startsWith(moduleRoot) ? relative(moduleRoot, f).split(sep)[0] : undefined;
+      const from = moduleName(file),
+        to = moduleName(target);
+      if (from && from !== to)
+        issues.push(relative(root, file) + ': module imports outside its public ownership ' + name);
+      if (to && to !== from && target !== resolve(moduleRoot, to, 'index.ts'))
+        issues.push(relative(root, file) + ': private module import ' + name);
     } else if (name.startsWith('@navard/')) {
       if (owner(file) === 'kernel' || name !== '@navard/shared-kernel')
         issues.push(relative(root, file) + ': nonpublic package import ' + name);

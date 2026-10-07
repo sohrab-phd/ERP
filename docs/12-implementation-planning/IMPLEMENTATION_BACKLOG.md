@@ -13,7 +13,13 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current status: the Owner authorized implementation in APR-018 from baseline
+Current scope: [APR-019](../00-governance/approved-baselines/APR-019-identity-authorization.md)
+explicitly authorizes Identity and authorization (capability 2) after accepted
+foundation. Standing scope-recording delegation is limited to accepted backlog
+progression. Stop after this capability's accepted local commit for Owner push.
+No OQ/business answer changes. See [actual Identity delivery](IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md).
+
+Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers
 SLICE-ENVELOPE, now accepted; historical false/pending statements below are
 the original planning snapshot. Continue dependency-aware scope/design/review

@@ -21,7 +21,24 @@ What must be retained as security and correction evidence. Retention
 day-counts stay OQ-016. This is not a SIEM or logging package
 (OQ-018).
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Current Identity implementation is authorized by APR-019. The following canonical
+AUD-CMD-* families remain unchanged; foundation-era authorization statements are
+historical snapshots.
+
+## Delivered Identity security events
+
+[ADR-0014](../00-governance/adrs/ADR-0014-local-identity-authorization.md) adds
+append-only `identity.security_event`, atomically owned by Identity lifecycle and
+security-administration procedures. Kinds: LOGIN_ACCEPTED, LOGIN_DENIED, LOGOUT,
+SESSION_REVOKED, ACCOUNT_CREATED, ACCOUNT_DISABLED, GRANT_CHANGED, PASSWORD_CHANGED.
+These supplement command audit, not substitute for canonical AUD-CMD-* evidence
+or a business outcome. LOGIN_DENIED records failed authentication without
+inventing a bound actor or storing the submitted username/credential. Person
+attribution and DB timestamp are retained when verifiable; grant changes include
+role/authority/customer/enabled metadata only. No token/hash/password is stored.
+Runtime may insert/read but never update/delete these events. Failed event insert
+rolls back the corresponding account/grant/session write. Throttled traffic has
+no credential evaluation or durable business outcome. Retention remains OQ-016.
 
 ## Evidence kinds
 

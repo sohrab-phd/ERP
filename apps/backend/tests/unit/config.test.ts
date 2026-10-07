@@ -24,3 +24,13 @@ void test('invalid configuration fails without disclosing credentials', () => {
   ])
     assert.throws(() => loadConfig({ ...env, ...change }));
 });
+void test('production Identity host binds loopback behind TLS termination', () => {
+  for (const HOST of ['0.0.0.0', '::', '192.0.2.10', 'public.example.invalid']) {
+    assert.throws(
+      () => loadConfig({ ...env, NODE_ENV: 'production', HOST }),
+      /Production host must bind loopback/u,
+    );
+  }
+  for (const HOST of ['127.0.0.1', '::1'])
+    assert.equal(loadConfig({ ...env, NODE_ENV: 'production', HOST }).host, HOST);
+});

@@ -20,7 +20,11 @@ Required identity properties for a Phase 05 command. These are labels,
 not a session library, password product, MFA vendor, or equipment
 protocol (OQ-018, OQ-011).
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Current scope is authorized by APR-019. [ADR-0014](../00-governance/adrs/ADR-0014-local-identity-authorization.md)
+and the [Identity implementation record](../12-implementation-planning/IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md)
+select local personal accounts, native scrypt and revocable PostgreSQL bearer
+sessions. Earlier label-era technology deferrals are superseded for this bounded
+delivery; real ACT assignments, equipment identity and MFA remain later inputs.
 
 ## Identity record (logical)
 
@@ -41,7 +45,8 @@ UI cookies, local storage, or a hidden form field are not this record.
 
 `Session` means: the backend can re-bind `actor_identity` on every
 command without trusting the client’s claimed role. Idle time, absolute
-lifetime, rotation, and store product stay OQ-018.
+lifetime and store are frozen by ADR-0014: 30-minute idle, 8-hour absolute,
+digest-only opaque bearer sessions. No invented password rotation/MFA policy.
 
 A replay of the same `idempotency_key` does not require a new session.
 It still requires a currently authenticated principal.
@@ -54,19 +59,21 @@ wait before execution/disclosure. That is the authorization decision point;
 revocation committed earlier denies, later revocation applies to subsequent
 attempts. Creating a resource once does not grant perpetual replay disclosure.
 Body identity/role/scope is not authority; test identity adapters are not included
-in production composition. Identity provider/session product and real ACT
-assignments remain later slice decisions.
+in production composition. Identity/session mechanism is now ADR-0014; real ACT
+assignments remain later operational inputs. Command transaction account/session
+locks serialize current grants/revocation until outcome commit; owner policy
+receives that same opaque transaction for target/disclosure checks.
 
 ## Password and MFA (labels only)
 
 | Label | Meaning | Open |
 | --- | --- | --- |
-| `PasswordPolicy` | A human principal is not a shared shop password | Strength and expiry days not invented |
+| `PasswordPolicy` | Personal account; ADR-0014 technical minimum15 code points/maximum128 UTF8 bytes | No invented password expiry days |
 | `SecondFactor` | Sensitive SoD commands may later require a second factor | Product and who must enroll stay OQ-018 / OQ-019 |
 | `SharedTerminal` | Shop-floor terminal may be shared; the operator identity is still required per command | Device join protocol OQ-011 |
 
-Do not select bcrypt, Argon2, TOTP, WebAuthn, Keycloak, Auth.js, or
-any other package here.
+ADR-0014 selects native scrypt without new packages. TOTP, WebAuthn, federation,
+MFA/recovery products remain outside this delivery; do not add them speculatively.
 
 ## Equipment identity
 

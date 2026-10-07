@@ -86,6 +86,15 @@ export async function withDatabase<T>(body: (fixture: DatabaseFixture) => Promis
     await owner.query(
       `GRANT SELECT, INSERT ON kernel.audit_event, kernel.command_outcome TO ${quotedRole}`,
     );
+    await owner.query(`GRANT USAGE ON SCHEMA identity TO ${quotedRole}`);
+    await owner.query(
+      `GRANT SELECT,INSERT,UPDATE ON identity.account,identity.session TO ${quotedRole}`,
+    );
+    await owner.query(`GRANT SELECT,INSERT,DELETE ON identity.role_grant TO ${quotedRole}`);
+    await owner.query(`GRANT SELECT,INSERT ON identity.security_event TO ${quotedRole}`);
+    await owner.query(
+      'TRUNCATE identity.security_event,identity.session,identity.role_grant,identity.account',
+    );
     await owner.query('CREATE SCHEMA IF NOT EXISTS envelope_test');
     await owner.query(
       'CREATE TABLE IF NOT EXISTS envelope_test.fact (identity text PRIMARY KEY, material text NOT NULL)',

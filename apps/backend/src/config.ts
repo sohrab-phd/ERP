@@ -31,6 +31,8 @@ export function loadConfig(env: NodeJS.ProcessEnv): Readonly<Config> {
     throw new Error('INSTALLATION_ID must be a stable UUID');
   const host = env.HOST ?? '127.0.0.1';
   if (!host || host.length > 253 || /[\s/\\]/.test(host)) throw new Error('HOST is invalid');
+  if (nodeEnv === 'production' && !['127.0.0.1', '::1'].includes(host))
+    throw new Error('Production host must bind loopback behind a TLS terminator');
   const text = env.PORT ?? '3000';
   if (!/^[0-9]+$/.test(text)) throw new Error('PORT is invalid');
   const port = Number(text);

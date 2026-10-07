@@ -13,7 +13,17 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner decision (2026-10-04): ERP implementation AUTHORIZED for
+Current Owner decision (2026-10-07): Identity and authorization is explicitly
+authorized by [APR-019](approved-baselines/APR-019-identity-authorization.md).
+Canonical gate is true and references APR-019; local ignored unlock matches.
+Approved architecture baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d.
+Standing delegation permits recording the next approved backlog scope only after
+DoD/tests/reviews/documentation/local commit. This task stops after Identity commit
+for Owner push; no next slice or remote push is begun.
+
+## Historical foundation authorization / readiness snapshot
+
+Owner decision (2026-10-04): ERP implementation AUTHORIZED for
 SLICE-ENVELOPE only. Implementation baseline commit:
 e80a04b15ddf93451cc79ccf81722f564912596d. APR-018 records explicit human
 approval and delegated gate/unlock recording. Canonical gate and local unlock

@@ -29,6 +29,13 @@ boundaries/Production atomic bundles remain intact.
 
 ## Scope and ownership
 
+Current Identity technical delivery is defined by [ADR-0014](../00-governance/adrs/ADR-0014-local-identity-authorization.md).
+Authentication/session/security-administration procedures have separate atomic,
+non-replay HTTP contracts and uncertain-response reconciliation; they are not
+admitted Phase-05 catalogue commands. Every admitted business command retains
+the durable protocol below. The foundation health-only description records its
+historical scope; Identity adds only bounded authentication/administration routes.
+
 Every admitted state-changing command uses this PostgreSQL protocol.
 SLICE-ENVELOPE exercises it with nonbusiness test fixtures only: production host
 exposes health, no command routes or fixture identities. Production identity/RBAC

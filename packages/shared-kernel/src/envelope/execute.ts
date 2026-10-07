@@ -240,10 +240,16 @@ export async function executeCommand(
   suppliedContext: ExecutionContext,
   ports: ExecutionPorts,
 ): Promise<ExecutionResult> {
-  const context: ExecutionContext = Object.freeze({
-    ...suppliedContext,
-    principal: Object.freeze({ ...suppliedContext.principal }),
-  });
+  // Preserve an immutable server-issued capability's identity. Mutable callers
+  // still receive the foundation defensive snapshot; identity adapters reject
+  // copies/forgeries rather than trusting matching claims.
+  const context: ExecutionContext =
+    Object.isFrozen(suppliedContext) && Object.isFrozen(suppliedContext.principal)
+      ? suppliedContext
+      : Object.freeze({
+          ...suppliedContext,
+          principal: Object.freeze({ ...suppliedContext.principal }),
+        });
   const attemptId = context.requestId;
   let request: CommandRequest, contract: CommandContract;
   try {
@@ -287,7 +293,7 @@ export async function executeCommand(
       const existing = await ports.outcomes.find(activeSession.context, key);
       if (!(await ports.recoveryFence.permitsAdmission(context)))
         throw new TechnicalError('incompatible');
-      if (!(await ports.authorization.canExecute(context, request))) {
+      if (!(await ports.authorization.canExecute(context, request, activeSession.context))) {
         await ports.audits.append(
           activeSession.context,
           audit(context, 'AUD-ISOLATION-DENY', request),
@@ -332,7 +338,14 @@ export async function executeCommand(
             message: 'Idempotency key is bound to another intent.',
           };
         }
-        if (!(await ports.authorization.canReplay(context, request, existing.result))) {
+        if (
+          !(await ports.authorization.canReplay(
+            context,
+            request,
+            existing.result,
+            activeSession.context,
+          ))
+        ) {
           await ports.audits.append(
             activeSession.context,
             audit(context, 'AUD-ISOLATION-DENY', request),

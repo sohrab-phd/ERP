@@ -7,6 +7,9 @@ import { PostgresOutcomes } from './infrastructure/postgresql/outcome-store.js';
 import { PostgresAudit } from './infrastructure/postgresql/audit-store.js';
 import { createLogger } from './infrastructure/logging/json-logger.js';
 import { createHttpHost, closeHttpHost } from './transport/http-host.js';
+import { createIdentityHandler } from './transport/identity-http.js';
+import { IdentityService, IdentityAuthorization } from './modules/identity/index.js';
+import { PostgresIdentityStore } from './infrastructure/postgresql/identity-store.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -33,23 +36,29 @@ export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise
 export function compose(config: Readonly<Config>) {
   const pool = createPool(config.databaseUrl);
   const log = createLogger(config.logLevel);
+  const transactions = new PostgresTransactions(pool);
+  const identity = new IdentityService(
+    new PostgresIdentityStore(pool),
+    transactions,
+    config.installationId,
+    config.installationId,
+  );
   const ports: ExecutionPorts = {
     registry: new CommandRegistry(),
-    transactions: new PostgresTransactions(pool),
+    transactions,
     outcomes: new PostgresOutcomes(),
     audits: new PostgresAudit(),
-    authorization: {
-      canExecute: () => Promise.resolve(false),
-      canReplay: () => Promise.resolve(false),
-    },
+    authorization: new IdentityAuthorization(identity, []),
     recoveryFence: { permitsAdmission: () => Promise.resolve(false) },
   };
   const server = createHttpHost({
     ping: () => pingDatabase(pool),
+    identity: createIdentityHandler(identity),
   });
   return {
     server,
     registry: ports.registry,
+    identity,
     command: (input: string | Uint8Array, context: ExecutionContext) =>
       executeCommand(input, context, ports),
     async start() {

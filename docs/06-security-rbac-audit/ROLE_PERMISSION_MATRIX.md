@@ -20,7 +20,11 @@ Which `ACT-*` role may present which Phase 05 command family. This is
 a permission catalogue, not an RBAC library and not named people
 (OQ-019). Backend evaluation is required (INV-015).
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Current Identity scope is authorized by APR-019. [ADR-0014](../00-governance/adrs/ADR-0014-local-identity-authorization.md)
+implements explicit grants and deny-by-default command/target/result policies;
+these business role rows are unchanged. No real people/delegates or OQ answers
+are inferred. ACT-SEC administration requires organizational scope, never a
+customer-bound grant; unknown business policy remains denied.
 
 `ACT-QC` and every Quality permission below are future/deferred labels
 only (OQ-005). The current factory has no Quality role or person.
