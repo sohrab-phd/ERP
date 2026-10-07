@@ -257,3 +257,15 @@ No new hook, installer or OS-enforcement prerequisite is introduced.
   QC, station lifecycle, business posting, frontend or infrastructure.
 - Real names/ACT assignments and OQ-019 approval policy are not inferred or closed.
   [Implementation evidence](../../12-implementation-planning/IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md).
+
+## ADR-0015 — Exact kg and application-owned inventory posting kernel
+
+- Status: accepted technical mechanism within explicit Owner APR-020 scope.
+- [Decision](../adrs/ADR-0015-inventory-posting-kernel.md): exact bounded BigInt kg,
+  nonrounding checked NUMERIC, one supplied transaction, globally ordered scoped
+  Unit/effect/claim locks, immutable Ledger provenance and reconstructible Balance.
+- Source-effect identity supplements envelope keys; fresh-key production duplicate
+  is CONFLICT, other mapped equivalent facts DUP. Current owning policies are
+  mandatory; no stock HTTP route, QC, business bundle or second writer introduced.
+- OQ-001 technical capacity subdecision is resolved; its factory/business residuals
+  and all other OQ statuses remain unchanged. Evidence: [IPS delivery](../../12-implementation-planning/SLICE_IPS_IMPLEMENTATION_STATUS.md).

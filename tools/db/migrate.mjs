@@ -9,6 +9,7 @@ const inventory = [
   '0002_audit_event.sql',
   '0003_command_outcome.sql',
   '0004_identity_authorization.sql',
+  '0005_inventory_posting.sql',
 ];
 export async function loadMigrations(
   directory = fileURLToPath(new URL('../../database/migrations/', import.meta.url)),

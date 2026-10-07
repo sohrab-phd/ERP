@@ -36,7 +36,7 @@ If its scope expands, reassess dependencies before authorization.
 
 | Source | Unresolved item | Class / required boundary |
 | --- | --- | --- |
-| OQ-001 | kg/length formula and factors; technical decimal/arithmetic scale; applicability of measurement precision beyond measured kg; descriptive-UOM scales | B before quantity/conversion/commercial calculations; no quantities in envelope |
+| OQ-001 | kg/length formula and factors; applicability of measurement precision beyond measured kg; descriptive-UOM scales; technical kernel capacity resolved by ADR-0015 | B only for affected business/conversion/calculation branches; no quantities in envelope |
 | OQ-001 | measured-versus-expected difference threshold | B only before any automatic acceptance/classification; display evidence must not invent a threshold |
 | OQ-002 | confirmation against actual scale tickets | C; validation of the accepted kg rule |
 | OQ-003 | Entry/Referral persistence beside operation lifecycle; stop/cancel semantics; versioned per-order routing; Station/work-center reconciliation | B before production/workflow; factory routing/Stations remain recorded facts |
@@ -118,7 +118,7 @@ needs no new Customer Order. FACT-03's posting boundary stays open.
 
 | ID | Status | What is now locked | Still unknown |
 | --- | --- | --- | --- |
-| OQ-001 | treating | kg is the only official stock quantity; count, length, dimensions, thickness, width, and material/type are not stock quantities; factory weight measurement is 0 decimal places, 1 kg, rounding not needed; weight↔count conversion is not required; a measured-vs-expected weight difference must be shown; Sheet count and individual length stay as attributes | kg↔length formula and factors; technical persistence/arithmetic scale; whether 0 decimals applies beyond scale measurement; any automatic threshold for a weight difference |
+| OQ-001 | treating | kg is the only official stock quantity; count, length, dimensions, thickness, width, and material/type are not stock quantities; factory weight measurement is 0 decimal places, 1 kg, rounding not needed; weight↔count conversion is not required; a measured-vs-expected weight difference must be shown; Sheet count and individual length stay as attributes; technical kernel capacity resolved by ADR-0015 without changing these factory answers | kg↔length formula and factors; whether 0 decimals applies beyond scale measurement; any automatic threshold for a weight difference |
 | OQ-002 | answered | Coil quantity = measured weight in kg; factory 2026-09-23 reinforces this | Shop-floor ticket confirmation (validation, not a new choice) |
 | OQ-003 | treating | Post at `CompleteProductionOperation`; no universal hard-coded route; clarification 2026-09-30: ten current physical Stations, Station = Production Step, no separate factory Work Center, route is per order and may skip Stations, Entry and Referral are workflow events with system timestamps and are not Start/Complete | How Entry/Referral sit beside the Production Operation lifecycle; exact abort/cancel command; whether architecture "work center" is unused or aliased; versioned routing mechanism |
 | OQ-004 | answered | Unit-level Coil; hybrid finished-product rule; factory 2026-09-23 confirms no unique ID per tiny cut piece; order code is the practical trace key for cut pieces and order scrap | First-go-live product-family catalogue; exact order-code identity; relationship of order code to inventory identity |
@@ -209,12 +209,20 @@ needed) is not a decision to store 0.1 kg, 0.01 kg, or 0.001 kg, and it
 is not a full technical persistence or arithmetic-scale design. The
 existing exact-decimal / PostgreSQL `NUMERIC` direction is unchanged.
 
+Technical subdecision (2026-10-07):
+[ADR-0015](../adrs/ADR-0015-inventory-posting-kernel.md) resolves kernel
+storage/arithmetic capacity: exact kg strings/BigInt scale 18, absolute magnitude
+less than 10^20, unconstrained NUMERIC with checks, rejection without rounding.
+This is engineering capacity, not permission for fractional scale measurements
+or an answer to business conversion/precision applicability. OQ-001 remains treating.
+
 ### Still unknown
 
 Material-specific kg↔length conversion formula and factors. No density,
 grade factor, or thickness/width equation is recorded. Technical
-persistence and arithmetic scale beyond the factory measurement
-statement. Whether zero decimal places applies to every stored kg value
+persistence and arithmetic capacity is resolved by ADR-0015; business
+applicability beyond the factory measurement statement remains open.
+Whether zero decimal places applies to every stored kg value
 or only to scale measurement. Any automatic threshold for a
 measured-vs-expected weight difference. Scales for non-kg descriptive
 UOMs. Commands that need a missing conversion factor remain

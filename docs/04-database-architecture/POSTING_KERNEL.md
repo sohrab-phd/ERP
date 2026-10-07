@@ -13,6 +13,15 @@ supersedes: null
 
 # Inventory Posting Kernel and Alternatives
 
+Implementation note (2026-10-07): the Owner-authorized SLICE-IPS delivery selects
+the application-owned option already recorded by OQ-017. Physical quantity,
+locking and persistence decisions are in
+[ADR-0015](../00-governance/adrs/ADR-0015-inventory-posting-kernel.md), with
+[actual kernel acceptance](../12-implementation-planning/SLICE_IPS_IMPLEMENTATION_STATUS.md).
+The architecture-only implementation flag and unfrozen physical choices below
+are the historical design snapshot; current scope is APR-020, not a new
+business posting workflow or a change to the accepted invariants.
+
 Proposed comparison of posting styles. OQ-017 is **answered**: the
 application owns the business command; each posting runs in an explicit
 PostgreSQL transaction (lock → validate → write Ledger facts → commit).

@@ -9,6 +9,8 @@ const files = [
   'apps/backend/dist/tests/unit/http-host.test.js',
   'apps/backend/dist/tests/unit/logger.test.js',
   'apps/backend/dist/tests/unit/identity.test.js',
+  'apps/backend/dist/tests/unit/inventory-quantity.test.js',
+  'apps/backend/dist/tests/unit/inventory-boundaries.test.js',
 ];
 for (const f of files) if (!existsSync(f)) throw new Error('Missing compiled test: ' + f);
 const r = spawnSync(process.execPath, ['--test', '--test-concurrency=1', ...files], {

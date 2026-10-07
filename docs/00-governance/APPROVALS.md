@@ -682,4 +682,14 @@ review and authorization.
 - Explicit delegation: record matching gate/local unlock and subsequent approved
   backlog scopes after accepted/tested/reviewed/documented/local-committed slices.
 - No MVP expansion, inferred business authority, push or history rewrite.
-  Current task stops after accepted Identity commit for Owner push.
+  That task stopped after accepted Identity commit for Owner push.
+
+### APR-020 — Explicit Inventory posting kernel scope
+
+- [Actual Owner authority](approved-baselines/APR-020-ips-scope.md): prior accepted
+  commits were pushed; next authorized implementation is SLICE-IPS only.
+- Baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d; current gate
+  and ignored local unlock reference APR-020. Standing APR-019 scope-recording
+  delegation remains bounded to accepted backlog progression.
+- Stop after accepted/tested/reviewed/documented local IPS commit for Owner push;
+  no next slice or remote push. No fabricated approval signature/OQ answer.

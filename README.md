@@ -10,18 +10,22 @@ The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
 [APR-018](docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md).
 Foundation implementation and its acceptance tests pass. See the
 [implementation report](docs/12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
-The Owner now explicitly authorizes Identity and authorization under
-[APR-019](docs/00-governance/approved-baselines/APR-019-identity-authorization.md).
+The Owner now explicitly authorizes SLICE-IPS under
+[APR-020](docs/00-governance/approved-baselines/APR-020-ips-scope.md), after accepted
+Identity and authorization in APR-019.
 See [delivered Identity behavior, API and operator contracts](docs/12-implementation-planning/IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md)
 and [ADR-0014](docs/00-governance/adrs/ADR-0014-local-identity-authorization.md).
-No business posting is included; stop after this accepted local commit for Owner
+See the [inventory kernel delivery record](docs/12-implementation-planning/SLICE_IPS_IMPLEMENTATION_STATUS.md)
+and [ADR-0015](docs/00-governance/adrs/ADR-0015-inventory-posting-kernel.md).
+The kernel is internal; receipt and other business workflows are not implemented.
+Stop after this accepted local commit for Owner
 push before the next major slice. The legacy Cursor hook does not establish
 technical interception for Codex; agents obey the current human grant.
 
 ```text
-IMPLEMENTATION_AUTHORIZED: true (Identity and authorization)
+IMPLEMENTATION_AUTHORIZED: true (SLICE-IPS)
 CURRENT_PHASE: 12-implementation-planning
-NO_IMPLEMENTATION_UNLOCK: false (matching APR-019 local unlock)
+NO_IMPLEMENTATION_UNLOCK: false (matching APR-020 local unlock)
 ```
 
 Authoritative work permission:
@@ -1290,7 +1294,7 @@ Superseded governance approvals:
 ## 16. Historical pre-authorization next steps
 
 This section records the earlier architecture-only workflow. Current authorized
-implementation follows APR-019 and the development workflow above; these old
+implementation follows APR-020 and the development workflow above; these old
 unlock-absent statements are not current scope or a new permission requirement.
 
 **If you are implementing software:** stop. There is no unlock.

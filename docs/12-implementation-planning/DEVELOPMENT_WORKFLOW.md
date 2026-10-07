@@ -253,8 +253,9 @@ These are local instruction files with links to canonical sources; no helper
 scripts, install hooks, new dependencies or source export. Before any third-party
 skill, inspect source/executables/dependencies/network/data reads or export and
 installation scope. Reject opaque/unneeded/overprivileged behavior. Graphify is
-not installed: at 38 TypeScript files, the existing index and rg are sufficient;
-only evaluate a source-reviewed graph tool if a measured navigation need arises.
+installed and accepted: use the [project-local offline graph policy](../../.agents/skills/graphify/SKILL.md)
+and [tooling receipt](GRAPHIFY_TOOLING.md) for targeted navigation; source remains
+authoritative and indexing never exports ERP contents.
 New skill folders can be discovered by a fresh task/session; current tasks can
 read the exact SKILL.md directly, without an installation/bootstrap procedure.
 

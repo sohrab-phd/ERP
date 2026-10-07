@@ -18,6 +18,11 @@ This `0.3.3` index update is in review. APR-017 checkpointed the prior
 
 ## Recorded approvals
 
+- [APR-020 — Current SLICE-IPS scope](APR-020-ips-scope.md) — explicit Owner
+  continuation after preceding accepted commits were pushed; architecture
+  baseline APR-018 is unchanged. Stop after kernel commit for Owner push.
+- [APR-019 — Accepted Identity and standing progression delegation](APR-019-identity-authorization.md).
+
 - [APR-018 — Final pre-implementation baseline and SLICE-ENVELOPE authorization](APR-018-final-pre-implementation.md)
   — explicit current Owner acceptance/implementation authorization; baseline
   `e80a04b15ddf93451cc79ccf81722f564912596d`; foundation only. Recorded under

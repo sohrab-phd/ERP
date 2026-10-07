@@ -14,10 +14,13 @@ supersedes: null
 # Phase 12 — Implementation Planning
 
 Current implementation authority is
-[APR-019](../00-governance/approved-baselines/APR-019-identity-authorization.md),
-for Identity and authorization after accepted foundation; architecture baseline
+[APR-020](../00-governance/approved-baselines/APR-020-ips-scope.md),
+for SLICE-IPS after accepted foundation and Identity; architecture baseline
 remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d. See the
 [Identity implementation record](IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md).
+See [IPS plan](SLICE_IPS_IMPLEMENTATION_PLAN.md),
+[actual delivery](SLICE_IPS_IMPLEMENTATION_STATUS.md) and
+[ADR-0015](../00-governance/adrs/ADR-0015-inventory-posting-kernel.md).
 See [live readiness](IMPLEMENTATION_READINESS.md) and the frozen
 [physical design](SLICE_ENVELOPE_PHYSICAL_DESIGN.md). The APR-014 structure gate
 and architecture-only statements below are historical; no Phase 13 is created.

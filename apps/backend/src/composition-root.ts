@@ -10,6 +10,8 @@ import { createHttpHost, closeHttpHost } from './transport/http-host.js';
 import { createIdentityHandler } from './transport/identity-http.js';
 import { IdentityService, IdentityAuthorization } from './modules/identity/index.js';
 import { PostgresIdentityStore } from './infrastructure/postgresql/identity-store.js';
+import { InventoryPostingService } from './modules/inventory/index.js';
+import { PostgresInventoryStore } from './infrastructure/postgresql/inventory-store.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -37,6 +39,12 @@ export function compose(config: Readonly<Config>) {
   const pool = createPool(config.databaseUrl);
   const log = createLogger(config.logLevel);
   const transactions = new PostgresTransactions(pool);
+  // Future owner workflows supply explicit current-use-case policies; no stock HTTP command.
+  const inventory = new InventoryPostingService(new PostgresInventoryStore(), {
+    authorize: () => Promise.resolve(false),
+    validate: () => Promise.resolve(undefined),
+    maintain: () => Promise.resolve(false),
+  });
   const identity = new IdentityService(
     new PostgresIdentityStore(pool),
     transactions,
@@ -59,6 +67,7 @@ export function compose(config: Readonly<Config>) {
     server,
     registry: ports.registry,
     identity,
+    inventory,
     command: (input: string | Uint8Array, context: ExecutionContext) =>
       executeCommand(input, context, ports),
     async start() {

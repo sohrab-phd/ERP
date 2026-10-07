@@ -13,11 +13,14 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current scope: [APR-019](../00-governance/approved-baselines/APR-019-identity-authorization.md)
-explicitly authorizes Identity and authorization (capability 2) after accepted
-foundation. Standing scope-recording delegation is limited to accepted backlog
+Current scope: [APR-020](../00-governance/approved-baselines/APR-020-ips-scope.md)
+explicitly authorizes SLICE-IPS (capability 3) after accepted
+foundation and Identity. Standing scope-recording delegation is limited to accepted backlog
 progression. Stop after this capability's accepted local commit for Owner push.
 No OQ/business answer changes. See [actual Identity delivery](IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md).
+See [IPS plan/DoD](SLICE_IPS_IMPLEMENTATION_PLAN.md),
+[delivery evidence](SLICE_IPS_IMPLEMENTATION_STATUS.md) and
+[ADR-0015](../00-governance/adrs/ADR-0015-inventory-posting-kernel.md).
 
 Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers

@@ -33,6 +33,14 @@ for (const file of files) {
     if (name.startsWith('.')) {
       const target = resolve(dirname(file), name.replace(/\.js$/, '.ts'));
       if (
+        target === resolve('apps/backend/src/infrastructure/postgresql/inventory-store.ts') &&
+        file.startsWith(resolve('apps/backend/src') + sep) &&
+        file !== resolve('apps/backend/src/composition-root.ts')
+      )
+        issues.push(
+          relative(root, file) + ': inventory persistence import bypasses sole posting owner',
+        );
+      if (
         owner(target) !== owner(file) ||
         !target.startsWith(
           resolve(owner(file) === 'kernel' ? 'packages/shared-kernel' : 'apps/backend') + sep,
@@ -71,6 +79,13 @@ for (const file of files) {
       issues.push(relative(root, file) + ': pg outside persistence owner');
   };
   const visit = (node) => {
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\binventory\.(unit|ledger|balance|reservation)\b/i.test(node.text) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-store.ts')
+    )
+      issues.push(relative(root, file) + ': inventory SQL outside sole persistence owner');
     if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier)
       check(node.moduleSpecifier);
     if (

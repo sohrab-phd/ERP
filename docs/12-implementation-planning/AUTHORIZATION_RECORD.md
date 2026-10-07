@@ -13,12 +13,12 @@ supersedes: null
 
 # Implementation Authorization Record (labels only)
 
-Current scope is Identity and authorization under [APR-019](../00-governance/approved-baselines/APR-019-identity-authorization.md),
+Current scope is SLICE-IPS under [APR-020](../00-governance/approved-baselines/APR-020-ips-scope.md),
 explicit Owner authorization and delegated gate/unlock recording. Canonical gate
-is true and references APR-019; ignored local unlock exists and matches. Approved
+is true and references APR-020; ignored local unlock exists and matches. Approved
 architecture baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d.
 Standing delegation permits the next approved backlog scope after acceptance and
-local commit; current task stops after Identity commit for Owner push.
+local commit; current task stops after IPS commit for Owner push.
 
 ## Historical foundation authorization and APR-014 labels
 

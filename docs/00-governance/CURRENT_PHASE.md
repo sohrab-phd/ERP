@@ -13,12 +13,13 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner decision (2026-10-07): Identity and authorization is explicitly
-authorized by [APR-019](approved-baselines/APR-019-identity-authorization.md).
-Canonical gate is true and references APR-019; local ignored unlock matches.
+Current Owner decision (2026-10-07): accepted preceding commits were pushed;
+SLICE-IPS is explicitly authorized by
+[APR-020](approved-baselines/APR-020-ips-scope.md).
+Canonical gate is true and references APR-020; local ignored unlock matches.
 Approved architecture baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d.
 Standing delegation permits recording the next approved backlog scope only after
-DoD/tests/reviews/documentation/local commit. This task stops after Identity commit
+DoD/tests/reviews/documentation/local commit. This task stops after IPS commit
 for Owner push; no next slice or remote push is begun.
 
 ## Historical foundation authorization / readiness snapshot
