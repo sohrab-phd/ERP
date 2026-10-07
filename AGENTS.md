@@ -26,6 +26,7 @@
 - Update canonical implementation documentation to describe delivered behavior, limits and deferred work.
 - Before committing review the final diff and relevant checks, including git diff --check.
 - After acceptance create a coherent local commit; report hash, tests, reviews and ready-to-push status.
+- After each accepted, committed major slice report evidence-based ERP progress and the next backlog slice per DEVELOPMENT_WORKFLOW.md; stop for Owner push.
 - Never push remotely or rewrite history without explicit authorization.
 - Obey effective Owner authorization, canonical gate/unlock and [current scope](docs/00-governance/CURRENT_PHASE.md).
 - Never self-authorize implementation or fabricate human approval; tool access is not approval.

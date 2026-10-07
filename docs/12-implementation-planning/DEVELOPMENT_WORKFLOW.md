@@ -3,10 +3,10 @@ id: PLAN-DEV-WORKFLOW-001
 title: ERP capability development workflow
 phase: 12-implementation-planning
 status: accepted
-version: 1.0.0
+version: 1.1.0
 owners: [delivery-lead, chief-solution-architect]
 depends_on: [ADR-0006, ADR-0007, PLAN-IMPLEMENTATION-BACKLOG-001, GOV-CURRENT-001]
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 approval: null
 ---
 
@@ -180,17 +180,52 @@ for the Owner to push; this does not itself send a message to another service.
 
 ```text
 MODULE/Slice: <name>
-STATUS: ACCEPTED | BLOCKED
-TESTS: <actual summary; unavailable checks explicit>
+STATUS: ACCEPTED
+TESTS: <actual test summary>
 REVIEW: PASS | findings
 SECURITY: PASS | findings
 DOCUMENTATION: UPDATED
-COMMIT: <hash or NOT READY>
-READY TO PUSH: YES | NO
+COMMIT: <accepted local implementation commit hash>
+READY TO PUSH: YES
+
+IMPLEMENTED SO FAR:
+1. <first accepted module/slice> — <short delivered responsibility>
+2. <next accepted module/slice> — <short delivered responsibility>
+
+CURRENT PROJECT STATE:
+- <actual implemented capability>
+- <actual implemented capability or important unfinished business area>
+
+NEXT IMPLEMENTATION:
+<next approved backlog slice> — <purpose and major completed dependency, if relevant>
+
+REMAINING MAJOR AREAS:
+<short high-level list of major areas not yet implemented>
 ```
 
 READY TO PUSH is YES only after DoD acceptance and a successful local commit.
 Use engineering ACCEPTED accurately; do not invent human UAT/release approval.
+
+After every accepted major module/slice, include this concise overall ERP progress
+summary in the same completion report. Derive it from actual committed code,
+acceptance/test/review records and the approved backlog, not documentation existence
+or inferred plans. List completed major capabilities in implementation order;
+distinguish foundations/infrastructure from business modules where useful. Do not
+count tooling/process updates as delivered business capabilities or count blocked,
+unfinished or uncommitted implementation as complete.
+
+CURRENT PROJECT STATE has 2–5 short bullets describing what the implemented ERP
+can do, including material limits. NEXT IMPLEMENTATION names the next approved
+backlog slice and its purpose/dependency; naming it is not starting it. REMAINING
+MAJOR AREAS is a short high-level list, not a reproduced backlog. Refresh the
+summary after each accepted slice; do not manufacture percentage-complete figures
+without a meaningful approved metric.
+
+For blocked work retain STATUS: BLOCKED, actual findings/unavailable evidence,
+COMMIT: NOT READY and READY TO PUSH: NO; do not present it as accepted progress.
+After the full accepted-delivery report with READY TO PUSH: YES, stop before the
+next major slice so the Project Owner can push the local commit. Scope-recording
+delegation does not waive this stop, testing/review gates or the no-push rule.
 
 ## Lightweight automation and skill selection
 
