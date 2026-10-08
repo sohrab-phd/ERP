@@ -13,6 +13,7 @@ import {
   type JsonObject,
 } from '@navard/shared-kernel';
 import type {
+  Availability,
   InventoryStore,
   LedgerRow,
   PostingContext,
@@ -413,6 +414,43 @@ export class InventoryPostingService {
     return rows;
   }
 
+  /** Current availability evidence only; this read never allocates or promises stock. */
+  async availability(
+    suppliedContext: PostingContext,
+    supplied: readonly string[],
+  ): Promise<readonly Availability[]> {
+    const context = snapshotContext(suppliedContext);
+    if (!Array.isArray(supplied) || supplied.length === 0 || supplied.length > 16)
+      reject('GUARD_INVARIANT', 'Invalid availability batch');
+    const unitIds = [...(supplied as readonly string[])];
+    unitIds.forEach(uuid);
+    if (new Set(unitIds).size !== unitIds.length)
+      reject('GUARD_INVARIANT', 'Repeated availability unit');
+    const authorize = async (unit?: Unit): Promise<void> => {
+      if (!this.policy.availability || !(await this.policy.availability(context, unit)))
+        reject('GUARD_ACTOR', 'Inventory availability access denied');
+    };
+    await authorize();
+    await this.store.lock(context, [...unitIds].sort(), []);
+    await authorize();
+    const results: Availability[] = [];
+    for (const unitId of unitIds) {
+      const unit = await this.store.unit(context, unitId);
+      if (!unit) reject('GUARD_STATE', 'Inventory unit does not exist');
+      // Organization stock is visible for an explicitly authorized demand assessment.
+      // Customer-owned stock always retains its exact isolation boundary.
+      if (unit.customerScope !== '' && unit.customerScope !== context.actor.customerScope)
+        reject('GUARD_ACTOR', 'Inventory resource access denied');
+      await authorize(unit);
+      const totals = await this.sourceQuantities(context, unit, true);
+      const availableKg =
+        unit.state === 'AVAILABLE'
+          ? parsedStored(totals.onHand).subtract(parsedStored(totals.reserved)).toString()
+          : '0';
+      results.push(Object.freeze({ unitId, kind: unit.kind, state: unit.state, availableKg }));
+    }
+    return Object.freeze(results);
+  }
   async snapshot(suppliedContext: PostingContext, unitId: string): Promise<Quantities> {
     const context = snapshotContext(suppliedContext);
     uuid(unitId);

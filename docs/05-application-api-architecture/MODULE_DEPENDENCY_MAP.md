@@ -18,7 +18,7 @@ module that other modules **command**. Shape is the accepted Modular
 Monolith (ADR-0006). Process split into services, packages, and folder
 layout stay OQ-018 residual.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+The original architecture-phase authorization snapshot was false. Effective Owner implementation scope is now recorded in [CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md); this dependency map does not grant scope.
 
 Quality interactions below are future/deferred architecture only (OQ-005).
 The current MVP has no Quality module dependency, QC execution, or Quality

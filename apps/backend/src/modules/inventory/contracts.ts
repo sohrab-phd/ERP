@@ -24,6 +24,12 @@ export interface Unit {
   customerScope: string;
   state: UnitState;
 }
+export interface Availability {
+  readonly unitId: string;
+  readonly kind: string;
+  readonly state: UnitState;
+  readonly availableKg: string;
+}
 export interface Quantities {
   onHand: string;
   reserved: string;
@@ -111,6 +117,8 @@ export interface InventoryStore {
 }
 /** Owning orchestration supplies business eligibility; unknown production policy stays denied. */
 export interface PostingPolicy {
+  /** Read authority is separate from stock posting and preserves the branded caller context. */
+  availability?(context: PostingContext, unit?: Unit): Promise<boolean>;
   authorize(context: PostingContext): Promise<boolean>;
   validate(
     context: PostingContext,

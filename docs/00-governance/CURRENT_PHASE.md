@@ -3,28 +3,25 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.41.0
+version: 0.42.0
 owners: [chief-solution-architect]
 depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-08
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
 
-Current Owner decision (2026-10-07): accepted IPS commit
-2b98d2c06beb5ae6fc3756a826695b9999abfedf is confirmed pushed. The bounded
-SLICE-PURCHASE receipt increment is explicitly authorized by
-[APR-021](approved-baselines/APR-021-receipt-increment-scope.md).
-Canonical gate is true and references APR-021; local ignored unlock matches.
-Approved architecture baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d.
-Standing delegation permits recording the next approved backlog scope only after
-DoD/tests/reviews/documentation/local commit. This task stops after receipt commit
-for Owner push; no next slice or remote push is begun.
-The [receipt plan](../12-implementation-planning/SLICE_PURCHASE_RECEIPT_PLAN.md)
-records Owner-confirmed ACT-WH manual receiving, no mandatory PO/ticket; no
-additional discrepancy/return/device authority is inferred from implementation permission.
+Current Owner decision (2026-10-08): accepted receipt commit
+a7bf877a85ea9705a506695283c9d77f89a01608 is confirmed pushed. APR-019 standing
+backlog delegation now records [APR-022](approved-baselines/APR-022-sales-demand-scope.md):
+SLICE-STOCK Sales demand/confirmation increment. Canonical gate is true and local
+ignored unlock matches APR-022. Architecture baseline APR-018/e80a04b15ddf93451cc79ccf81722f564912596d is unchanged.
+Current scope is direct demand drafting/submission, STOCK fulfillment assessment,
+confirmation and customer-isolated reads. No reservation, shipment, commercial
+amounts or new factory policy is authorized. Stop after accepted documented local
+commit for Owner review/push. See the [bounded plan](../12-implementation-planning/SLICE_STOCK_DEMAND_PLAN.md).
 
 ## Historical foundation authorization / readiness snapshot
 
@@ -68,7 +65,7 @@ structure. Current foundation implementation uses the Owner-authorized unlock ci
 `APR-*` with a recorded Git commit, exact `allowedWritePaths`, exact
 `allowedShellCommands`, and matching architecture-gate policy.
 
-## Current implementation scope
+## Historical foundation implementation scope
 
 APR-018 and the matching canonical gate/local unlock authorize the frozen
 foundation SLICE-ENVELOPE: workspaces, envelope, durable outcomes, audit,

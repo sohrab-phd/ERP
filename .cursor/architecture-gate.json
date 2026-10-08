@@ -3,7 +3,7 @@
   "mode": "architecture-only",
   "enforcement": "locked",
   "implementationAuthorized": true,
-  "approvedBaseline": "docs/00-governance/approved-baselines/APR-021-receipt-increment-scope.md",
+  "approvedBaseline": "docs/00-governance/approved-baselines/APR-022-sales-demand-scope.md",
   "workspaceRoot": ".",
   "unlockMarker": ".cursor/IMPLEMENTATION_UNLOCK.json",
   "checkpointMarker": ".cursor/PHASE_CHECKPOINT_APPROVAL.json",

@@ -97,9 +97,15 @@ export async function withDatabase<T>(body: (fixture: DatabaseFixture) => Promis
       `GRANT SELECT,INSERT,UPDATE ON inventory.unit,inventory.balance,inventory.reservation TO ${quotedRole}`,
     );
     await owner.query(`GRANT SELECT,INSERT ON inventory.ledger TO ${quotedRole}`);
+    await owner.query(`GRANT USAGE ON SCHEMA sales TO ${quotedRole}`);
+    await owner.query(`GRANT SELECT ON sales.customer TO ${quotedRole}`);
+    await owner.query(
+      `GRANT SELECT,INSERT,UPDATE ON sales.sales_order,sales.fulfillment_assessment TO ${quotedRole}`,
+    );
     await owner.query(`GRANT USAGE ON SCHEMA procurement TO ${quotedRole}`);
     await owner.query(`GRANT SELECT,INSERT,UPDATE ON procurement.goods_receipt TO ${quotedRole}`);
     await owner.query(`GRANT SELECT,INSERT ON inventory.material_lot TO ${quotedRole}`);
+    await owner.query('TRUNCATE sales.sales_order,sales.fulfillment_assessment,sales.customer');
     await owner.query(
       'TRUNCATE inventory.material_lot,procurement.goods_receipt,inventory.ledger,inventory.balance,inventory.reservation,inventory.unit',
     );

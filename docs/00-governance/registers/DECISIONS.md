@@ -278,3 +278,13 @@ admission; receipt document/key identity distinct from nonunique Internal Code;
 Procurement lifecycle and Inventory origin through sole IPS in one envelope
 transaction; whole kg, scoped Sheet code, authenticated stock reads and default
 recovery admission fence. No new business policy/PO/QC/ticket is inferred.
+
+## ADR-0017 — Non-monetary Sales demand and STOCK confirmation
+
+Accepted engineering mechanism within APR-022 backlog progression:
+[ADR-0017](../adrs/ADR-0017-sales-demand-confirmation.md). Customer-scoped personal
+ACT-SALES, immutable demand/specification snapshot with NOT_SUPPLIED monetary terms,
+recorded Ledger-backed STOCK evidence and confirmation without allocation/reservation.
+Sales owns its records; Inventory remains sole quantity owner. One envelope transaction
+preserves state/audit/outcome and current replay disclosure. No commercial policy is
+invented. [Actual delivery](../../12-implementation-planning/SLICE_STOCK_DEMAND_IMPLEMENTATION_STATUS.md).

@@ -3,6 +3,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
+import { validateMigrationSql } from './sql-guard.mjs';
 import { TextDecoder } from 'node:util';
 const inventory = [
   '0001_kernel_schema.sql',
@@ -11,6 +12,7 @@ const inventory = [
   '0004_identity_authorization.sql',
   '0005_inventory_posting.sql',
   '0006_goods_receipt.sql',
+  '0007_sales_demand.sql',
 ];
 export async function loadMigrations(
   directory = fileURLToPath(new URL('../../database/migrations/', import.meta.url)),
@@ -35,10 +37,10 @@ export async function applyMigrations(client, entries, dryRun = false) {
   for (const e of entries) {
     if (
       typeof e.sql !== 'string' ||
-      createHash('sha256').update(e.sql, 'utf8').digest('hex') !== e.sha256 ||
-      /\b(BEGIN|COMMIT|ROLLBACK|CONCURRENTLY|VACUUM)\b/i.test(e.sql.replace(/--[^\n]*/g, ''))
+      createHash('sha256').update(e.sql, 'utf8').digest('hex') !== e.sha256
     )
       throw new Error('Invalid migration content');
+    validateMigrationSql(e.sql);
   }
   await client.query('SELECT pg_advisory_lock(1312903757,1)');
   try {

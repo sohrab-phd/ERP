@@ -2,7 +2,7 @@
 
 This repository is the **design authority** for an integrated ERP/MES for
 Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement, inventory,
-production, quality, shipping, Finance-Lite, genealogy/traceability, and
+production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
 The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
@@ -10,22 +10,20 @@ The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
 [APR-018](docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md).
 Foundation implementation and its acceptance tests pass. See the
 [implementation report](docs/12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
-The Owner now explicitly authorizes SLICE-IPS under
-[APR-020](docs/00-governance/approved-baselines/APR-020-ips-scope.md), after accepted
-Identity and authorization in APR-019.
-See [delivered Identity behavior, API and operator contracts](docs/12-implementation-planning/IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md)
-and [ADR-0014](docs/00-governance/adrs/ADR-0014-local-identity-authorization.md).
-See the [inventory kernel delivery record](docs/12-implementation-planning/SLICE_IPS_IMPLEMENTATION_STATUS.md)
-and [ADR-0015](docs/00-governance/adrs/ADR-0015-inventory-posting-kernel.md).
-The kernel is internal; receipt and other business workflows are not implemented.
-Stop after this accepted local commit for Owner
-push before the next major slice. The legacy Cursor hook does not establish
-technical interception for Codex; agents obey the current human grant.
+Accepted/pushed implementation: SLICE-ENVELOPE, Identity/authorization, IPS and
+manual Goods Receipt (a7bf877a85ea9705a506695283c9d77f89a01608).
+Current next backlog scope is [APR-022](docs/00-governance/approved-baselines/APR-022-sales-demand-scope.md):
+SLICE-STOCK Sales demand/confirmation. The [delivery record](docs/12-implementation-planning/SLICE_STOCK_DEMAND_IMPLEMENTATION_STATUS.md)
+describes customer-isolated non-monetary order drafting/submission, STOCK assessment
+and confirmation. Confirmation neither reserves stock nor guarantees allocation.
+Inventory remains sole writer; pricing, reservation/shipment and other workflows
+are not delivered. Stop after accepted local commit for Owner review/push.
+No remote push is automatic. The trusted-agent grant is not an OS containment boundary.
 
 ```text
-IMPLEMENTATION_AUTHORIZED: true (SLICE-IPS)
+IMPLEMENTATION_AUTHORIZED: true (SLICE-STOCK Sales demand/confirmation increment)
 CURRENT_PHASE: 12-implementation-planning
-NO_IMPLEMENTATION_UNLOCK: false (matching APR-020 local unlock)
+NO_IMPLEMENTATION_UNLOCK: false (matching APR-022 local unlock)
 ```
 
 Authoritative work permission:

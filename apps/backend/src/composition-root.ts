@@ -5,7 +5,13 @@ import {
   executeCommand,
   validUuid,
 } from '@navard/shared-kernel';
-import type { ExecutionContext, ExecutionPorts, TransactionContext } from '@navard/shared-kernel';
+import type {
+  CommandRequest,
+  StableResult,
+  ExecutionContext,
+  ExecutionPorts,
+  TransactionContext,
+} from '@navard/shared-kernel';
 import type { Config } from './config.js';
 import { createPool } from './infrastructure/postgresql/pool.js';
 import { PostgresTransactions } from './infrastructure/postgresql/transaction.js';
@@ -24,6 +30,9 @@ import { InventoryReceiptService } from './modules/inventory/index.js';
 import { ReceiptService, parseReceiptInput } from './modules/procurement/index.js';
 import { PostgresInventoryReceiptStore } from './infrastructure/postgresql/inventory-receipt-store.js';
 import { PostgresReceiptStore } from './infrastructure/postgresql/receipt-store.js';
+import { SalesService, type SalesContext } from './modules/sales/index.js';
+import { PostgresSalesStore } from './infrastructure/postgresql/sales-store.js';
+import { createSalesHandler } from './transport/sales-http.js';
 import { createReceiptHandler } from './transport/receipt-http.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
@@ -67,7 +76,32 @@ export function compose(config: Readonly<Config>) {
     (await current(ctx.actor, ctx.transaction));
   const canPost = async (ctx: ReceiptContext) =>
     ctx.actor.actorRole === 'ACT-WH' && (await current(ctx.actor, ctx.transaction));
+  const salesStore = new PostgresSalesStore();
+  const salesCurrent = (ctx: SalesContext, customerId = ctx.actor.customerScope) =>
+    ctx.actor.actorRole === 'ACT-SALES' &&
+    validUuid(customerId) &&
+    ctx.actor.customerScope === customerId &&
+    ctx.actor.temporary !== true &&
+    identity.isCurrent(ctx.actor, ctx.transaction);
+  const salesResource = async (ctx: SalesContext) => {
+    if (!(await salesCurrent(ctx))) return false;
+    if (['SubmitSalesOrder', 'ConfirmSalesOrder'].includes(ctx.request.command))
+      return (
+        ctx.request.target.kind === 'sales-order' &&
+        (await salesStore.order(ctx, ctx.request.target.id)) !== undefined
+      );
+    if (ctx.request.command === 'RecordFulfillmentStock')
+      return (
+        ctx.request.target.kind === 'fulfillment-assessment' &&
+        (await salesStore.assessment(ctx, ctx.request.target.id)) !== undefined
+      );
+    return false;
+  };
   const inventory = new InventoryPostingService(new PostgresInventoryStore(), {
+    availability: (ctx) =>
+      ['RecordFulfillmentStock', 'ConfirmSalesOrder'].includes(ctx.request.command)
+        ? salesResource(ctx)
+        : Promise.resolve(false),
     authorize: (ctx) =>
       ctx.request.command === 'PostGoodsReceipt'
         ? canPost(ctx)
@@ -104,12 +138,61 @@ export function compose(config: Readonly<Config>) {
     canPost,
     canRead,
   });
+  const sales = new SalesService(
+    salesStore,
+    {
+      readStock: (ctx, ids) => inventory.availability(ctx, ids),
+    },
+    { canAccess: (ctx, id) => Promise.resolve(salesCurrent(ctx, id)) },
+  );
+  const salesPolicies = sales.contracts().map((contract) => ({
+    command: contract.command,
+    version: 1,
+    roles: ['ACT-SALES' as const],
+    canTarget: async (
+      actor: ExecutionContext,
+      request: CommandRequest,
+      tx?: TransactionContext,
+    ) => {
+      if (
+        actor.actorRole !== 'ACT-SALES' ||
+        actor.temporary === true ||
+        !validUuid(actor.customerScope)
+      )
+        return false;
+      if (request.command === 'DraftSalesOrder')
+        return (
+          request.target.kind === 'sales-order' &&
+          request.payload.customerId === actor.customerScope
+        );
+      if (request.command === 'DraftFulfillmentAssessment') {
+        if (request.target.kind !== 'fulfillment-assessment' || !validUuid(request.payload.orderId))
+          return false;
+        return (
+          tx === undefined ||
+          (await salesStore.order({ actor, request, transaction: tx }, request.payload.orderId)) !==
+            undefined
+        );
+      }
+      if (!tx)
+        return (
+          request.target.kind ===
+          (request.command === 'RecordFulfillmentStock' ? 'fulfillment-assessment' : 'sales-order')
+        );
+      return salesResource({ actor, request, transaction: tx });
+    },
+    canDisclose: (actor: ExecutionContext, _request: CommandRequest, result: StableResult) =>
+      Promise.resolve(
+        result.outcome === 'rejected' || result.data?.customerId === actor.customerScope,
+      ),
+  }));
   const ports: ExecutionPorts = {
-    registry: new CommandRegistry([receipts.contract()]),
+    registry: new CommandRegistry([receipts.contract(), ...sales.contracts()]),
     transactions,
     outcomes: new PostgresOutcomes(),
     audits: new PostgresAudit(),
     authorization: new IdentityAuthorization(identity, [
+      ...salesPolicies,
       {
         command: 'PostGoodsReceipt',
         version: 1,
@@ -172,10 +255,51 @@ export function compose(config: Readonly<Config>) {
       await tx.release();
     }
   };
+  const salesQuery = async (
+    kind: 'GetSalesOrder' | 'GetFulfillmentAssessment',
+    id: string,
+    actor: ExecutionContext,
+  ) => {
+    if (!validUuid(id) || !['GetSalesOrder', 'GetFulfillmentAssessment'].includes(kind))
+      throw new BusinessRejection({ family: 'GUARD_INVARIANT', message: 'Invalid Sales query' });
+    const tx = await transactions.begin();
+    try {
+      const ctx = {
+        actor,
+        transaction: tx.context,
+        request: {
+          command: kind,
+          contract_version: 1,
+          idempotency_key: randomUUID(),
+          target: { kind: 'query', id },
+          payload: {},
+          preconditions: {},
+        },
+      };
+      if (!(await salesCurrent(ctx)))
+        throw new BusinessRejection({ family: 'GUARD_ACTOR', message: 'Sales access denied' });
+      const result =
+        kind === 'GetSalesOrder'
+          ? await sales.getOrder(ctx, id)
+          : await sales.getAssessment(ctx, id);
+      await tx.commit();
+      return result
+        ? Object.fromEntries(
+            Object.entries(result).filter(([key]) => key !== 'binding' && key !== 'orderBinding'),
+          )
+        : undefined;
+    } catch (error) {
+      await tx.rollback();
+      throw error;
+    } finally {
+      await tx.release();
+    }
+  };
   const server = createHttpHost({
     ping: () => pingDatabase(pool),
     identity: createIdentityHandler(identity),
     receipt: createReceiptHandler({ identity, command, query }),
+    sales: createSalesHandler({ identity, command, query: salesQuery }),
   });
   return {
     server,
@@ -183,6 +307,8 @@ export function compose(config: Readonly<Config>) {
     identity,
     inventory,
     receipts,
+    sales,
+    salesQuery,
     command,
     query,
     async start() {

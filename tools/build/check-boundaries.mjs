@@ -33,9 +33,12 @@ for (const file of files) {
     if (name.startsWith('.')) {
       const target = resolve(dirname(file), name.replace(/\.js$/, '.ts'));
       if (
-        ['inventory-store.ts', 'inventory-receipt-store.ts', 'receipt-store.ts'].some(
-          (name) => target === resolve('apps/backend/src/infrastructure/postgresql', name),
-        ) &&
+        [
+          'inventory-store.ts',
+          'inventory-receipt-store.ts',
+          'receipt-store.ts',
+          'sales-store.ts',
+        ].some((name) => target === resolve('apps/backend/src/infrastructure/postgresql', name)) &&
         file.startsWith(resolve('apps/backend/src') + sep) &&
         file !== resolve('apps/backend/src/composition-root.ts')
       )
@@ -102,6 +105,13 @@ for (const file of files) {
       file !== resolve('apps/backend/src/infrastructure/postgresql/receipt-store.ts')
     )
       issues.push(relative(root, file) + ': receipt SQL outside persistence owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\bsales\.(customer|sales_order|fulfillment_assessment)\b/i.test(node.text) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/sales-store.ts')
+    )
+      issues.push(relative(root, file) + ': Sales SQL outside persistence owner');
     if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier)
       check(node.moduleSpecifier);
     if (

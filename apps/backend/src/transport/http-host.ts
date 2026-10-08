@@ -5,12 +5,20 @@ export interface HealthOptions {
   ping: () => Promise<void>;
   probeTimeoutMs?: number;
   identity?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
+  sales?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
   receipt?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
 }
 export function createHttpHost(options: HealthOptions): Server {
   const server = createServer(
     { maxHeaderSize: 8192, headersTimeout: 5000, requestTimeout: 10000, keepAliveTimeout: 5000 },
     (request, response) => {
+      if (options.sales && request.url?.startsWith('/sales/')) {
+        void options.sales(request, response).catch(() => {
+          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+          else response.destroy();
+        });
+        return;
+      }
       if (
         options.receipt &&
         (request.url?.startsWith('/receipts/') || request.url?.startsWith('/inventory/'))

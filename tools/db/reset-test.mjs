@@ -75,7 +75,7 @@ export async function resetTestDatabase(env = process.env) {
     client = await pool.connect();
     client.on('error', onError);
     await client.query(
-      'DROP SCHEMA IF EXISTS envelope_test CASCADE;DROP SCHEMA IF EXISTS procurement CASCADE;DROP SCHEMA IF EXISTS inventory CASCADE;DROP SCHEMA IF EXISTS identity CASCADE;DROP SCHEMA IF EXISTS kernel CASCADE',
+      'DROP SCHEMA IF EXISTS envelope_test CASCADE;DROP SCHEMA IF EXISTS sales CASCADE;DROP SCHEMA IF EXISTS procurement CASCADE;DROP SCHEMA IF EXISTS inventory CASCADE;DROP SCHEMA IF EXISTS identity CASCADE;DROP SCHEMA IF EXISTS kernel CASCADE',
     );
     await applyMigrations(client, await loadMigrations());
     await client.query('GRANT USAGE ON SCHEMA kernel TO ' + quote(identity.runtimeRole));
@@ -100,6 +100,12 @@ export async function resetTestDatabase(env = process.env) {
         quote(identity.runtimeRole),
     );
     await client.query('GRANT SELECT,INSERT ON inventory.ledger TO ' + quote(identity.runtimeRole));
+    await client.query('GRANT USAGE ON SCHEMA sales TO ' + quote(identity.runtimeRole));
+    await client.query('GRANT SELECT ON sales.customer TO ' + quote(identity.runtimeRole));
+    await client.query(
+      'GRANT SELECT,INSERT,UPDATE ON sales.sales_order,sales.fulfillment_assessment TO ' +
+        quote(identity.runtimeRole),
+    );
     await client.query('GRANT USAGE ON SCHEMA procurement TO ' + quote(identity.runtimeRole));
     await client.query(
       'GRANT SELECT,INSERT,UPDATE ON procurement.goods_receipt TO ' + quote(identity.runtimeRole),

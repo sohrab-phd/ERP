@@ -13,14 +13,17 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current scope: [APR-020](../00-governance/approved-baselines/APR-020-ips-scope.md)
-explicitly authorizes SLICE-IPS (capability 3) after accepted
-foundation and Identity. Standing scope-recording delegation is limited to accepted backlog
-progression. Stop after this capability's accepted local commit for Owner push.
-No OQ/business answer changes. See [actual Identity delivery](IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md).
-See [IPS plan/DoD](SLICE_IPS_IMPLEMENTATION_PLAN.md),
-[delivery evidence](SLICE_IPS_IMPLEMENTATION_STATUS.md) and
-[ADR-0015](../00-governance/adrs/ADR-0015-inventory-posting-kernel.md).
+Current scope: [APR-022](../00-governance/approved-baselines/APR-022-sales-demand-scope.md)
+records SLICE-STOCK's first demand/confirmation increment after accepted/pushed
+foundation, Identity, IPS and manual receipt a7bf877a85ea9705a506695283c9d77f89a01608.
+Standing scope delegation applies only to approved backlog progression after DoD,
+tests, reviews, documentation and local commit. Stop for Owner review/push.
+See [Sales bounded plan](SLICE_STOCK_DEMAND_PLAN.md),
+[actual implementation](SLICE_STOCK_DEMAND_IMPLEMENTATION_STATUS.md),
+[review evidence](SLICE_STOCK_DEMAND_REVIEW.md) and
+[ADR-0017](../00-governance/adrs/ADR-0017-sales-demand-confirmation.md).
+No OQ/business answer is changed. Reservation is the next separate increment;
+shipping/monetary/other Sales capabilities remain outside this delivery.
 
 Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers

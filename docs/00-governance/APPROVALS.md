@@ -704,3 +704,13 @@ review and authorization.
   No fabricated approval signature or broader OQ closure.
 - Stop after accepted tested/reviewed/documented local receipt commit for Owner
   review/push; no next major slice or remote push.
+
+### APR-022 — Sales demand/confirmation backlog increment
+
+- [Actual scope-recording authority](approved-baselines/APR-022-sales-demand-scope.md):
+  Owner confirms accepted receipt a7bf877a85ea9705a506695283c9d77f89a01608 pushed
+  and directs approved-cycle continuation under APR-019 standing delegation.
+- Current bounded scope is SLICE-STOCK demand/confirmation, not reservation/shipment,
+  pricing/quotation amounts or full Sales/Procurement. Architecture APR-018 is unchanged.
+- Gate/local unlock match APR-022; stop after accepted documented local commit for
+  Owner review/push. No new human business answer, fabricated signature or remote push.

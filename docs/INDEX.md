@@ -282,10 +282,10 @@ Phase 12 approval is not an implementation unlock. Team answers were
 recorded `2026-09-15`. Workshop execution remains blocked by OQ-019
 names. These are historical structure-checkpoint statements.
 
-Current Owner decision: [APR-020](00-governance/approved-baselines/APR-020-ips-scope.md)
+Historical IPS Owner decision: [APR-020](00-governance/approved-baselines/APR-020-ips-scope.md)
 authorizes SLICE-IPS after accepted foundation and Identity. Approved architecture
-baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d; current
-gate/local unlock match APR-020. See [kernel plan](12-implementation-planning/SLICE_IPS_IMPLEMENTATION_PLAN.md),
+baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d; then-current
+gate/local unlock matched APR-020. See [kernel plan](12-implementation-planning/SLICE_IPS_IMPLEMENTATION_PLAN.md),
 [delivery](12-implementation-planning/SLICE_IPS_IMPLEMENTATION_STATUS.md) and
 [ADR-0015](00-governance/adrs/ADR-0015-inventory-posting-kernel.md).
 No next slice, remote push or deployment is begun.
@@ -297,3 +297,16 @@ No next slice, remote push or deployment is begun.
 - [Receipt bounded plan](12-implementation-planning/SLICE_PURCHASE_RECEIPT_PLAN.md)
 - [Actual receipt implementation](12-implementation-planning/SLICE_PURCHASE_RECEIPT_IMPLEMENTATION_STATUS.md)
 - [Independent receipt review closure](12-implementation-planning/SLICE_PURCHASE_RECEIPT_REVIEW.md)
+
+## Current Sales demand/confirmation increment — 2026-10-08
+
+Receipt a7bf877a85ea9705a506695283c9d77f89a01608 is accepted/pushed; current
+scope follows the Owner's standing backlog delegation. No new business policy implied.
+
+- [Current scoped authority](00-governance/approved-baselines/APR-022-sales-demand-scope.md)
+- [ADR-0017 non-monetary demand/confirmation](00-governance/adrs/ADR-0017-sales-demand-confirmation.md)
+- [Sales bounded plan/DoD](12-implementation-planning/SLICE_STOCK_DEMAND_PLAN.md)
+- [Actual Sales implementation](12-implementation-planning/SLICE_STOCK_DEMAND_IMPLEMENTATION_STATUS.md)
+- [Independent review closure](12-implementation-planning/SLICE_STOCK_DEMAND_REVIEW.md)
+
+No reservation/shipment, commercial amounts or next major slice is begun.
