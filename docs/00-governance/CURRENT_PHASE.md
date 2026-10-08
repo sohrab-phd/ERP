@@ -3,7 +3,7 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.42.0
+version: 0.43.0
 owners: [chief-solution-architect]
 depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-08
@@ -13,15 +13,8 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner decision (2026-10-08): accepted receipt commit
-a7bf877a85ea9705a506695283c9d77f89a01608 is confirmed pushed. APR-019 standing
-backlog delegation now records [APR-022](approved-baselines/APR-022-sales-demand-scope.md):
-SLICE-STOCK Sales demand/confirmation increment. Canonical gate is true and local
-ignored unlock matches APR-022. Architecture baseline APR-018/e80a04b15ddf93451cc79ccf81722f564912596d is unchanged.
-Current scope is direct demand drafting/submission, STOCK fulfillment assessment,
-confirmation and customer-isolated reads. No reservation, shipment, commercial
-amounts or new factory policy is authorized. Stop after accepted documented local
-commit for Owner review/push. See the [bounded plan](../12-implementation-planning/SLICE_STOCK_DEMAND_PLAN.md).
+Current Owner decision (2026-10-08): accepted Sales demand/confirmation commit280aa8b4918e05cf091daff4b7b06306b6f7ebc6 is confirmed pushed. Owner explicitly authorizes [APR-023](approved-baselines/APR-023-reservation-increment-scope.md), SLICE-STOCK reservation increment. Gate remains true; local ignored unlock matches APR-023. Architecture APR-018/e80a04b15ddf93451cc79ccf81722f564912596d unchanged.
+Current scope: RequestReservation, ActivateReservation and scoped GetReservation; Inventory-owned evidence, IPS-only stock effects, confirmed-demand priority and no stealing/TTL. Shipment, release/consumption/cancellation, money and new factory policy excluded. Stop after accepted documented local commit for Owner push. See [plan](../12-implementation-planning/SLICE_STOCK_RESERVATION_PLAN.md).
 
 ## Historical foundation authorization / readiness snapshot
 

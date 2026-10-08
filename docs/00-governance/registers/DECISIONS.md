@@ -288,3 +288,7 @@ recorded Ledger-backed STOCK evidence and confirmation without allocation/reserv
 Sales owns its records; Inventory remains sole quantity owner. One envelope transaction
 preserves state/audit/outcome and current replay disclosure. No commercial policy is
 invented. [Actual delivery](../../12-implementation-planning/SLICE_STOCK_DEMAND_IMPLEMENTATION_STATUS.md).
+
+## ADR-0018 — Inventory request and atomic reservation activation
+
+[Accepted engineering mechanism](../adrs/ADR-0018-inventory-reservation-activation.md) within APR-023 Owner scope: immutable no-quantity REQUESTED intent, sole IPS activation, exact confirmation precedence with real ACTIVE coverage, individual/scoped command/query policies and durable atomic audit/outcome. No TTL, steal, cancellation/consumption, shipment or new OQ answer.

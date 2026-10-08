@@ -264,7 +264,15 @@ export class InventoryPostingService {
     const rows: LedgerRow[] = [];
     for (const effect of effects) {
       let unit = await this.store.unit(context, effect.unitId);
-      if (unit) this.visible(context, unit);
+      if (
+        unit &&
+        !(
+          context.request.command === 'ActivateReservation' &&
+          effect.type === 'RESERVE' &&
+          unit.customerScope === ''
+        )
+      )
+        this.visible(context, unit);
       const binding = canonicalJson({
         command: context.request.command,
         version: context.request.contract_version,

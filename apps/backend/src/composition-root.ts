@@ -26,6 +26,9 @@ import { InventoryPostingService } from './modules/inventory/index.js';
 import type { PostingContext } from './modules/inventory/index.js';
 import type { ReceiptContext } from './modules/procurement/index.js';
 import { PostgresInventoryStore } from './infrastructure/postgresql/inventory-store.js';
+import { ReservationService } from './modules/inventory/index.js';
+import { PostgresReservationRequestStore } from './infrastructure/postgresql/inventory-reservation-store.js';
+import { createReservationHandler } from './transport/reservation-http.js';
 import { InventoryReceiptService } from './modules/inventory/index.js';
 import { ReceiptService, parseReceiptInput } from './modules/procurement/index.js';
 import { PostgresInventoryReceiptStore } from './infrastructure/postgresql/inventory-receipt-store.js';
@@ -97,18 +100,45 @@ export function compose(config: Readonly<Config>) {
       );
     return false;
   };
-  const inventory = new InventoryPostingService(new PostgresInventoryStore(), {
-    availability: (ctx) =>
-      ['RecordFulfillmentStock', 'ConfirmSalesOrder'].includes(ctx.request.command)
-        ? salesResource(ctx)
-        : Promise.resolve(false),
+  const reservationCurrent = async (ctx: PostingContext, customerId: string, requesting = false) =>
+    validUuid(customerId) &&
+    ctx.actor.temporary !== true &&
+    (ctx.actor.actorRole === 'ACT-SALES'
+      ? ctx.actor.customerScope === customerId
+      : !requesting && ctx.actor.actorRole === 'ACT-WH' && org(ctx.actor)) &&
+    (await identity.isCurrent(ctx.actor, ctx.transaction));
+  const inventoryStore = new PostgresInventoryStore();
+  const reservationStore = new PostgresReservationRequestStore();
+  const inventory: InventoryPostingService = new InventoryPostingService(inventoryStore, {
+    availability: async (ctx, unit) => {
+      if (
+        !['RecordFulfillmentStock', 'ConfirmSalesOrder'].includes(ctx.request.command) ||
+        !(await salesResource(ctx))
+      )
+        return false;
+      if (!unit || unit.state === 'AVAILABLE') return true;
+      return (
+        unit.state === 'RESERVED' &&
+        (await reservationStore.activeCustomer(ctx, unit.id)) === ctx.actor.customerScope
+      );
+    },
     authorize: (ctx) =>
-      ctx.request.command === 'PostGoodsReceipt'
-        ? canPost(ctx)
-        : ['GetInventoryUnit', 'GetLot'].includes(ctx.request.command)
-          ? canRead(ctx)
-          : Promise.resolve(false),
+      ctx.request.command === 'ActivateReservation'
+        ? Promise.resolve(
+            ctx.actor.temporary !== true &&
+              (ctx.actor.actorRole === 'ACT-SALES'
+                ? validUuid(ctx.actor.customerScope)
+                : ctx.actor.actorRole === 'ACT-WH' && org(ctx.actor)) &&
+              identity.isCurrent(ctx.actor, ctx.transaction),
+          )
+        : ctx.request.command === 'PostGoodsReceipt'
+          ? canPost(ctx)
+          : ['GetInventoryUnit', 'GetLot'].includes(ctx.request.command)
+            ? canRead(ctx)
+            : Promise.resolve(false),
     validate: (ctx, effect, unit) => {
+      if (ctx.request.command === 'ActivateReservation')
+        return reservations.validateEffect(ctx, effect, unit);
       const input = parseReceiptInput(ctx.request.payload);
       return Promise.resolve(
         ctx.request.command === 'PostGoodsReceipt' &&
@@ -127,7 +157,11 @@ export function compose(config: Readonly<Config>) {
             },
       );
     },
-    maintain: (ctx, unit) => (unit.customerScope === '' ? canRead(ctx) : Promise.resolve(false)),
+    reservationPriority: (ctx, effect, unit) => reservations.priorityForEffect(ctx, effect, unit),
+    maintain: (ctx, unit) =>
+      unit.customerScope === '' && unit.state === 'AVAILABLE'
+        ? canRead(ctx)
+        : Promise.resolve(false),
   });
   const receiptInventory = new InventoryReceiptService(
     new PostgresInventoryReceiptStore(),
@@ -143,8 +177,71 @@ export function compose(config: Readonly<Config>) {
     {
       readStock: (ctx, ids) => inventory.availability(ctx, ids),
     },
-    { canAccess: (ctx, id) => Promise.resolve(salesCurrent(ctx, id)) },
+    {
+      canAccess: (ctx, id) => Promise.resolve(salesCurrent(ctx, id)),
+      canReserve: (ctx, id) =>
+        ['RequestReservation', 'ActivateReservation', 'GetReservation'].includes(
+          ctx.request.command,
+        )
+          ? reservationCurrent(ctx, id, ctx.request.command === 'RequestReservation')
+          : Promise.resolve(false),
+    },
   );
+  const reservations: ReservationService = new ReservationService(
+    reservationStore,
+    inventoryStore,
+    inventory,
+    {
+      demand: (ctx, id, customerId) => sales.reservationDemand(ctx, id, customerId),
+      competitors: (ctx, demand, unitId) =>
+        sales.reservationCompetitors(ctx, demand.id, demand.customerId, unitId),
+    },
+    {
+      canRequest: (ctx, id) => reservationCurrent(ctx, id, true),
+      canActivate: reservationCurrent,
+      canRead: (ctx, id) =>
+        ctx.actor.actorRole === 'ACT-SALES'
+          ? reservationCurrent(ctx, id, true)
+          : Promise.resolve(false),
+    },
+  );
+  const reservationPolicies = reservations.contracts().map((contract) => ({
+    command: contract.command,
+    version: 1,
+    roles:
+      contract.command === 'RequestReservation'
+        ? ['ACT-SALES' as const]
+        : ['ACT-SALES' as const, 'ACT-WH' as const],
+    canTarget: async (
+      actor: ExecutionContext,
+      request: CommandRequest,
+      tx?: TransactionContext,
+    ) => {
+      if (
+        request.target.kind !== 'reservation' ||
+        !validUuid(request.target.id) ||
+        actor.temporary === true
+      )
+        return false;
+      if (
+        actor.actorRole === 'ACT-SALES'
+          ? !validUuid(actor.customerScope)
+          : request.command !== 'ActivateReservation' || actor.actorRole !== 'ACT-WH' || !org(actor)
+      )
+        return false;
+      if (!tx || request.command === 'RequestReservation') return true;
+      return (
+        (await reservationStore.get({ actor, request, transaction: tx }, request.target.id)) !==
+        undefined
+      );
+    },
+    canDisclose: (actor: ExecutionContext, _request: CommandRequest, result: StableResult) =>
+      Promise.resolve(
+        result.outcome === 'rejected' ||
+          (actor.actorRole === 'ACT-WH' && org(actor)) ||
+          result.data?.customerId === actor.customerScope,
+      ),
+  }));
   const salesPolicies = sales.contracts().map((contract) => ({
     command: contract.command,
     version: 1,
@@ -187,12 +284,17 @@ export function compose(config: Readonly<Config>) {
       ),
   }));
   const ports: ExecutionPorts = {
-    registry: new CommandRegistry([receipts.contract(), ...sales.contracts()]),
+    registry: new CommandRegistry([
+      receipts.contract(),
+      ...sales.contracts(),
+      ...reservations.contracts(),
+    ]),
     transactions,
     outcomes: new PostgresOutcomes(),
     audits: new PostgresAudit(),
     authorization: new IdentityAuthorization(identity, [
       ...salesPolicies,
+      ...reservationPolicies,
       {
         command: 'PostGoodsReceipt',
         version: 1,
@@ -295,11 +397,46 @@ export function compose(config: Readonly<Config>) {
       await tx.release();
     }
   };
+  const reservationQuery = async (id: string, actor: ExecutionContext) => {
+    if (!validUuid(id))
+      throw new BusinessRejection({
+        family: 'GUARD_INVARIANT',
+        message: 'Invalid reservation query',
+      });
+    const tx = await transactions.begin();
+    try {
+      const ctx = {
+        actor,
+        transaction: tx.context,
+        request: {
+          command: 'GetReservation',
+          contract_version: 1,
+          idempotency_key: randomUUID(),
+          target: { kind: 'reservation', id },
+          payload: {},
+          preconditions: {},
+        },
+      };
+      const result = await reservations.get(ctx, id);
+      await tx.commit();
+      return result
+        ? Object.fromEntries(
+            Object.entries(result).filter(([key]) => !['binding', 'orderBinding'].includes(key)),
+          )
+        : undefined;
+    } catch (error) {
+      await tx.rollback();
+      throw error;
+    } finally {
+      await tx.release();
+    }
+  };
   const server = createHttpHost({
     ping: () => pingDatabase(pool),
     identity: createIdentityHandler(identity),
     receipt: createReceiptHandler({ identity, command, query }),
     sales: createSalesHandler({ identity, command, query: salesQuery }),
+    reservation: createReservationHandler({ identity, command, query: reservationQuery }),
   });
   return {
     server,
@@ -309,6 +446,8 @@ export function compose(config: Readonly<Config>) {
     receipts,
     sales,
     salesQuery,
+    reservations,
+    reservationQuery,
     command,
     query,
     async start() {

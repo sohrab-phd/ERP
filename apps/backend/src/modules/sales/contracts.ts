@@ -53,6 +53,22 @@ export interface FulfillmentAssessment {
 /** Sales-owned persistence; all lookups are customer-scoped on the supplied transaction. */
 export interface SalesStore {
   lockOrder(context: SalesContext, id: string): Promise<void>;
+  reservationOrder?(
+    context: SalesContext,
+    id: string,
+    customerId: string,
+  ): Promise<SalesOrder | undefined>;
+  reservationAssessment?(
+    context: SalesContext,
+    id: string,
+    customerId: string,
+  ): Promise<FulfillmentAssessment | undefined>;
+  reservationCompetitors?(
+    context: SalesContext,
+    orderId: string,
+    customerId: string,
+    unitId: string,
+  ): Promise<readonly ReservationCompetitor[]>;
   customer(context: SalesContext, id: string): Promise<Customer | undefined>;
   order(context: SalesContext, id: string): Promise<SalesOrder | undefined>;
   createOrder(context: SalesContext, order: SalesOrder): Promise<void>;
@@ -76,6 +92,20 @@ export interface SalesStore {
 export interface InventorySalesPort {
   readStock(context: SalesContext, unitIds: readonly string[]): Promise<readonly StockView[]>;
 }
+export interface ReservationCompetitor {
+  orderId: string;
+  itemId: string;
+  demandedKg: string;
+}
+export interface ReservationDemandView {
+  id: string;
+  customerId: string;
+  binding: string;
+  confirmedAt: string;
+  items: readonly { id: string; type: string; demandedKg: string }[];
+  selections: readonly StockSelection[];
+}
 export interface SalesPolicy {
   canAccess(context: SalesContext, customerId: string): Promise<boolean>;
+  canReserve?(context: SalesContext, customerId: string): Promise<boolean>;
 }

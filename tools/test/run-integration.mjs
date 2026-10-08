@@ -15,6 +15,8 @@ const files = [
   'receipt-http',
   'sales',
   'sales-http',
+  'reservation',
+  'reservation-http',
 ].map((f) => 'apps/backend/dist/tests/integration/' + f + '.test.js');
 for (const f of files)
   if (!existsSync(f)) throw new Error('Missing compiled integration test: ' + f);

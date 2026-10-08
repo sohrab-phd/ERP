@@ -100,6 +100,10 @@ export async function resetTestDatabase(env = process.env) {
         quote(identity.runtimeRole),
     );
     await client.query('GRANT SELECT,INSERT ON inventory.ledger TO ' + quote(identity.runtimeRole));
+    await client.query(
+      'GRANT SELECT,INSERT,UPDATE ON inventory.reservation_request TO ' +
+        quote(identity.runtimeRole),
+    );
     await client.query('GRANT USAGE ON SCHEMA sales TO ' + quote(identity.runtimeRole));
     await client.query('GRANT SELECT ON sales.customer TO ' + quote(identity.runtimeRole));
     await client.query(

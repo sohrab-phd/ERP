@@ -6,6 +6,7 @@ import type {
   FulfillmentAssessment,
   StockSelection,
   StockView,
+  ReservationCompetitor,
 } from '../../modules/sales/index.js';
 import { transactionClient } from './transaction.js';
 const scope = (ctx: SalesContext) => [
@@ -25,6 +26,57 @@ function record<T>(row: object | undefined): T | undefined {
 }
 /** All resource lookups bind installation, authority AND customer; only Sales writes these records. */
 export class PostgresSalesStore implements SalesStore {
+  async reservationOrder(
+    ctx: SalesContext,
+    id: string,
+    customerId: string,
+  ): Promise<SalesOrder | undefined> {
+    return record(
+      (
+        await transactionClient(ctx.transaction).query<Record<string, unknown>>(
+          'SELECT ' +
+            orderColumns +
+            ' FROM sales.sales_order WHERE installation_id=$1 AND authority_scope=$2 AND order_id=$3 AND customer_id=$4',
+          [ctx.actor.installationId, ctx.actor.authorityScopeId, id, customerId],
+        )
+      ).rows[0],
+    );
+  }
+  async reservationAssessment(
+    ctx: SalesContext,
+    id: string,
+    customerId: string,
+  ): Promise<FulfillmentAssessment | undefined> {
+    return record(
+      (
+        await transactionClient(ctx.transaction).query<Record<string, unknown>>(
+          'SELECT ' +
+            assessmentColumns +
+            ' FROM sales.fulfillment_assessment WHERE installation_id=$1 AND authority_scope=$2 AND assessment_id=$3 AND customer_id=$4',
+          [ctx.actor.installationId, ctx.actor.authorityScopeId, id, customerId],
+        )
+      ).rows[0],
+    );
+  }
+  async reservationCompetitors(
+    ctx: SalesContext,
+    orderId: string,
+    customerId: string,
+    unitId: string,
+  ): Promise<readonly ReservationCompetitor[]> {
+    const result = await transactionClient(ctx.transaction).query<ReservationCompetitor>(
+      `SELECT other_order.order_id AS "orderId",item->>'id' AS "itemId",item->>'demandedKg' AS "demandedKg"
+      FROM sales.sales_order own JOIN sales.sales_order other_order ON other_order.installation_id=own.installation_id AND other_order.authority_scope=own.authority_scope
+      JOIN sales.fulfillment_assessment a ON a.installation_id=other_order.installation_id AND a.authority_scope=other_order.authority_scope AND a.assessment_id=other_order.confirmed_assessment_id
+      CROSS JOIN LATERAL jsonb_array_elements(other_order.items) item
+      WHERE own.installation_id=$1 AND own.authority_scope=$2 AND own.order_id=$3 AND own.customer_id=$4 AND own.state='CONFIRMED' AND other_order.state='CONFIRMED'
+      AND (other_order.confirmed_at,other_order.order_id)<(own.confirmed_at,own.order_id)
+      AND EXISTS(SELECT 1 FROM jsonb_array_elements(a.selections) selection WHERE selection->>'itemId'=item->>'id' AND selection->'unitIds' ? $5)
+      ORDER BY other_order.confirmed_at,other_order.order_id`,
+      [ctx.actor.installationId, ctx.actor.authorityScopeId, orderId, customerId, unitId],
+    );
+    return result.rows;
+  }
   async lockOrder(ctx: SalesContext, id: string) {
     await transactionClient(ctx.transaction).query<Record<string, unknown>>(
       'SELECT pg_advisory_xact_lock(hashtextextended($1,0))',

@@ -714,3 +714,9 @@ review and authorization.
   pricing/quotation amounts or full Sales/Procurement. Architecture APR-018 is unchanged.
 - Gate/local unlock match APR-022; stop after accepted documented local commit for
   Owner review/push. No new human business answer, fabricated signature or remote push.
+
+### APR-023 — Reservation backlog increment
+
+- [Actual Owner confirmation](approved-baselines/APR-023-reservation-increment-scope.md): Sales280aa8b4918e05cf091daff4b7b06306b6f7ebc6 accepted/pushed, explicit reservation continuation.
+- Gate/local unlock match APR-023; architecture APR-018 unchanged. Inventory-owned Request/Activate and Sales-scoped reads only, no shipment/cancellation/expiry. No new business answer or fabricated signature.
+- Stop after accepted local commit for Owner review/push; never push automatically.

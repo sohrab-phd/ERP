@@ -31,6 +31,8 @@ import {
   type InventorySalesPort,
   type StockSelection,
   type StockView,
+  type ReservationDemandView,
+  type ReservationCompetitor,
 } from './contracts.js';
 
 const commands = [
@@ -525,6 +527,73 @@ export class SalesService {
         confirmedAt: confirmed.confirmedAt!,
       },
     };
+  }
+  /** Inventory calls this read port; no stock mutation or forged customer context. */
+  async reservationDemand(
+    supplied: SalesContext,
+    orderId: string,
+    customerId: string,
+  ): Promise<ReservationDemandView | undefined> {
+    const context = snapshot(supplied);
+    if (
+      !validUuid(orderId) ||
+      !validUuid(customerId) ||
+      !this.policy.canReserve ||
+      !(await this.policy.canReserve(context, customerId))
+    )
+      reject('GUARD_ACTOR', 'Reservation demand access denied');
+    if (!this.store.reservationOrder || !this.store.reservationAssessment)
+      throw new TechnicalError('incompatible');
+    const order = await this.store.reservationOrder(context, orderId, customerId);
+    if (
+      !order ||
+      order.state !== 'CONFIRMED' ||
+      !order.confirmedAssessmentId ||
+      !validTime(order.confirmedAt)
+    )
+      return undefined;
+    const assessment = await this.store.reservationAssessment(
+      context,
+      order.confirmedAssessmentId,
+      customerId,
+    );
+    if (
+      !assessment ||
+      assessment.state !== 'RECORDED' ||
+      assessment.orderId !== order.id ||
+      assessment.orderBinding !== order.binding ||
+      !assessment.selections
+    )
+      throw new TechnicalError('incompatible');
+    if (!(await this.policy.canReserve(context, customerId)))
+      reject('GUARD_ACTOR', 'Reservation demand access denied');
+    return frozen({
+      id: order.id,
+      customerId: order.customerId,
+      binding: order.binding,
+      confirmedAt: order.confirmedAt!,
+      items: order.items.map(({ id, type, demandedKg }) => ({ id, type, demandedKg })),
+      selections: assessment.selections,
+    });
+  }
+  /** Internal minimal contender evidence; never exported through command/query HTTP. Exact PG timestamps remain in SQL. */
+  async reservationCompetitors(
+    supplied: SalesContext,
+    orderId: string,
+    customerId: string,
+    unitId: string,
+  ): Promise<readonly ReservationCompetitor[]> {
+    const context = snapshot(supplied);
+    if (
+      !validUuid(orderId) ||
+      !validUuid(customerId) ||
+      !validUuid(unitId) ||
+      !this.policy.canReserve ||
+      !(await this.policy.canReserve(context, customerId))
+    )
+      reject('GUARD_ACTOR', 'Reservation demand access denied');
+    if (!this.store.reservationCompetitors) throw new TechnicalError('incompatible');
+    return this.store.reservationCompetitors(context, orderId, customerId, unitId);
   }
   async getOrder(supplied: SalesContext, id: string): Promise<SalesOrder | undefined> {
     const context = snapshot(supplied);

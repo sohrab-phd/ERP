@@ -38,6 +38,7 @@ for (const file of files) {
           'inventory-receipt-store.ts',
           'receipt-store.ts',
           'sales-store.ts',
+          'inventory-reservation-store.ts',
         ].some((name) => target === resolve('apps/backend/src/infrastructure/postgresql', name)) &&
         file.startsWith(resolve('apps/backend/src') + sep) &&
         file !== resolve('apps/backend/src/composition-root.ts')
@@ -88,7 +89,13 @@ for (const file of files) {
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
       /\binventory\.(unit|ledger|balance|reservation)\b/i.test(node.text) &&
       file.startsWith(resolve('apps/backend/src') + sep) &&
-      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-store.ts')
+      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-store.ts') &&
+      !(
+        file ===
+          resolve('apps/backend/src/infrastructure/postgresql/inventory-reservation-store.ts') &&
+        /\bSELECT\b/i.test(node.text) &&
+        !/\b(INSERT|UPDATE|DELETE|TRUNCATE|ALTER|DROP|CREATE|GRANT|REVOKE)\b/i.test(node.text)
+      )
     )
       issues.push(relative(root, file) + ': inventory SQL outside sole persistence owner');
     if (
@@ -112,6 +119,13 @@ for (const file of files) {
       file !== resolve('apps/backend/src/infrastructure/postgresql/sales-store.ts')
     )
       issues.push(relative(root, file) + ': Sales SQL outside persistence owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\binventory\.reservation_request\b/i.test(node.text) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-reservation-store.ts')
+    )
+      issues.push(relative(root, file) + ': reservation SQL outside Inventory owner');
     if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier)
       check(node.moduleSpecifier);
     if (

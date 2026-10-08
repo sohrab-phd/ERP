@@ -290,7 +290,7 @@ gate/local unlock matched APR-020. See [kernel plan](12-implementation-planning/
 [ADR-0015](00-governance/adrs/ADR-0015-inventory-posting-kernel.md).
 No next slice, remote push or deployment is begun.
 
-## Current receipt increment — 2026-10-08
+## Accepted receipt increment — 2026-10-08
 
 - [Owner manual-receiving policy/scope](00-governance/approved-baselines/APR-021-receipt-increment-scope.md)
 - [ADR-0016 atomic manual receipt](00-governance/adrs/ADR-0016-manual-goods-receipt.md)
@@ -298,7 +298,7 @@ No next slice, remote push or deployment is begun.
 - [Actual receipt implementation](12-implementation-planning/SLICE_PURCHASE_RECEIPT_IMPLEMENTATION_STATUS.md)
 - [Independent receipt review closure](12-implementation-planning/SLICE_PURCHASE_RECEIPT_REVIEW.md)
 
-## Current Sales demand/confirmation increment — 2026-10-08
+## Accepted Sales demand/confirmation increment — 2026-10-08
 
 Receipt a7bf877a85ea9705a506695283c9d77f89a01608 is accepted/pushed; current
 scope follows the Owner's standing backlog delegation. No new business policy implied.
@@ -309,4 +309,16 @@ scope follows the Owner's standing backlog delegation. No new business policy im
 - [Actual Sales implementation](12-implementation-planning/SLICE_STOCK_DEMAND_IMPLEMENTATION_STATUS.md)
 - [Independent review closure](12-implementation-planning/SLICE_STOCK_DEMAND_REVIEW.md)
 
-No reservation/shipment, commercial amounts or next major slice is begun.
+This demand increment alone did not reserve/ship stock or introduce commercial amounts. See current reservation increment below.
+
+## Current reservation increment — 2026-10-08
+
+Owner confirms Sales280aa8b4918e05cf091daff4b7b06306b6f7ebc6 pushed and explicitly authorizes reservation.
+
+- [APR-023 authority](00-governance/approved-baselines/APR-023-reservation-increment-scope.md)
+- [ADR-0018 request/activation](00-governance/adrs/ADR-0018-inventory-reservation-activation.md)
+- [Plan/DoD](12-implementation-planning/SLICE_STOCK_RESERVATION_PLAN.md)
+- [Actual implementation](12-implementation-planning/SLICE_STOCK_RESERVATION_IMPLEMENTATION_STATUS.md)
+- [Independent review](12-implementation-planning/SLICE_STOCK_RESERVATION_REVIEW.md)
+
+No shipment/release/consumption, commercial amounts or next major slice started; stop after accepted local commit for Owner push.

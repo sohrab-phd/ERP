@@ -10,21 +10,9 @@ The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
 [APR-018](docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md).
 Foundation implementation and its acceptance tests pass. See the
 [implementation report](docs/12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
-Accepted/pushed implementation: SLICE-ENVELOPE, Identity/authorization, IPS and
-manual Goods Receipt (a7bf877a85ea9705a506695283c9d77f89a01608).
-Current next backlog scope is [APR-022](docs/00-governance/approved-baselines/APR-022-sales-demand-scope.md):
-SLICE-STOCK Sales demand/confirmation. The [delivery record](docs/12-implementation-planning/SLICE_STOCK_DEMAND_IMPLEMENTATION_STATUS.md)
-describes customer-isolated non-monetary order drafting/submission, STOCK assessment
-and confirmation. Confirmation neither reserves stock nor guarantees allocation.
-Inventory remains sole writer; pricing, reservation/shipment and other workflows
-are not delivered. Stop after accepted local commit for Owner review/push.
-No remote push is automatic. The trusted-agent grant is not an OS containment boundary.
+Accepted/pushed foundation, Identity, IPS, receipt and Sales demand/confirmation280aa8b4918e05cf091daff4b7b06306b6f7ebc6. Owner explicitly authorizes current [APR-023 reservation increment](docs/00-governance/approved-baselines/APR-023-reservation-increment-scope.md). [Delivery](docs/12-implementation-planning/SLICE_STOCK_RESERVATION_IMPLEMENTATION_STATUS.md) describes Inventory-owned no-quantity request intent and sole IPS atomic activation, exact earlier-demand priority, customer-scoped reads and audit/idempotency. Confirmation alone still does not reserve stock. Shipment, release/consume/cancel/expiry and monetary behavior remain outside this delivery. Stop after accepted local commit for Owner review/push; never push automatically.
 
-```text
-IMPLEMENTATION_AUTHORIZED: true (SLICE-STOCK Sales demand/confirmation increment)
-CURRENT_PHASE: 12-implementation-planning
-NO_IMPLEMENTATION_UNLOCK: false (matching APR-022 local unlock)
-```
+IMPLEMENTATION_AUTHORIZED: true (SLICE-STOCK reservation increment); gate/local unlock match APR-023.
 
 Authoritative work permission:
 [docs/00-governance/CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md).

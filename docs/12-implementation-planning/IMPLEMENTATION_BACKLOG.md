@@ -13,17 +13,7 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current scope: [APR-022](../00-governance/approved-baselines/APR-022-sales-demand-scope.md)
-records SLICE-STOCK's first demand/confirmation increment after accepted/pushed
-foundation, Identity, IPS and manual receipt a7bf877a85ea9705a506695283c9d77f89a01608.
-Standing scope delegation applies only to approved backlog progression after DoD,
-tests, reviews, documentation and local commit. Stop for Owner review/push.
-See [Sales bounded plan](SLICE_STOCK_DEMAND_PLAN.md),
-[actual implementation](SLICE_STOCK_DEMAND_IMPLEMENTATION_STATUS.md),
-[review evidence](SLICE_STOCK_DEMAND_REVIEW.md) and
-[ADR-0017](../00-governance/adrs/ADR-0017-sales-demand-confirmation.md).
-No OQ/business answer is changed. Reservation is the next separate increment;
-shipping/monetary/other Sales capabilities remain outside this delivery.
+Current scope: [APR-023](../00-governance/approved-baselines/APR-023-reservation-increment-scope.md), SLICE-STOCK reservation increment after Owner-confirmed pushed Sales280aa8b4918e05cf091daff4b7b06306b6f7ebc6. RequestReservation/ActivateReservation and exact-customer GetReservation; no shipment/release/consume/cancellation/expiry or money. See [plan](SLICE_STOCK_RESERVATION_PLAN.md), [delivery](SLICE_STOCK_RESERVATION_IMPLEMENTATION_STATUS.md), [review](SLICE_STOCK_RESERVATION_REVIEW.md), [ADR-0018](../00-governance/adrs/ADR-0018-inventory-reservation-activation.md). No OQ/business answer changed. Stop after accepted documented local commit for Owner push. Shipment is next bounded increment, with live residual policies checked before affected commands.
 
 Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers
