@@ -157,11 +157,16 @@ Shipment completion does not by itself close the Sales Order.
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | DRAFT | DraftGoodsReceipt | ACT-PROC | authorized PO or inbound reference (INV-018) | Procurement writes GR | GoodsReceiptDrafted |
+| (none) | DRAFT | DraftGoodsReceipt | ACT-PROC; individual ACT-WH for internally composed normal manual intake | authorized purchasing reference where applicable; APR-021 manual intake requires no mandatory PO/ticket | Procurement writes GR | GoodsReceiptDrafted |
 | DRAFT | RECEIVED | ReceiveGoods | ACT-PROC / ACT-WH | physical receive evidence | Procurement writes GR; no current-MVP QC request | GoodsReceived |
 | RECEIVED | QC_HOLD | HoldInboundForQc | ACT-QC | **Future Quality only**; `open: OQ-005` | Quality writes inspection; commands Inventory hold; does not write stock | GoodsReceiptQcHeld |
 | RECEIVED (or future `QC_HOLD`) | POSTED | PostGoodsReceipt | ACT-IPS | Accepted command guards pass; no current-MVP QC approval; future QC may apply INV-010 only if later enabled. OQ-015 opening stock is separate. | Inventory posts Lot/Unit/Ledger; valid normal resulting Unit is `AVAILABLE` on commit (INV-003). Procurement does not write quantity. | GoodsReceiptPosted |
 | POSTED | POSTED (reversal) | ReverseGoodsReceipt | ACT-IPS | INV-005; normal receipt reversal is separate from OQ-015 opening-stock correction | new reversing Ledger rows | GoodsReceiptReversed |
+
+APR-021 normal manual increment exposes one PostGoodsReceipt action by a current
+individual ACT-WH commander; ACT-IPS executes quantity effects. The action
+records DRAFT -> RECEIVED -> POSTED within its atomic bundle, without extra user
+steps, Procurement posting authority, mandatory PO/ticket or a QC gate.
 
 ## SM-RESERVATION
 

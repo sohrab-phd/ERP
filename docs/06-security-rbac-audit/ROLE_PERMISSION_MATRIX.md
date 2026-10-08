@@ -57,7 +57,8 @@ with the owning bounded context.
 | Purchase Order draft/submit/send | ACT-PROC | no | no |
 | ApprovePurchaseOrder | ACT-PROC | no | named approver OQ-019 |
 | ReceiveGoods / DraftGoodsReceipt | ACT-PROC or ACT-WH | no (orchestration) | no |
-| PostGoodsReceipt / ReverseGoodsReceipt | commander ACT-PROC or ACT-WH; executor ACT-IPS | ACT-IPS | Reverse: different human (OQ-015, OQ-019) |
+| PostGoodsReceipt — normal manual MVP intake | individual ACT-WH; executor ACT-IPS; ACT-PROC has no second posting authority | ACT-IPS | no — Owner confirmation APR-021 |
+| ReverseGoodsReceipt — later scope | architectural commander ACT-PROC or ACT-WH; authority remains OQ-015/OQ-019 | ACT-IPS | different human; not implemented by receipt increment |
 | Reservation activate/consume/release | commander ACT-SALES or ACT-WH; executor ACT-IPS | ACT-IPS | no |
 | Unit lifecycle except return-after-ship | commander ACT-WH or ACT-OP; executor ACT-IPS | ACT-IPS | no |
 | ReturnUnit after SHIPPED | commander ACT-SHIP or ACT-WH; executor ACT-IPS | ACT-IPS | different from dispatcher (OQ-019) |

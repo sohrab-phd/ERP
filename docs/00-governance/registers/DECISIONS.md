@@ -269,3 +269,12 @@ No new hook, installer or OS-enforcement prerequisite is introduced.
   mandatory; no stock HTTP route, QC, business bundle or second writer introduced.
 - OQ-001 technical capacity subdecision is resolved; its factory/business residuals
   and all other OQ statuses remain unchanged. Evidence: [IPS delivery](../../12-implementation-planning/SLICE_IPS_IMPLEMENTATION_STATUS.md).
+
+## ADR-0016 — Atomic manual Goods Receipt
+
+Accepted engineering decision in actual APR-021 Owner scope/policy:
+[ADR-0016](../adrs/ADR-0016-manual-goods-receipt.md). WH-only personal manual
+admission; receipt document/key identity distinct from nonunique Internal Code;
+Procurement lifecycle and Inventory origin through sole IPS in one envelope
+transaction; whole kg, scoped Sheet code, authenticated stock reads and default
+recovery admission fence. No new business policy/PO/QC/ticket is inferred.

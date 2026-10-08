@@ -1794,3 +1794,17 @@ receipt, over-receipt, under-receipt, and receipt cancellation or
 correction. No procurement tolerance and no procurement payment workflow
 are defined. No mandatory link from an intake record to a purchase
 record is defined.
+
+## Normal manual receiving — Owner confirmation 2026-10-07
+
+[APR-021](../approved-baselines/APR-021-receipt-increment-scope.md) records
+actual Owner clarification for the bounded receipt increment: individual ACT-WH
+may post normal manual Goods Receipt, through Inventory/IPS only. ACT-PROC is
+not a second stock-posting authority. No mandatory PO, invented external ticket,
+global Internal Code uniqueness or duplicate identity is supplied. Retain the
+receipt document UUID and existing bound command key across retry. Intake facts
+remain Internal Code, descriptive Count, whole measured kg and Type; no fake
+Coil parent for standalone Sheet. No QC or receiving discrepancy/tolerance,
+return/correction policy is introduced. This supersedes the earlier open
+normal-manual-receiving authority sentence only. Actual named grants remain
+Go-Live/configuration, and other procurement/device/OQ-011 residuals stay open.

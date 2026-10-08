@@ -11,6 +11,11 @@ void test('configuration validates once, default values, stable ID and immutable
   assert.equal(c.port, 3000);
   assert.equal(c.host, '127.0.0.1');
   assert.ok(Object.isFrozen(c));
+  assert.equal(c.commandAdmissionReconciled, false);
+  assert.equal(
+    loadConfig({ ...env, COMMAND_ADMISSION_RECONCILED: 'true' }).commandAdmissionReconciled,
+    true,
+  );
 });
 void test('invalid configuration fails without disclosing credentials', () => {
   for (const change of [
@@ -21,6 +26,7 @@ void test('invalid configuration fails without disclosing credentials', () => {
     { PORT: '12.5' },
     { HOST: 'bad host' },
     { LOG_LEVEL: 'trace' },
+    { COMMAND_ADMISSION_RECONCILED: 'yes' },
   ])
     assert.throws(() => loadConfig({ ...env, ...change }));
 });

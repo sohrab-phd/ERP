@@ -1001,7 +1001,7 @@ void test('Identity HTTP rejects unsafe framing, body claims, duplicate JSON fie
   });
 });
 
-void test('production composition exposes only Identity and health routes with no fixture business commands', async () => {
+void test('production composition exposes Identity and bounded receipt routes with no fixture business commands', async () => {
   await withDatabase(async (db) => {
     const { accountId } = await setup(db);
     await db.owner.query(

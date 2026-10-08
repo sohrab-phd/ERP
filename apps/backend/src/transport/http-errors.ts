@@ -1,9 +1,5 @@
 import type { ServerResponse } from 'node:http';
-export function respond(
-  response: ServerResponse,
-  status: number,
-  value: Readonly<Record<string, string>>,
-): void {
+export function respond(response: ServerResponse, status: number, value: unknown): void {
   response.writeHead(status, {
     'content-type': 'application/json; charset=utf-8',
     'cache-control': 'no-store',

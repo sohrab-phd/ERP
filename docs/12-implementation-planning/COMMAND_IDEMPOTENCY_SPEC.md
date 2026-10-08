@@ -164,7 +164,12 @@ a new key. 40P01/40001/timeouts/connections/audit outage are technical, not guar
 Accepted replay is not GUARD_IDEMPOTENT_DUP. DUP is only different-key semantic
 duplicate under a registered owner rule. CompleteProductionOperation new-key
 duplicate remains GUARD_CONFLICT (DATA-TX-001); do not replace it with DUP.
-Receipt natural identity remains dependent on OQ-011. Nested production primitives
+Normal manual receipt uses its stable recorded Goods Receipt UUID plus the
+existing bound command key under Owner confirmation APR-021; no mandatory ticket,
+PO or globally unique Internal Code is inferred. Different-key matching receipt
+UUID rejects DUP; changed intake rejects CONFLICT. Distinct receipt UUIDs are not
+automatically classified as the same physical intake. Actual external/device
+natural identity remains dependent on OQ-011. Nested production primitives
 share their outer execution/key and never independently post. Unique SQL error
 alone does not establish matching authorized fact content.
 

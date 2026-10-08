@@ -289,3 +289,11 @@ gate/local unlock match APR-020. See [kernel plan](12-implementation-planning/SL
 [delivery](12-implementation-planning/SLICE_IPS_IMPLEMENTATION_STATUS.md) and
 [ADR-0015](00-governance/adrs/ADR-0015-inventory-posting-kernel.md).
 No next slice, remote push or deployment is begun.
+
+## Current receipt increment — 2026-10-08
+
+- [Owner manual-receiving policy/scope](00-governance/approved-baselines/APR-021-receipt-increment-scope.md)
+- [ADR-0016 atomic manual receipt](00-governance/adrs/ADR-0016-manual-goods-receipt.md)
+- [Receipt bounded plan](12-implementation-planning/SLICE_PURCHASE_RECEIPT_PLAN.md)
+- [Actual receipt implementation](12-implementation-planning/SLICE_PURCHASE_RECEIPT_IMPLEMENTATION_STATUS.md)
+- [Independent receipt review closure](12-implementation-planning/SLICE_PURCHASE_RECEIPT_REVIEW.md)

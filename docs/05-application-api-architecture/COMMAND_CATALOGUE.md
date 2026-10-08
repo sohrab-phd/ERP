@@ -22,7 +22,7 @@ Every command requires a caller-supplied idempotency key and a backend
 `ACT-*` role (INV-015, INV-016). Quantity fields stay `open: OQ-001` /
 `OQ-002`. Portal order commands are rejected in MVP (INV-020).
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Implementation authority follows [current bounded scope](../00-governance/CURRENT_PHASE.md) and the canonical gate/unlock; the earlier locked snapshot is historical.
 
 Quality commands listed below are future/deferred architecture under
 OQ-005. They are not current-MVP commands or dependencies. No current

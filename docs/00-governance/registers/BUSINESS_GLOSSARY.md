@@ -189,7 +189,9 @@ does not convert them into owner-signed business policy.
 - Persian: رسید کالا / رسید مواد
 - Aliases: GoodsReceipt, MaterialReceipt
 - Definition: Controlled record of goods physically received against a
-  purchasing or other authorized inbound reference, before or with coordinated
+  purchasing or other authorized inbound reference where applicable; APR-021 normal
+  manual intake requires neither a purchase record nor an invented ticket. Before
+  or with coordinated
   quality and Inventory posting. Factory intake (`2026-09-30`): one station
   with Mr. Karimi records Internal Code, Count, Weight, and Type for Coil,
   Sheet, angle, beam, and similar materials. Count is descriptive. Weight

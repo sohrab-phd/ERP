@@ -4,6 +4,8 @@ import { performance } from 'node:perf_hooks';
 import { parseBoundedJson } from '@navard/shared-kernel';
 import { IdentityError, type IdentityService, type HumanRole } from '../modules/identity/index.js';
 
+export { token as sessionToken, body as requestJson };
+
 function reply(response: ServerResponse, status: number, value: unknown) {
   response.writeHead(status, {
     'content-type': 'application/json; charset=utf-8',

@@ -20,7 +20,9 @@ Threats against the approved Phase 05 command and query structure.
 This does not choose a firewall, identity provider, or package
 (OQ-018). Named attackers or named owners stay OQ-019.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Implementation authority follows [current scope](../00-governance/CURRENT_PHASE.md)
+and the canonical gate/unlock; the earlier locked snapshot is superseded by
+the Owner's bounded implementation authorization. Tool access grants no new scope.
 
 ## Trust boundaries
 

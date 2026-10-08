@@ -14,8 +14,8 @@ supersedes: null
 # Phase 12 — Implementation Planning
 
 Current implementation authority is
-[APR-020](../00-governance/approved-baselines/APR-020-ips-scope.md),
-for SLICE-IPS after accepted foundation and Identity; architecture baseline
+[APR-021](../00-governance/approved-baselines/APR-021-receipt-increment-scope.md),
+for the receipt increment after accepted foundation, Identity and IPS; architecture baseline
 remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d. See the
 [Identity implementation record](IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md).
 See [IPS plan](SLICE_IPS_IMPLEMENTATION_PLAN.md),
@@ -24,6 +24,8 @@ See [IPS plan](SLICE_IPS_IMPLEMENTATION_PLAN.md),
 See [live readiness](IMPLEMENTATION_READINESS.md) and the frozen
 [physical design](SLICE_ENVELOPE_PHYSICAL_DESIGN.md). The APR-014 structure gate
 and architecture-only statements below are historical; no Phase 13 is created.
+
+See [receipt plan](SLICE_PURCHASE_RECEIPT_PLAN.md), [actual receipt delivery](SLICE_PURCHASE_RECEIPT_IMPLEMENTATION_STATUS.md), [review closure](SLICE_PURCHASE_RECEIPT_REVIEW.md) and [ADR-0016](../00-governance/adrs/ADR-0016-manual-goods-receipt.md).
 
 ## Gate
 

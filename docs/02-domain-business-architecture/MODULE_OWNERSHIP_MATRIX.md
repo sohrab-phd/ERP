@@ -184,3 +184,13 @@ would fork GOV-DATA-DICT-001.
 - Self-check: [SELF_CHECK.md](SELF_CHECK.md)
 - Independent review: [INDEPENDENT_REVIEW.md](INDEPENDENT_REVIEW.md)
 - Reconciliation: [RECONCILIATION.md](RECONCILIATION.md)
+
+## Current manual receipt-origin implementation
+
+Within APR-021, [ADR-0016](../00-governance/adrs/ADR-0016-manual-goods-receipt.md)
+implements Inventory-owned material_lot receipt-origin facts and IPS-only stock
+mutation. Procurement owns Goods Receipt and calls the public Inventory port;
+ACT-WH is the normal manual commander, not a second writer. This technical
+physical implementation clarifies the current bounded owner port and does not
+fabricate workshop confirmation or alter ENT-MATERIAL-LOT's recorded historical
+business-validation flag. Broader material-master behavior remains later scope.

@@ -17,7 +17,7 @@ Read models. Queries do not write Ledger, Balance, or posted documents.
 Customer isolation applies (INV-015). Portal visibility is a Sales-owned
 read (OQ-010 recorded). Portal ordering remains rejected in MVP.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Implementation authority follows [current bounded scope](../00-governance/CURRENT_PHASE.md) and the canonical gate/unlock; the earlier locked snapshot is historical.
 
 ## Queries that may be named now
 

@@ -193,7 +193,10 @@ durable replay, audit, concurrency and compensating-correction contracts.
   rejection when a required receiving policy is missing.
 - **Acceptance:** physical receipt evidence and its single stock fact reconcile;
   queries agree with committed Ledger truth; accepted receipt never double-posts.
-- **Out of scope/residuals:** intake identity/authority/discrepancy policy are B;
+- **Owner-confirmed normal manual policy:** APR-021 permits personal ACT-WH only,
+  no mandatory PO/ticket; Internal Code is nonunique. Stable receipt document UUID
+  plus bound command key covers replay; no guessed cross-document deduplication.
+- **Out of scope/residuals:** device identity/discrepancy/returns policy is later B;
   OQ-011 automatic scale integration is B for that path, with accepted human
   ticket fallback. OQ-015 opening-stock tooling/cutover is separate B/D. No
   invented procurement tolerance or warehouse transformation command.

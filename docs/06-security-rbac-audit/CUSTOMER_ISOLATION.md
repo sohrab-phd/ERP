@@ -21,19 +21,23 @@ This is not a multi-tenant product choice. OQ-013 records one legal entity and
 principal site; another site requires architecture reopen. OQ-010 records
 visibility-only portal MVP, with the approved document whitelist still unresolved.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Implementation authority follows [current scope](../00-governance/CURRENT_PHASE.md)
+and the canonical gate/unlock; the earlier locked snapshot is superseded by
+the Owner's bounded implementation authorization. Isolation remains mandatory.
 
 ## Isolation key
 
-Every query, export, file, `EventNotice`, and `LiveNotice` that
-carries commercial or stock content must present a customer isolation
-key. A missing key is `GUARD_INVARIANT`, not an implicit “all
-customers.”
+Every query, export, file, `EventNotice`, and `LiveNotice` carrying commercial
+or customer-allocated/reserved stock content must present the owning customer
+isolation key. A missing key is `GUARD_INVARIANT`, never implicit all-customers
+access. Internal roles remain constrained to their permitted customer resources.
 
-Internal roles (ACT-SALES, ACT-WH, ACT-FIN, ACT-SEC) still operate
-inside that key. They do not receive an unscoped dump unless a later
-explicit `SEC-*` exception is approved. No such exception is written
-here.
+Unallocated mill intake is not a customer document: authorized ACT-WH stock
+and ACT-SEC audit reads use the recorded installation/single-site authority
+scope (OQ-013). This is a narrow organizational-stock rule, not an exception
+allowing a customer-wide dump or cross-customer access. Customer actors cannot
+use these internal receipt/stock routes. Allocating stock later must apply the
+owning demand's customer rule; current manual intake has no customer allocation.
 
 ## Surfaces that must isolate
 

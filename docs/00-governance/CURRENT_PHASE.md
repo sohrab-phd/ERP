@@ -13,14 +13,18 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner decision (2026-10-07): accepted preceding commits were pushed;
-SLICE-IPS is explicitly authorized by
-[APR-020](approved-baselines/APR-020-ips-scope.md).
-Canonical gate is true and references APR-020; local ignored unlock matches.
+Current Owner decision (2026-10-07): accepted IPS commit
+2b98d2c06beb5ae6fc3756a826695b9999abfedf is confirmed pushed. The bounded
+SLICE-PURCHASE receipt increment is explicitly authorized by
+[APR-021](approved-baselines/APR-021-receipt-increment-scope.md).
+Canonical gate is true and references APR-021; local ignored unlock matches.
 Approved architecture baseline remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d.
 Standing delegation permits recording the next approved backlog scope only after
-DoD/tests/reviews/documentation/local commit. This task stops after IPS commit
+DoD/tests/reviews/documentation/local commit. This task stops after receipt commit
 for Owner push; no next slice or remote push is begun.
+The [receipt plan](../12-implementation-planning/SLICE_PURCHASE_RECEIPT_PLAN.md)
+records Owner-confirmed ACT-WH manual receiving, no mandatory PO/ticket; no
+additional discrepancy/return/device authority is inferred from implementation permission.
 
 ## Historical foundation authorization / readiness snapshot
 

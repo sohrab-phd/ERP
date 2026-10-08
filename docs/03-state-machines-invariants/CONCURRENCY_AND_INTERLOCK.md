@@ -148,6 +148,10 @@ moment. Human reusability recording/authority stays OQ-009; measurement-based cl
   physical receipt: the second must fail `GUARD_IDEMPOTENT_DUP` or
   `GUARD_CONFLICT` once identity of the receipt is established. How
   weighbridge identity is established stays OQ-011.
+- Owner confirmation APR-021: normal manual intake requires no invented ticket
+  or mandatory PO. Retain the receipt document UUID and command key across retry;
+  Internal Code is nonunique. Matching receipt UUID/new key gives DUP, changed
+  intake CONFLICT. Distinct receipt UUIDs cannot be guessed physically duplicate.
 - Opening-stock posting authority stays OQ-015.
 
 Procurement never posts quantity (INV-018).

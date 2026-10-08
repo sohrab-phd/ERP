@@ -693,3 +693,14 @@ review and authorization.
   delegation remains bounded to accepted backlog progression.
 - Stop after accepted/tested/reviewed/documented local IPS commit for Owner push;
   no next slice or remote push. No fabricated approval signature/OQ answer.
+
+### APR-021 — Manual Goods Receipt increment
+
+- [Actual Owner scope and business policy](approved-baselines/APR-021-receipt-increment-scope.md):
+  accepted IPS2b98d2c06beb5ae6fc3756a826695b9999abfedf was confirmed pushed;
+  bounded receipt increment authorized, then ACT-WH-only personal manual receipt
+  clarified without mandatory PO/ticket/Internal Code uniqueness or QC/tolerance.
+- Architecture remains APR-018; current gate/local unlock reference APR-021.
+  No fabricated approval signature or broader OQ closure.
+- Stop after accepted tested/reviewed/documented local receipt commit for Owner
+  review/push; no next major slice or remote push.
