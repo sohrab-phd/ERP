@@ -6,7 +6,7 @@ import type {
 } from '../../modules/inventory/index.js';
 import { transactionClient } from './transaction.js';
 const columns =
-  'reservation_id AS id,order_id AS "orderId",item_id AS "itemId",unit_id AS "unitId",customer_id AS "customerId",kg::text AS kg,binding,order_binding AS "orderBinding",confirmed_at AS "confirmedAt",state,requested_at AS "requestedAt",activated_at AS "activatedAt"';
+  'reservation_id AS id,order_id AS "orderId",item_id AS "itemId",unit_id AS "unitId",customer_id AS "customerId",kg::text AS kg,binding,order_binding AS "orderBinding",confirmed_at AS "confirmedAt",state,requested_at AS "requestedAt",activated_at AS "activatedAt",dispatch_id AS "dispatchId",consumed_at AS "consumedAt"';
 const scope = (ctx: PostingContext): [string, string] => [
   ctx.actor.installationId,
   ctx.actor.authorityScopeId,
@@ -63,16 +63,36 @@ export class PostgresReservationRequestStore implements ReservationRequestStore 
     if (!row) throw new TechnicalError('incompatible');
     return row.kg;
   }
-  /** Internal priority proof only; never returns another customer's document. */
+  /** Internal monotone demand coverage: live claims plus verified consumed outbound facts. */
   async activeKg(ctx: PostingContext, orderId: string, itemId: string): Promise<string> {
     const row = (
       await transactionClient(ctx.transaction).query<{ kg: string }>(
-        "SELECT COALESCE(SUM(r.kg),0)::text AS kg FROM inventory.reservation_request q JOIN inventory.reservation r ON r.installation_id=q.installation_id AND r.authority_scope=q.authority_scope AND r.reservation_id=q.reservation_id AND r.unit_id=q.unit_id AND r.demand_id=q.order_id AND r.kg=q.kg WHERE q.installation_id=$1 AND q.authority_scope=$2 AND q.order_id=$3 AND q.item_id=$4 AND q.state='ACTIVE' AND r.state='ACTIVE'",
+        "SELECT COALESCE(SUM(r.kg),0)::text AS kg FROM inventory.reservation_request q JOIN inventory.reservation r ON r.installation_id=q.installation_id AND r.authority_scope=q.authority_scope AND r.reservation_id=q.reservation_id AND r.unit_id=q.unit_id AND r.demand_id=q.order_id AND r.kg=q.kg WHERE q.installation_id=$1 AND q.authority_scope=$2 AND q.order_id=$3 AND q.item_id=$4 AND ((q.state='ACTIVE' AND r.state='ACTIVE') OR (q.state='CONSUMED' AND r.state='CONSUMED' AND EXISTS(SELECT 1 FROM inventory.ledger l WHERE l.installation_id=q.installation_id AND l.authority_scope=q.authority_scope AND l.unit_id=q.unit_id AND l.effect_id=q.out_effect_id AND l.source_fact_id=q.dispatch_id AND l.command_id='DispatchShipment' AND l.on_hand_delta=-q.kg AND l.reserved_delta=0) AND EXISTS(SELECT 1 FROM inventory.ledger l WHERE l.installation_id=q.installation_id AND l.authority_scope=q.authority_scope AND l.unit_id=q.unit_id AND l.effect_id=q.consume_effect_id AND l.source_fact_id=q.dispatch_id AND l.command_id='DispatchShipment' AND l.on_hand_delta=0 AND l.reserved_delta=-q.kg)))",
         [...scope(ctx), orderId, itemId],
       )
     ).rows[0];
     if (!row) throw new TechnicalError('incompatible');
     return row.kg;
+  }
+  async consume(
+    ctx: PostingContext,
+    id: string,
+    shipmentId: string,
+    releaseEffectId: string,
+    outEffectId: string,
+  ): Promise<void> {
+    const result = await transactionClient(ctx.transaction).query(
+      "UPDATE inventory.reservation_request SET state='CONSUMED',dispatch_id=$4,consume_effect_id=$5,out_effect_id=$6,consumed_at=clock_timestamp() WHERE installation_id=$1 AND authority_scope=$2 AND reservation_id=$3 AND state='ACTIVE' AND customer_id::text=$7",
+      [
+        ...scope(ctx),
+        id,
+        shipmentId,
+        releaseEffectId,
+        outEffectId,
+        ctx.actor.customerScope ?? null,
+      ],
+    );
+    if (result.rowCount !== 1) throw new TechnicalError('incompatible');
   }
   async create(ctx: PostingContext, request: ReservationRequest): Promise<ReservationRequest> {
     const created = record(

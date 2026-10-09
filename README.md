@@ -10,14 +10,14 @@ The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
 [APR-018](docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md).
 Foundation implementation and its acceptance tests pass. See the
 [implementation report](docs/12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
-Accepted/pushed foundation, Identity, IPS, receipt and Sales demand/confirmation280aa8b4918e05cf091daff4b7b06306b6f7ebc6. Owner explicitly authorizes current [APR-023 reservation increment](docs/00-governance/approved-baselines/APR-023-reservation-increment-scope.md). [Delivery](docs/12-implementation-planning/SLICE_STOCK_RESERVATION_IMPLEMENTATION_STATUS.md) describes Inventory-owned no-quantity request intent and sole IPS atomic activation, exact earlier-demand priority, customer-scoped reads and audit/idempotency. Confirmation alone still does not reserve stock. Shipment, release/consume/cancel/expiry and monetary behavior remain outside this delivery. Stop after accepted local commit for Owner review/push; never push automatically.
+Accepted/pushed foundation, Identity, IPS, receipt, Sales demand and reservation807ab190d49ebb3bd4e3419e09c28de4bc656faf. Owner authorizes [APR-024 normal shipment increment](docs/00-governance/approved-baselines/APR-024-shipment-increment-scope.md). [Current shipment delivery](docs/12-implementation-planning/SLICE_STOCK_SHIPMENT_IMPLEMENTATION_STATUS.md) records scoped individual ACT-SHIP preparation/packing/loading/dispatch, complete reserved Units and IPS-only atomic exit. No payment/invoice gate, physical split, exceptional shipment or customer delivery; dispatch does not close or fulfill Sales. Stop after accepted local commit for Owner review/push.
 
-IMPLEMENTATION_AUTHORIZED: true (SLICE-STOCK reservation increment); gate/local unlock match APR-023.
+IMPLEMENTATION_AUTHORIZED: true (SLICE-STOCK shipment increment); gate/local unlock match APR-024.
 
 Authoritative work permission:
 [docs/00-governance/CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md).
 
-## Foundation developer workflow
+## Developer workflow
 
 For significant capabilities use the
 [ERP development workflow](docs/12-implementation-planning/DEVELOPMENT_WORKFLOW.md):
@@ -61,9 +61,9 @@ For those migration commands, MIGRATION_DATABASE_URL selects the dev DDL role;
 DATABASE_URL is the distinct dev runtime role. Set NODE_ENV=development,
 INSTALLATION_ID to the installation's stable UUID and optionally HOST/PORT/
 LOG_LEVEL. After the migration, grant runtime only the above object privileges
-using the local database administrator. `npm run start` exposes GET /health/live
-and /health/ready only. Readiness verifies PG18.6/UTF-8 with a bounded probe;
-there is no production command, synthetic identity, fixture or business route.
+using the local database administrator. Current business privileges: inventory USAGE and SELECT/INSERT/UPDATE on unit/balance/reservation/reservation_request, SELECT/INSERT on ledger/material_lot; procurement USAGE and SELECT/INSERT/UPDATE on goods_receipt; sales USAGE with customer SELECT and sales_order/fulfillment_assessment SELECT/INSERT/UPDATE; shipping USAGE with package/package_content/shipment SELECT/INSERT/UPDATE and dispatch SELECT/INSERT only. No history DELETE, runtime DDL or direct user SQL endpoint.
+`npm run start` exposes health, personal identity and the delivered receipt/Sales/reservation/shipping routes. Readiness verifies PG18.6/UTF-8 with a bounded probe;
+no synthetic production identity or fixture is installed.
 Shutdown closes the listener and pool. JSON logs exclude payload/results/URLs/
 credentials and unknown fields.
 
@@ -71,7 +71,7 @@ Integration sequence: NODE_ENV=test, TEST_DATABASE_URL selects test runtime,
 MIGRATION_DATABASE_URL selects the different test DDL owner,
 TEST_DATABASE_ACK=navard_erp_test, DATABASE_URL still points at the distinct dev
 database. Helpers verify the actual connected database, logins, PG18.6/roles and
-the ACK before changing only kernel/envelope_test schemas.
+the ACK before resetting only the dedicated test database's delivered ERP schemas.
 
 ```text
 npm run db:test:reset
@@ -81,7 +81,7 @@ npm run verify
 ```
 
 Tests use real PostgreSQL clients/processes with serial fixtures and explicit
-concurrency barriers. All seven compiled unit files and six integration files
+concurrency barriers. All registered compiled unit and integration files
 are mandatory; missing, zero-test or skipped proof fails the runners. The Owner
 has selected Windows-only validation. CI runs Windows static/build/unit checks
 with pinned publisher actions and dependency advisories; Linux jobs were removed. PostgreSQL18.6 integration
@@ -90,9 +90,7 @@ yet configured; this does not permit skipping database acceptance before a
 code change is declared complete. No Ubuntu/WSL dependency is required. Local
 evidence must not be described as a remote CI run without a real remote run.
 
-No business posting is implemented by this foundation. Current acceptance
-evidence and independent review are recorded in the implementation report;
-the next business slice needs a separate Owner decision.
+Foundation and delivered business increments have separate acceptance reports. See the current shipment delivery above and accepted backlog; never infer unfinished modules from their design documents.
 
 Full document index:
 [docs/INDEX.md](docs/INDEX.md).
@@ -122,8 +120,8 @@ proposed](docs/00-governance/registers/DECISIONS.md)), pnpm, extra MCP.
 
 ADR-0011 and ADR-0013 now accept the delegated technical foundation: bound durable
 command outcomes; supported pinned Node/TypeScript, npm workspaces, direct pg SQL,
-SQL migrations, node:test and ESLint/Prettier. The backend host is health-only
-node:http. See [technical freeze](docs/12-implementation-planning/TECHNICAL_FREEZE.md).
+SQL migrations, node:test and ESLint/Prettier. The node:http host now exposes
+health, personal identity and the delivered owner-controlled business routes. See [technical freeze](docs/12-implementation-planning/TECHNICAL_FREEZE.md).
 These decisions are not human approval of an implementation baseline.
 
 **Not required for MVP:** Kafka, RabbitMQ, Kubernetes, Event Sourcing, a
@@ -133,7 +131,7 @@ time-series database, a service-per-domain mesh.
 
 ## 2. How a new developer should read this project
 
-Read in this order. Do **not** start coding.
+Read the current authorized scope first, then only sources relevant to the active slice.
 
 1. This README. Section 1 is the lock. [Section 14](#14-documentation-map) explains every document and links to it.
 2. [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) — what you may
@@ -1062,7 +1060,7 @@ This folder defines allowed states, transitions, and invariants. A state or comm
 
 ### 14.5 Phase 04 — Data (`docs/04-database-architecture/`)
 
-This folder is the logical data design. The Inventory Ledger is stock truth. Balance and genealogy are projections. There is no physical schema and no migration in this repository.
+This folder is the logical data design. The Inventory Ledger is stock truth. Balance and genealogy are projections. The logical folder does not define physical migrations; the delivered additive SQL lives in database/migrations and its implementation reports.
 
 | File | What it is |
 | --- | --- |

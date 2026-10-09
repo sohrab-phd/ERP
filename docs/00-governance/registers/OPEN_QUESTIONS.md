@@ -66,10 +66,10 @@ If its scope expands, reassess dependencies before authorization.
 | FACT-03 | command/atomic transaction for opened-remainder warehouse Coil-to-Sheet transformation without a new order | B before that transformation; not silently added to DATA-TX-001 |
 | Commercial evidence | price ownership/version/customer pricing; tax/discount/currency/money rounding; cutting fee formula/authority; invoice numbering/timing | B before affected sales/Finance-Lite; C validate commercial examples; no invented tax/legal rule |
 | Payment evidence / OQ-012 | payment recorder, invoice/order links and allocations, partial payments, cheque/promissory-note recording/settlement | B before payments; architecture states do not supply factory procedure |
-| Payment evidence / OQ-012 | credit authority/limits; shipment dependency; customer-balance meaning; correction/reversal | B before affected Finance-Lite/shipment behavior; payment remains independent of SO closure |
+| Payment evidence / OQ-012 | credit authority/limits; customer-balance meaning; correction/reversal | B before affected Finance-Lite behavior; normal shipment has no financial gate under APR-024; payment remains independent of SO closure |
 | Payment methods | deposit percentage and settlement deadline; credit aging policy; cheque/promissory-note operational treatment | B before affected Finance-Lite behavior; no invented percentage/deadline/lifecycle; any statutory/legal-GL treatment F |
 | Intake / procurement evidence | code/identity relationships; scale/feed; discrepancies/tolerance; receiving authority and mandatory purchase link | B before receipt/procurement; C/D for actual device/people; no second quantity writer |
-| Shipment evidence | preparation/authorization/loading/recording/delivery actors, documents/carrier/evidence/signature, invoice timing/payment prerequisite | B before shipment; C/D for operational verification/people; no invented logistics role |
+| Shipment evidence | Normal confirmed-order complete-reserved-Unit dispatch authority/evidence/no financial gate answered by APR-024 (2026-10-09); delivery/exception/carrier workflow deferred | No B for bounded normal dispatch; B before excluded delivery/exception behavior; C/D for operational people |
 | Order-change evidence | change/cancel requests and approvals, confirmed-order editing, demand/material changes, route/reservation/allocated-or-produced effects, post-start/post-ship cancellation, customer evidence/reasons/reopen | B before affected commercial commands; no automatic stock reversal or demand discard |
 | Procurement evidence | supplier identity/master-data owner/selection/approval; purchase-request/PO existence/creator/approver; proforma and supplier confirmation | B before procurement; C/D for authorized personnel |
 | Procurement evidence | quantity change/cancel/return and downstream effects; price/currency/tax/payment terms; acceptance/discrepancy/partial/over/under receipt/correction | B before affected procurement/receipt commands; no invented purchase tolerance/payment workflow |
@@ -1808,3 +1808,13 @@ Coil parent for standalone Sheet. No QC or receiving discrepancy/tolerance,
 return/correction policy is introduced. This supersedes the earlier open
 normal-manual-receiving authority sentence only. Actual named grants remain
 Go-Live/configuration, and other procurement/device/OQ-011 residuals stay open.
+
+## Normal MVP stock shipment — Owner confirmation2026-10-09
+
+[APR-024](../approved-baselines/APR-024-shipment-increment-scope.md) supersedes the2026-09-30 logistics gap only for normal confirmed-order dispatch in SLICE-STOCK shipment increment. Individual ACT-SHIP handles preparation, recording, loading and final dispatch without another approver. Employee assignments remain configuration/Go-Live data.
+
+Ship complete already-reserved Units only; no split, ownership override or exceptional shipment. Partial order dispatch follows existing line permission/default zero tolerance with whole Units. Payment/invoice issuance, customer balance, cheque/promissory-note/credit state are not shipment gates.
+
+Record Shipment and Sales Order references, Unit identities, authoritative stock kg, personal actor, system timestamp and posting outcome with envelope idempotency/audit evidence. Carrier/driver/vehicle/signature/proof-of-delivery/transport-document/invoice/payment references are not mandatory. No customer delivery or carrier workflow in this increment. IPS alone posts stock; reservation ownership/atomic audit/remaining valid demand preserved. Shipment posting neither closes Sales nor implies DELIVERED.
+
+This closes the normal dispatch B residual only. It does not silently close OQ-019, decide external Order Code identity, shipment exceptions, return/correction, customer delivery/fulfillment recording or deferred finance policies. Historical factory-evidence sections remain historical evidence.

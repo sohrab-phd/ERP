@@ -270,6 +270,12 @@ export class InventoryPostingService {
           context.request.command === 'ActivateReservation' &&
           effect.type === 'RESERVE' &&
           unit.customerScope === ''
+        ) &&
+        !(
+          context.request.command === 'DispatchShipment' &&
+          unit.customerScope === '' &&
+          this.policy.visibleForEffect &&
+          (await this.policy.visibleForEffect(context, effect, unit))
         )
       )
         this.visible(context, unit);

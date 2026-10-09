@@ -66,7 +66,7 @@ with the owning bounded context.
 | Shop-floor operation facts | ACT-OP records; ACT-IPS posts | ACT-IPS | no — operator does not sign policy |
 | AbortProductionOrder / post-post cancel | ACT-PLAN | ACT-IPS for reversals | residual/scrap already recorded; open: OQ-003 |
 | Quality inspection and hold/release command (**future only**) | ACT-QC (deferred) | ACT-IPS if later commanded | Future named person OQ-005; no current-MVP Quality actor |
-| Package / Shipment (with demand) | ACT-SHIP | ACT-IPS on dispatch | no |
+| Package / Shipment (normal confirmed demand, complete reserved Units) | individual ACT-SHIP; preparation/recording/loading/final dispatch; Owner APR-024 | ACT-IPS on dispatch | no; no payment/invoice gate |
 | DraftShipment without customer/order | ACT-SHIP | ACT-IPS if later dispatched | exceptional authority OQ-019 |
 | Invoice / Payment (non-void) | ACT-FIN | no | no |
 | VoidInvoice / ReversePayment | ACT-FIN | no | different identity than issuer (OQ-019); ACT-SEC may be the recorded authority |

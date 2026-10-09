@@ -901,7 +901,7 @@ void test('over-reservation rejects durably and Ledger records caller provenance
     const effect = incoming();
     const input = command([effect]);
     const actor = caller();
-    completed(await h.run(input, actor), 'accepted');
+    const accepted = completed(await h.run(input, actor), 'accepted');
     const provenance = await db.owner.query<{
       executor: string;
       issuer: string;
@@ -945,13 +945,23 @@ void test('over-reservation rejects durably and Ledger records caller provenance
       ).rows[0]?.total,
       0,
     );
-    const audit = await db.owner.query<{ event_kind: string }>(
-      'SELECT event_kind FROM kernel.audit_event ORDER BY occurred_at,event_id',
-    );
-    assert.deepEqual(
-      audit.rows.map((row) => row.event_kind),
-      ['AUD-CMD-ACCEPTED', 'AUD-CMD-REJECTED', 'AUD-CMD-REPLAYED'],
-    );
+    const audit = await db.owner.query<{
+      event_kind: string;
+      execution_id: string;
+      idempotency_key: string;
+    }>('SELECT event_kind,execution_id,idempotency_key FROM kernel.audit_event');
+    // Millisecond timestamps can tie; UUID order is not command chronology.
+    assert.equal(audit.rowCount, 3);
+    for (const [event_kind, execution_id, idempotency_key] of [
+      ['AUD-CMD-ACCEPTED', accepted.executionId, input.idempotency_key],
+      ['AUD-CMD-REJECTED', rejection.executionId, over.idempotency_key],
+      ['AUD-CMD-REPLAYED', rejection.executionId, over.idempotency_key],
+    ]) {
+      assert.deepEqual(
+        audit.rows.filter((row) => row.event_kind === event_kind),
+        [{ event_kind, execution_id, idempotency_key }],
+      );
+    }
   });
 });
 

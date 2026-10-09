@@ -311,7 +311,7 @@ scope follows the Owner's standing backlog delegation. No new business policy im
 
 This demand increment alone did not reserve/ship stock or introduce commercial amounts. See current reservation increment below.
 
-## Current reservation increment — 2026-10-08
+## Delivered reservation increment — 2026-10-08
 
 Owner confirms Sales280aa8b4918e05cf091daff4b7b06306b6f7ebc6 pushed and explicitly authorizes reservation.
 
@@ -321,4 +321,12 @@ Owner confirms Sales280aa8b4918e05cf091daff4b7b06306b6f7ebc6 pushed and explicit
 - [Actual implementation](12-implementation-planning/SLICE_STOCK_RESERVATION_IMPLEMENTATION_STATUS.md)
 - [Independent review](12-implementation-planning/SLICE_STOCK_RESERVATION_REVIEW.md)
 
-No shipment/release/consumption, commercial amounts or next major slice started; stop after accepted local commit for Owner push.
+That reservation increment did not ship/consume stock or implement commercial amounts. The separately authorized shipment increment below extends the consumed lifecycle.
+
+## Current shipment increment — 2026-10-09
+
+- [Owner normal-shipment policy/scope](00-governance/approved-baselines/APR-024-shipment-increment-scope.md)
+- [ADR-0019 normal stock dispatch](00-governance/adrs/ADR-0019-normal-stock-dispatch.md)
+- [Bounded shipment plan](12-implementation-planning/SLICE_STOCK_SHIPMENT_PLAN.md)
+- [Shipment implementation](12-implementation-planning/SLICE_STOCK_SHIPMENT_IMPLEMENTATION_STATUS.md)
+- [Independent shipment review](12-implementation-planning/SLICE_STOCK_SHIPMENT_REVIEW.md)

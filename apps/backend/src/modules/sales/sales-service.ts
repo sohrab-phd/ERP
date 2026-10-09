@@ -529,17 +529,18 @@ export class SalesService {
     };
   }
   /** Inventory calls this read port; no stock mutation or forged customer context. */
-  async reservationDemand(
+  private async confirmedDemand(
     supplied: SalesContext,
     orderId: string,
     customerId: string,
+    permits: ((ctx: SalesContext, customerId: string) => Promise<boolean>) | undefined,
   ): Promise<ReservationDemandView | undefined> {
     const context = snapshot(supplied);
     if (
       !validUuid(orderId) ||
       !validUuid(customerId) ||
-      !this.policy.canReserve ||
-      !(await this.policy.canReserve(context, customerId))
+      !permits ||
+      !(await permits(context, customerId))
     )
       reject('GUARD_ACTOR', 'Reservation demand access denied');
     if (!this.store.reservationOrder || !this.store.reservationAssessment)
@@ -565,16 +566,46 @@ export class SalesService {
       !assessment.selections
     )
       throw new TechnicalError('incompatible');
-    if (!(await this.policy.canReserve(context, customerId)))
+    if (!(await permits(context, customerId)))
       reject('GUARD_ACTOR', 'Reservation demand access denied');
     return frozen({
       id: order.id,
       customerId: order.customerId,
       binding: order.binding,
       confirmedAt: order.confirmedAt!,
-      items: order.items.map(({ id, type, demandedKg }) => ({ id, type, demandedKg })),
+      items: order.items.map(({ id, type, demandedKg, allowPartialShipment }) => ({
+        id,
+        type,
+        demandedKg,
+        allowPartialShipment,
+      })),
       selections: assessment.selections,
     });
+  }
+  async reservationDemand(
+    context: SalesContext,
+    orderId: string,
+    customerId: string,
+  ): Promise<ReservationDemandView | undefined> {
+    return this.confirmedDemand(
+      context,
+      orderId,
+      customerId,
+      this.policy.canReserve?.bind(this.policy),
+    );
+  }
+  /** Shipping receives confirmed demand only; no permission to mutate Sales state. */
+  async shippingDemand(
+    context: SalesContext,
+    orderId: string,
+    customerId: string,
+  ): Promise<ReservationDemandView | undefined> {
+    return this.confirmedDemand(
+      context,
+      orderId,
+      customerId,
+      this.policy.canShip?.bind(this.policy),
+    );
   }
   /** Internal minimal contender evidence; never exported through command/query HTTP. Exact PG timestamps remain in SQL. */
   async reservationCompetitors(

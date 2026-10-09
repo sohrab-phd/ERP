@@ -37,6 +37,10 @@ import { SalesService, type SalesContext } from './modules/sales/index.js';
 import { PostgresSalesStore } from './infrastructure/postgresql/sales-store.js';
 import { createSalesHandler } from './transport/sales-http.js';
 import { createReceiptHandler } from './transport/receipt-http.js';
+import { ShippingService, type ShippingContext } from './modules/shipping/index.js';
+import { InventoryShippingService } from './modules/inventory/index.js';
+import { PostgresShippingStore } from './infrastructure/postgresql/shipping-store.js';
+import { createShippingHandler } from './transport/shipping-http.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -107,6 +111,22 @@ export function compose(config: Readonly<Config>) {
       ? ctx.actor.customerScope === customerId
       : !requesting && ctx.actor.actorRole === 'ACT-WH' && org(ctx.actor)) &&
     (await identity.isCurrent(ctx.actor, ctx.transaction));
+  const shippingCommands = [
+    'DraftPackage',
+    'PackPackage',
+    'UnpackPackage',
+    'AssignPackageToShipment',
+    'DraftShipment',
+    'MarkShipmentReady',
+    'StartLoading',
+    'DispatchShipment',
+  ];
+  const shipCurrent = async (ctx: ShippingContext, customerId = ctx.actor.customerScope) =>
+    ctx.actor.actorRole === 'ACT-SHIP' &&
+    validUuid(customerId) &&
+    ctx.actor.customerScope === customerId &&
+    ctx.actor.temporary !== true &&
+    (await identity.isCurrent(ctx.actor, ctx.transaction));
   const inventoryStore = new PostgresInventoryStore();
   const reservationStore = new PostgresReservationRequestStore();
   const inventory: InventoryPostingService = new InventoryPostingService(inventoryStore, {
@@ -122,21 +142,26 @@ export function compose(config: Readonly<Config>) {
         (await reservationStore.activeCustomer(ctx, unit.id)) === ctx.actor.customerScope
       );
     },
+    visibleForEffect: (ctx, effect, unit) => inventoryShipping.visibleForEffect(ctx, effect, unit),
     authorize: (ctx) =>
-      ctx.request.command === 'ActivateReservation'
-        ? Promise.resolve(
-            ctx.actor.temporary !== true &&
-              (ctx.actor.actorRole === 'ACT-SALES'
-                ? validUuid(ctx.actor.customerScope)
-                : ctx.actor.actorRole === 'ACT-WH' && org(ctx.actor)) &&
-              identity.isCurrent(ctx.actor, ctx.transaction),
-          )
-        : ctx.request.command === 'PostGoodsReceipt'
-          ? canPost(ctx)
-          : ['GetInventoryUnit', 'GetLot'].includes(ctx.request.command)
-            ? canRead(ctx)
-            : Promise.resolve(false),
+      ctx.request.command === 'DispatchShipment'
+        ? shipCurrent(ctx)
+        : ctx.request.command === 'ActivateReservation'
+          ? Promise.resolve(
+              ctx.actor.temporary !== true &&
+                (ctx.actor.actorRole === 'ACT-SALES'
+                  ? validUuid(ctx.actor.customerScope)
+                  : ctx.actor.actorRole === 'ACT-WH' && org(ctx.actor)) &&
+                identity.isCurrent(ctx.actor, ctx.transaction),
+            )
+          : ctx.request.command === 'PostGoodsReceipt'
+            ? canPost(ctx)
+            : ['GetInventoryUnit', 'GetLot'].includes(ctx.request.command)
+              ? canRead(ctx)
+              : Promise.resolve(false),
     validate: (ctx, effect, unit) => {
+      if (ctx.request.command === 'DispatchShipment')
+        return inventoryShipping.validateEffect(ctx, effect, unit);
       if (ctx.request.command === 'ActivateReservation')
         return reservations.validateEffect(ctx, effect, unit);
       const input = parseReceiptInput(ctx.request.payload);
@@ -179,6 +204,10 @@ export function compose(config: Readonly<Config>) {
     },
     {
       canAccess: (ctx, id) => Promise.resolve(salesCurrent(ctx, id)),
+      canShip: (ctx, id) =>
+        shippingCommands.includes(ctx.request.command)
+          ? shipCurrent(ctx, id)
+          : Promise.resolve(false),
       canReserve: (ctx, id) =>
         ['RequestReservation', 'ActivateReservation', 'GetReservation'].includes(
           ctx.request.command,
@@ -205,6 +234,56 @@ export function compose(config: Readonly<Config>) {
           : Promise.resolve(false),
     },
   );
+  const inventoryShipping = new InventoryShippingService(
+    reservationStore,
+    inventoryStore,
+    inventory,
+    { canShip: shipCurrent },
+  );
+  const shippingStore = new PostgresShippingStore();
+  const shipping = new ShippingService(
+    shippingStore,
+    inventoryShipping,
+    { demand: (ctx, id, customer) => sales.shippingDemand(ctx, id, customer) },
+    { canShip: shipCurrent },
+  );
+  const shippingPolicies = shipping.contracts().map((contract) => ({
+    command: contract.command,
+    version: 1,
+    roles: ['ACT-SHIP' as const],
+    canTarget: async (
+      actor: ExecutionContext,
+      request: CommandRequest,
+      tx?: TransactionContext,
+    ) => {
+      const packageCommand = [
+        'DraftPackage',
+        'PackPackage',
+        'UnpackPackage',
+        'AssignPackageToShipment',
+      ].includes(request.command);
+      if (
+        actor.actorRole !== 'ACT-SHIP' ||
+        actor.temporary === true ||
+        !validUuid(actor.customerScope) ||
+        !validUuid(request.target.id) ||
+        request.target.kind !== (packageCommand ? 'package' : 'shipment')
+      )
+        return false;
+      if (!tx || request.command === 'DraftPackage' || request.command === 'DraftShipment')
+        return true;
+      const ctx = { actor, request, transaction: tx };
+      return (
+        (packageCommand
+          ? await shippingStore.package(ctx, request.target.id)
+          : await shippingStore.shipment(ctx, request.target.id)) !== undefined
+      );
+    },
+    canDisclose: (actor: ExecutionContext, _request: CommandRequest, result: StableResult) =>
+      Promise.resolve(
+        result.outcome === 'rejected' || result.data?.customerId === actor.customerScope,
+      ),
+  }));
   const reservationPolicies = reservations.contracts().map((contract) => ({
     command: contract.command,
     version: 1,
@@ -288,6 +367,7 @@ export function compose(config: Readonly<Config>) {
       receipts.contract(),
       ...sales.contracts(),
       ...reservations.contracts(),
+      ...shipping.contracts(),
     ]),
     transactions,
     outcomes: new PostgresOutcomes(),
@@ -295,6 +375,7 @@ export function compose(config: Readonly<Config>) {
     authorization: new IdentityAuthorization(identity, [
       ...salesPolicies,
       ...reservationPolicies,
+      ...shippingPolicies,
       {
         command: 'PostGoodsReceipt',
         version: 1,
@@ -431,11 +512,52 @@ export function compose(config: Readonly<Config>) {
       await tx.release();
     }
   };
+  const shippingQuery = async (
+    kind: 'GetPackage' | 'GetShipment',
+    id: string,
+    actor: ExecutionContext,
+  ) => {
+    if (!validUuid(id) || !['GetPackage', 'GetShipment'].includes(kind))
+      throw new BusinessRejection({ family: 'GUARD_INVARIANT', message: 'Invalid shipment query' });
+    const tx = await transactions.begin();
+    try {
+      const ctx = {
+        actor,
+        transaction: tx.context,
+        request: {
+          command: kind,
+          contract_version: 1,
+          idempotency_key: randomUUID(),
+          target: { kind: 'query', id },
+          payload: {},
+          preconditions: {},
+        },
+      };
+      if (!(await shipCurrent(ctx)))
+        throw new BusinessRejection({ family: 'GUARD_ACTOR', message: 'Shipping access denied' });
+      const result =
+        kind === 'GetPackage'
+          ? await shipping.getPackage(ctx, id)
+          : await shipping.getShipment(ctx, id);
+      await tx.commit();
+      return result
+        ? Object.fromEntries(
+            Object.entries(result).filter(([key]) => !['binding', 'orderBinding'].includes(key)),
+          )
+        : undefined;
+    } catch (error) {
+      await tx.rollback();
+      throw error;
+    } finally {
+      await tx.release();
+    }
+  };
   const server = createHttpHost({
     ping: () => pingDatabase(pool),
     identity: createIdentityHandler(identity),
     receipt: createReceiptHandler({ identity, command, query }),
     sales: createSalesHandler({ identity, command, query: salesQuery }),
+    shipping: createShippingHandler({ identity, command, query: shippingQuery }),
     reservation: createReservationHandler({ identity, command, query: reservationQuery }),
   });
   return {
@@ -446,6 +568,8 @@ export function compose(config: Readonly<Config>) {
     receipts,
     sales,
     salesQuery,
+    shipping,
+    shippingQuery,
     reservations,
     reservationQuery,
     command,

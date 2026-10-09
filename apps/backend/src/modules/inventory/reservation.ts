@@ -55,7 +55,9 @@ export interface ReservationRequest {
   binding: string;
   orderBinding: string;
   confirmedAt: string;
-  state: 'REQUESTED' | 'ACTIVE';
+  state: 'REQUESTED' | 'ACTIVE' | 'CONSUMED';
+  dispatchId?: string;
+  consumedAt?: string;
   requestedAt?: string;
   activatedAt?: string;
 }
@@ -67,6 +69,13 @@ export interface ReservationRequestStore {
   activeKg(context: PostingContext, orderId: string, itemId: string): Promise<string>;
   create(context: PostingContext, request: ReservationRequest): Promise<ReservationRequest>;
   activate(context: PostingContext, id: string): Promise<ReservationRequest | undefined>;
+  consume?(
+    context: PostingContext,
+    id: string,
+    shipmentId: string,
+    releaseEffectId: string,
+    outEffectId: string,
+  ): Promise<void>;
 }
 export interface ReservationPolicy {
   canRequest(context: PostingContext, customerId: string): Promise<boolean>;
@@ -398,8 +407,8 @@ export class ReservationService {
       if (!validUuid(competitor.orderId) || !validUuid(competitor.itemId))
         throw new TechnicalError('incompatible');
       whole(competitor.demandedKg);
-      // Historical assessment is not an allocation. Only the real ACTIVE IPS
-      // claims satisfy earlier demand; REQUESTED intent never counts as stock.
+      // Historical assessment is not an allocation. Real ACTIVE claims and
+      // verified consumed shipment facts satisfy demand; REQUESTED intent never does.
       const covered = Kg.parse(
         await this.store.activeKg(context, competitor.orderId, competitor.itemId),
       );

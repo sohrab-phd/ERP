@@ -13,7 +13,7 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current scope: [APR-023](../00-governance/approved-baselines/APR-023-reservation-increment-scope.md), SLICE-STOCK reservation increment after Owner-confirmed pushed Sales280aa8b4918e05cf091daff4b7b06306b6f7ebc6. RequestReservation/ActivateReservation and exact-customer GetReservation; no shipment/release/consume/cancellation/expiry or money. See [plan](SLICE_STOCK_RESERVATION_PLAN.md), [delivery](SLICE_STOCK_RESERVATION_IMPLEMENTATION_STATUS.md), [review](SLICE_STOCK_RESERVATION_REVIEW.md), [ADR-0018](../00-governance/adrs/ADR-0018-inventory-reservation-activation.md). No OQ/business answer changed. Stop after accepted documented local commit for Owner push. Shipment is next bounded increment, with live residual policies checked before affected commands.
+Current scope: [APR-024](../00-governance/approved-baselines/APR-024-shipment-increment-scope.md), SLICE-STOCK shipment increment after Owner-confirmed pushed reservation807ab190d49ebb3bd4e3419e09c28de4bc656faf. Normal complete reserved-Unit preparation/dispatch by personal ACT-SHIP, no payment/invoice or second approval. See [plan](SLICE_STOCK_SHIPMENT_PLAN.md), [delivery](SLICE_STOCK_SHIPMENT_IMPLEMENTATION_STATUS.md), [review](SLICE_STOCK_SHIPMENT_REVIEW.md) and [ADR-0019](../00-governance/adrs/ADR-0019-normal-stock-dispatch.md). Delivery/exception/Sales fulfillment and closure remain deferred; Owner normal-shipment answer is recorded in the live OQ register. Stop after accepted documented local commit for Owner push. Next backlog capability is SLICE-MAKE production/genealogy source facts after confirming its actual prerequisites.
 
 Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers
@@ -220,7 +220,7 @@ durable replay, audit, concurrency and compensating-correction contracts.
   the accepted rule; shipment posts stock once; Sales writes no finance or stock
   tables; branches with missing authority reject under `GUARD_OPEN_POLICY`.
 - **Out of scope/residuals:** prices/tax/currency/rounding (B for commercial
-  amounts), shipment actors/evidence/payment prerequisite (B), change/cancel
+  amounts), normal complete-reserved-Unit shipment policy answered APR-024 (no financial prerequisite); exceptional/delivery procedures deferred, change/cancel
   effects (B), nondefault OQ-006 tolerance (B when introduced), FIND-026 expiry (B
   before expiry). Frontend product and customer ordering portal are not implied.
 

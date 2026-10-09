@@ -262,6 +262,8 @@ steps, Procurement posting authority, mandatory PO/ticket or a QC gate.
 | COMPLETED | QUARANTINED | QuarantineFromInspection | ACT-QC | INV-017 | commands Inventory quarantine | QualityQuarantined |
 | COMPLETED | REJECTED | RejectInspection | ACT-QC | INV-010 | commands reject/scrap path; no shipment | QualityRejected |
 
+Normal MVP shipment increment under APR-024 (2026-10-09) implements preparation through dispatch only. Contents are complete already-reserved Units for confirmed demand; no split or exceptional shipment, customer delivery, carrier workflow or second approval. This bounded policy does not enable every architectural branch below. Required evidence is Shipment/order/Unit/kg/personal actor/system time/outcome with envelope audit/idempotency. Dispatch is not Sales fulfillment or closure.
+
 ## SM-PACKAGE
 
 | From | To | Command | Actor | Guard | Effect | Event |
@@ -276,7 +278,7 @@ steps, Procurement posting authority, mandatory PO/ticket or a QC gate.
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | DRAFT | DraftShipment | ACT-SHIP | authorized customer/order or INV-011 exceptional authority; named person `open: OQ-019`; not OQ-005 | Shipping writes Shipment | ShipmentDrafted |
-| DRAFT | READY | MarkShipmentReady | ACT-SHIP | authorized contents and OQ-006 fulfillment tolerance default 0 or explicit configuration; shipment procedure/authority remains later policy; Quality `Released` only in future QC scope, not current MVP | Shipping writes Shipment | ShipmentReady |
+| DRAFT | READY | MarkShipmentReady | ACT-SHIP | authorized contents and OQ-006 fulfillment tolerance default 0 or explicit configuration; normal shipment authority/procedure answered APR-024: individual ACT-SHIP, complete reserved Units, no payment/invoice gate; exception/delivery policies remain deferred; Quality `Released` only in future QC scope, not current MVP | Shipping writes Shipment | ShipmentReady |
 | READY | LOADING | StartLoading | ACT-SHIP | none numeric | Shipping writes Shipment | ShipmentLoading |
 | LOADING | DISPATCHED | DispatchShipment | ACT-SHIP | commands ACT-IPS stock exit (INV-017) | Shipping writes Shipment; Inventory posts exit | ShipmentDispatched |
 | DISPATCHED | PARTIALLY_DELIVERED | RecordPartialDelivery | ACT-SHIP | OQ-006 partial fulfillment permission/default 0 where applicable; actual delivery attribution/procedure remains later policy | Shipping writes Shipment | ShipmentPartiallyDelivered |

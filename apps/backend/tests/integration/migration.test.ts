@@ -39,13 +39,13 @@ function hasStderr(...fragments: string[]) {
 void test('fresh/second migration and concurrent runners are checksum-bound and serialized', async () => {
   await withDatabase(async (db) => {
     await db.owner.query(
-      'DROP SCHEMA IF EXISTS sales CASCADE; DROP SCHEMA IF EXISTS procurement CASCADE; DROP SCHEMA IF EXISTS inventory CASCADE; DROP SCHEMA IF EXISTS identity CASCADE; DROP SCHEMA kernel CASCADE',
+      'DROP SCHEMA IF EXISTS shipping CASCADE; DROP SCHEMA IF EXISTS sales CASCADE; DROP SCHEMA IF EXISTS procurement CASCADE; DROP SCHEMA IF EXISTS inventory CASCADE; DROP SCHEMA IF EXISTS identity CASCADE; DROP SCHEMA kernel CASCADE',
     );
     await Promise.all([runTool('tools/db/migrate.mjs'), runTool('tools/db/migrate.mjs')]);
     const ledger = await db.owner.query(
       'SELECT version,sha256 FROM kernel.schema_migrations ORDER BY version',
     );
-    assert.equal(ledger.rowCount, 8);
+    assert.equal(ledger.rowCount, 10);
     assert.ok(ledger.rows.every((row: { sha256: string }) => /^[0-9a-f]{64}$/.test(row.sha256)));
     await runTool('tools/db/migrate.mjs');
     assert.deepEqual(
@@ -59,7 +59,7 @@ void test('fresh/second migration and concurrent runners are checksum-bound and 
 void test('dry-run has no DDL; drift and missing applied file fail without modifying ledger', async () => {
   await withDatabase(async (db) => {
     await db.owner.query(
-      'DROP SCHEMA IF EXISTS sales CASCADE; DROP SCHEMA IF EXISTS procurement CASCADE; DROP SCHEMA IF EXISTS inventory CASCADE; DROP SCHEMA IF EXISTS identity CASCADE; DROP SCHEMA kernel CASCADE',
+      'DROP SCHEMA IF EXISTS shipping CASCADE; DROP SCHEMA IF EXISTS sales CASCADE; DROP SCHEMA IF EXISTS procurement CASCADE; DROP SCHEMA IF EXISTS inventory CASCADE; DROP SCHEMA IF EXISTS identity CASCADE; DROP SCHEMA kernel CASCADE',
     );
     await runTool('tools/db/migrate.mjs', ['--dry-run']);
     assert.equal(
@@ -93,7 +93,7 @@ void test('dry-run has no DDL; drift and missing applied file fail without modif
 void test('failed file SQL and ledger insert rollback together while earlier migrations remain restartable', async () => {
   await withDatabase(async (db) => {
     await db.owner.query(
-      'DROP SCHEMA IF EXISTS sales CASCADE; DROP SCHEMA IF EXISTS procurement CASCADE; DROP SCHEMA IF EXISTS inventory CASCADE; DROP SCHEMA IF EXISTS identity CASCADE; DROP SCHEMA kernel CASCADE',
+      'DROP SCHEMA IF EXISTS shipping CASCADE; DROP SCHEMA IF EXISTS sales CASCADE; DROP SCHEMA IF EXISTS procurement CASCADE; DROP SCHEMA IF EXISTS inventory CASCADE; DROP SCHEMA IF EXISTS identity CASCADE; DROP SCHEMA kernel CASCADE',
     );
     await assert.rejects(
       migrationProbe(
@@ -132,7 +132,7 @@ void test('failed file SQL and ledger insert rollback together while earlier mig
           'SELECT count(*)::integer AS count FROM kernel.schema_migrations',
         )
       ).rows[0]?.count,
-      8,
+      10,
     );
   });
 });

@@ -190,8 +190,13 @@ DispatchShipment, RecordPartialDelivery, ConfirmDelivery,
 CloseShipment. Exceptional shipment person `open: OQ-019`. Over-delivery
 `open: OQ-006`.
 
-The factory has not confirmed these shipping commands and has not named
-who uses them. They are not deleted. None of them closes a Sales Order.
+Owner confirmation APR-024 (2026-10-09) enables normal confirmed-order
+preparation/packing/loading/dispatch by individual ACT-SHIP, without second
+approval or payment/invoice prerequisite. Complete already-reserved Units only;
+no split, ownership override or exceptional shipment. Minimum durable evidence
+is Shipment/order/Unit identity, stock kg, actor/time and posting outcome with
+idempotency/audit. Delivery confirmation, carrier workflows and exceptions remain
+deferred; none of these commands closes a Sales Order.
 Dispatch does not write the Ledger; stock exit stays with the Inventory
 Posting Service.
 

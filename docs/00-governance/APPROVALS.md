@@ -720,3 +720,9 @@ review and authorization.
 - [Actual Owner confirmation](approved-baselines/APR-023-reservation-increment-scope.md): Sales280aa8b4918e05cf091daff4b7b06306b6f7ebc6 accepted/pushed, explicit reservation continuation.
 - Gate/local unlock match APR-023; architecture APR-018 unchanged. Inventory-owned Request/Activate and Sales-scoped reads only, no shipment/cancellation/expiry. No new business answer or fabricated signature.
 - Stop after accepted local commit for Owner review/push; never push automatically.
+
+### APR-024 — Normal reserved-stock shipment increment
+
+- [Actual Owner scope and policy](approved-baselines/APR-024-shipment-increment-scope.md): reservation807ab190d49ebb3bd4e3419e09c28de4bc656faf confirmed pushed; normal complete reserved-Unit shipment authorized and ACT-SHIP/no second approval/no payment or invoice prerequisite confirmed2026-10-09.
+- Gate/local ignored unlock match APR-024; architecture APR-018 unchanged. Shipping owns preparation/dispatch, Inventory owns claim/lifecycle and sole IPS posts stock exit; customer delivery, physical splitting, exceptions and Sales closure are excluded.
+- Stop after accepted documented local commit for Owner review/push. No fabricated approval signature, blanket OQ closure or remote push.

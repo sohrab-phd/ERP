@@ -39,6 +39,7 @@ for (const file of files) {
           'receipt-store.ts',
           'sales-store.ts',
           'inventory-reservation-store.ts',
+          'shipping-store.ts',
         ].some((name) => target === resolve('apps/backend/src/infrastructure/postgresql', name)) &&
         file.startsWith(resolve('apps/backend/src') + sep) &&
         file !== resolve('apps/backend/src/composition-root.ts')
@@ -126,6 +127,13 @@ for (const file of files) {
       file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-reservation-store.ts')
     )
       issues.push(relative(root, file) + ': reservation SQL outside Inventory owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\bshipping\.(package|shipment|package_content|dispatch)\b/i.test(node.text) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/shipping-store.ts')
+    )
+      issues.push(relative(root, file) + ': Shipping SQL outside persistence owner');
     if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier)
       check(node.moduleSpecifier);
     if (

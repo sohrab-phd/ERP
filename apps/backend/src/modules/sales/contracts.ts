@@ -102,10 +102,11 @@ export interface ReservationDemandView {
   customerId: string;
   binding: string;
   confirmedAt: string;
-  items: readonly { id: string; type: string; demandedKg: string }[];
+  items: readonly { id: string; type: string; demandedKg: string; allowPartialShipment: boolean }[];
   selections: readonly StockSelection[];
 }
 export interface SalesPolicy {
   canAccess(context: SalesContext, customerId: string): Promise<boolean>;
   canReserve?(context: SalesContext, customerId: string): Promise<boolean>;
+  canShip?(context: SalesContext, customerId: string): Promise<boolean>;
 }

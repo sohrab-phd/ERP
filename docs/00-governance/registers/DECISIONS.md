@@ -292,3 +292,7 @@ invented. [Actual delivery](../../12-implementation-planning/SLICE_STOCK_DEMAND_
 ## ADR-0018 — Inventory request and atomic reservation activation
 
 [Accepted engineering mechanism](../adrs/ADR-0018-inventory-reservation-activation.md) within APR-023 Owner scope: immutable no-quantity REQUESTED intent, sole IPS activation, exact confirmation precedence with real ACTIVE coverage, individual/scoped command/query policies and durable atomic audit/outcome. No TTL, steal, cancellation/consumption, shipment or new OQ answer.
+
+## ADR-0019 — Normal reserved-stock dispatch
+
+[Accepted engineering mechanism](../adrs/ADR-0019-normal-stock-dispatch.md) within APR-024: Shipping-owned package/dispatch evidence through Inventory owner ports and sole IPS, complete reserved Units, atomic consumed intent/Ledger/Balance/audit/outcome, instance-bound admission and retained outbound allocation coverage. No financial prerequisite, physical split, customer delivery or automatic Sales fulfillment/closure. Actual107 unit/173 PostgreSQL tests and independent engineering/security source review pass; bounded delivery is documented.

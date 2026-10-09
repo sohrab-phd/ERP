@@ -3,18 +3,18 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.43.0
+version: 0.44.0
 owners: [chief-solution-architect]
 depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-10-08
+last_reviewed: 2026-10-09
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
 
-Current Owner decision (2026-10-08): accepted Sales demand/confirmation commit280aa8b4918e05cf091daff4b7b06306b6f7ebc6 is confirmed pushed. Owner explicitly authorizes [APR-023](approved-baselines/APR-023-reservation-increment-scope.md), SLICE-STOCK reservation increment. Gate remains true; local ignored unlock matches APR-023. Architecture APR-018/e80a04b15ddf93451cc79ccf81722f564912596d unchanged.
-Current scope: RequestReservation, ActivateReservation and scoped GetReservation; Inventory-owned evidence, IPS-only stock effects, confirmed-demand priority and no stealing/TTL. Shipment, release/consumption/cancellation, money and new factory policy excluded. Stop after accepted documented local commit for Owner push. See [plan](../12-implementation-planning/SLICE_STOCK_RESERVATION_PLAN.md).
+Current Owner decision (2026-10-09): accepted reservation commit807ab190d49ebb3bd4e3419e09c28de4bc656faf is confirmed pushed. Owner explicitly authorizes [APR-024](approved-baselines/APR-024-shipment-increment-scope.md), SLICE-STOCK shipment increment. Gate remains true; local ignored unlock matches APR-024. Architecture APR-018/e80a04b15ddf93451cc79ccf81722f564912596d unchanged.
+Current scope: bounded confirmed-order shipping preparation/dispatch, Shipping-owned evidence, Inventory-owned lifecycle and IPS-only stock exit, Sales-owned demand/fulfillment through owner ports. Owner policy confirmation2026-10-09 resolves normal shipment: individual ACT-SHIP, complete reserved Units, no second approval or financial prerequisite, minimum identity/kg/actor/time/outcome evidence. See [execution plan/DoD](../12-implementation-planning/SLICE_STOCK_SHIPMENT_PLAN.md). Implementation proceeds within this bounded policy; no exceptional shipment, Unit splitting or delivery confirmation. Engineering shipment DoD accepted after107 unit/173 real PostgreSQL tests and independent review/security closure; see [actual shipment delivery](../12-implementation-planning/SLICE_STOCK_SHIPMENT_IMPLEMENTATION_STATUS.md). Stop after local commit for Owner review/push.
 
 ## Historical foundation authorization / readiness snapshot
 
