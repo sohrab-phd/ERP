@@ -6,25 +6,16 @@ status: in_review
 version: 0.6.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [SM-CATALOGUE-001, SM-INV-001, SM-SIDE-001, APR-004, APR-005]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-09
 approval: null
 supersedes: null
 ---
 
 # Transition Tables
 
-## Current evidence precedence (2026-10-04)
+## Current evidence precedence (2026-10-09)
 
-APR-005 remains historical structure-approval evidence; this technical revision
-is made under delegated ADR-0012 authority and does not approve a new baseline.
-Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
-classification: a person decides reusability; recording and authority stay open.
-OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
-policy remains open under production evidence/OQ-009 and must not inherit its
-zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
-Quality is future-only; portal MVP is isolated visibility-only; personal
-operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
-RACI and historical handoff wording cannot override these live facts.
+APR-025 Owner production decision (2026-10-09) now supplies full/partial consumption at CompleteProductionOperation, route-based WIP/final results, exact zero-unexplained-imbalance mass balance and authenticated managerial Residual/Scrap disposition. No numeric classifier, process-loss adjustment or OQ-006 tolerance applies. Unanswered runtime route skip/reorder, post-post correction/rework and standalone warehouse conversion remain deferred prerequisites. QC stays outside MVP. Historical factory evidence is retained; this decision resolves only those OQ-003/OQ-009 branches, both remain treating.
 
 
 Per-transition structure for every machine in
@@ -37,7 +28,7 @@ reversal, not delete (INV-005). Temporary roster names cannot be the Actor.
 `ACT-IPS` is mechanical only. Requirement links are `INV-*` and `REQ-OBJ-*`.
 Detailed `REQ-*` and `TEST-*` IDs are not invented (FIND-021, FIND-028).
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Implementation authorization and bounded scope are recorded in [CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md) and the canonical gate; this catalogue grants no authority.
 
 OQ-005 current-MVP scope overrides the proposed QC-dependent rows below:
 there is no Quality role or QC execution. Rows involving `ACT-QC`,
@@ -193,7 +184,7 @@ steps, Procurement posting authority, mandatory PO/ticket or a QC gate.
 | ISSUED_TO_PRODUCTION or PARTIALLY_CONSUMED | CONSUMED | ConsumeUnitComplete | ACT-IPS nested inside `CompleteProductionOperation` | same; independent production consume forbidden | Inventory writes Unit/Ledger consume side of the completion bundle | InventoryUnitConsumed |
 | AVAILABLE or RESERVED | PACKED | PackUnit | ACT-IPS commanded by ACT-SHIP | INV-017; `open: OQ-004` | Inventory writes Unit | InventoryUnitPacked |
 | PACKED | SHIPPED | ShipUnit | ACT-IPS commanded by ACT-SHIP | SM-SHIPMENT dispatched; INV-011 | Inventory writes Unit/Ledger exit | InventoryUnitShipped |
-| any live | SCRAPPED | ScrapUnit | ACT-IPS commanded by ACT-OP or ACT-QC | paired SM-SCRAP fact; scrap **quantity** is `PostScrapMovement` only (OQ-009) | Inventory writes Unit destiny `SCRAPPED`; does not post a second scrap qty | InventoryUnitScrapped |
+| any live | SCRAPPED | ScrapUnit | ACT-IPS commanded by ACT-OP or ACT-QC | paired SM-SCRAP fact; for operation leftover, classified Scrap is counted once within full actual input stock-out (ADR-0020); a later NEW Scrap capability needs its approved contract | Inventory writes Unit destiny `SCRAPPED`; does not post a second scrap qty | InventoryUnitScrapped |
 | SHIPPED | RETURNED | ReturnUnit | ACT-IPS | reversal, not delete (INV-005) | Inventory writes Unit/Ledger | InventoryUnitReturned |
 | terminal | CLOSED | CloseUnit | ACT-IPS | no remaining quantity | Inventory writes Unit | InventoryUnitClosed |
 
@@ -203,16 +194,16 @@ steps, Procurement posting authority, mandatory PO/ticket or a QC gate.
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | PLANNED | PlanMaterialAllocation | ACT-PLAN | distinct from Reservation (INV-003) | Production writes Allocation | MaterialAllocationPlanned |
 | PLANNED | ASSIGNED | AssignMaterialAllocation | ACT-PLAN | Unit or Lot identified | Production writes Allocation | MaterialAllocationAssigned |
-| ASSIGNED | ISSUED | IssueAllocatedMaterial | ACT-IPS | Production Order released; `open: OQ-003` | Inventory posts issue; Production does not write Ledger | MaterialAllocationIssued |
+| ASSIGNED | ISSUED | IssueAllocatedMaterial | ACT-IPS | Production Order released; current route/allocation/quantity/customer and unreserved eligible Unit; APR-025; issue changes lifecycle, not stock quantity | Inventory marks issued identity and restriction; no quantity movement; Production records allocation state | MaterialAllocationIssued |
 | PLANNED or ASSIGNED | RELEASED | ReleaseMaterialAllocation | ACT-PLAN | not yet issued, or issued then reversed | Production writes Allocation | MaterialAllocationReleased |
 
 ## SM-PRODUCTION-OPERATION
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | PLANNED | PlanProductionOperation | ACT-PLAN | `open: OQ-003` routing storage/version/lifecycle; ten Stations recorded | Production writes Operation | ProductionOperationPlanned |
+| (none) | PLANNED | PlanProductionOperation | ACT-PLAN | Draft route revisions/releases per APR-025 and ADR-0020; ten Stations are vocabulary, not a fixed sequence | Production writes Operation | ProductionOperationPlanned |
 | PLANNED | IN_PROGRESS | StartProductionOperation | ACT-OP | order is RELEASED or IN_PROGRESS | Production writes Operation | ProductionOperationStarted |
-| IN_PROGRESS | COMPLETED | CompleteProductionOperation | ACT-OP | INV-006 exclusive posting boundary; routing storage/version/lifecycle `open: OQ-003` (ten Stations already recorded); production mass-balance policy and human disposition recording/authority `open: OQ-009` (OQ-006 is fulfillment tolerance, not mass balance); no current-MVP QC guard | One transaction: consume/output/leftover residual **or** scrap, process loss, genealogy source facts, nested IPS identity/qty posts. Valid normal good/reusable output Units are `AVAILABLE` on commit; Scrap is not. QC request is deferred to a future Quality scope only. See DATA-TX-001. | ProductionOperationCompleted |
+| IN_PROGRESS | COMPLETED | CompleteProductionOperation | ACT-OP | INV-006; immutable released order-specific route; APR-025 exact mass balance, own issued inputs and authenticated disposition when leftovers exist; no QC or OQ-006 tolerance | One transaction: actual full/partial consumption, route-based final/new WIP and human-classified leftover, immutable genealogy source facts, nested IPS identity/qty posts. Valid final/reusable output Units are `AVAILABLE` on commit; new WIP stays `ISSUED_TO_PRODUCTION` and unavailable to sale/shipment; Scrap is not available. QC request is deferred to a future Quality scope only. See DATA-TX-001. | ProductionOperationCompleted |
 | PLANNED | SKIPPED | SkipProductionOperation | ACT-PLAN | Factory per-order route may skip Stations; operation skip lifecycle/authority remains OQ-003/OQ-019, no inventory post implied | Production writes Operation; no silent stock change | ProductionOperationSkipped |
 | COMPLETED | REWORK | StartReworkOperation | ACT-OP | INV-005, INV-009; `open: OQ-003` | new operation/fact; prior posted facts reverse, not edit | ProductionOperationRework |
 
@@ -221,11 +212,11 @@ steps, Procurement posting authority, mandatory PO/ticket or a QC gate.
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | DRAFT | DraftProductionOrder | ACT-PLAN | demand or make-need reference | Production writes PO | ProductionOrderDrafted |
-| DRAFT | PLANNED | PlanProductionOrder | ACT-PLAN | allocation distinct from Reservation (INV-003) | Production writes PO + Allocation | ProductionOrderPlanned |
-| PLANNED | RELEASED | ReleaseProductionOrder | ACT-PLAN | `open: OQ-003` | Production writes PO; commands issue | ProductionOrderReleased |
+| DRAFT or PLANNED (before release) | PLANNED | PlanProductionOrder | ACT-PLAN | bounded order-specific route; allocation is a separate intent, distinct from Reservation (INV-003) | Production writes PO/operations and immutable route snapshot; allocation uses its own command | ProductionOrderPlanned |
+| PLANNED | RELEASED | ReleaseProductionOrder | ACT-PLAN | current confirmed MAKE demand and approved immutable route, APR-025 | Production writes PO and records Sales MAKE reference through its owner port; material issue is separate | ProductionOrderReleased |
 | RELEASED | IN_PROGRESS | StartProductionOrder | ACT-OP | issued material or allowed start | Production writes PO | ProductionOrderInProgress |
 | IN_PROGRESS | PARTIALLY_COMPLETED | CompleteOperationPartial | ACT-OP | At least one operation `COMPLETED` via `CompleteProductionOperation`; remaining operations exist | Production writes PO state only; **no** Ledger, residual, or scrap post | ProductionOrderPartiallyCompleted |
-| IN_PROGRESS or PARTIALLY_COMPLETED | COMPLETED | CompleteProductionOrder | ACT-OP / ACT-PLAN | remaining operations done; mass-balance policy open under production evidence/OQ-009, separate from OQ-006 | Production writes PO | ProductionOrderCompleted |
+| IN_PROGRESS or PARTIALLY_COMPLETED | COMPLETED | CompleteProductionOrder | ACT-OP / ACT-PLAN | all required released route operations completed under APR-025; no stock quantity effect | Production writes PO | ProductionOrderCompleted |
 | COMPLETED | CLOSED | CloseProductionOrder | ACT-PLAN | none for stock | Production writes PO | ProductionOrderClosed |
 | live | PAUSED | PauseProductionOrder | ACT-PLAN / ACT-OP | none numeric | Production writes PO | ProductionOrderPaused |
 | PAUSED | prior live state | ResumeProductionOrder | ACT-PLAN / ACT-OP | change record exists; QC hold applies only in future Quality scope | Production writes PO | ProductionOrderResumed |
@@ -238,7 +229,7 @@ steps, Procurement posting authority, mandatory PO/ticket or a QC gate.
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
 | (none) | FACT_RECORDED | RecordResidualFact | ACT-OP nested inside `CompleteProductionOperation` | parent Unit known; leftover of this operation is not independently postable (INV-006) | Production writes residual fact, not Ledger | ResidualFactRecorded |
-| FACT_RECORDED | UNIT_CREATED | CreateResidualUnit | ACT-IPS nested inside `CompleteProductionOperation` | INV-008; `open: OQ-009` usable; not a second qty post after completion | Inventory creates child Unit as `AVAILABLE` for current-MVP normal use on valid commit; parent closed/split; residual on-hand Ledger **once** | ResidualUnitCreated |
+| FACT_RECORDED | UNIT_CREATED | CreateResidualUnit | ACT-IPS nested inside `CompleteProductionOperation` | INV-008; authenticated explicit managerial disposition under APR-025; not a second qty post after completion | Inventory creates child Unit as `AVAILABLE` for current-MVP normal use on valid commit; parent closed/split; residual on-hand Ledger **once** | ResidualUnitCreated |
 | FACT_RECORDED | BELOW_THRESHOLD_TO_SCRAP (**historical superseded proposal only**) | ConvertResidualToScrap (historical numeric-branch mapping only) | no current-MVP executable actor mapping | Forbidden as automatic threshold classification; OQ-009 human disposition/authority remains required | No current transition or write; non-reusable leftover uses existing nested RecordScrapFact/PostScrapMovement under human disposition | ResidualBelowThreshold (historical, not emitted) |
 | UNIT_CREATED | AVAILABLE_OR_QUARANTINE | PlaceResidualUnit | ACT-IPS | Historical/future placement/QC branch; not required to make a valid current-MVP child Unit `AVAILABLE`. Quarantine applies only in future Quality scope (INV-010). | Follow-on placement where applicable may change location without a second quantity post; no current-MVP release effect | ResidualUnitPlaced |
 
@@ -246,8 +237,8 @@ steps, Procurement posting authority, mandatory PO/ticket or a QC gate.
 
 | From | To | Command | Actor | Guard | Effect | Event |
 | --- | --- | --- | --- | --- | --- | --- |
-| (none) | FACT_RECORDED | RecordScrapFact | ACT-OP; ACT-QC future only | quantity, reason, origin; production leftover nested in `CompleteProductionOperation` | Production writes scrap fact; future Quality may do so only if enabled. Neither writes stock. | ScrapFactRecorded |
-| FACT_RECORDED | STOCK_POSTED | PostScrapMovement | ACT-IPS | INV-001, INV-017; OQ-009 authoritative scrap **qty**; one Ledger row per scrap fact | Inventory posts scrap quantity once | ScrapStockPosted |
+| (none) | FACT_RECORDED | RecordScrapFact | ACT-OP; ACT-QC future only | quantity, origin and authenticated explicit managerial disposition under APR-025; production leftover nested in `CompleteProductionOperation` | Production writes scrap fact; future Quality may do so only if enabled. Neither writes stock. | ScrapFactRecorded |
+| FACT_RECORDED | STOCK_POSTED | PostScrapMovement | ACT-IPS | INV-001, INV-017; OQ-009 authoritative scrap **qty**; classified Scrap included once in actual consumed-input stock-out; immutable Scrap source evidence, no extra quantity subtraction (ADR-0020) | Inventory posts scrap quantity once | ScrapStockPosted |
 | STOCK_POSTED | CLOSED | CloseScrap | ACT-OP; ACT-QC future only | none numeric | owning fact closed | ScrapClosed |
 
 ## SM-QUALITY-INSPECTION — future/deferred, outside current MVP
@@ -310,14 +301,18 @@ Normal MVP shipment increment under APR-024 (2026-10-09) implements preparation 
 
 ## Still not filled on purpose
 
-- Technical arithmetic/persistence scale (OQ-001); OQ-002 measured kg answered
-- Routing storage/version/lifecycle (OQ-003); ten physical Stations are recorded. Posting **boundary** is `CompleteProductionOperation` (recorded).
+- OQ-001 remaining conversion/applicability inputs; technical arithmetic/persistence scale is accepted by ADR-0015, and OQ-002 measured kg is answered
+- OQ-003 runtime skip/reorder, post-post correction/rework and standalone warehouse conversion; immutable routing storage/version/release is delivered by ADR-0020. Posting **boundary** is `CompleteProductionOperation`.
 - Dependent catalogue/order identity mapping (OQ-004 hybrid grain is answered)
 - Named QC releasers and numeric limits (OQ-005)
-- Percent or weight tolerances (OQ-006)
+- Future family-specific percent/weight configuration (OQ-006); accepted fulfillment default is zero
 - Family %/kg over-delivery (OQ-006 configuration; default 0 is answered)
 - Future temporary-hold reservation TTL (OQ-008 residual only)
-- Human reusability disposition recording and authority; no automatic cutoff (OQ-009)
-- Required production mass-balance/process-loss policy (OQ-009 production evidence), distinct from fulfillment tolerance
-- Named workshop approvers and exceptional-shipment person (OQ-019)
+- OQ-009 unrelated later family/warehouse-return/compensation branches; authenticated disposition recording and authority are resolved for this bounded workflow by APR-025
+- Any future change to the APR-025 exact zero-unexplained-imbalance production policy requires actual factory evidence and Owner decision; no current process-loss adjustment or OQ-006 tolerance applies
+- Actual user-to-permission Go-Live mappings and future exceptional-shipment authority (OQ-019); no named employee is hard-coded or required for the normal production flow
 - Inquiry and Quotation expiry day counts (`workshop-commercial-practice`)
+
+## Effective bounded MVP production policy — 2026-10-09
+
+[APR-025](../00-governance/approved-baselines/APR-025-production-scope.md#owner-production-decision--2026-10-09) supersedes only earlier missing production consumption/result/mass-balance/disposition branches. CompleteProductionOperation supports full/partial actual kg; original unconsumed material retains restrictions. Exact consumed = final + new WIP + Residual + Scrap, zero unexplained imbalance, no process loss/rounding. Existing WIP is not double-counted. WIP is not saleable; final readiness follows approved per-order route. Required leftover classification is the actual authenticated, explicitly permitted manager decision, without a new role/second approval chain; none is required for no leftovers. Current atomic owner/IPS/source-fact/audit/idempotency boundary is unchanged; unrelated OQ branches remain open.

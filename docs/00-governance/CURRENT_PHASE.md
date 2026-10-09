@@ -13,8 +13,9 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner decision (2026-10-09): accepted reservation commit807ab190d49ebb3bd4e3419e09c28de4bc656faf is confirmed pushed. Owner explicitly authorizes [APR-024](approved-baselines/APR-024-shipment-increment-scope.md), SLICE-STOCK shipment increment. Gate remains true; local ignored unlock matches APR-024. Architecture APR-018/e80a04b15ddf93451cc79ccf81722f564912596d unchanged.
-Current scope: bounded confirmed-order shipping preparation/dispatch, Shipping-owned evidence, Inventory-owned lifecycle and IPS-only stock exit, Sales-owned demand/fulfillment through owner ports. Owner policy confirmation2026-10-09 resolves normal shipment: individual ACT-SHIP, complete reserved Units, no second approval or financial prerequisite, minimum identity/kg/actor/time/outcome evidence. See [execution plan/DoD](../12-implementation-planning/SLICE_STOCK_SHIPMENT_PLAN.md). Implementation proceeds within this bounded policy; no exceptional shipment, Unit splitting or delivery confirmation. Engineering shipment DoD accepted after107 unit/173 real PostgreSQL tests and independent review/security closure; see [actual shipment delivery](../12-implementation-planning/SLICE_STOCK_SHIPMENT_IMPLEMENTATION_STATUS.md). Stop after local commit for Owner review/push.
+Current Owner decision (2026-10-09): accepted shipment commit `40630e02acb24091e306816647cfbfc2d97dda28` is confirmed pushed. Owner explicitly authorizes [APR-025](approved-baselines/APR-025-production-scope.md), SLICE-MAKE. Gate remains true and local ignored unlock matches APR-025; architecture APR-018 is unchanged.
+
+Current scope: Production lifecycle/allocation and atomic consumption/result/source-fact completion through Inventory owner ports and sole IPS, with Sales demand references. See [bounded plan/DoD](../12-implementation-planning/SLICE_MAKE_PLAN.md). The actual Owner decision in APR-025 resolves bounded consumption/WIP/mass-balance/disposition prerequisites. Unrelated OQ branches remain open. SLICE-MAKE has passed its documented tests, independent engineering/security review and engineering acceptance; actual evidence is recorded in [delivery](../12-implementation-planning/SLICE_MAKE_IMPLEMENTATION_STATUS.md). The coherent local delivery commit awaits Owner review/push; the next major slice has not begun. Prior shipment engineering/security gates passed and the Owner accepted/pushed that commit. Stop after accepted documented local SLICE-MAKE commit for Owner review/push.
 
 ## Historical foundation authorization / readiness snapshot
 
@@ -152,3 +153,5 @@ and signers), OQ-019 (workshop/sign-off/delegate and ACT permission mappings;
 unnamed production operators). Eleven organizational names are already recorded.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+Current Owner production policy update (2026-10-09): the bounded SLICE-MAKE consumption, WIP/final, exact mass-balance and authenticated managerial disposition prerequisites above are resolved by the actual [Owner decision](approved-baselines/APR-025-production-scope.md). Implementation resumes; earlier pending preparation text is historical. OQ-003/OQ-009 stay treating for unrelated branches.

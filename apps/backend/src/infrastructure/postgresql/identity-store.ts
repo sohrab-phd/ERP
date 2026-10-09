@@ -31,8 +31,17 @@ export class PostgresIdentityStore implements IdentityStore {
     const r = await client.query<{ allowed: boolean }>(
       'SELECT EXISTS(SELECT 1 FROM identity.session s JOIN identity.account a USING(installation_id,account_id) JOIN identity.role_grant g USING(installation_id,account_id) WHERE s.installation_id=$1 AND s.token_digest=$2 AND s.account_id=$3 AND a.person_id=$4 AND g.authority_scope_id=$5 AND g.actor_role=$6 AND g.customer_scope=$7 AND ' +
         activeSession +
-        ') AS allowed',
-      [installation, digest, accountId, personId, g.authorityScopeId, g.actorRole, g.customerScope],
+        ' AND ($8::boolean=false OR g.production_disposition)) AS allowed',
+      [
+        installation,
+        digest,
+        accountId,
+        personId,
+        g.authorityScopeId,
+        g.actorRole,
+        g.customerScope,
+        g.productionDisposition === true,
+      ],
     );
     return r.rows[0]?.allowed === true;
   }
@@ -89,12 +98,20 @@ export class PostgresIdentityStore implements IdentityStore {
     enabled: boolean,
   ) {
     const values = [installation, id, g.authorityScopeId, g.actorRole, g.customerScope];
-    if (enabled)
-      await transactionClient(tx).query(
-        'INSERT INTO identity.role_grant(installation_id,account_id,authority_scope_id,actor_role,customer_scope) VALUES($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING',
-        values,
+    const client = transactionClient(tx);
+    if (enabled) {
+      // The existing account/admin locks serialize grant replacement and permission revocation.
+      // No UPDATE privilege or separate permission subsystem is introduced.
+      if (g.productionDisposition !== undefined)
+        await client.query(
+          'DELETE FROM identity.role_grant WHERE installation_id=$1 AND account_id=$2 AND authority_scope_id=$3 AND actor_role=$4 AND customer_scope=$5',
+          values,
+        );
+      await client.query(
+        'INSERT INTO identity.role_grant(installation_id,account_id,authority_scope_id,actor_role,customer_scope,production_disposition) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT DO NOTHING',
+        [...values, g.productionDisposition === true],
       );
-    else
+    } else
       await transactionClient(tx).query(
         'DELETE FROM identity.role_grant WHERE installation_id=$1 AND account_id=$2 AND authority_scope_id=$3 AND actor_role=$4 AND customer_scope=$5',
         values,
@@ -104,10 +121,12 @@ export class PostgresIdentityStore implements IdentityStore {
     const client = tx === undefined ? this.pool : transactionClient(tx);
     return (
       await client.query<Grant>(
-        'SELECT actor_role AS "actorRole",authority_scope_id AS "authorityScopeId",customer_scope AS "customerScope" FROM identity.role_grant WHERE installation_id=$1 AND account_id=$2 ORDER BY actor_role,customer_scope',
+        'SELECT actor_role AS "actorRole",authority_scope_id AS "authorityScopeId",customer_scope AS "customerScope", production_disposition AS "productionDisposition" FROM identity.role_grant WHERE installation_id=$1 AND account_id=$2 ORDER BY actor_role,customer_scope',
         [installation, id],
       )
-    ).rows;
+    ).rows.map(({ productionDisposition, ...grant }) =>
+      productionDisposition === true ? { ...grant, productionDisposition: true } : grant,
+    );
   }
   async countAdmins(tx: TransactionContext, installation: string, scope: string) {
     const r = await transactionClient(tx).query<{ count: number }>(

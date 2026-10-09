@@ -726,3 +726,9 @@ review and authorization.
 - [Actual Owner scope and policy](approved-baselines/APR-024-shipment-increment-scope.md): reservation807ab190d49ebb3bd4e3419e09c28de4bc656faf confirmed pushed; normal complete reserved-Unit shipment authorized and ACT-SHIP/no second approval/no payment or invoice prerequisite confirmed2026-10-09.
 - Gate/local ignored unlock match APR-024; architecture APR-018 unchanged. Shipping owns preparation/dispatch, Inventory owns claim/lifecycle and sole IPS posts stock exit; customer delivery, physical splitting, exceptions and Sales closure are excluded.
 - Stop after accepted documented local commit for Owner review/push. No fabricated approval signature, blanket OQ closure or remote push.
+
+### APR-025 — Production and genealogy source-fact scope
+
+- [Actual Owner authority](approved-baselines/APR-025-production-scope.md): shipment `40630e02acb24091e306816647cfbfc2d97dda28` accepted/pushed, explicit SLICE-MAKE continuation.
+- Gate/local ignored unlock match APR-025; architecture APR-018 unchanged. No new factory business answer, approval signature or broader MVP grant. OQ-003/OQ-009 affected production semantics remain pending in the [bounded plan](../12-implementation-planning/SLICE_MAKE_PLAN.md).
+- Stop after accepted tested/reviewed/documented local slice commit for Owner review/push; no remote push or next major slice.

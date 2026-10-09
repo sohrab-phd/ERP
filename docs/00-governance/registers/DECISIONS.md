@@ -296,3 +296,7 @@ invented. [Actual delivery](../../12-implementation-planning/SLICE_STOCK_DEMAND_
 ## ADR-0019 — Normal reserved-stock dispatch
 
 [Accepted engineering mechanism](../adrs/ADR-0019-normal-stock-dispatch.md) within APR-024: Shipping-owned package/dispatch evidence through Inventory owner ports and sole IPS, complete reserved Units, atomic consumed intent/Ledger/Balance/audit/outcome, instance-bound admission and retained outbound allocation coverage. No financial prerequisite, physical split, customer delivery or automatic Sales fulfillment/closure. Actual107 unit/173 PostgreSQL tests and independent engineering/security source review pass; bounded delivery is documented.
+
+## ADR-0020 — Atomic routed production
+
+[Engineering mechanism](../adrs/ADR-0020-atomic-routed-production.md) within actual APR-025 Owner policies: per-order immutable route, real ProductBatch/source identities, current authenticated disposition, private owner admissions and sole IPS atomic full/partial consumption/new output. Classified Scrap is included once in full actual consumed-input stock-out, with immutable source evidence; no double subtraction. Exact bounded lineage capacity, WIP restrictions and no-quantity finalization preserve accepted domain rules. Acceptance evidence: [actual delivery](../../12-implementation-planning/SLICE_MAKE_IMPLEMENTATION_STATUS.md); unrelated OQ branches remain open.

@@ -41,6 +41,16 @@ import { ShippingService, type ShippingContext } from './modules/shipping/index.
 import { InventoryShippingService } from './modules/inventory/index.js';
 import { PostgresShippingStore } from './infrastructure/postgresql/shipping-store.js';
 import { createShippingHandler } from './transport/shipping-http.js';
+import {
+  ProductionService,
+  productionRole,
+  productionTarget,
+  type ProductionContext,
+} from './modules/production/index.js';
+import { InventoryProductionService } from './modules/inventory/index.js';
+import { PostgresProductionStore } from './infrastructure/postgresql/production-store.js';
+import { PostgresInventoryProductionStore } from './infrastructure/postgresql/inventory-production-store.js';
+import { createProductionHandler } from './transport/production-http.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -97,7 +107,7 @@ export function compose(config: Readonly<Config>) {
         ctx.request.target.kind === 'sales-order' &&
         (await salesStore.order(ctx, ctx.request.target.id)) !== undefined
       );
-    if (ctx.request.command === 'RecordFulfillmentStock')
+    if (['RecordFulfillmentStock', 'RecordFulfillmentMake'].includes(ctx.request.command))
       return (
         ctx.request.target.kind === 'fulfillment-assessment' &&
         (await salesStore.assessment(ctx, ctx.request.target.id)) !== undefined
@@ -127,6 +137,12 @@ export function compose(config: Readonly<Config>) {
     ctx.actor.customerScope === customerId &&
     ctx.actor.temporary !== true &&
     (await identity.isCurrent(ctx.actor, ctx.transaction));
+  const productionCurrent = async (ctx: ProductionContext) =>
+    ['ACT-PLAN', 'ACT-OP'].includes(ctx.actor.actorRole) &&
+    validUuid(ctx.actor.customerScope) &&
+    ctx.actor.temporary !== true &&
+    (await identity.isCurrent(ctx.actor, ctx.transaction));
+  const productionStore = new PostgresProductionStore();
   const inventoryStore = new PostgresInventoryStore();
   const reservationStore = new PostgresReservationRequestStore();
   const inventory: InventoryPostingService = new InventoryPostingService(inventoryStore, {
@@ -142,24 +158,31 @@ export function compose(config: Readonly<Config>) {
         (await reservationStore.activeCustomer(ctx, unit.id)) === ctx.actor.customerScope
       );
     },
-    visibleForEffect: (ctx, effect, unit) => inventoryShipping.visibleForEffect(ctx, effect, unit),
+    visibleForEffect: (ctx, effect, unit) =>
+      ctx.request.command === 'CompleteProductionOperation'
+        ? inventoryProduction.visibleForEffect(ctx, effect, unit)
+        : inventoryShipping.visibleForEffect(ctx, effect, unit),
     authorize: (ctx) =>
-      ctx.request.command === 'DispatchShipment'
-        ? shipCurrent(ctx)
-        : ctx.request.command === 'ActivateReservation'
-          ? Promise.resolve(
-              ctx.actor.temporary !== true &&
-                (ctx.actor.actorRole === 'ACT-SALES'
-                  ? validUuid(ctx.actor.customerScope)
-                  : ctx.actor.actorRole === 'ACT-WH' && org(ctx.actor)) &&
-                identity.isCurrent(ctx.actor, ctx.transaction),
-            )
-          : ctx.request.command === 'PostGoodsReceipt'
-            ? canPost(ctx)
-            : ['GetInventoryUnit', 'GetLot'].includes(ctx.request.command)
-              ? canRead(ctx)
-              : Promise.resolve(false),
+      ctx.request.command === 'CompleteProductionOperation'
+        ? productionCurrent(ctx)
+        : ctx.request.command === 'DispatchShipment'
+          ? shipCurrent(ctx)
+          : ctx.request.command === 'ActivateReservation'
+            ? Promise.resolve(
+                ctx.actor.temporary !== true &&
+                  (ctx.actor.actorRole === 'ACT-SALES'
+                    ? validUuid(ctx.actor.customerScope)
+                    : ctx.actor.actorRole === 'ACT-WH' && org(ctx.actor)) &&
+                  identity.isCurrent(ctx.actor, ctx.transaction),
+              )
+            : ctx.request.command === 'PostGoodsReceipt'
+              ? canPost(ctx)
+              : ['GetInventoryUnit', 'GetLot'].includes(ctx.request.command)
+                ? canRead(ctx)
+                : Promise.resolve(false),
     validate: (ctx, effect, unit) => {
+      if (ctx.request.command === 'CompleteProductionOperation')
+        return inventoryProduction.validateEffect(ctx, effect, unit);
       if (ctx.request.command === 'DispatchShipment')
         return inventoryShipping.validateEffect(ctx, effect, unit);
       if (ctx.request.command === 'ActivateReservation')
@@ -203,6 +226,11 @@ export function compose(config: Readonly<Config>) {
       readStock: (ctx, ids) => inventory.availability(ctx, ids),
     },
     {
+      canStartMake: async (ctx, salesId, productionId, itemId) =>
+        (await productionCurrent(ctx)) &&
+        production.admittedRelease(ctx, salesId, productionId, itemId),
+      canProduce: (ctx, id) =>
+        ctx.actor.customerScope === id ? productionCurrent(ctx) : Promise.resolve(false),
       canAccess: (ctx, id) => Promise.resolve(salesCurrent(ctx, id)),
       canShip: (ctx, id) =>
         shippingCommands.includes(ctx.request.command)
@@ -214,6 +242,36 @@ export function compose(config: Readonly<Config>) {
         )
           ? reservationCurrent(ctx, id, ctx.request.command === 'RequestReservation')
           : Promise.resolve(false),
+    },
+  );
+  const inventoryProduction: InventoryProductionService = new InventoryProductionService(
+    new PostgresInventoryProductionStore(),
+    inventoryStore,
+    inventory,
+    {
+      canInspect: (ctx, id) => production.accessible(ctx, id),
+      canIssue: async (ctx, id, units) =>
+        (await productionCurrent(ctx)) && (await production.admittedIssue(ctx, id, units)),
+      canComplete: async (ctx, batch) =>
+        (await productionCurrent(ctx)) &&
+        (await production.admittedCompletion(ctx, batch)) &&
+        (!(
+          (Array.isArray(ctx.request.payload.residuals) && ctx.request.payload.residuals.length) ||
+          (Array.isArray(ctx.request.payload.scraps) && ctx.request.payload.scraps.length)
+        ) ||
+          (await identity.canDispose(ctx.actor, ctx.transaction))),
+    },
+  );
+  const production: ProductionService = new ProductionService(
+    productionStore,
+    inventoryProduction,
+    {
+      demand: (ctx, id, customer) => sales.productionDemand(ctx, id, customer),
+      start: (ctx, id, order, item) => sales.startMake(ctx, id, order, item),
+    },
+    {
+      current: productionCurrent,
+      canDispose: (ctx) => identity.canDispose(ctx.actor, ctx.transaction),
     },
   );
   const reservations: ReservationService = new ReservationService(
@@ -353,9 +411,53 @@ export function compose(config: Readonly<Config>) {
       if (!tx)
         return (
           request.target.kind ===
-          (request.command === 'RecordFulfillmentStock' ? 'fulfillment-assessment' : 'sales-order')
+          (['RecordFulfillmentStock', 'RecordFulfillmentMake'].includes(request.command)
+            ? 'fulfillment-assessment'
+            : 'sales-order')
         );
       return salesResource({ actor, request, transaction: tx });
+    },
+    canDisclose: (actor: ExecutionContext, _request: CommandRequest, result: StableResult) =>
+      Promise.resolve(
+        result.outcome === 'rejected' || result.data?.customerId === actor.customerScope,
+      ),
+  }));
+  const productionPolicies = production.contracts().map((contract) => ({
+    command: contract.command,
+    version: 1,
+    roles:
+      contract.command === 'CompleteProductionOrder'
+        ? ['ACT-PLAN' as const, 'ACT-OP' as const]
+        : [productionRole(contract.command)],
+    canTarget: async (
+      actor: ExecutionContext,
+      request: CommandRequest,
+      tx?: TransactionContext,
+    ) => {
+      if (
+        (actor.actorRole !== productionRole(request.command) &&
+          !(request.command === 'CompleteProductionOrder' && actor.actorRole === 'ACT-PLAN')) ||
+        actor.temporary === true ||
+        !validUuid(actor.customerScope) ||
+        !validUuid(request.target.id) ||
+        request.target.kind !== productionTarget(request.command)
+      )
+        return false;
+      const hasLeftover =
+        request.command === 'CompleteProductionOperation' &&
+        ((Array.isArray(request.payload.residuals) && request.payload.residuals.length > 0) ||
+          (Array.isArray(request.payload.scraps) && request.payload.scraps.length > 0));
+      if (hasLeftover && !(await identity.canDispose(actor, tx))) return false;
+      if (!tx || ['DraftProductionOrder', 'PlanMaterialAllocation'].includes(request.command))
+        return true;
+      const ctx = { actor, request, transaction: tx };
+      return (
+        (request.target.kind === 'production-order'
+          ? await productionStore.order(ctx, request.target.id)
+          : request.target.kind === 'production-operation'
+            ? await productionStore.operation(ctx, request.target.id)
+            : await productionStore.allocation(ctx, request.target.id)) !== undefined
+      );
     },
     canDisclose: (actor: ExecutionContext, _request: CommandRequest, result: StableResult) =>
       Promise.resolve(
@@ -368,6 +470,7 @@ export function compose(config: Readonly<Config>) {
       ...sales.contracts(),
       ...reservations.contracts(),
       ...shipping.contracts(),
+      ...production.contracts(),
     ]),
     transactions,
     outcomes: new PostgresOutcomes(),
@@ -376,6 +479,7 @@ export function compose(config: Readonly<Config>) {
       ...salesPolicies,
       ...reservationPolicies,
       ...shippingPolicies,
+      ...productionPolicies,
       {
         command: 'PostGoodsReceipt',
         version: 1,
@@ -552,9 +656,39 @@ export function compose(config: Readonly<Config>) {
       await tx.release();
     }
   };
+  const productionQuery = async (
+    kind: 'GetProductionOrder' | 'GetOperation' | 'GetAllocation',
+    id: string,
+    actor: ExecutionContext,
+  ) => {
+    const tx = await transactions.begin();
+    try {
+      const ctx = {
+        actor,
+        transaction: tx.context,
+        request: {
+          command: kind,
+          contract_version: 1,
+          idempotency_key: randomUUID(),
+          target: { kind: 'query', id },
+          payload: {},
+          preconditions: {},
+        },
+      };
+      const data = await production.query(ctx, kind, id);
+      await tx.commit();
+      return data;
+    } catch (error) {
+      await tx.rollback();
+      throw error;
+    } finally {
+      await tx.release();
+    }
+  };
   const server = createHttpHost({
     ping: () => pingDatabase(pool),
     identity: createIdentityHandler(identity),
+    production: createProductionHandler({ identity, command, query: productionQuery }),
     receipt: createReceiptHandler({ identity, command, query }),
     sales: createSalesHandler({ identity, command, query: salesQuery }),
     shipping: createShippingHandler({ identity, command, query: shippingQuery }),
@@ -563,6 +697,8 @@ export function compose(config: Readonly<Config>) {
   return {
     server,
     registry: ports.registry,
+    production,
+    productionQuery,
     identity,
     inventory,
     receipts,

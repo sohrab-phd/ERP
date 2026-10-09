@@ -25,7 +25,7 @@ export interface SalesOrder {
   items: readonly SalesItem[];
   commercialTerms: 'NOT_SUPPLIED';
   binding: string;
-  state: 'DRAFT' | 'SUBMITTED' | 'CONFIRMED';
+  state: 'DRAFT' | 'SUBMITTED' | 'CONFIRMED' | 'IN_PRODUCTION';
   confirmedAt?: string;
   confirmedAssessmentId?: string;
 }
@@ -46,6 +46,7 @@ export interface FulfillmentAssessment {
   customerId: string;
   binding: string;
   state: 'DRAFT' | 'RECORDED';
+  mode?: 'STOCK' | 'MAKE';
   selections?: readonly StockSelection[];
   stock?: readonly StockView[];
   observedAt?: string;
@@ -69,6 +70,21 @@ export interface SalesStore {
     customerId: string,
     unitId: string,
   ): Promise<readonly ReservationCompetitor[]>;
+  productionOrder?(
+    context: SalesContext,
+    id: string,
+    customerId: string,
+  ): Promise<SalesOrder | undefined>;
+  startMake?(
+    context: SalesContext,
+    orderId: string,
+    productionOrderId: string,
+    itemId: string,
+  ): Promise<boolean>;
+  recordMakeAssessment?(
+    context: SalesContext,
+    id: string,
+  ): Promise<FulfillmentAssessment | undefined>;
   customer(context: SalesContext, id: string): Promise<Customer | undefined>;
   order(context: SalesContext, id: string): Promise<SalesOrder | undefined>;
   createOrder(context: SalesContext, order: SalesOrder): Promise<void>;
@@ -105,8 +121,22 @@ export interface ReservationDemandView {
   items: readonly { id: string; type: string; demandedKg: string; allowPartialShipment: boolean }[];
   selections: readonly StockSelection[];
 }
+export interface ProductionDemandView {
+  id: string;
+  customerId: string;
+  binding: string;
+  confirmedAt: string;
+  items: readonly { id: string; type: string; demandedKg: string; allowPartialShipment: boolean }[];
+}
 export interface SalesPolicy {
   canAccess(context: SalesContext, customerId: string): Promise<boolean>;
   canReserve?(context: SalesContext, customerId: string): Promise<boolean>;
   canShip?(context: SalesContext, customerId: string): Promise<boolean>;
+  canProduce?(context: SalesContext, customerId: string): Promise<boolean>;
+  canStartMake?(
+    context: SalesContext,
+    salesOrderId: string,
+    productionOrderId: string,
+    itemId: string,
+  ): Promise<boolean>;
 }

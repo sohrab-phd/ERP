@@ -40,6 +40,8 @@ for (const file of files) {
           'sales-store.ts',
           'inventory-reservation-store.ts',
           'shipping-store.ts',
+          'production-store.ts',
+          'inventory-production-store.ts',
         ].some((name) => target === resolve('apps/backend/src/infrastructure/postgresql', name)) &&
         file.startsWith(resolve('apps/backend/src') + sep) &&
         file !== resolve('apps/backend/src/composition-root.ts')
@@ -115,7 +117,7 @@ for (const file of files) {
       issues.push(relative(root, file) + ': receipt SQL outside persistence owner');
     if (
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
-      /\bsales\.(customer|sales_order|fulfillment_assessment)\b/i.test(node.text) &&
+      /\bsales\.(customer|sales_order|fulfillment_assessment|make_reference)\b/i.test(node.text) &&
       file.startsWith(resolve('apps/backend/src') + sep) &&
       file !== resolve('apps/backend/src/infrastructure/postgresql/sales-store.ts')
     )
@@ -134,6 +136,22 @@ for (const file of files) {
       file !== resolve('apps/backend/src/infrastructure/postgresql/shipping-store.ts')
     )
       issues.push(relative(root, file) + ': Shipping SQL outside persistence owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\bproduction\.(production_order|operation|allocation|source_fact|route_snapshot|product_batch)\b/i.test(
+        node.text,
+      ) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/production-store.ts')
+    )
+      issues.push(relative(root, file) + ': Production SQL outside owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\binventory\.production_(issue|origin)\b/i.test(node.text) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-production-store.ts')
+    )
+      issues.push(relative(root, file) + ': Production inventory SQL outside Inventory owner');
     if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier)
       check(node.moduleSpecifier);
     if (

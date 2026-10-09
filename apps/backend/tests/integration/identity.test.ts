@@ -1335,3 +1335,278 @@ void test('initial steward provisioning audit failure rolls back both the accoun
     }
   });
 });
+
+void test('production disposition requires an explicit current ACT-PLAN grant on the same individually authenticated account and customer', async () => {
+  await withDatabase(async (db) => {
+    const { service, admin } = await setup(db);
+    const customer = randomUUID(),
+      otherCustomer = randomUUID();
+    const user = await personal(service, admin, 'fixture.disposition');
+    for (const actorRole of ['ACT-OP', 'ACT-PLAN'] as const)
+      await service.setGrant(admin, {
+        accountId: user.accountId,
+        actorRole,
+        customerScope: customer,
+        enabled: true,
+      });
+    const actor = await service.context(user.token, 'ACT-OP', customer);
+    assert.equal(await service.canDispose(actor), false);
+    await service.setGrant(admin, {
+      accountId: user.accountId,
+      actorRole: 'ACT-PLAN',
+      customerScope: otherCustomer,
+      enabled: true,
+      productionDisposition: true,
+    });
+    assert.equal(await service.canDispose(actor), false);
+    await service.setGrant(admin, {
+      accountId: user.accountId,
+      actorRole: 'ACT-PLAN',
+      customerScope: customer,
+      enabled: true,
+      productionDisposition: true,
+    });
+    assert.equal(await service.canDispose(actor), true);
+    assert.equal(
+      await service.canDispose(await service.context(user.token, 'ACT-PLAN', customer)),
+      true,
+    );
+    assert.equal(await service.canDispose(Object.freeze({ ...actor })), false);
+    assert.equal(
+      await service.canDispose(
+        Object.freeze({
+          ...actor,
+          principal: Object.freeze({ ...actor.principal, subject: randomUUID() }),
+        }),
+      ),
+      false,
+    );
+    const tx = await db.transactions.begin();
+    try {
+      assert.equal(await service.canDispose(actor, tx.context), true);
+      await tx.commit();
+    } finally {
+      await tx.release();
+    }
+    // Normal idempotent role provisioning without a flag must not silently remove the capability.
+    await service.setGrant(admin, {
+      accountId: user.accountId,
+      actorRole: 'ACT-PLAN',
+      customerScope: customer,
+      enabled: true,
+    });
+    assert.equal(await service.canDispose(actor), true);
+    await service.setGrant(admin, {
+      accountId: user.accountId,
+      actorRole: 'ACT-PLAN',
+      customerScope: customer,
+      enabled: true,
+      productionDisposition: false,
+    });
+    assert.equal(await service.canDispose(actor), false);
+    assert.equal(await service.isCurrent(actor), true);
+    assert.ok(
+      !(await service.session(user.token)).grants.find(
+        (g) => g.actorRole === 'ACT-PLAN' && g.customerScope === customer,
+      )?.productionDisposition,
+    );
+    await service.setGrant(admin, {
+      accountId: user.accountId,
+      actorRole: 'ACT-PLAN',
+      customerScope: customer,
+      enabled: true,
+      productionDisposition: true,
+    });
+    await service.setGrant(admin, {
+      accountId: user.accountId,
+      actorRole: 'ACT-PLAN',
+      customerScope: customer,
+      enabled: false,
+    });
+    assert.equal(await service.canDispose(actor), false);
+    const events = await db.owner.query<{
+      safe_details: { productionDisposition?: boolean };
+      actor_person_id: string;
+      target_person_id: string;
+    }>(
+      "SELECT safe_details,actor_person_id,target_person_id FROM identity.security_event WHERE kind='GRANT_CHANGED'",
+    );
+    assert.ok(
+      events.rows.some(
+        (e) =>
+          e.safe_details.productionDisposition === true && e.target_person_id === user.personId,
+      ),
+    );
+    assert.ok(
+      events.rows.some(
+        (e) =>
+          e.safe_details.productionDisposition === false && e.target_person_id === user.personId,
+      ),
+    );
+    assert.ok(!JSON.stringify(events.rows).includes(user.token));
+  });
+});
+
+void test('production disposition provisioning cannot be self-granted, placed on an operator role, or survive session/account revocation', async () => {
+  await withDatabase(async (db) => {
+    const { service, admin } = await setup(db);
+    const customer = randomUUID(),
+      user = await personal(service, admin, 'fixture.manager');
+    await service.setGrant(admin, {
+      accountId: user.accountId,
+      actorRole: 'ACT-OP',
+      customerScope: customer,
+      enabled: true,
+    });
+    await assert.rejects(
+      service.setGrant(user.token, {
+        accountId: user.accountId,
+        actorRole: 'ACT-PLAN',
+        customerScope: customer,
+        enabled: true,
+        productionDisposition: true,
+      }),
+      denied('forbidden'),
+    );
+    await assert.rejects(
+      service.setGrant(admin, {
+        accountId: user.accountId,
+        actorRole: 'ACT-OP',
+        customerScope: customer,
+        enabled: true,
+        productionDisposition: true,
+      }),
+      denied('invalid'),
+    );
+    await assert.rejects(
+      service.setGrant(admin, {
+        accountId: user.accountId,
+        actorRole: 'ACT-PLAN',
+        customerScope: customer,
+        enabled: true,
+        productionDisposition: 'true' as unknown as boolean,
+      }),
+      denied('invalid'),
+    );
+    await assert.rejects(
+      db.runtime.query(
+        "INSERT INTO identity.role_grant(installation_id,account_id,authority_scope_id,actor_role,customer_scope,production_disposition) VALUES($1,$2,$3,'ACT-SHIP',$4,true)",
+        [installation, user.accountId, scope, customer],
+      ),
+      (error: unknown) =>
+        typeof error === 'object' && error !== null && 'code' in error && error.code === '23514',
+    );
+    await service.setGrant(admin, {
+      accountId: user.accountId,
+      actorRole: 'ACT-PLAN',
+      customerScope: customer,
+      enabled: true,
+      productionDisposition: true,
+    });
+    const actor = await service.context(user.token, 'ACT-OP', customer);
+    assert.equal(await service.canDispose(actor), true);
+    await service.revokeSessions(admin, user.accountId);
+    assert.equal(await service.canDispose(actor), false);
+    const fresh = await service.context(
+      (await service.login('fixture.manager', password)).token,
+      'ACT-OP',
+      customer,
+    );
+    assert.equal(await service.canDispose(fresh), true);
+    await service.disableAccount(admin, user.accountId);
+    assert.equal(await service.canDispose(fresh), false);
+  });
+});
+
+void test('Identity HTTP accepts only an explicit administrator disposition grant and rejects caller-controlled managerial escalation', async () => {
+  await withDatabase(async (db) => {
+    const { service, admin } = await setup(db);
+    const user = await personal(service, admin, 'fixture.http-manager');
+    const customer = randomUUID();
+    const server = createHttpHost({
+      ping: () => Promise.resolve(),
+      identity: createIdentityHandler(service),
+    });
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const address = server.address();
+    assert.ok(address && typeof address !== 'string');
+    const call = (token: string, payload: unknown) =>
+      fetch('http://127.0.0.1:' + address.port + '/identity/grants', {
+        method: 'POST',
+        headers: { authorization: 'Bearer ' + token, 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    try {
+      const grant = {
+        accountId: user.accountId,
+        actorRole: 'ACT-PLAN',
+        customerScope: customer,
+        enabled: true,
+        productionDisposition: true,
+      };
+      assert.equal((await call(user.token, grant)).status, 403);
+      assert.equal((await call(admin, { ...grant, actorRole: 'ACT-OP' })).status, 400);
+      assert.equal((await call(admin, { ...grant, productionDisposition: 'true' })).status, 400);
+      assert.equal((await call(admin, grant)).status, 200);
+      assert.equal(
+        await service.canDispose(await service.context(user.token, 'ACT-PLAN', customer)),
+        true,
+      );
+      assert.equal((await call(admin, { ...grant, productionDisposition: false })).status, 200);
+      assert.equal(
+        await service.canDispose(await service.context(user.token, 'ACT-PLAN', customer)),
+        false,
+      );
+    } finally {
+      await closeHttpHost(server);
+    }
+  });
+});
+
+void test('disposition permission changes and security audit roll back atomically on audit failure', async () => {
+  await withDatabase(async (db) => {
+    const { service, admin } = await setup(db);
+    const customer = randomUUID(),
+      user = await personal(service, admin, 'fixture.disposition-rollback');
+    await service.setGrant(admin, {
+      accountId: user.accountId,
+      actorRole: 'ACT-PLAN',
+      customerScope: customer,
+      enabled: true,
+      productionDisposition: true,
+    });
+    const actor = await service.context(user.token, 'ACT-PLAN', customer);
+    await db.owner.query(
+      "CREATE FUNCTION identity.fail_disposition_audit() RETURNS trigger LANGUAGE plpgsql AS $$BEGIN RAISE EXCEPTION 'synthetic disposition audit failure'; END$$",
+    );
+    await db.owner.query(
+      'CREATE TRIGGER fail_disposition_audit BEFORE INSERT ON identity.security_event FOR EACH ROW EXECUTE FUNCTION identity.fail_disposition_audit()',
+    );
+    try {
+      await assert.rejects(
+        service.setGrant(admin, {
+          accountId: user.accountId,
+          actorRole: 'ACT-PLAN',
+          customerScope: customer,
+          enabled: true,
+          productionDisposition: false,
+        }),
+        denied('busy'),
+      );
+      assert.equal(await service.canDispose(actor), true);
+      await assert.rejects(
+        service.setGrant(admin, {
+          accountId: user.accountId,
+          actorRole: 'ACT-PLAN',
+          customerScope: customer,
+          enabled: false,
+        }),
+        denied('busy'),
+      );
+      assert.equal(await service.canDispose(actor), true);
+    } finally {
+      await db.owner.query('DROP TRIGGER fail_disposition_audit ON identity.security_event');
+      await db.owner.query('DROP FUNCTION identity.fail_disposition_audit()');
+    }
+  });
+});

@@ -13,7 +13,7 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current scope: [APR-024](../00-governance/approved-baselines/APR-024-shipment-increment-scope.md), SLICE-STOCK shipment increment after Owner-confirmed pushed reservation807ab190d49ebb3bd4e3419e09c28de4bc656faf. Normal complete reserved-Unit preparation/dispatch by personal ACT-SHIP, no payment/invoice or second approval. See [plan](SLICE_STOCK_SHIPMENT_PLAN.md), [delivery](SLICE_STOCK_SHIPMENT_IMPLEMENTATION_STATUS.md), [review](SLICE_STOCK_SHIPMENT_REVIEW.md) and [ADR-0019](../00-governance/adrs/ADR-0019-normal-stock-dispatch.md). Delivery/exception/Sales fulfillment and closure remain deferred; Owner normal-shipment answer is recorded in the live OQ register. Stop after accepted documented local commit for Owner push. Next backlog capability is SLICE-MAKE production/genealogy source facts after confirming its actual prerequisites.
+Current scope: [APR-025](../00-governance/approved-baselines/APR-025-production-scope.md), SLICE-MAKE after Owner-confirmed accepted/pushed shipment `40630e02acb24091e306816647cfbfc2d97dda28`. The seven prior increments are accepted; SLICE-MAKE is the eighth engineering-accepted delivery, pending Owner review/push of its local commit. See [production plan/DoD](SLICE_MAKE_PLAN.md): Owner APR-025 resolves bounded consumption/WIP/mass-balance/disposition prerequisites; actual production implementation and acceptance are recorded in [delivery status](SLICE_MAKE_IMPLEMENTATION_STATUS.md). Unrelated OQ branches remain open. Stop after accepted documented local commit for Owner push.
 
 Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers
@@ -404,3 +404,5 @@ expand them. Real factory policy/principal mappings remain B/C/D; Quality and
 portal requests/order writes remain F. Production human disposition and separate
 mass-balance-policy residuals are explicit, not closed by architectural prose.
 No OQ answer/status, gate, approval evidence, unlock or product file was changed.
+
+Current Owner production policy update (2026-10-09): the bounded SLICE-MAKE consumption, WIP/final, exact mass-balance and authenticated managerial disposition prerequisites above are resolved by the actual [Owner decision](../00-governance/approved-baselines/APR-025-production-scope.md). Implementation resumes; earlier pending preparation text is historical. OQ-003/OQ-009 stay treating for unrelated branches.

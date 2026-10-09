@@ -22,6 +22,7 @@ const commands = [
   'SubmitSalesOrder',
   'DraftFulfillmentAssessment',
   'RecordFulfillmentStock',
+  'RecordFulfillmentMake',
   'ConfirmSalesOrder',
 ];
 /** Customer selector is checked against current grants; never a caller-supplied identity or wildcard. */

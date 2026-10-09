@@ -92,6 +92,17 @@ export async function withDatabase<T>(body: (fixture: DatabaseFixture) => Promis
     );
     await owner.query(`GRANT SELECT,INSERT,DELETE ON identity.role_grant TO ${quotedRole}`);
     await owner.query(`GRANT SELECT,INSERT ON identity.security_event TO ${quotedRole}`);
+    await owner.query(
+      'TRUNCATE production.product_batch,production.source_fact,production.route_snapshot,production.operation,production.allocation,production.production_order,inventory.production_origin,inventory.production_issue',
+    );
+    await owner.query(`GRANT USAGE ON SCHEMA production TO ${quotedRole}`);
+    await owner.query(
+      `GRANT SELECT,INSERT,UPDATE ON production.production_order,production.operation,production.allocation TO ${quotedRole}`,
+    );
+    await owner.query(
+      `GRANT SELECT,INSERT ON production.product_batch,production.source_fact,production.route_snapshot,inventory.production_origin,sales.make_reference TO ${quotedRole}`,
+    );
+    await owner.query(`GRANT SELECT,INSERT,UPDATE ON inventory.production_issue TO ${quotedRole}`);
     await owner.query(`GRANT USAGE ON SCHEMA shipping TO ${quotedRole}`);
     await owner.query(
       `GRANT SELECT,INSERT,UPDATE ON shipping.package,shipping.shipment,shipping.package_content TO ${quotedRole}`,
@@ -117,9 +128,11 @@ export async function withDatabase<T>(body: (fixture: DatabaseFixture) => Promis
       `GRANT SELECT,INSERT,UPDATE ON inventory.reservation_request TO ${quotedRole}`,
     );
     await owner.query('TRUNCATE inventory.reservation_request');
-    await owner.query('TRUNCATE sales.sales_order,sales.fulfillment_assessment,sales.customer');
     await owner.query(
-      'TRUNCATE inventory.reservation_request,inventory.material_lot,procurement.goods_receipt,inventory.ledger,inventory.balance,inventory.reservation,inventory.unit',
+      'TRUNCATE sales.make_reference,sales.sales_order,sales.fulfillment_assessment,sales.customer',
+    );
+    await owner.query(
+      'TRUNCATE inventory.production_origin,inventory.production_issue,production.source_fact,inventory.reservation_request,inventory.material_lot,procurement.goods_receipt,inventory.ledger,inventory.balance,inventory.reservation,inventory.unit',
     );
     await owner.query(
       'TRUNCATE identity.security_event,identity.session,identity.role_grant,identity.account',

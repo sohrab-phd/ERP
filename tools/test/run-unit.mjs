@@ -16,6 +16,8 @@ const files = [
   'apps/backend/dist/tests/unit/sales.test.js',
   'apps/backend/dist/tests/unit/reservation.test.js',
   'apps/backend/dist/tests/unit/shipping.test.js',
+  'apps/backend/dist/tests/unit/inventory-production.test.js',
+  'apps/backend/dist/tests/unit/production.test.js',
   'tools/test/migration-guard.test.mjs',
 ];
 for (const f of files) if (!existsSync(f)) throw new Error('Missing compiled test: ' + f);

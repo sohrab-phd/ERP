@@ -16,6 +16,10 @@ const inventory = [
   '0008_reservation_requests.sql',
   '0009_inventory_dispatch.sql',
   '0010_stock_shipment.sql',
+  '0011_inventory_production.sql',
+  '0012_production_sources.sql',
+  '0013_sales_make.sql',
+  '0014_identity_production_disposition.sql',
 ];
 export async function loadMigrations(
   directory = fileURLToPath(new URL('../../database/migrations/', import.meta.url)),

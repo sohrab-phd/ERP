@@ -72,11 +72,10 @@ residual after completion.
 3. Good output / WIP fact(s) — Production write.
 4. Exactly one leftover classification for each leftover quantity:
    reusable residual **or** scrap, not both for the same kg.
-5. Process-loss fact if the routing records approved process loss.
+5. No process-loss fact or balancing adjustment is authorized in bounded MVP completion (APR-025).
 6. Genealogy **source** facts for those transformations (INV-009). Genealogy
    Link rows are not written as source truth (INV-019).
-7. Inventory Ledger rows via `ACT-IPS` for consume, good output, residual
-   on-hand (when reusable), and scrap quantity (when non-reusable).
+7. Inventory Ledger rows via `ACT-IPS`: negative full actual consumed input, positive newly produced final/WIP and reusable Residual. Classified Scrap is already included in consumed input; its immutable source fact explains the net stock loss. No second Scrap subtraction (ADR-0020).
 8. Nested `CreateResidualUnit` when leftover is reusable (INV-008): child
    Inventory Unit identity, parent close/split, residual Ledger on-hand
    **once**. Valid normal child Unit is `AVAILABLE` when the transaction
@@ -84,15 +83,7 @@ residual after completion.
 9. Nested unit-state primitives: `ConsumeUnitPartial` / `ConsumeUnitComplete`
    for the issued parent; `ScrapUnit` only when that unit’s destiny is
    `SCRAPPED`.
-10. Mass balance (INV-007): consumed = good output + WIP + residual + scrap
-    + approved process loss. Production process-loss/mass-balance tolerance
-    is unresolved in the live production evidence; OQ-006 fulfillment default
-    zero is not that policy. Missing required production policy →
-    `GUARD_OPEN_POLICY`. Residual versus Scrap follows the attributable
-    Production/Workshop Manager human reusability decision, never an automatic
-    weight/dimension cutoff. Recording that decision and later return posting
-    remain OQ-009 slice prerequisites; missing a fabricated numeric cutoff is
-    not a current classifier guard.
+10. APR-025 exact mass balance: actual consumed kg = final output + NEW WIP + Residual + Scrap. Exclude unconsumed source and existing WIP. Zero unexplained imbalance; no rounding, process-loss/default adjustment or OQ-006 tolerance. Residual/Scrap requires an actual authenticated individual explicitly granted production-management disposition authority, rechecked after locks. No numeric classifier, manager-name assertion or second-human chain. Unrelated OQ-009 branches remain open.
 11. QC request only as a future/deferred extension if Quality is later
     enabled. Current-MVP completion has no QC request or approval
     dependency. Future Quality does not write stock (INV-017).
@@ -121,7 +112,7 @@ does not classify all WIP as saleable or make Scrap available.
 | `CreateResidualUnit` | Residual identity + parent close/split + residual Ledger once | Same reject for that leftover |
 | `ConvertResidualToScrap` | Classification branch when leftover fails reuse policy | Same leftover must not be posted twice |
 | `RecordScrapFact` | Production leftover scrap fact | Allowed later only for a **new** scrap (Quality reject, abort compensation) with a new key |
-| `PostScrapMovement` | Authoritative scrap **quantity** Ledger post (OQ-009) | Same as `RecordScrapFact` |
+| `PostScrapMovement` | Logical Scrap quantity accounting; for this completion the full input consumption stock-out includes it exactly once, with classified source evidence (ADR-0020). No additional movement. | A later independently authorized NEW Scrap/abort capability requires its own contract; absent from this increment. |
 | `ScrapUnit` | Unit destiny `SCRAPPED`; not a second quantity post | Only with a paired scrap fact; never a second qty for the same leftover |
 | `ConsumeUnitPartial` / `ConsumeUnitComplete` | Parent unit destiny inside this bundle | Independent production consume is rejected (`GUARD_INVARIANT` INV-006) |
 
@@ -186,3 +177,7 @@ does not require a second operational posting.
 - Prisma or any package
 - Decimal scale
 - Outbox or broker
+
+## Effective bounded MVP production policy — 2026-10-09
+
+[APR-025](../00-governance/approved-baselines/APR-025-production-scope.md#owner-production-decision--2026-10-09) supersedes only earlier missing production consumption/result/mass-balance/disposition branches. CompleteProductionOperation supports full/partial actual kg; original unconsumed material retains restrictions. Exact consumed = final + new WIP + Residual + Scrap, zero unexplained imbalance, no process loss/rounding. Existing WIP is not double-counted. WIP is not saleable; final readiness follows approved per-order route. Required leftover classification is the actual authenticated, explicitly permitted manager decision, without a new role/second approval chain; none is required for no leftovers. Current atomic owner/IPS/source-fact/audit/idempotency boundary is unchanged; unrelated OQ branches remain open.

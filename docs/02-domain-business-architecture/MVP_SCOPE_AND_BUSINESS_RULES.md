@@ -6,25 +6,16 @@ status: in_review
 version: 0.6.0
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [ASM-REPORT-001, DOM-CAP-BC-001, DOM-PROCESS-001, DOM-OWN-001, ASM-014]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-09
 approval: null
 supersedes: null
 ---
 
 # MVP Scope and Business-Rule Catalogue
 
-## Current evidence precedence (2026-10-04)
+## Current evidence precedence (2026-10-09)
 
-APR-004 remains historical structure-approval evidence; this technical revision
-is made under delegated ADR-0012 authority and does not approve a new baseline.
-Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
-classification: a person decides reusability; recording and authority stay open.
-OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
-policy remains open under production evidence/OQ-009 and must not inherit its
-zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
-Quality is future-only; portal MVP is isolated visibility-only; personal
-operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
-RACI and historical handoff wording cannot override these live facts.
+APR-025 actual Owner production decision (2026-10-09) resolves bounded full/partial consumption only at CompleteProductionOperation, approved-route WIP/final meanings, zero unexplained mass imbalance and authenticated managerial Residual/Scrap disposition. No numeric classifier, process-loss adjustment or OQ-006 tolerance. Runtime route skip/reorder, post-post correction/rework and standalone warehouse conversion remain deferred prerequisites. QC stays outside MVP. Earlier factory evidence is retained; only the answered OQ-003/OQ-009 branches are resolved, both remain treating overall. Invariants and historical structure approvals do not grant implementation authority.
 
 
 ## Purpose
@@ -34,7 +25,7 @@ must respect, without converting open questions into silent decisions. This
 catalogue is Phase 02 draft evidence. It is not workshop output, not owner
 sign-off, and not implementation authorization.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Implementation authorization and bounded scope are recorded in [CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md) and the canonical gate; this catalogue grants no authority.
 
 ## Scope classification
 
@@ -141,9 +132,9 @@ identities cannot approve them.
 | BR-003 | Available quantity is Ledger-derived on-hand minus reservations; Inventory Unit lifecycle eligibility is separate. Current-MVP valid normal stock-in creates or increases stock whose resulting Unit is `AVAILABLE` in the posting transaction, usable after commit under existing guards and without QC release. A Quality hold applies only if future QC is enabled. Reservation, Allocation, and Consumption are distinct. | BC-INVENTORY, BC-PRODUCTION | TERM-009, TERM-010; INV-003; OQ-005 future only |
 | BR-004 | One Inventory Unit has one active physical location and cannot be simultaneously issued, shipped, quarantined, or consumed incompatibly. | BC-INVENTORY | ASM-005 |
 | BR-005 | Posted operational and financial records are not physically deleted; corrections use reversal with reason, actor, authority, and audit. | cross-cutting | ASM-006, ASM-012, OQ-015 |
-| BR-006 | Operation completion atomically records Consumption, Output/WIP, Residual, Scrap, process loss, genealogy, and inventory postings. | BC-PRODUCTION | OQ-003 |
-| BR-007 | Mass balance holds within approved tolerance: consumed weight equals good output plus WIP plus residual plus scrap plus approved process loss. | BC-PRODUCTION | Production/process-loss evidence on OQ-009; mass-balance policy unresolved, separate from OQ-006 |
-| BR-008 | A usable residual receives a new Inventory Unit identity linked to its parent; the parent is closed or split. Human reusability disposition and its recording/authority remain OQ-009; no measurement-based classifier. | BC-PRODUCTION, BC-INVENTORY | OQ-009 |
+| BR-006 | Operation completion atomically records actual Consumption, new Output/WIP, authorized Residual/Scrap and immutable genealogy source facts with sole IPS inventory postings. No process loss is authorized in the bounded MVP. | BC-PRODUCTION | OQ-003 |
+| BR-007 | Bounded MVP: consumed kg exactly equals final output plus new WIP plus Residual plus Scrap; no rounding, unexplained loss or balancing adjustment. Unconsumed stock and existing WIP are excluded. | BC-PRODUCTION | APR-025 zero unexplained imbalance; independent of OQ-006; future change requires evidence and Owner decision |
+| BR-008 | A usable residual receives a new Inventory Unit identity linked to its parent; the parent is closed or split. Authenticated explicitly permitted management disposition under APR-025; no measurement-based classifier; original unconsumed material is not generated Residual. | BC-PRODUCTION, BC-INVENTORY | OQ-009 |
 | BR-009 | Genealogy source facts are immutable and support supplier-to-customer and customer-to-source tracing, including merge, split, rework, and defective-lot impact. | BC-PRODUCTION, BC-REPORTING | TERM-015 |
 | BR-010 | **Future Quality only:** if a later approved scope requires QC, pending/quarantined/rejected Quality disposition blocks availability or shipment and Product Batch release follows that plan. No QC gate or Quality `Released` state is required in the current MVP. | BC-QUALITY, BC-SHIPPING | OQ-005 future residual, TERM-016 |
 | BR-011 | Shipment content belongs to the authorized customer/order and references permitted Package or Product Batch form. Shipment without demand requires explicit authority. | BC-SHIPPING | OQ-006 |

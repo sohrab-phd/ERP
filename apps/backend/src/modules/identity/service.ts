@@ -269,16 +269,24 @@ export class IdentityService {
   }
   async setGrant(
     token: string,
-    input: { accountId: string; actorRole: HumanRole; customerScope?: string; enabled: boolean },
+    input: {
+      accountId: string;
+      actorRole: HumanRole;
+      customerScope?: string;
+      enabled: boolean;
+      productionDisposition?: boolean;
+    },
   ): Promise<void> {
-    const { accountId, actorRole, customerScope, enabled } = input;
+    const { accountId, actorRole, customerScope, enabled, productionDisposition } = input;
     const tokenDigest = digest(token),
       customer = customerScope ?? '';
     if (
       !humanRoles.includes(actorRole) ||
       typeof enabled !== 'boolean' ||
       (customerScope !== undefined && !validCustomer(customerScope)) ||
-      (actorRole === 'ACT-CUST' && customer === '')
+      (actorRole === 'ACT-CUST' && customer === '') ||
+      (productionDisposition !== undefined &&
+        (typeof productionDisposition !== 'boolean' || actorRole !== 'ACT-PLAN'))
     )
       throw new IdentityError('invalid');
     await this.transaction(async (tx) => {
@@ -293,6 +301,7 @@ export class IdentityService {
           actorRole,
           authorityScopeId: this.authorityScopeId,
           customerScope: customer,
+          ...(productionDisposition === undefined ? {} : { productionDisposition }),
         },
         enabled,
       );
@@ -303,7 +312,13 @@ export class IdentityService {
         'GRANT_CHANGED',
         actor.personId,
         target.personId,
-        { actorRole, authorityScopeId: this.authorityScopeId, customerScope: customer, enabled },
+        {
+          actorRole,
+          authorityScopeId: this.authorityScopeId,
+          customerScope: customer,
+          enabled,
+          ...(productionDisposition === undefined ? {} : { productionDisposition }),
+        },
       );
     });
   }
@@ -413,6 +428,26 @@ export class IdentityService {
         actorRole: context.actorRole as HumanRole,
         authorityScopeId: this.authorityScopeId,
         customerScope: context.customerScope ?? '',
+      },
+      tx,
+    );
+  }
+
+  /** Current explicit authority on the SAME individually authenticated account; no manager claim. */
+  async canDispose(context: ExecutionContext, tx?: TransactionContext): Promise<boolean> {
+    if (!['ACT-OP', 'ACT-PLAN'].includes(context.actorRole) || !(await this.isCurrent(context, tx)))
+      return false;
+    const issued = this.issued.get(context)!;
+    return this.store.currentGrant(
+      this.installationId,
+      issued.digest,
+      issued.accountId,
+      context.principal.subject,
+      {
+        actorRole: 'ACT-PLAN',
+        authorityScopeId: this.authorityScopeId,
+        customerScope: context.customerScope ?? '',
+        productionDisposition: true,
       },
       tx,
     );

@@ -6,25 +6,16 @@ status: in_review
 version: 0.5.0
 owners: [chief-solution-architect, domain-leads]
 depends_on: [DOM-MVP-RULES-001, DOM-P03-HANDOFF-001, APR-004, APR-005]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-09
 approval: null
 supersedes: null
 ---
 
 # Canonical Invariant Catalogue
 
-## Current evidence precedence (2026-10-04)
+## Current evidence precedence (2026-10-09)
 
-APR-005 remains historical structure-approval evidence; this technical revision
-is made under delegated ADR-0012 authority and does not approve a new baseline.
-Live OQ-009/factory evidence supersedes automatic numeric Residual/Scrap
-classification: a person decides reusability; recording and authority stay open.
-OQ-006 is fulfillment tolerance only. Production mass-balance/process-loss
-policy remains open under production evidence/OQ-009 and must not inherit its
-zero default. Missing required later-slice policy stays GUARD_OPEN_POLICY.
-Quality is future-only; portal MVP is isolated visibility-only; personal
-operator accounts apply. OQ answers/statuses are unchanged. Older draft/seed,
-RACI and historical handoff wording cannot override these live facts.
+APR-025 actual Owner production decision (2026-10-09) resolves bounded full/partial consumption only at CompleteProductionOperation, approved-route WIP/final meanings, zero unexplained mass imbalance and authenticated managerial Residual/Scrap disposition. No numeric classifier, process-loss adjustment or OQ-006 tolerance. Runtime route skip/reorder, post-post correction/rework and standalone warehouse conversion remain deferred prerequisites. QC stays outside MVP. Earlier factory evidence is retained; only the answered OQ-003/OQ-009 branches are resolved, both remain treating overall. Invariants and historical structure approvals do not grant implementation authority.
 
 
 Proposed `INV-*` rows promoted from Phase 02 `BR-*`. They are not owner-signed
@@ -32,7 +23,7 @@ policy. Temporary identities cannot approve them. A row that depends on an
 unanswered OQ keeps an explicit open guard. No number, person, or cutoff is
 invented here.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Implementation authorization and bounded scope are recorded in [CURRENT_PHASE.md](../00-governance/CURRENT_PHASE.md) and the canonical gate; this catalogue grants no authority.
 
 OQ-005 scope: the factory has no QC department or Quality role, and QC
 execution is outside the current MVP. Quality-dependent clauses below
@@ -45,12 +36,12 @@ inspection, hold, release, availability, or shipment prerequisite.
 | --- | --- | --- | --- |
 | INV-001 | BR-001 | Every stock change has exactly one authorized posting path and immutable evidence. | OQ-017 answered: application-owned PostgreSQL transaction; optional stored functions require a later ADR |
 | INV-002 | BR-002 | On-hand, reserved, and available quantities cannot become negative. Active reservations cannot exceed free stock under concurrency. A single Inventory Unit may have at most one reservation in state `ACTIVE` (OQ-008). `REQUESTED`, `RELEASED`, `CONSUMED`, and `EXPIRED` reservations do not occupy that slot. | Future temporary-hold TTL only (OQ-008 residual) |
-| INV-003 | BR-003 | Availability quantity is on-hand minus reservations; Inventory Unit lifecycle eligibility is distinct from Ledger quantity. In the current MVP, valid normal stock-in creates or increases stock whose resulting Unit is `AVAILABLE` within the posting transaction, visible for permitted normal use after commit, without Quality release. Existing quantity, identity, location, authorization, reservation, and destiny guards still apply. A Quality hold applies only in a later approved QC scope. Reservation, Allocation, and Consumption are distinct. | OQ-005 future only; no new current-MVP approval gate |
+| INV-003 | BR-003 | Availability quantity is on-hand minus reservations; Inventory Unit lifecycle eligibility is distinct from Ledger quantity. In the current MVP, valid normal stock-in creates or increases stock whose resulting Unit is `AVAILABLE` within the posting transaction, visible for permitted normal use after commit, without Quality release. Existing quantity, identity, location, authorization, reservation, and destiny guards still apply. Production new WIP is the explicit exception: it remains `ISSUED_TO_PRODUCTION` and unavailable to sale/shipment until valid final required route completion under APR-025. A Quality hold applies only in a later approved QC scope. Reservation, Allocation, and Consumption are distinct. | OQ-005 future only; no new current-MVP approval gate |
 | INV-004 | BR-004 | One Inventory Unit has one active physical location and cannot be simultaneously issued, shipped, quarantined, or consumed incompatibly. | ASM-005 unconfirmed |
 | INV-005 | BR-005 | Posted operational and financial records are not physically deleted. Corrections use reversal with reason, actor, authority, and audit. | Cutover authority remains OQ-015 |
-| INV-006 | BR-006 | Operation completion atomically records Consumption, Output/WIP, Residual, Scrap, process loss, genealogy source facts, and inventory postings. Residual identity (`CreateResidualUnit`) and scrap quantity (`PostScrapMovement`) are nested in that transaction, not later independent posts. | Ten Stations and variable per-order routes are recorded; routing storage/version/lifecycle remains OQ-003; posting boundary is `CompleteProductionOperation` (recorded OQ-003). Human disposition recording/authority remains OQ-009; no numeric classifier. |
-| INV-007 | BR-007 | Mass balance holds within approved tolerance: consumed = good output + WIP + residual + scrap + approved process loss. | Production/process-loss evidence on OQ-009; mass-balance tolerance/meaning is unresolved and separate from OQ-006 fulfillment tolerance. Missing required policy rejects. |
-| INV-008 | BR-008 | A usable residual receives a new Inventory Unit identity linked to its parent; the parent is closed or split. | OQ-009 human reusability disposition and its recording/authority; no universal threshold or automatic classification from measurements. |
+| INV-006 | BR-006 | Operation completion atomically records actual Consumption, new Output/WIP, authorized Residual/Scrap, genealogy source facts and inventory postings; no process-loss adjustment in this MVP. Residual identity (`CreateResidualUnit`) and scrap quantity (`PostScrapMovement`) are nested in that transaction, not later independent posts. | Ten Stations and variable per-order routes are recorded; immutable route storage/version/release is implemented by ADR-0020; runtime skip/reorder and correction branches remain OQ-003; posting boundary is `CompleteProductionOperation` (recorded OQ-003). APR-025 supplies authenticated managerial disposition; no numeric classifier. |
+| INV-007 | BR-007 | Bounded MVP exact consumed kg = final + new WIP + Residual + Scrap. Exclude unconsumed source and existing WIP; no rounding or unexplained loss. | APR-025 zero unexplained imbalance; OQ-006 fulfillment tolerance is unrelated. No automatic classifier or balancing adjustment. |
+| INV-008 | BR-008 | A usable residual receives a new Inventory Unit identity linked to its parent; the parent is closed or split. | APR-025 authenticated management disposition; no universal threshold or automatic classification from measurements; standalone warehouse conversion remains outside this completion. |
 | INV-009 | BR-009 | Genealogy source facts are immutable and support supplier-to-customer and customer-to-source tracing, including merge, split, rework, and defective-lot impact. | OQ-004 hybrid grain answered; dependent material/order-code catalogue and physical mapping remain later inputs |
 | INV-010 | BR-010 | **Future Quality scope only:** if QC is later required, pending, quarantined, or rejected disposition blocks availability or shipment and Product Batch requires Quality release. This does not apply in the current MVP. | Future plans, limits, and named releasers remain OQ-005; no current-MVP QC guard |
 | INV-011 | BR-011 | Shipment content belongs to the authorized customer/order and references permitted Package or Product Batch form. Shipment without demand requires explicit authority. | OQ-006 answered: default 0, explicit family configuration for any nondefault limit; named exceptional-shipment person remains OQ-019; QC releasers OQ-005 only in future QC scope |
@@ -108,3 +99,7 @@ Demand remains distinct from overdue, delayed, awaiting-supply,
 quotation-rejected, and cancelled. `CloseSalesOrder` from
 `PARTIALLY_FULFILLED` requires an authorized TERM-005 Unfulfilled Demand
 covering remaining qty. Payment and invoice status are not this invariant.
+
+## Effective bounded MVP production policy — 2026-10-09
+
+[APR-025](../00-governance/approved-baselines/APR-025-production-scope.md#owner-production-decision--2026-10-09) supersedes only earlier missing production consumption/result/mass-balance/disposition branches. CompleteProductionOperation supports full/partial actual kg; original unconsumed material retains restrictions. Exact consumed = final + new WIP + Residual + Scrap, zero unexplained imbalance, no process loss/rounding. Existing WIP is not double-counted. WIP is not saleable; final readiness follows approved per-order route. Required leftover classification is the actual authenticated, explicitly permitted manager decision, without a new role/second approval chain; none is required for no leftovers. Current atomic owner/IPS/source-fact/audit/idempotency boundary is unchanged; unrelated OQ branches remain open.

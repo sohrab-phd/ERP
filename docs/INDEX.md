@@ -330,3 +330,16 @@ That reservation increment did not ship/consume stock or implement commercial am
 - [Bounded shipment plan](12-implementation-planning/SLICE_STOCK_SHIPMENT_PLAN.md)
 - [Shipment implementation](12-implementation-planning/SLICE_STOCK_SHIPMENT_IMPLEMENTATION_STATUS.md)
 - [Independent shipment review](12-implementation-planning/SLICE_STOCK_SHIPMENT_REVIEW.md)
+
+## Current production scope — 2026-10-09
+
+Owner confirms accepted shipment40630e02 pushed and authorizes SLICE-MAKE.
+
+- [Actual scope authority](00-governance/approved-baselines/APR-025-production-scope.md)
+- [Bounded production plan, prerequisites and DoD](12-implementation-planning/SLICE_MAKE_PLAN.md)
+
+These planning records grant no acceptance by themselves. Actual Owner policy resolves bounded prerequisites; implemented code, limitations and executed evidence are recorded in the production delivery page below.
+
+Current Owner production policy update (2026-10-09): the bounded SLICE-MAKE consumption, WIP/final, exact mass-balance and authenticated managerial disposition prerequisites above are resolved by the actual [Owner decision](00-governance/approved-baselines/APR-025-production-scope.md). SLICE-MAKE engineering acceptance is complete; its local commit awaits Owner review/push. Earlier pending preparation text is historical. OQ-003/OQ-009 stay treating for unrelated branches.
+
+SLICE-MAKE actual delivery: [implementation status](12-implementation-planning/SLICE_MAKE_IMPLEMENTATION_STATUS.md), [ADR-0020](00-governance/adrs/ADR-0020-atomic-routed-production.md). Owner policy: APR-025; unrelated OQs remain open.

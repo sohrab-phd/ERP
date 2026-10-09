@@ -200,7 +200,7 @@ void test('default production recovery admission fence prevents new receipts eve
       assert.equal((await bundleCounts(db)).movements, 0);
       assert.equal((await bundleCounts(db)).outcomes, 0);
       assert.ok(app.registry.find('PostGoodsReceipt', 1));
-      assert.equal(app.registry.find('CompleteProductionOperation', 1), undefined);
+      assert.ok(app.registry.find('CompleteProductionOperation', 1)); // Authorized SLICE-MAKE is registered; the recovery fence remains mandatory.
     } finally {
       await app.stop();
     }

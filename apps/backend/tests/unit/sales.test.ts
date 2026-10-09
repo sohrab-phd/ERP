@@ -118,6 +118,42 @@ function fixture() {
       assessments.set(assessment.id, assessment);
       return Promise.resolve();
     },
+    recordMakeAssessment: (context, id) => {
+      contexts.push(context);
+      const old = assessments.get(id);
+      if (!old || old.state !== 'DRAFT') return Promise.resolve(undefined);
+      const value: FulfillmentAssessment = {
+        ...old,
+        state: 'RECORDED',
+        mode: 'MAKE',
+        observedAt: timestamp,
+      };
+      assessments.set(id, value);
+      return Promise.resolve(value);
+    },
+    productionOrder: (context, id, customer) => {
+      contexts.push(context);
+      const value = orders.get(id);
+      return Promise.resolve(value?.customerId === customer ? value : undefined);
+    },
+    reservationAssessment: (context, id, customer) => {
+      contexts.push(context);
+      const value = assessments.get(id);
+      return Promise.resolve(value?.customerId === customer ? value : undefined);
+    },
+    reservationOrder: (context, id, customer) => {
+      contexts.push(context);
+      const value = orders.get(id);
+      return Promise.resolve(value?.customerId === customer ? value : undefined);
+    },
+    startMake: (context, id) => {
+      contexts.push(context);
+      calls.push('make-reference');
+      const value = orders.get(id);
+      if (!value) return Promise.resolve(false);
+      orders.set(id, { ...value, state: 'IN_PRODUCTION' });
+      return Promise.resolve(true);
+    },
     recordAssessment: (context, id, selections, evidence) => {
       contexts.push(context);
       const previous = assessments.get(id);
@@ -141,6 +177,9 @@ function fixture() {
     },
   };
   const policy: SalesPolicy = {
+    canProduce: () => Promise.resolve(permitted),
+    canReserve: () => Promise.resolve(permitted),
+    canShip: () => Promise.resolve(permitted),
     canAccess: () => {
       calls.push('authorize');
       return Promise.resolve(permitted);
@@ -149,7 +188,9 @@ function fixture() {
   const service = new SalesService(store, inventory, policy);
   function request(command: string, payload: JsonObject = {}, id?: string): CommandRequest {
     const assessment =
-      command === 'DraftFulfillmentAssessment' || command === 'RecordFulfillmentStock';
+      command === 'DraftFulfillmentAssessment' ||
+      command === 'RecordFulfillmentStock' ||
+      command === 'RecordFulfillmentMake';
     return {
       command,
       contract_version: 1,
@@ -206,7 +247,7 @@ function fixture() {
   };
 }
 
-void test('Sales registers only the five bounded non-monetary commands', () => {
+void test('Sales registers bounded STOCK and MAKE non-monetary commands', () => {
   const f = fixture();
   assert.deepEqual(
     f.service.contracts().map((value) => value.command),
@@ -215,6 +256,7 @@ void test('Sales registers only the five bounded non-monetary commands', () => {
       'SubmitSalesOrder',
       'DraftFulfillmentAssessment',
       'RecordFulfillmentStock',
+      'RecordFulfillmentMake',
       'ConfirmSalesOrder',
     ],
   );
@@ -524,4 +566,130 @@ void test('known cross-customer document identity collisions have only a generic
     assert.deepEqual(result, { family: 'GUARD_ACTOR', message: 'Sales resource unavailable' });
     assert.equal(contract.constraintRejections?.unrelated_constraint, undefined);
   }
+});
+
+void test('MAKE selection and confirmation need no finished stock and never auto-start Production', async () => {
+  const f = fixture();
+  f.setStock([]);
+  await f.execute('DraftSalesOrder', f.draftPayload());
+  await f.execute('SubmitSalesOrder');
+  await f.execute('DraftFulfillmentAssessment', { orderId: f.orderId });
+  await f.execute('RecordFulfillmentMake');
+  await assert.rejects(f.execute('RecordFulfillmentMake'), guard('GUARD_IDEMPOTENT_DUP'));
+  await assert.rejects(
+    f.execute('RecordFulfillmentStock', f.selections()),
+    guard('GUARD_CONFLICT'),
+  );
+  await f.execute('ConfirmSalesOrder', { assessmentId: f.assessmentId });
+  assert.equal(f.orders.get(f.orderId)?.state, 'CONFIRMED');
+  assert.equal(f.assessments.get(f.assessmentId)?.mode, 'MAKE');
+  assert.ok(!f.calls.includes('availability-read') && !f.calls.includes('make-reference'));
+  const ctx = { actor: f.actor, request: f.request('GetReservation'), transaction: f.transaction };
+  assert.equal(await f.service.reservationDemand(ctx, f.orderId, f.customerId), undefined);
+  assert.equal(await f.service.shippingDemand(ctx, f.orderId, f.customerId), undefined);
+});
+void test('MAKE owner demand preserves customer binding and release alone records production reference', async () => {
+  const f = fixture();
+  await f.execute('DraftSalesOrder', f.draftPayload());
+  await f.execute('SubmitSalesOrder');
+  await f.execute('DraftFulfillmentAssessment', { orderId: f.orderId });
+  await f.execute('RecordFulfillmentMake');
+  await f.execute('ConfirmSalesOrder', { assessmentId: f.assessmentId });
+  const productionId = randomUUID();
+  const actor = Object.freeze({ ...f.actor, actorRole: 'ACT-PLAN' });
+  const request = {
+    ...f.request('ReleaseProductionOrder'),
+    target: { kind: 'production-order', id: productionId },
+  };
+  const context = { actor, request, transaction: f.transaction };
+  const demand = await f.service.productionDemand(context, f.orderId, f.customerId);
+  assert.equal(demand?.id, f.orderId);
+  assert.equal(demand?.items[0]?.demandedKg, f.item.demandedKg);
+  await assert.rejects(
+    f.service.productionDemand({ ...context, actor: f.actor }, f.orderId, f.customerId),
+    guard('GUARD_ACTOR'),
+  );
+  await assert.rejects(
+    f.service.productionDemand(context, f.orderId, randomUUID()),
+    guard('GUARD_ACTOR'),
+  );
+  await assert.rejects(
+    f.service.startMake(
+      { ...context, actor: Object.freeze({ ...actor, actorRole: 'ACT-OP' }) },
+      f.orderId,
+      productionId,
+      f.item.id,
+    ),
+    guard('GUARD_ACTOR'),
+  );
+  await assert.rejects(
+    f.service.startMake(
+      { ...context, request: { ...request, command: 'DraftSalesOrder' } },
+      f.orderId,
+      productionId,
+      f.item.id,
+    ),
+    guard('GUARD_ACTOR'),
+  );
+  // A command label and a current planner grant do not authorize the mutating owner port.
+  await assert.rejects(
+    f.service.startMake(context, f.orderId, productionId, f.item.id),
+    guard('GUARD_ACTOR'),
+  );
+  assert.equal(f.calls.filter((call) => call === 'make-reference').length, 0);
+  let releaseAdmitted = true;
+  f.policy.canStartMake = (ctx, sales, production, item) =>
+    Promise.resolve(
+      releaseAdmitted &&
+        ctx.actor === actor &&
+        ctx.transaction === f.transaction &&
+        ctx.request.idempotency_key === request.idempotency_key &&
+        sales === f.orderId &&
+        production === productionId &&
+        item === f.item.id,
+    );
+  f.onLock(() => {
+    releaseAdmitted = false;
+  });
+  await assert.rejects(
+    f.service.startMake(context, f.orderId, productionId, f.item.id),
+    guard('GUARD_ACTOR'),
+  );
+  assert.equal(f.calls.filter((call) => call === 'make-reference').length, 0);
+  assert.equal(f.orders.get(f.orderId)?.state, 'CONFIRMED');
+  releaseAdmitted = true;
+  f.onLock(() => {});
+  await f.service.startMake(context, f.orderId, productionId, f.item.id);
+  assert.equal(f.orders.get(f.orderId)?.state, 'IN_PRODUCTION');
+  assert.equal(
+    (await f.service.productionDemand(context, f.orderId, f.customerId))?.binding,
+    demand?.binding,
+  );
+  assert.equal(f.calls.filter((call) => call === 'make-reference').length, 1);
+  f.permit(false);
+  await assert.rejects(
+    f.service.productionDemand(context, f.orderId, f.customerId),
+    guard('GUARD_ACTOR'),
+  );
+});
+void test('MAKE contract cannot insert client-supplied plan/material/manager authority and cannot overwrite STOCK assessment', async () => {
+  const f = fixture();
+  await f.ready();
+  await assert.rejects(f.execute('RecordFulfillmentMake'), guard('GUARD_CONFLICT'));
+  const g = fixture();
+  await g.execute('DraftSalesOrder', g.draftPayload());
+  await g.execute('DraftFulfillmentAssessment', { orderId: g.orderId });
+  await assert.rejects(
+    g.execute('RecordFulfillmentMake', { manager: 'fake' }),
+    guard('GUARD_INVARIANT'),
+  );
+  const actor = Object.freeze({ ...g.actor, actorRole: 'ACT-PLAN' });
+  assert.equal(
+    await g.service.productionDemand(
+      { actor, request: g.request('GetProductionOrder'), transaction: g.transaction },
+      g.orderId,
+      g.customerId,
+    ),
+    undefined,
+  );
 });

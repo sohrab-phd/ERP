@@ -197,12 +197,24 @@ export function createIdentityHandler(
         });
         return;
       } else if (route === '/identity/grants') {
-        fields(value, ['accountId', 'actorRole', 'enabled'], ['customerScope']);
+        fields(
+          value,
+          ['accountId', 'actorRole', 'enabled'],
+          ['customerScope', 'productionDisposition'],
+        );
+        if (
+          value.productionDisposition !== undefined &&
+          typeof value.productionDisposition !== 'boolean'
+        )
+          throw new IdentityError('invalid');
         if (typeof value.enabled !== 'boolean') throw new IdentityError('invalid');
         await identity.setGrant(credential, {
           accountId: text(value.accountId),
           actorRole: text(value.actorRole) as HumanRole,
           enabled: value.enabled,
+          ...(value.productionDisposition === undefined
+            ? {}
+            : { productionDisposition: value.productionDisposition }),
           ...(value.customerScope === undefined
             ? {}
             : { customerScope: text(value.customerScope) }),

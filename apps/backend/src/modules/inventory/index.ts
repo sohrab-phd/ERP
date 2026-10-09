@@ -4,3 +4,4 @@ export { InventoryPostingService } from './posting-service.js';
 export * from './receipt.js';
 export * from './reservation.js';
 export * from './shipping.js';
+export * from './production.js';

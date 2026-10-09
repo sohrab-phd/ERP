@@ -108,7 +108,13 @@ function snapshotEffect(effect: PostingEffect): PostingEffect {
   const kg = Kg.parse(effect.kg);
   if (kg.compare(Kg.zero()) <= 0) reject('GUARD_INVARIANT', 'Posting quantity must be positive kg');
   if (effect.type === 'STOCK_IN') {
-    exactNames(effect, ['type', 'source', 'unitId', 'kg', 'create']);
+    exactNames(effect, ['type', 'source', 'unitId', 'kg', 'create', 'nextState']);
+    if (
+      effect.nextState !== undefined &&
+      (!['AVAILABLE', 'ISSUED_TO_PRODUCTION'].includes(effect.nextState) ||
+        effect.create === undefined)
+    )
+      reject('GUARD_INVARIANT', 'Derived stock state requires a created output');
     if (effect.create !== undefined) {
       const create = effect.create;
       if (typeof create !== 'object' || create === null)
@@ -122,6 +128,7 @@ function snapshotEffect(effect: PostingEffect): PostingEffect {
         ...base,
         type: 'STOCK_IN',
         kg: kg.toString(),
+        ...(effect.nextState !== undefined ? { nextState: effect.nextState } : {}),
         create: Object.freeze({
           lotId: create.lotId,
           kind: create.kind,
@@ -272,7 +279,7 @@ export class InventoryPostingService {
           unit.customerScope === ''
         ) &&
         !(
-          context.request.command === 'DispatchShipment' &&
+          ['DispatchShipment', 'CompleteProductionOperation'].includes(context.request.command) &&
           unit.customerScope === '' &&
           this.policy.visibleForEffect &&
           (await this.policy.visibleForEffect(context, effect, unit))
@@ -296,10 +303,17 @@ export class InventoryPostingService {
       const eligibility = await this.policy.validate(context, effect, unit);
       if (eligibility) throw new BusinessRejection(eligibility);
       let initial: Quantities;
+      const created = unit === undefined;
+      if (
+        effect.type === 'STOCK_IN' &&
+        effect.nextState !== undefined &&
+        context.request.command !== 'CompleteProductionOperation'
+      )
+        reject('GUARD_INVARIANT', 'Production output state requires its owner completion');
       if (!unit) {
         if (effect.type !== 'STOCK_IN' || !effect.create)
           reject('GUARD_STATE', 'Inventory unit does not exist');
-        unit = { id: effect.unitId, ...effect.create, state: 'AVAILABLE' };
+        unit = { id: effect.unitId, ...effect.create, state: effect.nextState ?? 'AVAILABLE' };
         this.visible(context, unit);
         await this.store.createUnit(context, unit);
         initial = { onHand: '0', reserved: '0' };
@@ -312,7 +326,15 @@ export class InventoryPostingService {
       let newClaim: Reservation | undefined;
       let closedClaim: Extract<PostingEffect, { type: 'RELEASE' }> | undefined;
       if (effect.type === 'STOCK_IN') {
-        if (unit.state !== 'AVAILABLE')
+        if (
+          unit.state !== 'AVAILABLE' &&
+          !(
+            created &&
+            context.request.command === 'CompleteProductionOperation' &&
+            effect.nextState === 'ISSUED_TO_PRODUCTION' &&
+            unit.state === 'ISSUED_TO_PRODUCTION'
+          )
+        )
           reject('GUARD_STATE', 'Inventory unit is not available for stock-in');
         if (
           effect.create &&

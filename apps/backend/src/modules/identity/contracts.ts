@@ -24,6 +24,8 @@ export interface Grant {
   actorRole: HumanRole;
   authorityScopeId: string;
   customerScope: string;
+  /** Explicit managerial disposition authority; never inferred from a role name. */
+  productionDisposition?: boolean;
 }
 export interface SessionRecord {
   digest: string;

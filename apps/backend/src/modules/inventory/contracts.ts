@@ -50,6 +50,7 @@ export type PostingEffect =
       unitId: string;
       kg: string;
       create?: Omit<Unit, 'id' | 'state'>;
+      nextState?: 'AVAILABLE' | 'ISSUED_TO_PRODUCTION';
     }
   | {
       type: 'STOCK_OUT';

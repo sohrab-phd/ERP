@@ -168,12 +168,12 @@ Canonical contract:
 | `CompleteProductionOperation` | Business command | Exclusive production posting boundary | Via nested `ACT-IPS` only | Yes, as the architecture posting command. Not the operator's station-completion declaration. | — |
 | `CreateResidualUnit` | Nested IPS command | Residual **identity**, parent close/split, residual on-hand once (OQ-009, INV-008); valid normal child Unit `AVAILABLE` on commit (INV-003) | Yes, once, for the child unit | No for leftover of this operation | Nested inside the bundle when leftover is reusable |
 | `RecordResidualFact` | Nested Production fact | Residual domain fact, not stock tables | No | No for that leftover | Nested |
-| `PostScrapMovement` | Authoritative scrap qty command (OQ-009) | Scrap **quantity** Ledger | Yes, once per scrap fact | Not for leftover already in the bundle. Yes for a **new** Quality/abort scrap with a new key | Nested for production leftover |
-| `ScrapUnit` | Unit state transition | Destiny `SCRAPPED`; paired scrap fact required | No second qty; Ledger qty is `PostScrapMovement` | Only with paired scrap fact; never a second qty | Nested when parent destiny is `SCRAPPED` |
+| `PostScrapMovement` | Logical Scrap quantity accounting (ADR-0020) | Actual consumed input stock-out already includes classified Scrap once; immutable Scrap fact explains net quantity | Via that one consume post; never a second subtraction | No separate MVP leftover command. Later NEW Scrap/abort contract is deferred | Nested accounting inside completion |
+| `ScrapUnit` | Unit state transition | Destiny `SCRAPPED`; paired scrap fact required | No second qty; classified Scrap is included once in the full input stock-out (ADR-0020) | Only with paired scrap fact; never a second qty | Nested when parent destiny is `SCRAPPED` |
 | `RecordScrapFact` | Domain fact | Scrap fact, not stock tables | No | Same split as `PostScrapMovement` | Nested for production leftover |
 | `ConsumeUnitPartial` | Nested IPS primitive | Parent unit partial consume state | Yes, as the consume side of this bundle | **No** (INV-006) | Nested only |
 | `ConsumeUnitComplete` | Nested IPS primitive | Parent unit fully consumed | Yes, as the consume side of this bundle | **No** (INV-006) | Nested only |
-| `ConvertResidualToScrap` | Nested classification | Leftover fails reuse policy → scrap path | No; scrap qty is `PostScrapMovement` | No for that leftover | Nested branch |
+| `ConvertResidualToScrap` | Nested classification | Leftover fails reuse policy → scrap path | No; no extra quantity subtraction after full input stock-out (ADR-0020) | No for that leftover | Nested branch |
 | `PlaceResidualUnit` | Follow-on placement where applicable; future QC branch | Child unit location; future-only QC hold | No residual qty | Yes, after the child exists; not needed for current-MVP availability | After the bundle; not a posting |
 | `CompleteOperationPartial` | Order lifecycle | Production Order `PARTIALLY_COMPLETED` | No | Yes, after at least one operation completed via the bundle | Must not post stock |
 

@@ -33,6 +33,7 @@ import {
   type StockView,
   type ReservationDemandView,
   type ReservationCompetitor,
+  type ProductionDemandView,
 } from './contracts.js';
 
 const commands = [
@@ -40,6 +41,7 @@ const commands = [
   'SubmitSalesOrder',
   'DraftFulfillmentAssessment',
   'RecordFulfillmentStock',
+  'RecordFulfillmentMake',
   'ConfirmSalesOrder',
 ] as const;
 const itemNames = ['id', 'type', 'description', 'demandedKg', 'allowPartialShipment'];
@@ -211,6 +213,7 @@ export class SalesService {
           },
         },
       },
+      RecordFulfillmentMake: {},
       ConfirmSalesOrder: { assessmentId: scalar },
     };
     return commands.map((command) => ({
@@ -276,7 +279,8 @@ export class SalesService {
     const admitted = context.request;
     const kind =
       admitted.command === 'DraftFulfillmentAssessment' ||
-      admitted.command === 'RecordFulfillmentStock'
+      admitted.command === 'RecordFulfillmentStock' ||
+      admitted.command === 'RecordFulfillmentMake'
         ? 'fulfillment-assessment'
         : 'sales-order';
     if (
@@ -298,6 +302,8 @@ export class SalesService {
         return this.draftAssessment(context);
       case 'RecordFulfillmentStock':
         return this.recordStock(context);
+      case 'RecordFulfillmentMake':
+        return this.recordMake(context);
       case 'ConfirmSalesOrder':
         return this.confirm(context);
       default:
@@ -447,6 +453,7 @@ export class SalesService {
     const assessment = await this.requireAssessment(context, id);
     const order = await this.requireOrder(context, assessment.orderId);
     if (assessment.state === 'RECORDED') {
+      if (assessment.mode === 'MAKE') reject('GUARD_CONFLICT', 'Assessment already records MAKE');
       if (binding(assessment.selections) !== binding(selections))
         reject('GUARD_CONFLICT', 'Recorded stock assessment is immutable');
       reject('GUARD_IDEMPOTENT_DUP', 'Stock assessment already recorded');
@@ -477,6 +484,50 @@ export class SalesService {
       },
     };
   }
+  private async recordMake(context: SalesContext): Promise<CommandDecision> {
+    names(context.request.payload, []);
+    const id = context.request.target.id;
+    const initial = await this.requireAssessment(context, id);
+    await this.store.lockOrder(context, initial.orderId);
+    await this.store.lockAssessment(context, id);
+    const assessment = await this.requireAssessment(context, id);
+    const order = await this.requireOrder(context, assessment.orderId);
+    if (assessment.state === 'RECORDED') {
+      reject(
+        assessment.mode === 'MAKE' ? 'GUARD_IDEMPOTENT_DUP' : 'GUARD_CONFLICT',
+        'Assessment already recorded',
+      );
+    }
+    if (
+      (order.state !== 'DRAFT' && order.state !== 'SUBMITTED') ||
+      assessment.orderBinding !== order.binding
+    )
+      reject('GUARD_STATE', 'Assessment cannot be recorded');
+    if (!this.store.recordMakeAssessment) throw new TechnicalError('incompatible');
+    const recorded = await this.store.recordMakeAssessment(context, id);
+    if (
+      !recorded ||
+      recorded.state !== 'RECORDED' ||
+      recorded.mode !== 'MAKE' ||
+      !validTime(recorded.observedAt)
+    )
+      throw new TechnicalError('incompatible');
+    return {
+      outcome: 'accepted',
+      factIdentity: id,
+      sourceState: 'DRAFT',
+      targetState: 'RECORDED',
+      event: 'FulfillmentMakeRecorded',
+      data: {
+        assessmentId: id,
+        orderId: order.id,
+        customerId: order.customerId,
+        state: 'RECORDED',
+        mode: 'MAKE',
+        observedAt: recorded.observedAt!,
+      },
+    };
+  }
   private async confirm(context: SalesContext): Promise<CommandDecision> {
     names(context.request.payload, ['assessmentId']);
     const assessmentId = context.request.payload.assessmentId;
@@ -486,7 +537,7 @@ export class SalesService {
     await this.store.lockAssessment(context, assessmentId);
     await this.authorize(context, context.actor.customerScope!);
     const order = await this.requireOrder(context, id);
-    if (order.state === 'CONFIRMED') {
+    if (order.state === 'CONFIRMED' || order.state === 'IN_PRODUCTION') {
       if (order.confirmedAssessmentId !== assessmentId)
         reject('GUARD_CONFLICT', 'Order already confirmed against another assessment');
       reject('GUARD_IDEMPOTENT_DUP', 'Order already confirmed');
@@ -498,12 +549,12 @@ export class SalesService {
       assessment.state !== 'RECORDED' ||
       assessment.orderId !== id ||
       assessment.orderBinding !== order.binding ||
-      !assessment.selections ||
-      !assessment.stock ||
+      ((assessment.mode ?? 'STOCK') === 'STOCK' && (!assessment.selections || !assessment.stock)) ||
       !validTime(assessment.observedAt)
     )
       reject('GUARD_STATE', 'Matching recorded stock assessment required');
-    await this.stockEvidence(context, order, assessment.selections);
+    if ((assessment.mode ?? 'STOCK') === 'STOCK')
+      await this.stockEvidence(context, order, assessment.selections!);
     await this.authorize(context, order.customerId);
     const confirmed = await this.store.confirmOrder(context, id, assessmentId);
     if (
@@ -558,6 +609,7 @@ export class SalesService {
       order.confirmedAssessmentId,
       customerId,
     );
+    if (assessment?.mode === 'MAKE') return undefined;
     if (
       !assessment ||
       assessment.state !== 'RECORDED' ||
@@ -606,6 +658,88 @@ export class SalesService {
       customerId,
       this.policy.canShip?.bind(this.policy),
     );
+  }
+  /** Narrow MAKE demand port; never trusts finished-stock availability or changes Sales on registration. */
+  async productionDemand(
+    supplied: SalesContext,
+    orderId: string,
+    customerId: string,
+  ): Promise<ProductionDemandView | undefined> {
+    const context = snapshot(supplied);
+    if (
+      !validUuid(orderId) ||
+      !validUuid(customerId) ||
+      context.actor.temporary === true ||
+      !['ACT-PLAN', 'ACT-OP'].includes(context.actor.actorRole) ||
+      context.actor.customerScope !== customerId ||
+      !this.policy.canProduce ||
+      !(await this.policy.canProduce(context, customerId))
+    )
+      reject('GUARD_ACTOR', 'Production demand access denied');
+    if (!this.store.productionOrder || !this.store.reservationAssessment)
+      throw new TechnicalError('incompatible');
+    const order = await this.store.productionOrder(context, orderId, customerId);
+    if (
+      !order ||
+      !['CONFIRMED', 'IN_PRODUCTION'].includes(order.state) ||
+      !order.confirmedAssessmentId ||
+      !validTime(order.confirmedAt)
+    )
+      return undefined;
+    const assessment = await this.store.reservationAssessment(
+      context,
+      order.confirmedAssessmentId,
+      customerId,
+    );
+    if (!assessment || assessment.state !== 'RECORDED' || assessment.mode !== 'MAKE')
+      return undefined;
+    if (assessment.orderId !== order.id || assessment.orderBinding !== order.binding)
+      throw new TechnicalError('incompatible');
+    if (!(await this.policy.canProduce(context, customerId)))
+      reject('GUARD_ACTOR', 'Production demand access denied');
+    return frozen({
+      id: order.id,
+      customerId: order.customerId,
+      binding: order.binding,
+      confirmedAt: order.confirmedAt!,
+      items: order.items.map(({ id, type, demandedKg, allowPartialShipment }) => ({
+        id,
+        type,
+        demandedKg,
+        allowPartialShipment,
+      })),
+    });
+  }
+  /** Sales-owned released-plan reference, in the caller's same transaction; no registration auto-start. */
+  async startMake(
+    supplied: SalesContext,
+    orderId: string,
+    productionOrderId: string,
+    itemId: string,
+  ): Promise<void> {
+    const context = snapshot(supplied);
+    if (
+      context.actor.actorRole !== 'ACT-PLAN' ||
+      context.request.command !== 'ReleaseProductionOrder' ||
+      context.request.contract_version !== 1 ||
+      context.request.target.kind !== 'production-order' ||
+      context.request.target.id !== productionOrderId ||
+      !validUuid(productionOrderId) ||
+      !validUuid(orderId) ||
+      !validUuid(itemId) ||
+      !this.policy.canStartMake ||
+      !(await this.policy.canStartMake(context, orderId, productionOrderId, itemId))
+    )
+      reject('GUARD_ACTOR', 'Production release authority required');
+    await this.store.lockOrder(context, orderId);
+    const demand = await this.productionDemand(context, orderId, context.actor.customerScope ?? '');
+    if (!demand || !demand.items.some((item) => item.id === itemId))
+      reject('GUARD_ACTOR', 'MAKE demand unavailable');
+    if (!(await this.policy.canStartMake(context, orderId, productionOrderId, itemId)))
+      reject('GUARD_ACTOR', 'Production release admission withdrawn');
+    if (!this.store.startMake) throw new TechnicalError('incompatible');
+    if (!(await this.store.startMake(context, orderId, productionOrderId, itemId)))
+      reject('GUARD_CONFLICT', 'Production reference differs');
   }
   /** Internal minimal contender evidence; never exported through command/query HTTP. Exact PG timestamps remain in SQL. */
   async reservationCompetitors(

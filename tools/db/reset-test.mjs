@@ -75,7 +75,7 @@ export async function resetTestDatabase(env = process.env) {
     client = await pool.connect();
     client.on('error', onError);
     await client.query(
-      'DROP SCHEMA IF EXISTS shipping CASCADE;DROP SCHEMA IF EXISTS envelope_test CASCADE;DROP SCHEMA IF EXISTS sales CASCADE;DROP SCHEMA IF EXISTS procurement CASCADE;DROP SCHEMA IF EXISTS inventory CASCADE;DROP SCHEMA IF EXISTS identity CASCADE;DROP SCHEMA IF EXISTS kernel CASCADE',
+      'DROP SCHEMA IF EXISTS production CASCADE;DROP SCHEMA IF EXISTS shipping CASCADE;DROP SCHEMA IF EXISTS envelope_test CASCADE;DROP SCHEMA IF EXISTS sales CASCADE;DROP SCHEMA IF EXISTS procurement CASCADE;DROP SCHEMA IF EXISTS inventory CASCADE;DROP SCHEMA IF EXISTS identity CASCADE;DROP SCHEMA IF EXISTS kernel CASCADE',
     );
     await applyMigrations(client, await loadMigrations());
     await client.query('GRANT USAGE ON SCHEMA kernel TO ' + quote(identity.runtimeRole));
@@ -101,6 +101,18 @@ export async function resetTestDatabase(env = process.env) {
     );
     await client.query(
       'GRANT SELECT,INSERT ON shipping.dispatch TO ' + quote(identity.runtimeRole),
+    );
+    await client.query('GRANT USAGE ON SCHEMA production TO ' + quote(identity.runtimeRole));
+    await client.query(
+      'GRANT SELECT,INSERT,UPDATE ON production.production_order,production.operation,production.allocation TO ' +
+        quote(identity.runtimeRole),
+    );
+    await client.query(
+      'GRANT SELECT,INSERT ON production.source_fact,production.route_snapshot,production.product_batch,inventory.production_origin,sales.make_reference TO ' +
+        quote(identity.runtimeRole),
+    );
+    await client.query(
+      'GRANT SELECT,INSERT,UPDATE ON inventory.production_issue TO ' + quote(identity.runtimeRole),
     );
     await client.query('GRANT USAGE ON SCHEMA inventory TO ' + quote(identity.runtimeRole));
     await client.query(

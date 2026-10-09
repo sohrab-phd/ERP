@@ -93,3 +93,7 @@ customer's payload by merely holding a command permission or claiming a role.
 - Group, claim, or JWT shape (OQ-018)
 - Real named holders of each role (OQ-019)
 - Multi-site role grants (OQ-013)
+
+## Bounded production disposition (APR-025)
+
+CompleteProductionOperation requires a current individual ACT-OP and exact customer grant. When residuals/scraps are supplied, that same authenticated person additionally needs an explicitly granted ACT-PLAN productionDisposition capability for that customer; default false. ACT-SEC administers the flag through existing grant/audit procedures. This is a permission distinction, not a new organizational role or second-person approval. Names, checkbox/manager IDs and mere ACT-PLAN membership do not supply it. Current permission is rechecked after Inventory lock waits and before completion; revoked disposition denies leftover replay. No leftovers requires no disposition. Planning/referral/issue use ACT-PLAN; Entry/declaration/start use ACT-OP. Queries require current ACT-PLAN or ACT-OP/customer and omit internal Sales bindings.

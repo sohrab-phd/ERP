@@ -101,7 +101,7 @@ Exclusive composition lives in
 (OQ-003). Residual on-hand and scrap quantity each post **once** via
 `ACT-IPS` inside that transaction. `CreateResidualUnit` creates identity
 and parent close/split; it is not a second residual quantity. Scrap
-quantity is `PostScrapMovement` only; `ScrapUnit` is unit destiny.
+quantity is included once in the full actual input consumption stock-out, attributable through immutable Scrap/source facts (ADR-0020). `PostScrapMovement` is that logical accounting responsibility, not an additional subtraction from already consumed input. `ScrapUnit` is unit destiny; later NEW Scrap/abort workflows remain separately scoped.
 
 How those facts are stored at runtime is the recorded OQ-017 style
 (application-owned PostgreSQL transaction + locks). Restricted database
@@ -141,3 +141,7 @@ That proof is a separately authorized evidence spike, not this draft.
 - Opening-stock posting authority: OQ-015 residual
 - Packages, ORM product, PostgreSQL version: OQ-018 residual. Database
   product is PostgreSQL (ADR-0007).
+
+## Effective bounded MVP production policy — 2026-10-09
+
+[APR-025](../00-governance/approved-baselines/APR-025-production-scope.md#owner-production-decision--2026-10-09) supersedes only earlier missing production consumption/result/mass-balance/disposition branches. CompleteProductionOperation supports full/partial actual kg; original unconsumed material retains restrictions. Exact consumed = final + new WIP + Residual + Scrap, zero unexplained imbalance, no process loss/rounding. Existing WIP is not double-counted. WIP is not saleable; final readiness follows approved per-order route. Required leftover classification is the actual authenticated, explicitly permitted manager decision, without a new role/second approval chain; none is required for no leftovers. Current atomic owner/IPS/source-fact/audit/idempotency boundary is unchanged; unrelated OQ branches remain open.

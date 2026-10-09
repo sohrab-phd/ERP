@@ -15,7 +15,7 @@ const scope = (ctx: SalesContext) => [
   ctx.actor.customerScope,
 ];
 const orderColumns = `order_id AS id,customer_id AS "customerId",customer_name AS "customerName",items,commercial_terms AS "commercialTerms",binding,state,confirmed_at AS "confirmedAt",confirmed_assessment_id AS "confirmedAssessmentId"`;
-const assessmentColumns = `assessment_id AS id,order_id AS "orderId",customer_id AS "customerId",order_binding AS "orderBinding",binding,state,selections,stock,observed_at AS "observedAt"`;
+const assessmentColumns = `assessment_id AS id,order_id AS "orderId",customer_id AS "customerId",order_binding AS "orderBinding",binding,state,fulfillment_mode AS mode,selections,stock,observed_at AS "observedAt"`;
 function record<T>(row: object | undefined): T | undefined {
   if (!row) return undefined;
   return Object.fromEntries(
@@ -95,6 +95,58 @@ export class PostgresSalesStore implements SalesStore {
         ]),
       ],
     );
+  }
+  productionOrder(
+    ctx: SalesContext,
+    id: string,
+    customerId: string,
+  ): Promise<SalesOrder | undefined> {
+    return this.reservationOrder(ctx, id, customerId);
+  }
+  async recordMakeAssessment(
+    ctx: SalesContext,
+    id: string,
+  ): Promise<FulfillmentAssessment | undefined> {
+    return record(
+      (
+        await transactionClient(ctx.transaction).query<Record<string, unknown>>(
+          "UPDATE sales.fulfillment_assessment SET state='RECORDED',fulfillment_mode='MAKE',observed_at=clock_timestamp() WHERE installation_id=$1 AND authority_scope=$2 AND customer_id=$3 AND assessment_id=$4 AND state='DRAFT' RETURNING " +
+            assessmentColumns,
+          [...scope(ctx), id],
+        )
+      ).rows[0],
+    );
+  }
+  async startMake(
+    ctx: SalesContext,
+    orderId: string,
+    productionOrderId: string,
+    itemId: string,
+  ): Promise<boolean> {
+    const client = transactionClient(ctx.transaction);
+    await client.query(
+      'INSERT INTO sales.make_reference(installation_id,authority_scope,order_id,customer_id,production_order_id,item_id,issuer,subject) VALUES($1,$2,$4,$3,$5,$6,$7,$8) ON CONFLICT(installation_id,authority_scope,production_order_id) DO NOTHING',
+      [
+        ...scope(ctx),
+        orderId,
+        productionOrderId,
+        itemId,
+        ctx.actor.principal.issuer,
+        ctx.actor.principal.subject,
+      ],
+    );
+    const match = (
+      await client.query(
+        'SELECT 1 FROM sales.make_reference WHERE installation_id=$1 AND authority_scope=$2 AND customer_id=$3 AND order_id=$4 AND production_order_id=$5 AND item_id=$6',
+        [...scope(ctx), orderId, productionOrderId, itemId],
+      )
+    ).rowCount;
+    if (match !== 1) return false;
+    await client.query(
+      "UPDATE sales.sales_order SET state='IN_PRODUCTION' WHERE installation_id=$1 AND authority_scope=$2 AND customer_id=$3 AND order_id=$4 AND state='CONFIRMED'",
+      [...scope(ctx), orderId],
+    );
+    return true;
   }
   async customer(ctx: SalesContext, id: string): Promise<Customer | undefined> {
     return record(
