@@ -3,10 +3,10 @@ id: SEC-RBAC-001
 title: Role Permission and Scope Matrix
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.4.0
+version: 0.5.0
 owners: [security-architect, business-control-owner]
 depends_on: [DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
@@ -70,6 +70,7 @@ with the owning bounded context.
 | Package / Shipment (normal confirmed demand, complete reserved Units) | individual ACT-SHIP; preparation/recording/loading/final dispatch; Owner APR-024 | ACT-IPS on dispatch | no; no payment/invoice gate |
 | DraftShipment without customer/order | ACT-SHIP | ACT-IPS if later dispatched | exceptional authority OQ-019 |
 | Invoice / Payment (non-void) | ACT-FIN | no | no |
+| RecordIssuedInvoiceEvidence (APR-028 bounded documentary exception) | current individual organizational ACT-SALES only; Finance-Lite owns write | no | no; trusted recorder/issuer attribution, no external accounting registration |
 | VoidInvoice / ReversePayment | ACT-FIN | no | different identity than issuer (OQ-019); ACT-SEC may be the recorded authority |
 | Identity / audit administration | ACT-SEC | no | no stock writes |
 
@@ -84,6 +85,7 @@ with the owning bounded context.
 | GetAvailability / GetLedger / GetBalance / GetUnit | ACT-WH, ACT-SALES (availability), ACT-PLAN (allocation context), ACT-SEC (audit) | customer/resource visibility and recorded single organizational site scope (OQ-013) |
 | TraceForward / TraceBackward | ACT-WH, ACT-SALES, ACT-SEC; ACT-QC only if future Quality separately enabled | rebuild-only; no source write |
 | GetInvoice / GetPayment | ACT-FIN; ACT-SALES may see own-order invoices | customer isolation |
+| GetIssuedInvoiceEvidence (APR-028) | current individual organizational ACT-SALES or ACT-FIN | exact installation/authority; mandatory owning customer/order binding; customer-scoped grants and unrelated roles denied |
 | Portal customer reads | ACT-CUST through Sales-owned read port, only explicitly approved document whitelist before portal slice | Own customer only; OQ-010 visibility-only MVP, document list residual |
 
 Query permission is evaluated independently from write-command permission.

@@ -3,15 +3,22 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.9.0
+version: 0.10.0
 owners: [chief-solution-architect]
 depends_on: []
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## Current capability decision gate (2026-10-10)
+
+- [Current scope](00-governance/CURRENT_PHASE.md)
+- [Owner Purchasing acceptance and Finance-Lite invoice-evidence authority](00-governance/approved-baselines/APR-028-finance-lite-continuation.md)
+- [Finance-Lite invoice-evidence plan and DoD](12-implementation-planning/FINANCE_LITE_PLAN.md)
+- [Finance-Lite invoice-evidence implementation and validation](12-implementation-planning/FINANCE_LITE_IMPLEMENTATION_STATUS.md)
 
 ## Current engineering package (2026-10-04)
 

@@ -75,9 +75,13 @@ export async function resetTestDatabase(env = process.env) {
     client = await pool.connect();
     client.on('error', onError);
     await client.query(
-      'DROP SCHEMA IF EXISTS production CASCADE;DROP SCHEMA IF EXISTS shipping CASCADE;DROP SCHEMA IF EXISTS envelope_test CASCADE;DROP SCHEMA IF EXISTS sales CASCADE;DROP SCHEMA IF EXISTS procurement CASCADE;DROP SCHEMA IF EXISTS inventory CASCADE;DROP SCHEMA IF EXISTS identity CASCADE;DROP SCHEMA IF EXISTS kernel CASCADE',
+      'DROP SCHEMA IF EXISTS finance CASCADE;DROP SCHEMA IF EXISTS production CASCADE;DROP SCHEMA IF EXISTS shipping CASCADE;DROP SCHEMA IF EXISTS envelope_test CASCADE;DROP SCHEMA IF EXISTS sales CASCADE;DROP SCHEMA IF EXISTS procurement CASCADE;DROP SCHEMA IF EXISTS inventory CASCADE;DROP SCHEMA IF EXISTS identity CASCADE;DROP SCHEMA IF EXISTS kernel CASCADE',
     );
     await applyMigrations(client, await loadMigrations());
+    await client.query('GRANT USAGE ON SCHEMA finance TO ' + quote(identity.runtimeRole));
+    await client.query(
+      'GRANT SELECT,INSERT ON finance.invoice_evidence TO ' + quote(identity.runtimeRole),
+    );
     await client.query('GRANT USAGE ON SCHEMA kernel TO ' + quote(identity.runtimeRole));
     await client.query(
       'GRANT SELECT,INSERT ON kernel.audit_event,kernel.command_outcome TO ' +

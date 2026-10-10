@@ -3,10 +3,10 @@ id: APP-CMD-001
 title: Application Command Catalogue
 phase: 05-application-api-architecture
 status: approved
-version: 0.4.0
+version: 0.5.0
 owners: [solution-architect, api-architect]
 depends_on: [SM-TRANS-001, SM-EVT-001, APR-006, APR-007]
-last_reviewed: 2026-10-01
+last_reviewed: 2026-10-10
 approval: APR-007
 supersedes: null
 ---
@@ -215,6 +215,13 @@ AllocateFullPayment, CloseInvoice, MarkInvoiceOverdue,
 RequestInvoiceVoid, VoidInvoice, RecordPayment, AllocatePayment,
 LeavePaymentUnallocated, ClosePayment, ReversePayment. Not legal GL
 (OQ-012).
+
+Owner APR-028 separately authorizes `RecordIssuedInvoiceEvidence` v1, target
+`invoice-evidence`: documentary reference/date and existing Sales order/matching
+customer only, current individual organizational ACT-SALES. Finance-Lite owns
+immutable evidence; the shared envelope persists outcome/audit atomically. No
+invoice generation, money, lifecycle change,
+allocation or external upload. See [bounded plan](../12-implementation-planning/FINANCE_LITE_PLAN.md).
 
 These Finance-Lite commands remain architecture. The factory has named
 three customer payment methods and has not named who records a payment,

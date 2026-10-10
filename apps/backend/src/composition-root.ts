@@ -56,6 +56,9 @@ import { createGenealogyHandler } from './transport/genealogy-http.js';
 import { PurchaseService, type PurchaseContext } from './modules/procurement/index.js';
 import { PostgresPurchaseStore } from './infrastructure/postgresql/purchase-store.js';
 import { createPurchaseHandler } from './transport/purchase-http.js';
+import { InvoiceEvidenceService, type InvoiceEvidenceContext } from './modules/finance/index.js';
+import { PostgresInvoiceEvidenceStore } from './infrastructure/postgresql/invoice-evidence-store.js';
+import { createInvoiceEvidenceHandler } from './transport/invoice-evidence-http.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -253,6 +256,8 @@ export function compose(config: Readonly<Config>) {
       readStock: (ctx, ids) => inventory.availability(ctx, ids),
     },
     {
+      canRecordInvoiceEvidence: async (ctx) =>
+        ctx.actor.actorRole === 'ACT-SALES' && current(ctx.actor, ctx.transaction),
       canStartMake: async (ctx, salesId, productionId, itemId) =>
         (await productionCurrent(ctx)) &&
         production.admittedRelease(ctx, salesId, productionId, itemId),
@@ -271,6 +276,31 @@ export function compose(config: Readonly<Config>) {
           : Promise.resolve(false),
     },
   );
+  const invoiceEvidence = new InvoiceEvidenceService(
+    new PostgresInvoiceEvidenceStore(),
+    {
+      reference: (ctx, orderId, customerId) => sales.invoiceReference(ctx, orderId, customerId),
+    },
+    {
+      current: async (ctx: InvoiceEvidenceContext) =>
+        ['ACT-SALES', 'ACT-FIN'].includes(ctx.actor.actorRole) &&
+        current(ctx.actor, ctx.transaction),
+    },
+  );
+  const invoiceEvidencePolicies = invoiceEvidence.contracts().map((contract) => ({
+    command: contract.command,
+    version: 1,
+    roles: ['ACT-SALES' as const],
+    canTarget: (actor: ExecutionContext, request: CommandRequest) =>
+      Promise.resolve(
+        org(actor) &&
+          actor.actorRole === 'ACT-SALES' &&
+          request.target.kind === 'invoice-evidence' &&
+          validUuid(request.target.id),
+      ),
+    canDisclose: (actor: ExecutionContext) =>
+      Promise.resolve(org(actor) && actor.actorRole === 'ACT-SALES'),
+  }));
   const inventoryProduction: InventoryProductionService = new InventoryProductionService(
     new PostgresInventoryProductionStore(),
     inventoryStore,
@@ -495,6 +525,7 @@ export function compose(config: Readonly<Config>) {
     registry: new CommandRegistry([
       receipts.contract(),
       ...purchases.contracts(),
+      ...invoiceEvidence.contracts(),
       ...sales.contracts(),
       ...reservations.contracts(),
       ...shipping.contracts(),
@@ -505,6 +536,7 @@ export function compose(config: Readonly<Config>) {
     audits: new PostgresAudit(),
     authorization: new IdentityAuthorization(identity, [
       ...purchasePolicies,
+      ...invoiceEvidencePolicies,
       ...salesPolicies,
       ...reservationPolicies,
       ...shippingPolicies,
@@ -530,6 +562,33 @@ export function compose(config: Readonly<Config>) {
   };
   const command = (input: string | Uint8Array, context: ExecutionContext) =>
     executeCommand(input, context, ports);
+  const invoiceEvidenceQuery = async (id: string, actor: ExecutionContext) => {
+    const tx = await transactions.begin();
+    try {
+      const data = await invoiceEvidence.get(
+        {
+          actor,
+          transaction: tx.context,
+          request: {
+            command: 'GetIssuedInvoiceEvidence',
+            contract_version: 1,
+            idempotency_key: randomUUID(),
+            target: { kind: 'query', id },
+            payload: {},
+            preconditions: {},
+          },
+        },
+        id,
+      );
+      await tx.commit();
+      return data;
+    } catch (error) {
+      await tx.rollback();
+      throw error;
+    } finally {
+      await tx.release();
+    }
+  };
   const purchaseQuery = async (
     kind: 'GetCompletedPurchase' | 'GetPurchaseProforma',
     id: string,
@@ -808,6 +867,11 @@ export function compose(config: Readonly<Config>) {
     genealogy: createGenealogyHandler({ identity, query: genealogyQuery }),
     receipt: createReceiptHandler({ identity, command, query }),
     purchase: createPurchaseHandler({ identity, command, query: purchaseQuery }),
+    invoiceEvidence: createInvoiceEvidenceHandler({
+      identity,
+      command,
+      query: invoiceEvidenceQuery,
+    }),
     sales: createSalesHandler({ identity, command, query: salesQuery }),
     shipping: createShippingHandler({ identity, command, query: shippingQuery }),
     reservation: createReservationHandler({ identity, command, query: reservationQuery }),
@@ -822,6 +886,8 @@ export function compose(config: Readonly<Config>) {
     inventory,
     receipts,
     purchases,
+    invoiceEvidence,
+    invoiceEvidenceQuery,
     purchaseQuery,
     sales,
     salesQuery,

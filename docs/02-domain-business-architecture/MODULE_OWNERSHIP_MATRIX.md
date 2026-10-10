@@ -3,10 +3,10 @@ id: DOM-OWN-001
 title: Module Capability and Data-Ownership Matrix
 phase: 02-domain-business-architecture
 status: approved
-version: 0.3.0
+version: 0.4.0
 owners: [chief-solution-architect, data-architect]
 depends_on: [GOV-DATA-DICT-001, DOM-CAP-BC-001]
-last_reviewed: 2026-10-01
+last_reviewed: 2026-10-10
 approval: APR-004
 supersedes: null
 ---
@@ -123,6 +123,7 @@ First-use glossary links appear in the Concept column.
 | [Package](../00-governance/registers/BUSINESS_GLOSSARY.md#term-023--package) | ENT-PACKAGE / TERM-023 | `BC-SHIPPING` | Inventory, Quality, Sales, Reporting | Inventory pack-state posting if required by later Phase 03 | Inventory writing Package as shipment workflow |
 | [Shipment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-017--shipment) | ENT-SHIPMENT / TERM-017 | `BC-SHIPPING` | Sales, Inventory, Finance-Lite, Quality, Reporting | Inventory Posting Service for definitive stock exit on dispatch | Ledger/Balance; Sales writing shipment rows |
 | Invoice | ENT-INVOICE; not legal GL (OQ-012 recorded) | `BC-FINANCE-LITE` ([Finance-Lite](../00-governance/registers/BUSINESS_GLOSSARY.md#term-018--finance-lite), TERM-018) | Sales, Shipping, Reporting, Integration (export candidate) | none for stock; none for Sales Order close (OQ-007) | External accounting tables (out of this system); Sales writing invoices; Finance-Lite writing Sales Order lifecycle |
+| Issued-invoice evidence (APR-028) | Immutable documentary facts, not monetary Invoice lifecycle | `BC-FINANCE-LITE` | current organizational ACT-SALES/ACT-FIN through owner query only | Sales-owned existing order/customer validation, no mutation | Sales/Customer master duplication; monetary calculations; payment/allocation; foreign lifecycle writes |
 | [Payment](../00-governance/registers/BUSINESS_GLOSSARY.md#term-024--payment) | ENT-PAYMENT / TERM-024 | `BC-FINANCE-LITE` | Sales, Reporting | none for stock | Inventory, legal GL |
 | [Genealogy Link](../00-governance/registers/BUSINESS_GLOSSARY.md#term-025--genealogy-link) | ENT-GENEALOGY-LINK / TERM-025 **projection** | **none as independent truth** — `BC-REPORTING` may materialize a rebuildable projection | Sales, Quality, Shipping, Procurement, Audit (authorized) | none — must not be edited as source | Any module writing GenealogyLink without rebuilding from Lot origin, Consumption, Output, Residual, Scrap, Package, Shipment, and Rework facts; Ledger-only genealogy rebuild |
 

@@ -38,6 +38,7 @@ for (const file of files) {
           'inventory-receipt-store.ts',
           'receipt-store.ts',
           'purchase-store.ts',
+          'invoice-evidence-store.ts',
           'sales-store.ts',
           'inventory-reservation-store.ts',
           'shipping-store.ts',
@@ -116,6 +117,13 @@ for (const file of files) {
       file !== resolve('apps/backend/src/infrastructure/postgresql/purchase-store.ts')
     )
       issues.push(relative(root, file) + ': purchasing SQL outside Procurement owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\bfinance\.invoice_evidence\b/i.test(node.text) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/invoice-evidence-store.ts')
+    )
+      issues.push(relative(root, file) + ': invoice evidence SQL outside Finance owner');
     if (
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
       /\bprocurement\.goods_receipt\b/i.test(node.text) &&

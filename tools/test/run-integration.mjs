@@ -14,6 +14,8 @@ const files = [
   'receipt',
   'purchase',
   'purchase-http',
+  'invoice-evidence',
+  'invoice-evidence-http',
   'receipt-http',
   'sales',
   'sales-http',

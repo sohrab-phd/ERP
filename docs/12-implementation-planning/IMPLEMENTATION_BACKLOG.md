@@ -3,17 +3,27 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [chief-solution-architect]
 depends_on: [ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
 
-Current scope: [APR-026](../00-governance/approved-baselines/APR-026-genealogy-trace-scope.md), Genealogy Projection and Trace after Owner-confirmed accepted/pushed final SLICE-MAKE `e5997f506c753bc73426128a88558d9c633e7f88`. The eight preceding increments are accepted/pushed; Genealogy is the ninth engineering-accepted delivery, awaiting Owner review/push of its local commit. See the [bounded plan/DoD](GENEALOGY_TRACE_PLAN.md) and [actual delivery](GENEALOGY_TRACE_IMPLEMENTATION_STATUS.md). No unrelated OQ branch is closed. Stop after accepted documented local commit for Owner review/push.
+Current direction: [APR-028](../00-governance/approved-baselines/APR-028-finance-lite-continuation.md),
+conditional Finance-Lite continuation after Owner acceptance and confirmed push
+of Purchasing `b2619790ca7f20a57978279cd7392199c331f0b3`. Eleven capabilities are
+engineering accepted with this local delivery; see the [committed progress](FINANCE_LITE_IMPLEMENTATION_STATUS.md#overall-committed-capability-progress).
+The subsequent actual Owner policy approves [Finance-Lite Invoice Evidence First](FINANCE_LITE_PLAN.md):
+immutable existing-invoice evidence only; org ACT-SALES records/reads, org ACT-FIN
+reads, validated existing Sales order/customer. Money/payment/numbering/upload
+remain excluded and their policies open for affected future increments. Gate/local
+unlock match APR-028 under APR-019. Invoice evidence passes its DoD and independent
+reviews; stop for Owner acceptance/push. Next recommended task is Weighbridge
+human ticket/fallback scope review (§10), resolving its actual inputs before implementation.
 
 Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers

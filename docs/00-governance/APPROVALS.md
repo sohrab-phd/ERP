@@ -3,10 +3,10 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.13.0
+version: 0.14.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-10-03
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
@@ -742,3 +742,17 @@ review and authorization.
 
 - [Actual Owner continuation and policy](approved-baselines/APR-027-purchasing-evidence-scope.md): genealogy601e52a02430ee3f81b737c1b8ffdabc2123b63c accepted/pushed; purchasing increment explicitly authorized; bounded organization-scoped ACT-PROC recording fields/authority approved in the subsequent reply.
 - Gate/local ignored unlock match APR-027; architecture APR-018 unchanged. Immutable completed-purchase and optional linked sent-proforma evidence only. No supplier master/approval, PO lifecycle, financial or stock changes, actual transmission or remote push. Stop after delivery for Owner acceptance/push.
+
+### APR-028 — Purchasing acceptance and Finance-Lite invoice evidence
+
+- [Actual Owner decision](approved-baselines/APR-028-finance-lite-continuation.md):
+  Purchasing `b2619790ca7f20a57978279cd7392199c331f0b3` formally accepted and
+  confirmed pushed on 2026-10-10; subsequent bounded policy replies authorize
+  Invoice Evidence First: documentary UUID/reference/date/existing Sales order/
+  matching customer and system attribution, org ACT-SALES record/read and org
+  ACT-FIN read only. Other/customer grants denied; Finance-Lite owns the evidence.
+- [Bounded plan/DoD](../12-implementation-planning/FINANCE_LITE_PLAN.md) preserves
+  open commercial/payment residuals for later affected increments. Gate/local
+  unlock match APR-028 under standing APR-019; no money/allocation/upload is granted.
+- No Purchasing reapproval, factory UAT, production deployment, remote push,
+  unrelated backlog work or invented ACT authority.

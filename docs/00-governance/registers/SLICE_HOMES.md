@@ -3,10 +3,10 @@ id: GOV-SLICE-HOMES-001
 title: Slice Homes for Approved Commands Adapters and Scenes
 phase: 00-governance
 status: in_review
-version: 0.4.0
+version: 0.5.0
 owners: [chief-solution-architect]
 depends_on: [PLAN-SLICE-001, PLAN-WI-001, APP-CMD-001, APP-QRY-001, INT-CAT-001, QA-SCN-001, APR-014, CHK-0013, ASM-025]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
@@ -133,6 +133,10 @@ CloseShipment. Finance-Lite: DraftInvoice, IssueInvoice,
 AllocatePartialPayment, AllocateFullPayment, AllocatePayment
 (`WI-BUNDLE-PAY`), CloseInvoice, MarkInvoiceOverdue, RecordPayment,
 LeavePaymentUnallocated, ClosePayment.
+
+APR-028 bounded documentary increment: RecordIssuedInvoiceEvidence and
+GetIssuedInvoiceEvidence live here under Finance-Lite ownership. No monetary
+invoice state, WI-BUNDLE-PAY execution or Sales lifecycle mutation is authorized.
 
 Open: OQ-006 (family over-delivery %). Exceptional shipment-without-demand
 person: OQ-019. Reservation uniqueness is recorded (OQ-008). Sales Order

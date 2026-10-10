@@ -129,6 +129,7 @@ export interface ProductionDemandView {
   items: readonly { id: string; type: string; demandedKg: string; allowPartialShipment: boolean }[];
 }
 export interface SalesPolicy {
+  canRecordInvoiceEvidence?(context: SalesContext): Promise<boolean>;
   canAccess(context: SalesContext, customerId: string): Promise<boolean>;
   canReserve?(context: SalesContext, customerId: string): Promise<boolean>;
   canShip?(context: SalesContext, customerId: string): Promise<boolean>;

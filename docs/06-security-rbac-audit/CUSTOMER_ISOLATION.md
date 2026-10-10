@@ -3,10 +3,10 @@ id: SEC-ISO-001
 title: Customer Isolation Policy
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [security-architect]
 depends_on: [SEC-RBAC-001, APP-QRY-001, APP-ENV-001, APR-007, APR-008]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
@@ -48,6 +48,16 @@ and other roles cannot use these internal routes. Descriptive supplier reference
 do not grant access to supplier master data or associated customer documents.
 
 ## Surfaces that must isolate
+
+Owner [APR-028](../00-governance/approved-baselines/APR-028-finance-lite-continuation.md)
+authorizes keyed customer-invoice documentary evidence under current personal
+organizational ACT-SALES (record/read) or ACT-FIN (read only). Every fact retains
+mandatory Sales order and owning customer ID, validated in the exact trusted
+installation/authority. This explicit organization-wide evidence permission
+does not widen existing Sales customer-scoped workflows or monetary Invoice/
+Payment permissions. Customer-scoped grants, ACT-CUST, ACT-SEC without an approved
+document role and unrelated roles are denied. No all-customer browse/search,
+portal, export or financial state is introduced.
 
 | Surface | Rule |
 | --- | --- |

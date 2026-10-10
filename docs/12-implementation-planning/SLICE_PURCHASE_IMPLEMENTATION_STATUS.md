@@ -135,9 +135,14 @@ commercial terms/quantities, purchase selection/request, mandatory receipt/deman
 link, partial/over/under receipt, cancellation/return/correction or new genealogy
 source. Deferred branches remain subject to actual factory answers and scope.
 
-After accepted local commit stop for Owner acceptance/push. Next backlog area is
-Finance-Lite, depending on Sales/Identity and genuinely unresolved commercial/
-payment recording/allocation policy. Naming it is not authorizing implementation.
+Owner follow-up (2026-10-10): the completed increment is formally accepted and
+commit `b2619790ca7f20a57978279cd7392199c331f0b3` is confirmed pushed. No further
+Purchasing change is requested except a genuine regression or discovered defect.
+This is not factory UAT or production deployment approval. The subsequent
+[APR-028 Finance-Lite direction](../00-governance/approved-baselines/APR-028-finance-lite-continuation.md)
+was followed by an actual Owner decision approving [Invoice Evidence First](FINANCE_LITE_PLAN.md),
+with documentary fields/permissions only and monetary/payment branches explicitly
+deferred. Purchasing needs no repeat approval.
 
 ## Overall committed capability progress
 

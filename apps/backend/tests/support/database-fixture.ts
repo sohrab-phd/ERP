@@ -82,6 +82,8 @@ export async function withDatabase<T>(body: (fixture: DatabaseFixture) => Promis
     assert.notEqual(new URL(required('DATABASE_URL')).pathname.slice(1), runtimeIdentity.db);
     await runTool('tools/db/migrate.mjs');
     const quotedRole = `"${runtimeIdentity.role.replaceAll('"', '""')}"`;
+    await owner.query(`GRANT USAGE ON SCHEMA finance TO ${quotedRole}`);
+    await owner.query(`GRANT SELECT,INSERT ON finance.invoice_evidence TO ${quotedRole}`);
     await owner.query(`GRANT USAGE ON SCHEMA kernel TO ${quotedRole}`);
     await owner.query(
       `GRANT SELECT, INSERT ON kernel.audit_event, kernel.command_outcome TO ${quotedRole}`,
@@ -133,7 +135,7 @@ export async function withDatabase<T>(body: (fixture: DatabaseFixture) => Promis
     );
     await owner.query('TRUNCATE inventory.reservation_request');
     await owner.query(
-      'TRUNCATE sales.make_reference,sales.sales_order,sales.fulfillment_assessment,sales.customer',
+      'TRUNCATE finance.invoice_evidence,sales.make_reference,sales.sales_order,sales.fulfillment_assessment,sales.customer',
     );
     await owner.query(
       'TRUNCATE inventory.production_origin,inventory.production_issue,production.source_fact,inventory.reservation_request,inventory.material_lot,procurement.goods_receipt,inventory.ledger,inventory.balance,inventory.reservation,inventory.unit',

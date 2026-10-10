@@ -3,10 +3,10 @@ id: SEC-AUD-001
 title: Audit and Evidence Taxonomy
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [security-architect, business-control-owner]
 depends_on: [SM-EVT-001, APP-ENV-001, DATA-TX-001, APR-007, APR-008]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
@@ -83,6 +83,16 @@ and why a command was refused.
 | `fact_identity` | accepted writes |
 | `linked_fact` | reversals |
 | `customer_scope` | customer-bearing items |
+
+For APR-028 issued-invoice documentary evidence, the authorized actor grant is
+organizational. Generic command audit retains that original organizational grant
+scope without fabricating a customer-scoped principal. The accepted fact UUID
+links to the same-transaction immutable Finance-Lite record with its mandatory
+owning customer/Sales order and installation/authority. Audit carries no invoice
+reference, date or customer commercial payload; document lookup still requires
+the explicit invoice-evidence role policy. ACT-SEC audit administration does not
+grant invoice-document access. This bounded association does not widen any
+other customer-bearing audit/export/notification surface.
 
 Generic decision/attempt storage is frozen below. Later log shipper/SIEM product
 choice remains OQ-018.

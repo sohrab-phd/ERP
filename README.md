@@ -10,9 +10,21 @@ The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
 [APR-018](docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md).
 Foundation implementation and its acceptance tests pass. See the
 [implementation report](docs/12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
-Accepted/pushed capabilities: envelope, Identity, IPS, receipt, Sales demand, reservation, shipment and SLICE-MAKE `e5997f506c753bc73426128a88558d9c633e7f88`. Owner authorizes [APR-026 Genealogy Projection and Trace](docs/00-governance/approved-baselines/APR-026-genealogy-trace-scope.md). See the [bounded plan](docs/12-implementation-planning/GENEALOGY_TRACE_PLAN.md) and [actual delivery](docs/12-implementation-planning/GENEALOGY_TRACE_IMPLEMENTATION_STATUS.md). Trace reconstructs immutable owner facts without stock/source writes; unsupported rework and browser visualization remain deferred. Stop after acceptance/local commit for Owner review/push.
+Ten accepted/pushed capabilities now include Genealogy and Purchasing
+`b2619790ca7f20a57978279cd7392199c331f0b3` after foundation, Identity, IPS,
+receipt, Sales demand, reservation, shipment and production. Owner authorizes
+[APR-028 Finance-Lite Invoice Evidence First](docs/00-governance/approved-baselines/APR-028-finance-lite-continuation.md).
+See the [bounded plan/DoD](docs/12-implementation-planning/FINANCE_LITE_PLAN.md).
+See [implementation and validation status](docs/12-implementation-planning/FINANCE_LITE_IMPLEMENTATION_STATUS.md).
+This records already-issued invoice evidence and matched Sales references only;
+commercial amounts, payments/allocation and external accounting remain deferred.
+Invoice evidence is engineering accepted: 177 unit and 260 real PostgreSQL tests
+pass with no failures/skips; independent engineering/security reviews PASS.
+This eleventh increment is locally delivered for Owner acceptance/push.
+Recommended next task is Weighbridge human ticket/fallback scope review, subject
+to its actual inputs and a separate bounded implementation authorization.
 
-IMPLEMENTATION_AUTHORIZED: true (Genealogy Projection and Trace); gate/local unlock match APR-026.
+IMPLEMENTATION_AUTHORIZED: true (Finance-Lite invoice evidence only); gate/local unlock match APR-028.
 
 Authoritative work permission:
 [docs/00-governance/CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md).
@@ -65,7 +77,13 @@ using the local database administrator. Current business privileges: inventory U
 Purchasing documentary privileges additionally require SELECT/INSERT only on
 procurement.completed_purchase and procurement.purchase_proforma_sent. Their
 records remain immutable; no runtime UPDATE/DELETE or second receiving path.
-`npm run start` exposes health, personal identity and delivered receipt/Sales/reservation/shipping/production/genealogy/purchasing routes. Readiness verifies PG18.6/UTF-8 with a bounded probe;
+Finance-Lite documentary privileges require finance USAGE and SELECT/INSERT only
+on finance.invoice_evidence; no runtime UPDATE/DELETE/TRUNCATE/DDL. Owner APR-028
+permits organizational ACT-SALES record/read and ACT-FIN read only; customer grants
+and other roles receive no access. POST /finance/invoice-evidence accepts
+RecordIssuedInvoiceEvidence v1; GET /finance/invoice-evidence/{uuid} returns the
+approved reference/date/order/customer and trusted personal attribution/time.
+`npm run start` exposes health, personal identity and delivered receipt/Sales/reservation/shipping/production/genealogy/purchasing/invoice-evidence routes. Readiness verifies PG18.6/UTF-8 with a bounded probe;
 no synthetic production identity or fixture is installed.
 Shutdown closes the listener and pool. JSON logs exclude payload/results/URLs/
 credentials and unknown fields.

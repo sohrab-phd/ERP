@@ -3,7 +3,7 @@ id: APP-QRY-001
 title: Application Query Catalogue
 phase: 05-application-api-architecture
 status: approved
-version: 0.2.0
+version: 0.3.0
 owners: [solution-architect, api-architect]
 depends_on: [APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
 last_reviewed: 2026-10-10
@@ -36,6 +36,7 @@ Implementation authority follows [current bounded scope](../00-governance/CURREN
 | GetInspection | Quality | |
 | GetPackage / GetShipment | Shipping | |
 | GetInvoice / GetPayment | Finance-Lite | not legal GL |
+| GetIssuedInvoiceEvidence (APR-028) | Finance-Lite | keyed immutable evidence, current organization ACT-SALES/ACT-FIN, mandatory order/customer binding; no monetary invoice/payment state |
 | TraceForward / TraceBackward | Genealogy projection | rebuild from DATA-GEN-001 source facts if stale (INV-019, FIND-G-014); not from Ledger/Balance |
 
 ## Must not exist as writes

@@ -769,6 +769,35 @@ export class SalesService {
     await this.authorize(context, order.customerId);
     return frozen(order);
   }
+  /** APR-028 minimal org-scoped reference validation, using existing Sales lookup/FK. No Sales state gate or mutation. */
+  async invoiceReference(
+    supplied: SalesContext,
+    orderId: string,
+    customerId: string,
+  ): Promise<{ id: string; customerId: string } | undefined> {
+    const ctx = snapshot(supplied);
+    if (
+      !validUuid(orderId) ||
+      !validUuid(customerId) ||
+      ctx.actor.actorRole !== 'ACT-SALES' ||
+      ctx.actor.customerScope !== undefined ||
+      ctx.actor.temporary === true ||
+      ctx.request.command !== 'RecordIssuedInvoiceEvidence' ||
+      ctx.request.contract_version !== 1 ||
+      ctx.request.target.kind !== 'invoice-evidence' ||
+      !validUuid(ctx.request.target.id) ||
+      ctx.request.payload.salesOrderId !== orderId ||
+      ctx.request.payload.customerId !== customerId ||
+      !this.policy.canRecordInvoiceEvidence ||
+      !(await this.policy.canRecordInvoiceEvidence(ctx))
+    )
+      reject('GUARD_ACTOR', 'Invoice evidence reference access denied');
+    if (!this.store.reservationOrder) throw new TechnicalError('incompatible');
+    const order = await this.store.reservationOrder(ctx, orderId, customerId);
+    if (!(await this.policy.canRecordInvoiceEvidence(ctx)))
+      reject('GUARD_ACTOR', 'Invoice evidence reference access denied');
+    return order ? Object.freeze({ id: order.id, customerId: order.customerId }) : undefined;
+  }
   async getAssessment(
     supplied: SalesContext,
     id: string,

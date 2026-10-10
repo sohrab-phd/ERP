@@ -3,10 +3,10 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: in_review
-version: 0.29.0
+version: 0.30.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
@@ -1374,6 +1374,13 @@ commands remain architecture. The factory has not confirmed them as a
 payment procedure.
 
 ### What the factory has not specified about customer payment
+
+Owner APR-028 (2026-10-10) explicitly excludes monetary invoicing, payment and
+allocation from Invoice Evidence First. The commercial/payment residuals below
+remain OPEN prerequisites for their future affected increments; they are not
+resolved or needed by immutable reference/date/order/customer evidence. The
+[actual scope decision](../approved-baselines/APR-028-finance-lite-continuation.md)
+supplies only documentary fields and organization ACT-SALES/ACT-FIN access.
 
 - Who records a customer payment. Ms. Koushki follows up receivables.
   That follow-up is not payment recording and not payment approval.
