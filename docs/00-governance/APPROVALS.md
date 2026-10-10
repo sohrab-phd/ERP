@@ -730,5 +730,10 @@ review and authorization.
 ### APR-025 — Production and genealogy source-fact scope
 
 - [Actual Owner authority](approved-baselines/APR-025-production-scope.md): shipment `40630e02acb24091e306816647cfbfc2d97dda28` accepted/pushed, explicit SLICE-MAKE continuation.
-- Gate/local ignored unlock match APR-025; architecture APR-018 unchanged. No new factory business answer, approval signature or broader MVP grant. OQ-003/OQ-009 affected production semantics remain pending in the [bounded plan](../12-implementation-planning/SLICE_MAKE_PLAN.md).
+- At that delivery gate/local ignored unlock matched APR-025; architecture APR-018 unchanged. The subsequent actual Owner APR-025 decision resolves bounded consumption/WIP/mass-balance/disposition prerequisites in the [plan](../12-implementation-planning/SLICE_MAKE_PLAN.md); unrelated OQ-003/OQ-009 branches remain treating. No fabricated signature or broader MVP grant.
 - Stop after accepted tested/reviewed/documented local slice commit for Owner review/push; no remote push or next major slice.
+
+### APR-026 — Genealogy Projection and Trace
+
+- [Actual Owner scope](approved-baselines/APR-026-genealogy-trace-scope.md): final SLICE-MAKE e5997f506c753bc73426128a88558d9c633e7f88 accepted/pushed and explicit next-capability continuation.
+- Gate/local ignored unlock match APR-026; architecture APR-018 unchanged. Read projection only from immutable owner sources; no new business policy or remote push. Stop for Owner review/push after delivery.

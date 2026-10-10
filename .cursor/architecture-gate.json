@@ -3,7 +3,7 @@
   "mode": "architecture-only",
   "enforcement": "locked",
   "implementationAuthorized": true,
-  "approvedBaseline": "docs/00-governance/approved-baselines/APR-025-production-scope.md",
+  "approvedBaseline": "docs/00-governance/approved-baselines/APR-026-genealogy-trace-scope.md",
   "workspaceRoot": ".",
   "unlockMarker": ".cursor/IMPLEMENTATION_UNLOCK.json",
   "checkpointMarker": ".cursor/PHASE_CHECKPOINT_APPROVAL.json",

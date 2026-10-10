@@ -10,7 +10,7 @@ import {
   validUuid,
   type JsonObject,
 } from '@navard/shared-kernel';
-import type { PostingContext, Quantities } from './contracts.js';
+import type { InventoryTraceContext, PostingContext, Quantities } from './contracts.js';
 import type { InventoryPostingService } from './posting-service.js';
 import { Kg } from './quantity.js';
 
@@ -45,6 +45,13 @@ export interface InventoryReceiptStore {
   create(context: PostingContext, origin: ReceiptOrigin): Promise<void>;
   byUnit(context: PostingContext, id: string): Promise<ReceiptOrigin | undefined>;
   byLot(context: PostingContext, id: string): Promise<ReceiptOrigin | undefined>;
+}
+export interface InventoryReceiptTraceSourcePort {
+  traceSources(
+    context: InventoryTraceContext,
+    kind: 'UNIT' | 'LOT' | 'RECEIPT',
+    id: string,
+  ): Promise<readonly ReceiptOrigin[]>;
 }
 
 function invalid(message = 'Invalid receipt intake data'): never {

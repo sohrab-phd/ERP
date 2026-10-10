@@ -1,9 +1,14 @@
-import { TechnicalError } from '@navard/shared-kernel';
+import { BusinessRejection, TechnicalError, validUuid } from '@navard/shared-kernel';
 import type {
   ShippingContext,
   ShippingStore,
   ShippingPackage,
   Shipment,
+  ShippingTraceContext,
+  ShippingTraceSourcePort,
+  ShippingTracePackage,
+  ShippingTraceShipment,
+  ShippingTraceSources,
 } from '../../modules/shipping/index.js';
 import { transactionClient } from './transaction.js';
 const scope = (ctx: ShippingContext) => [
@@ -22,7 +27,59 @@ function record<T>(row: Record<string, unknown> | undefined): T | undefined {
   ) as T;
 }
 /** Shipping SQL only; supplied transaction binds all orchestration and IPS effects. */
-export class PostgresShippingStore implements ShippingStore {
+export class PostgresShippingStore implements ShippingStore, ShippingTraceSourcePort {
+  async traceSources(
+    ctx: ShippingTraceContext,
+    kind: 'UNIT' | 'PACKAGE' | 'SHIPMENT' | 'SALES_ORDER',
+    id: string,
+  ): Promise<ShippingTraceSources> {
+    if (!validUuid(ctx.customerId))
+      throw new BusinessRejection({ family: 'GUARD_ACTOR', message: 'Trace customer required' });
+    const client = transactionClient(ctx.transaction);
+    const parameters = [
+      ctx.actor.installationId,
+      ctx.actor.authorityScopeId,
+      ctx.customerId,
+      id,
+      kind,
+    ];
+    const packages = await client.query<Record<string, unknown>>(
+      `SELECT p.package_id AS id,p.order_id AS "orderId",p.state,p.shipment_id AS "shipmentId",
+       COALESCE((SELECT jsonb_agg(jsonb_build_object('reservationId',c.reservation_id,'unitId',c.unit_id,'itemId',c.item_id,'kg',c.kg::text) ORDER BY c.reservation_id)
+         FROM (SELECT reservation_id,unit_id,item_id,kg FROM shipping.package_content pc
+           WHERE pc.installation_id=p.installation_id AND pc.authority_scope=p.authority_scope AND pc.package_id=p.package_id
+           ORDER BY pc.reservation_id LIMIT 257) c),'[]'::jsonb) AS entries
+       FROM shipping.package p
+       WHERE p.installation_id=$1 AND p.authority_scope=$2 AND p.customer_id=$3::uuid
+       AND (($5='UNIT' AND EXISTS(SELECT 1 FROM shipping.package_content c WHERE c.installation_id=p.installation_id AND c.authority_scope=p.authority_scope AND c.package_id=p.package_id AND c.unit_id=$4::uuid))
+         OR ($5='PACKAGE' AND p.package_id=$4::uuid)
+         OR ($5='SHIPMENT' AND (p.shipment_id=$4::uuid OR EXISTS(SELECT 1 FROM shipping.dispatch d WHERE d.installation_id=p.installation_id AND d.authority_scope=p.authority_scope AND d.package_id=p.package_id AND d.shipment_id=$4::uuid)))
+         OR ($5='SALES_ORDER' AND p.order_id=$4::uuid))
+       ORDER BY p.package_id LIMIT 257`,
+      parameters,
+    );
+    const shipments = await client.query<Record<string, unknown>>(
+      `SELECT s.shipment_id AS id,s.order_id AS "orderId",s.state,s.dispatched_at AS "dispatchedAt",
+       COALESCE((SELECT jsonb_agg(jsonb_build_object('packageId',d.package_id,'reservationId',d.reservation_id,'unitId',d.unit_id,'itemId',d.item_id,'kg',d.kg::text) ORDER BY d.unit_id)
+         FROM (SELECT package_id,reservation_id,unit_id,item_id,kg FROM shipping.dispatch sd
+           WHERE sd.installation_id=s.installation_id AND sd.authority_scope=s.authority_scope AND sd.shipment_id=s.shipment_id
+           ORDER BY sd.unit_id LIMIT 257) d),'[]'::jsonb) AS dispatch
+       FROM shipping.shipment s
+       WHERE s.installation_id=$1 AND s.authority_scope=$2 AND s.customer_id=$3::uuid
+       AND (($5='UNIT' AND (EXISTS(SELECT 1 FROM shipping.dispatch d WHERE d.installation_id=s.installation_id AND d.authority_scope=s.authority_scope AND d.shipment_id=s.shipment_id AND d.unit_id=$4::uuid)
+           OR EXISTS(SELECT 1 FROM shipping.package p JOIN shipping.package_content c USING(installation_id,authority_scope,package_id) WHERE p.installation_id=s.installation_id AND p.authority_scope=s.authority_scope AND p.customer_id=s.customer_id AND p.shipment_id=s.shipment_id AND c.unit_id=$4::uuid)))
+         OR ($5='PACKAGE' AND (EXISTS(SELECT 1 FROM shipping.package p WHERE p.installation_id=s.installation_id AND p.authority_scope=s.authority_scope AND p.customer_id=s.customer_id AND p.shipment_id=s.shipment_id AND p.package_id=$4::uuid)
+           OR EXISTS(SELECT 1 FROM shipping.dispatch d WHERE d.installation_id=s.installation_id AND d.authority_scope=s.authority_scope AND d.shipment_id=s.shipment_id AND d.package_id=$4::uuid)))
+         OR ($5='SHIPMENT' AND s.shipment_id=$4::uuid) OR ($5='SALES_ORDER' AND s.order_id=$4::uuid))
+       ORDER BY s.shipment_id LIMIT 257`,
+      parameters,
+    );
+    return {
+      packages: packages.rows.map((row) => record<ShippingTracePackage>(row)!),
+      shipments: shipments.rows.map((row) => record<ShippingTraceShipment>(row)!),
+    };
+  }
+
   async lockOrder(ctx: ShippingContext, id: string): Promise<void> {
     await transactionClient(ctx.transaction).query(
       'SELECT pg_advisory_xact_lock(hashtextextended($1,0))',

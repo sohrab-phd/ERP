@@ -340,6 +340,12 @@ Owner confirms accepted shipment40630e02 pushed and authorizes SLICE-MAKE.
 
 These planning records grant no acceptance by themselves. Actual Owner policy resolves bounded prerequisites; implemented code, limitations and executed evidence are recorded in the production delivery page below.
 
-Current Owner production policy update (2026-10-09): the bounded SLICE-MAKE consumption, WIP/final, exact mass-balance and authenticated managerial disposition prerequisites above are resolved by the actual [Owner decision](00-governance/approved-baselines/APR-025-production-scope.md). SLICE-MAKE engineering acceptance is complete; its local commit awaits Owner review/push. Earlier pending preparation text is historical. OQ-003/OQ-009 stay treating for unrelated branches.
+Current Owner production policy update (2026-10-09): the bounded SLICE-MAKE consumption, WIP/final, exact mass-balance and authenticated managerial disposition prerequisites above are resolved by the actual [Owner decision](00-governance/approved-baselines/APR-025-production-scope.md). SLICE-MAKE final e5997f506c753bc73426128a88558d9c633e7f88 is Owner-accepted and confirmed pushed. Earlier pending preparation text is historical. OQ-003/OQ-009 stay treating for unrelated branches.
 
 SLICE-MAKE actual delivery: [implementation status](12-implementation-planning/SLICE_MAKE_IMPLEMENTATION_STATUS.md), [ADR-0020](00-governance/adrs/ADR-0020-atomic-routed-production.md). Owner policy: APR-025; unrelated OQs remain open.
+
+## Current Genealogy Projection and Trace — 2026-10-10
+
+- [Owner scope](00-governance/approved-baselines/APR-026-genealogy-trace-scope.md)
+- [Plan/Definition of Done](12-implementation-planning/GENEALOGY_TRACE_PLAN.md)
+- [Actual implementation and acceptance](12-implementation-planning/GENEALOGY_TRACE_IMPLEMENTATION_STATUS.md)

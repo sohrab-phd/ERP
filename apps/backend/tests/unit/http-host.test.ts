@@ -4,6 +4,24 @@ import { request } from 'node:http';
 import { EventEmitter } from 'node:events';
 import { pingDatabase } from '../../src/composition-root.js';
 import { createHttpHost, closeHttpHost } from '../../src/transport/http-host.js';
+// Native HTTP tests the host on any OS-assigned port; Fetch blocks some valid local ports.
+async function readHttp(url: string, options: { method?: string } = {}) {
+  return new Promise<{ status: number; text(): Promise<string> }>((resolve, reject) => {
+    const req = request(url, options, (response) => {
+      let body = '';
+      response.setEncoding('utf8');
+      response.on('data', (chunk: string) => {
+        body += chunk;
+      });
+      response.on('error', reject);
+      response.on('end', () =>
+        resolve({ status: response.statusCode!, text: () => Promise.resolve(body) }),
+      );
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
 async function withHost(ping: () => Promise<void>, body: (base: string) => Promise<void>) {
   const server = createHttpHost({ ping, probeTimeoutMs: 30 });
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -19,12 +37,12 @@ void test('host is health-only, no command/fixture/auth route, GET only, safe re
   await withHost(
     () => Promise.resolve(),
     async (base) => {
-      assert.equal((await fetch(base + '/health/live')).status, 200);
-      assert.equal((await fetch(base + '/health/ready')).status, 200);
-      assert.equal((await fetch(base + '/commands', { method: 'POST' })).status, 404);
-      assert.equal((await fetch(base + '/health/live', { method: 'POST' })).status, 405);
-      assert.equal((await fetch(base + '/fixtures')).status, 404);
-      assert.equal((await fetch(base + '/health/live?role=admin')).status, 404);
+      assert.equal((await readHttp(base + '/health/live')).status, 200);
+      assert.equal((await readHttp(base + '/health/ready')).status, 200);
+      assert.equal((await readHttp(base + '/commands', { method: 'POST' })).status, 404);
+      assert.equal((await readHttp(base + '/health/live', { method: 'POST' })).status, 405);
+      assert.equal((await readHttp(base + '/fixtures')).status, 404);
+      assert.equal((await readHttp(base + '/health/live?role=admin')).status, 404);
     },
   );
 });
@@ -34,7 +52,7 @@ void test('readiness failure and timeout disclose no database details', async ()
     () => new Promise<void>(() => undefined),
   ])
     await withHost(ping, async (base) => {
-      const response = await fetch(base + '/health/ready');
+      const response = await readHttp(base + '/health/ready');
       assert.equal(response.status, 503);
       assert.doesNotMatch(await response.text(), /SECRET/);
     });
@@ -81,10 +99,10 @@ void test('checked-out readiness socket error is owned, discarded once and leave
   await withHost(
     () => pingDatabase(pool),
     async (base) => {
-      const response = await fetch(base + '/health/ready');
+      const response = await readHttp(base + '/health/ready');
       assert.equal(response.status, 503);
       assert.doesNotMatch(await response.text(), /SECRET|DRIVER|CONNECTION/);
-      assert.equal((await fetch(base + '/health/live')).status, 200);
+      assert.equal((await readHttp(base + '/health/live')).status, 200);
     },
   );
   assert.equal(releases, 1);

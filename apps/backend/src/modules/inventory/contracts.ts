@@ -24,6 +24,15 @@ export interface Unit {
   customerScope: string;
   state: UnitState;
 }
+/** Internal read seam; the caller authorizes the explicit customer and owns the snapshot. */
+export interface InventoryTraceContext {
+  actor: ExecutionContext;
+  transaction: TransactionContext;
+  customerId: string;
+}
+export interface InventoryTraceSourcePort {
+  traceUnit(context: InventoryTraceContext, id: string): Promise<Unit | undefined>;
+}
 export interface Availability {
   readonly unitId: string;
   readonly kind: string;

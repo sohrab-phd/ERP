@@ -51,6 +51,8 @@ import { InventoryProductionService } from './modules/inventory/index.js';
 import { PostgresProductionStore } from './infrastructure/postgresql/production-store.js';
 import { PostgresInventoryProductionStore } from './infrastructure/postgresql/inventory-production-store.js';
 import { createProductionHandler } from './transport/production-http.js';
+import { GenealogyProjection, type GenealogyReference } from './modules/genealogy/index.js';
+import { createGenealogyHandler } from './transport/genealogy-http.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -685,10 +687,66 @@ export function compose(config: Readonly<Config>) {
       await tx.release();
     }
   };
+  const genealogyReads = new PostgresTransactions(pool, {
+    deadlineMs: 8000,
+    statementTimeoutMs: 4000,
+    lockTimeoutMs: 1000,
+  });
+  const genealogy = new GenealogyProjection({
+    inventory: {
+      unit: (ctx, id) => inventoryStore.traceUnit(ctx, id),
+      origins: (ctx, kind, id) => new PostgresInventoryReceiptStore().traceSources(ctx, kind, id),
+    },
+    production: { facts: (ctx, kind, id) => productionStore.traceSources(ctx, kind, id) },
+    shipping: { sources: (ctx, kind, id) => shippingStore.traceSources(ctx, kind, id) },
+  });
+  const traceCurrent = (actor: ExecutionContext) =>
+    actor.temporary !== true &&
+    ['ACT-WH', 'ACT-SALES', 'ACT-SEC'].includes(actor.actorRole) &&
+    validUuid(actor.customerScope) &&
+    identity.isCurrent(actor);
+  const genealogyQuery = async (
+    direction: 'TraceForward' | 'TraceBackward',
+    root: GenealogyReference,
+    actor: ExecutionContext,
+  ) => {
+    if (!(await traceCurrent(actor)))
+      throw new BusinessRejection({
+        family: 'GUARD_ACTOR',
+        message: 'Current scoped trace permission required',
+      });
+    const tx = await genealogyReads.begin('read-snapshot');
+    let result;
+    try {
+      result = await Promise.race([
+        genealogy.trace(
+          { actor, transaction: tx.context, customerId: actor.customerScope! },
+          direction,
+          root,
+        ),
+        tx.aborted,
+      ]);
+      await tx.commit();
+    } catch (error) {
+      await tx.rollback();
+      throw error;
+    } finally {
+      await tx.release();
+    }
+    // Fresh grant/session read only AFTER releasing the snapshot: revocation cannot hide in RR,
+    // and even a one-connection pool does not wait on a connection this request owns.
+    if (!(await traceCurrent(actor)))
+      throw new BusinessRejection({
+        family: 'GUARD_ACTOR',
+        message: 'Current scoped trace permission required',
+      });
+    return result;
+  };
   const server = createHttpHost({
     ping: () => pingDatabase(pool),
     identity: createIdentityHandler(identity),
     production: createProductionHandler({ identity, command, query: productionQuery }),
+    genealogy: createGenealogyHandler({ identity, query: genealogyQuery }),
     receipt: createReceiptHandler({ identity, command, query }),
     sales: createSalesHandler({ identity, command, query: salesQuery }),
     shipping: createShippingHandler({ identity, command, query: shippingQuery }),
@@ -699,6 +757,7 @@ export function compose(config: Readonly<Config>) {
     registry: ports.registry,
     production,
     productionQuery,
+    genealogyQuery,
     identity,
     inventory,
     receipts,

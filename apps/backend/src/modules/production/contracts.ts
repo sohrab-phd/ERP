@@ -22,6 +22,35 @@ export interface ProductionContext {
   actor: ExecutionContext;
   transaction: TransactionContext;
 }
+export interface ProductionTraceContext {
+  actor: ExecutionContext;
+  transaction: TransactionContext;
+  customerId: string;
+}
+export interface ProductionTraceFact {
+  id: string;
+  kind:
+    | 'CONSUMPTION'
+    | 'OUTPUT'
+    | 'RESIDUAL'
+    | 'SCRAP'
+    | 'FINALIZED'
+    | 'ENTRY'
+    | 'REFERRAL'
+    | 'DECLARATION';
+  data: JsonObject;
+  operationId: string;
+  productionOrderId: string;
+  salesOrderId: string;
+  occurredAt: string;
+}
+export interface ProductionTraceSourcePort {
+  traceSources(
+    context: ProductionTraceContext,
+    kind: 'UNIT' | 'FACT' | 'OPERATION' | 'ORDER' | 'BATCH' | 'SALES_ORDER',
+    id: string,
+  ): Promise<readonly ProductionTraceFact[]>;
+}
 export interface ProductionOrder {
   id: string;
   salesOrderId: string;

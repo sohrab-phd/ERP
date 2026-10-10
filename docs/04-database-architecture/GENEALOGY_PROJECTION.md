@@ -6,7 +6,7 @@ status: in_review
 version: 0.2.0
 owners: [data-architect, domain-leads]
 depends_on: [SM-INV-001, GOV-DATA-DICT-001, APR-005]
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
@@ -19,7 +19,7 @@ is delegated technical work, not human baseline approval.
 Genealogy Link (TERM-025 / ENT-GENEALOGY-LINK) is a rebuildable query
 projection (INV-019). It is not independently editable source truth.
 
-`IMPLEMENTATION_AUTHORIZED` remains `false`.
+Implementation follows the [current bounded Owner authority](../00-governance/CURRENT_PHASE.md). APR-026 authorizes Genealogy Projection and Trace after accepted/pushed SLICE-MAKE. The earlier false state was pre-implementation history. [Actual implementation](../12-implementation-planning/GENEALOGY_TRACE_IMPLEMENTATION_STATUS.md) records delivered behavior and acceptance evidence.
 
 ## Rebuild source (FIND-G-014)
 
@@ -76,9 +76,10 @@ reconstruction, not a new business posting and not Event Sourcing.
 Tracking granularity is the recorded OQ-004 hybrid grain; the first
 go-live family catalogue remains configuration. Official posting
 **boundary** is `CompleteProductionOperation` (OQ-003 recorded); ten physical
-Station/Step names are recorded, while workflow/versioned route/lifecycle remains
-OQ-003. Residual/Scrap follows the human reusability decision;
-recording and return-posting contracts stay OQ-009. No automatic numeric cutoff
+Station/Step names are recorded. APR-025 and ADR-0020 resolve the bounded MVP
+per-order immutable route, full/partial consumption, exact accounted mass balance
+and authenticated production-management Residual/Scrap disposition. OQ-003 and
+OQ-009 remain treating for unrelated return/correction/rework branches. No automatic numeric cutoff
 or missing-number classifier is introduced.
 
 ## Projection rules
@@ -102,3 +103,13 @@ or missing-number classifier is introduced.
 - Label or barcode format (ASM-009 still unconfirmed)
 - A dedicated ENT-REWORK identity (Rework remains a Production fact
   plus reversals)
+
+## Delivered query projection
+
+APR-026 delivers a bounded live reconstruction on one REPEATABLE READ READ ONLY PostgreSQL snapshot. There is no persistent Genealogy table/cache or additional writer. Exact declared parent links preserve split/merge relationships; Consumption records actual kg, FINALIZED annotates the existing WIP identity, and Scrap is terminal classified evidence. Shared operation/order/batch references do not create Cartesian ancestry.
+
+Available receipt sources preserve Internal Code, Count, measured kg, Type and recorded standalone-Sheet Product Code. Supplier/certificate capture is not yet present and is not fabricated; production-derived Units have no false Goods Receipt origin. Package content history remains distinct from immutable actual dispatch; assigned/loading/unpacked state alone is neither stock exit nor delivery.
+
+Current WH/SALES/SEC readers require the exact selected customer grant. Scope filters precede source bounds; source reachability gates organizational origins. Authorization is freshly checked after snapshot release before disclosure. The query contract documents explicit bounded-query rejection, not silent partial graphs. Nonmaterial Entry/Referral/declaration events annotate association roots only.
+
+The broader source catalogue above remains architecture for producers as they become accepted. Unsupported rework/correction and supplier evidence are not delivered by this query slice. A separate restore/rebuild worker remains SLICE-RESTORE; reconstruction from live sources now does not claim database restore acceptance or recovery tooling. Browser visualization is deferred.

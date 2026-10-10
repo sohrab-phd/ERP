@@ -38,7 +38,7 @@ export class PostgresTransactions implements TransactionPort {
     private readonly bounds: TransactionBounds = {},
   ) {}
 
-  async begin(): Promise<TransactionSession> {
+  async begin(mode: 'write' | 'read-snapshot' = 'write'): Promise<TransactionSession> {
     let client: PoolClient;
     try {
       client = await this.pool.connect();
@@ -81,7 +81,11 @@ export class PostgresTransactions implements TransactionPort {
     }, this.bounds.deadlineMs ?? 30_000);
     timer.unref();
     try {
-      await client.query('BEGIN ISOLATION LEVEL READ COMMITTED');
+      await client.query(
+        mode === 'read-snapshot'
+          ? 'BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY'
+          : 'BEGIN ISOLATION LEVEL READ COMMITTED',
+      );
       await client.query(
         "SELECT set_config('lock_timeout', $1, true), set_config('statement_timeout', $2, true)",
         [

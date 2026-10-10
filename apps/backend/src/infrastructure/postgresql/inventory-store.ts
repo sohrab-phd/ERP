@@ -1,6 +1,8 @@
-import { TechnicalError } from '@navard/shared-kernel';
+import { BusinessRejection, TechnicalError, validUuid } from '@navard/shared-kernel';
 import type {
   InventoryStore,
+  InventoryTraceContext,
+  InventoryTraceSourcePort,
   LedgerRow,
   PostingContext,
   Quantities,
@@ -47,7 +49,20 @@ function ledgerRow(row: StoredLedger | undefined): LedgerRow | undefined {
 }
 
 /** Internal ACT-IPS persistence; caller owns the one transaction and its outcome. */
-export class PostgresInventoryStore implements InventoryStore {
+export class PostgresInventoryStore implements InventoryStore, InventoryTraceSourcePort {
+  async traceUnit(context: InventoryTraceContext, id: string): Promise<Unit | undefined> {
+    if (!validUuid(context.customerId))
+      throw new BusinessRejection({ family: 'GUARD_ACTOR', message: 'Trace customer required' });
+    return (
+      await transactionClient(context.transaction).query<Unit>(
+        'SELECT ' +
+          unitColumns +
+          " FROM inventory.unit WHERE installation_id=$1 AND authority_scope=$2 AND (customer_scope='' OR customer_scope=$3) AND unit_id=$4",
+        [context.actor.installationId, context.actor.authorityScopeId, context.customerId, id],
+      )
+    ).rows[0];
+  }
+
   async lock(
     context: PostingContext,
     unitIds: readonly string[],

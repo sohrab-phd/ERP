@@ -1,5 +1,9 @@
+import { BusinessRejection, validUuid } from '@navard/shared-kernel';
 import type {
   ProductionStore,
+  ProductionTraceContext,
+  ProductionTraceFact,
+  ProductionTraceSourcePort,
   ProductionContext,
   ProductionOrder,
   ProductionOperation as Operation,
@@ -12,7 +16,32 @@ const scope = (c: ProductionContext) => [
   c.actor.authorityScopeId,
   c.actor.customerScope,
 ];
-export class PostgresProductionStore implements ProductionStore {
+export class PostgresProductionStore implements ProductionStore, ProductionTraceSourcePort {
+  async traceSources(
+    c: ProductionTraceContext,
+    kind: 'UNIT' | 'FACT' | 'OPERATION' | 'ORDER' | 'BATCH' | 'SALES_ORDER',
+    id: string,
+  ): Promise<readonly ProductionTraceFact[]> {
+    if (!validUuid(c.customerId))
+      throw new BusinessRejection({ family: 'GUARD_ACTOR', message: 'Trace customer required' });
+    const response = await transactionClient(c.transaction).query<ProductionTraceFact>(
+      `SELECT f.fact_id AS id,f.kind,f.data,f.operation_id AS "operationId",f.order_id AS "productionOrderId",p.sales_order_id AS "salesOrderId",f.occurred_at AS "occurredAt"
+       FROM production.source_fact f JOIN production.production_order p USING(installation_id,authority_scope,customer_id,order_id)
+       WHERE f.installation_id=$1 AND f.authority_scope=$2 AND f.customer_id=$3::uuid
+       AND (f.kind IN('CONSUMPTION','OUTPUT','RESIDUAL','SCRAP','FINALIZED') OR ($5<>'UNIT' AND f.kind IN('ENTRY','REFERRAL','DECLARATION')))
+       AND (($5='UNIT' AND (f.data->>'unitId'=$4 OR f.data->>'sourceUnitId'=$4 OR f.data->'sourceUnitIds' @> jsonb_build_array($4::text)))
+         OR ($5='FACT' AND f.fact_id=$4::uuid) OR ($5='OPERATION' AND f.operation_id=$4::uuid)
+         OR ($5='ORDER' AND f.order_id=$4::uuid) OR ($5='BATCH' AND f.data->>'productBatchId'=$4)
+         OR ($5='SALES_ORDER' AND p.sales_order_id=$4::uuid))
+       ORDER BY f.occurred_at,f.fact_id LIMIT 257`,
+      [c.actor.installationId, c.actor.authorityScopeId, c.customerId, id, kind],
+    );
+    return response.rows.map((row) => ({
+      ...row,
+      occurredAt: new Date(row.occurredAt).toISOString(),
+    }));
+  }
+
   async batch(c: ProductionContext, id: string, orderId: string, operationId: string) {
     await transactionClient(c.transaction).query(
       'INSERT INTO production.product_batch(installation_id,authority_scope,customer_id,batch_id,order_id,operation_id) VALUES($1,$2,$3,$4,$5,$6)',

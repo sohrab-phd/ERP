@@ -10,9 +10,9 @@ The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
 [APR-018](docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md).
 Foundation implementation and its acceptance tests pass. See the
 [implementation report](docs/12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md).
-Accepted/pushed foundation, Identity, IPS, receipt, Sales demand and reservation807ab190d49ebb3bd4e3419e09c28de4bc656faf. Owner authorizes [APR-024 normal shipment increment](docs/00-governance/approved-baselines/APR-024-shipment-increment-scope.md). [Current shipment delivery](docs/12-implementation-planning/SLICE_STOCK_SHIPMENT_IMPLEMENTATION_STATUS.md) records scoped individual ACT-SHIP preparation/packing/loading/dispatch, complete reserved Units and IPS-only atomic exit. No payment/invoice gate, physical split, exceptional shipment or customer delivery; dispatch does not close or fulfill Sales. Stop after accepted local commit for Owner review/push.
+Accepted/pushed capabilities: envelope, Identity, IPS, receipt, Sales demand, reservation, shipment and SLICE-MAKE `e5997f506c753bc73426128a88558d9c633e7f88`. Owner authorizes [APR-026 Genealogy Projection and Trace](docs/00-governance/approved-baselines/APR-026-genealogy-trace-scope.md). See the [bounded plan](docs/12-implementation-planning/GENEALOGY_TRACE_PLAN.md) and [actual delivery](docs/12-implementation-planning/GENEALOGY_TRACE_IMPLEMENTATION_STATUS.md). Trace reconstructs immutable owner facts without stock/source writes; unsupported rework and browser visualization remain deferred. Stop after acceptance/local commit for Owner review/push.
 
-IMPLEMENTATION_AUTHORIZED: true (SLICE-STOCK shipment increment); gate/local unlock match APR-024.
+IMPLEMENTATION_AUTHORIZED: true (Genealogy Projection and Trace); gate/local unlock match APR-026.
 
 Authoritative work permission:
 [docs/00-governance/CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md).

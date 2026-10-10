@@ -23,6 +23,11 @@ void test('one opaque context owns READ COMMITTED client and savepoint rejection
         ?.transaction_isolation,
       'read committed',
     );
+    assert.equal(
+      (await client.query<{ transaction_read_only: string }>('SHOW transaction_read_only')).rows[0]
+        ?.transaction_read_only,
+      'off',
+    );
     await session.savepoint();
     await client.query("INSERT INTO envelope_test.fact VALUES('tentative','safe')");
     await session.rollbackToSavepoint();
@@ -35,6 +40,53 @@ void test('one opaque context owns READ COMMITTED client and savepoint rejection
     );
     assert.equal(rejected.status, 'completed');
     assert.deepEqual(await db.counts(), { facts: 0, outcomes: 1, audits: 1 });
+  });
+});
+
+void test('read snapshot uses REPEATABLE READ and server-enforced READ ONLY on one opaque client', async () => {
+  await withDatabase(async (db) => {
+    const session = await db.transactions.begin('read-snapshot');
+    const client = transactionClient(session.context);
+    try {
+      assert.equal(
+        (await client.query<{ transaction_isolation: string }>('SHOW transaction_isolation'))
+          .rows[0]?.transaction_isolation,
+        'repeatable read',
+      );
+      assert.equal(
+        (await client.query<{ transaction_read_only: string }>('SHOW transaction_read_only'))
+          .rows[0]?.transaction_read_only,
+        'on',
+      );
+      assert.equal((await client.query('SELECT * FROM envelope_test.fact')).rowCount, 0);
+      await db.owner.query("INSERT INTO envelope_test.fact VALUES('after-snapshot','safe')");
+      assert.equal((await client.query('SELECT * FROM envelope_test.fact')).rowCount, 0);
+      await assert.rejects(
+        client.query("INSERT INTO envelope_test.fact VALUES('read-only-write','safe')"),
+        (error: unknown) =>
+          typeof error === 'object' && error !== null && 'code' in error && error.code === '25006',
+      );
+    } finally {
+      await session.rollback();
+      await session.release();
+    }
+    assert.throws(() => transactionClient(session.context));
+    assert.equal((await db.counts()).facts, 1);
+    const next = await db.transactions.begin();
+    try {
+      assert.equal(
+        (
+          await transactionClient(next.context).query<{ transaction_read_only: string }>(
+            'SHOW transaction_read_only',
+          )
+        ).rows[0]?.transaction_read_only,
+        'off',
+      );
+      await next.commit();
+    } finally {
+      await next.rollback();
+      await next.release();
+    }
   });
 });
 

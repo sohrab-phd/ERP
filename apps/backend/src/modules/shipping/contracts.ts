@@ -4,6 +4,39 @@ export interface ShippingContext {
   actor: ExecutionContext;
   transaction: TransactionContext;
 }
+export interface ShippingTraceContext {
+  actor: ExecutionContext;
+  transaction: TransactionContext;
+  customerId: string;
+}
+export interface ShippingTraceDispatch extends ShippingEntry {
+  packageId: string;
+}
+export interface ShippingTracePackage {
+  id: string;
+  orderId: string;
+  state: ShippingPackage['state'];
+  shipmentId?: string;
+  entries: readonly ShippingEntry[];
+}
+export interface ShippingTraceShipment {
+  id: string;
+  orderId: string;
+  state: Shipment['state'];
+  dispatch: readonly ShippingTraceDispatch[];
+  dispatchedAt?: string;
+}
+export interface ShippingTraceSources {
+  packages: readonly ShippingTracePackage[];
+  shipments: readonly ShippingTraceShipment[];
+}
+export interface ShippingTraceSourcePort {
+  traceSources(
+    context: ShippingTraceContext,
+    kind: 'UNIT' | 'PACKAGE' | 'SHIPMENT' | 'SALES_ORDER',
+    id: string,
+  ): Promise<ShippingTraceSources>;
+}
 export interface ShippingEntry {
   reservationId: string;
   unitId: string;

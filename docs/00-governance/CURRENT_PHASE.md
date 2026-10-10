@@ -6,16 +6,16 @@ status: in_review
 version: 0.44.0
 owners: [chief-solution-architect]
 depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-10-09
+last_reviewed: 2026-10-10
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
 
-Current Owner decision (2026-10-09): accepted shipment commit `40630e02acb24091e306816647cfbfc2d97dda28` is confirmed pushed. Owner explicitly authorizes [APR-025](approved-baselines/APR-025-production-scope.md), SLICE-MAKE. Gate remains true and local ignored unlock matches APR-025; architecture APR-018 is unchanged.
+Current Owner decision (2026-10-10): final SLICE-MAKE e5997f506c753bc73426128a88558d9c633e7f88 is accepted and confirmed pushed. Owner explicitly authorizes [APR-026](approved-baselines/APR-026-genealogy-trace-scope.md), Genealogy Projection and Trace. Gate remains true and local ignored unlock matches APR-026; architecture APR-018 remains unchanged.
 
-Current scope: Production lifecycle/allocation and atomic consumption/result/source-fact completion through Inventory owner ports and sole IPS, with Sales demand references. See [bounded plan/DoD](../12-implementation-planning/SLICE_MAKE_PLAN.md). The actual Owner decision in APR-025 resolves bounded consumption/WIP/mass-balance/disposition prerequisites. Unrelated OQ branches remain open. SLICE-MAKE has passed its documented tests, independent engineering/security review and engineering acceptance; actual evidence is recorded in [delivery](../12-implementation-planning/SLICE_MAKE_IMPLEMENTATION_STATUS.md). The coherent local delivery commit awaits Owner review/push; the next major slice has not begun. Prior shipment engineering/security gates passed and the Owner accepted/pushed that commit. Stop after accepted documented local SLICE-MAKE commit for Owner review/push.
+Current scope is the bounded read-only genealogy projection and bidirectional trace from published immutable owner facts. See [plan/DoD](../12-implementation-planning/GENEALOGY_TRACE_PLAN.md) and [engineering-accepted delivery/evidence](../12-implementation-planning/GENEALOGY_TRACE_IMPLEMENTATION_STATUS.md):159 unit and216 real PostgreSQL tests pass, independent review/security findings closed. The local delivery commit awaits Owner review/push. No source/stock write, new business policy, unsupported rework or browser UI. Stop after accepted tested/reviewed/documented local commit for Owner review/push; no remote push or next major slice.
 
 ## Historical foundation authorization / readiness snapshot
 

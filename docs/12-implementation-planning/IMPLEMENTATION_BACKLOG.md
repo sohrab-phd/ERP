@@ -13,7 +13,7 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current scope: [APR-025](../00-governance/approved-baselines/APR-025-production-scope.md), SLICE-MAKE after Owner-confirmed accepted/pushed shipment `40630e02acb24091e306816647cfbfc2d97dda28`. The seven prior increments are accepted; SLICE-MAKE is the eighth engineering-accepted delivery, pending Owner review/push of its local commit. See [production plan/DoD](SLICE_MAKE_PLAN.md): Owner APR-025 resolves bounded consumption/WIP/mass-balance/disposition prerequisites; actual production implementation and acceptance are recorded in [delivery status](SLICE_MAKE_IMPLEMENTATION_STATUS.md). Unrelated OQ branches remain open. Stop after accepted documented local commit for Owner push.
+Current scope: [APR-026](../00-governance/approved-baselines/APR-026-genealogy-trace-scope.md), Genealogy Projection and Trace after Owner-confirmed accepted/pushed final SLICE-MAKE `e5997f506c753bc73426128a88558d9c633e7f88`. The eight preceding increments are accepted/pushed; Genealogy is the ninth engineering-accepted delivery, awaiting Owner review/push of its local commit. See the [bounded plan/DoD](GENEALOGY_TRACE_PLAN.md) and [actual delivery](GENEALOGY_TRACE_IMPLEMENTATION_STATUS.md). No unrelated OQ branch is closed. Stop after accepted documented local commit for Owner review/push.
 
 Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers
@@ -28,7 +28,7 @@ This is an ordered engineering plan under the Project Owner's trusted-agent
 decision of 2026-10-04. It does not authorize implementation, approve a baseline,
 close an OQ, or require OS adversarial containment. Native-autonomy installers,
 parent ACL hardening and ProgramData enforcement are outside this backlog.
-`implementationAuthorized=false`; final authorization remains human-only.
+The historical readiness grant was `implementationAuthorized=false`; current bounded implementation authority is recorded above and in CURRENT_PHASE. Backlog prose does not self-authorize a new scope.
 
 SLICE-ENVELOPE remains the first slice. Foundation setup is part of that slice,
 not a separate business implementation. Its non-business fixture exercises the

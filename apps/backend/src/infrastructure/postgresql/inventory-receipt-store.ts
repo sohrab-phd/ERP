@@ -1,5 +1,8 @@
+import { BusinessRejection, validUuid } from '@navard/shared-kernel';
 import type {
   InventoryReceiptStore,
+  InventoryReceiptTraceSourcePort,
+  InventoryTraceContext,
   PostingContext,
   ReceiptOrigin,
 } from '../../modules/inventory/index.js';
@@ -18,7 +21,29 @@ function origin(row: StoredOrigin | undefined): ReceiptOrigin | undefined {
 }
 
 /** Receipt origin persistence has no Ledger or Balance write capability. */
-export class PostgresInventoryReceiptStore implements InventoryReceiptStore {
+export class PostgresInventoryReceiptStore
+  implements InventoryReceiptStore, InventoryReceiptTraceSourcePort
+{
+  async traceSources(
+    context: InventoryTraceContext,
+    kind: 'UNIT' | 'LOT' | 'RECEIPT',
+    id: string,
+  ): Promise<readonly ReceiptOrigin[]> {
+    if (!validUuid(context.customerId))
+      throw new BusinessRejection({ family: 'GUARD_ACTOR', message: 'Trace customer required' });
+    // Original receipt origins are organizational facts. The composed trace gates disclosure
+    // through customer-scoped source reachability and the public Inventory Unit read port.
+    const response = await transactionClient(context.transaction).query<StoredOrigin>(
+      `SELECT l.lot_id AS "lotId",l.receipt_id AS "receiptId",l.unit_id AS "unitId",l.material_id AS "materialId",l.effect_id AS "effectId",l.internal_code AS "internalCode",l.count::text AS count,l.measured_kg::text AS "measuredKg",l.type,l.location_id AS "locationId",l.product_code AS "productCode"
+       FROM inventory.material_lot l
+       WHERE l.installation_id=$1 AND l.authority_scope=$2
+       AND (($4='UNIT' AND l.unit_id=$3::uuid) OR ($4='LOT' AND l.lot_id=$3::uuid) OR ($4='RECEIPT' AND l.receipt_id=$3::uuid))
+       ORDER BY l.lot_id LIMIT 257`,
+      [context.actor.installationId, context.actor.authorityScopeId, id, kind],
+    );
+    return response.rows.map((row) => origin(row)!);
+  }
+
   async lockProductCode(context: PostingContext, code: string): Promise<void> {
     await transactionClient(context.transaction).query(
       'SELECT pg_advisory_xact_lock(hashtextextended($1,0))',
