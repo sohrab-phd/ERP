@@ -12,6 +12,8 @@ const files = [
   'identity',
   'inventory',
   'receipt',
+  'purchase',
+  'purchase-http',
   'receipt-http',
   'sales',
   'sales-http',

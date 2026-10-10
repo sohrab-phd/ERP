@@ -30,6 +30,7 @@ Implementation authority follows [current bounded scope](../00-governance/CURREN
 | GetAvailability | Inventory (Balance + holds + reservations) | derived; INV-003 |
 | GetReservation | Inventory | |
 | GetPurchaseOrder / GetGoodsReceipt | Procurement | qty truth is Ledger after post |
+| GetCompletedPurchase / GetPurchaseProforma | Procurement | APR-027 immutable documentary evidence, internal org ACT-PROC only; no stock truth or candidate PO lifecycle |
 | GetInventoryUnit / GetLot / GetLedger / GetBalance | Inventory | Balance must reconcile to Ledger |
 | GetProductionOrder / GetOperation / GetAllocation | Production | |
 | GetInspection | Quality | |

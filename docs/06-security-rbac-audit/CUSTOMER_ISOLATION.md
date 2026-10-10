@@ -39,6 +39,14 @@ allowing a customer-wide dump or cross-customer access. Customer actors cannot
 use these internal receipt/stock routes. Allocating stock later must apply the
 owning demand's customer rule; current manual intake has no customer allocation.
 
+Owner [APR-027](../00-governance/approved-baselines/APR-027-purchasing-evidence-scope.md)
+separately authorizes organizational purchasing documentary evidence. Completed
+purchase and optional linked sent-proforma records have no customer/order/stock
+allocation fields. Current individual ACT-PROC without customer scope may access
+only the exact installation/authority records. Customer-bound ACT-PROC, ACT-CUST
+and other roles cannot use these internal routes. Descriptive supplier references
+do not grant access to supplier master data or associated customer documents.
+
 ## Surfaces that must isolate
 
 | Surface | Rule |

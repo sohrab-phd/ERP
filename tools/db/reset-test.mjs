@@ -83,6 +83,11 @@ export async function resetTestDatabase(env = process.env) {
       'GRANT SELECT,INSERT ON kernel.audit_event,kernel.command_outcome TO ' +
         quote(identity.runtimeRole),
     );
+    await client.query('GRANT USAGE ON SCHEMA procurement TO ' + quote(identity.runtimeRole));
+    await client.query(
+      'GRANT SELECT,INSERT ON procurement.completed_purchase,procurement.purchase_proforma_sent TO ' +
+        quote(identity.runtimeRole),
+    );
     await client.query('GRANT USAGE ON SCHEMA identity TO ' + quote(identity.runtimeRole));
     await client.query(
       'GRANT SELECT,INSERT,UPDATE ON identity.account,identity.session TO ' +

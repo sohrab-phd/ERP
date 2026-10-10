@@ -90,3 +90,5 @@ invent an unlock file. Do not create application folders. Do not mint
 - Implementation remains locked until a later human unlock.
 
 `IMPLEMENTATION_AUTHORIZED` remains `false`.
+
+Current purchasing increment: [plan/DoD](SLICE_PURCHASE_PLAN.md), [actual delivery and evidence](SLICE_PURCHASE_IMPLEMENTATION_STATUS.md), [Owner scope](../00-governance/approved-baselines/APR-027-purchasing-evidence-scope.md). Candidate PO approval/lifecycle stays deferred; no stock or financial effect.

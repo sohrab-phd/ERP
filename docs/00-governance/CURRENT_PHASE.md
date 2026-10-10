@@ -3,7 +3,7 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.44.0
+version: 0.45.0
 owners: [chief-solution-architect]
 depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-10
@@ -13,9 +13,9 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner decision (2026-10-10): final SLICE-MAKE e5997f506c753bc73426128a88558d9c633e7f88 is accepted and confirmed pushed. Owner explicitly authorizes [APR-026](approved-baselines/APR-026-genealogy-trace-scope.md), Genealogy Projection and Trace. Gate remains true and local ignored unlock matches APR-026; architecture APR-018 remains unchanged.
+Current Owner decision (2026-10-10): genealogy601e52a02430ee3f81b737c1b8ffdabc2123b63c is accepted and confirmed pushed. Owner explicitly authorizes [APR-027](approved-baselines/APR-027-purchasing-evidence-scope.md), SLICE-PURCHASE purchasing increment, and approves bounded organization-scoped ACT-PROC record-and-evidence authority/fields. Gate remains true and local ignored unlock matches APR-027; architecture APR-018 remains unchanged.
 
-Current scope is the bounded read-only genealogy projection and bidirectional trace from published immutable owner facts. See [plan/DoD](../12-implementation-planning/GENEALOGY_TRACE_PLAN.md) and [engineering-accepted delivery/evidence](../12-implementation-planning/GENEALOGY_TRACE_IMPLEMENTATION_STATUS.md):159 unit and216 real PostgreSQL tests pass, independent review/security findings closed. The local delivery commit awaits Owner review/push. No source/stock write, new business policy, unsupported rework or browser UI. Stop after accepted tested/reviewed/documented local commit for Owner review/push; no remote push or next major slice.
+Current scope records completed purchases and optional later sent-proforma evidence using immutable Procurement facts. See [plan/DoD](../12-implementation-planning/SLICE_PURCHASE_PLAN.md) and [engineering-accepted delivery/evidence](../12-implementation-planning/SLICE_PURCHASE_IMPLEMENTATION_STATUS.md):170 unit and240 actual PostgreSQL tests pass, independent engineering/security required findings closed. Local delivery is ready for Owner acceptance/push after the reported commit. No supplier master/approval, PO lifecycle, financial values, outbound messages, receipt/stock change, corrections or browser UI. Stop for Owner acceptance/push; no remote push or next major slice.
 
 ## Historical foundation authorization / readiness snapshot
 

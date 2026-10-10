@@ -55,6 +55,7 @@ with the owning bounded context.
 | Sales cancel / hold after confirm | ACT-SALES | no | not a closed SoD pair; named authority stays OQ-019 if later required |
 | PortalRequestInquiry / any PortalPlaceOrder | none in MVP | no | n/a — `GUARD_PORTAL_MVP` |
 | Purchase Order draft/submit/send | ACT-PROC | no | no |
+| RecordCompletedPurchase / RecordPurchaseProformaSent | individual current organization-scoped ACT-PROC | no | no — documentary evidence only, Owner APR-027; no PO approval/transmission/receiving/payment authority |
 | ApprovePurchaseOrder | ACT-PROC | no | named approver OQ-019 |
 | ReceiveGoods / DraftGoodsReceipt | ACT-PROC or ACT-WH | no (orchestration) | no |
 | PostGoodsReceipt — normal manual MVP intake | individual ACT-WH; executor ACT-IPS; ACT-PROC has no second posting authority | ACT-IPS | no — Owner confirmation APR-021 |
@@ -79,6 +80,7 @@ with the owning bounded context.
 | Query family | May read | Isolation |
 | --- | --- | --- |
 | Own-BC documents | owning `ACT-*` | customer scope required |
+| GetCompletedPurchase / GetPurchaseProforma | individual current ACT-PROC only, Owner APR-027 | exact installation/authority, organizational grant without customer scope; excludes customer and other-role access |
 | GetAvailability / GetLedger / GetBalance / GetUnit | ACT-WH, ACT-SALES (availability), ACT-PLAN (allocation context), ACT-SEC (audit) | customer/resource visibility and recorded single organizational site scope (OQ-013) |
 | TraceForward / TraceBackward | ACT-WH, ACT-SALES, ACT-SEC; ACT-QC only if future Quality separately enabled | rebuild-only; no source write |
 | GetInvoice / GetPayment | ACT-FIN; ACT-SALES may see own-order invoices | customer isolation |

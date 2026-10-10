@@ -140,6 +140,12 @@ close is recorded (OQ-007).
 
 ### `SLICE-PURCHASE`
 
+APR-027 purchasing increment adds RecordCompletedPurchase and
+RecordPurchaseProformaSent, with GetCompletedPurchase/GetPurchaseProforma.
+These immutable documentary records have no PO state machine or stock effect.
+The purchase commands below remain architecture candidates, separate from this
+confirmed recording workflow and the previously delivered PostGoodsReceipt path.
+
 DraftPurchaseOrder, SubmitPurchaseOrder, ApprovePurchaseOrder
 (`GUARD_OPEN_POLICY` until OQ-019), SendPurchaseOrder,
 RecordPartialReceipt, RecordFullReceipt, ClosePurchaseOrder,

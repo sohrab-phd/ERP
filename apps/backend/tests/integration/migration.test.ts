@@ -45,7 +45,7 @@ void test('fresh/second migration and concurrent runners are checksum-bound and 
     const ledger = await db.owner.query(
       'SELECT version,sha256 FROM kernel.schema_migrations ORDER BY version',
     );
-    assert.equal(ledger.rowCount, 14);
+    assert.equal(ledger.rowCount, 15);
     assert.ok(ledger.rows.every((row: { sha256: string }) => /^[0-9a-f]{64}$/.test(row.sha256)));
     await runTool('tools/db/migrate.mjs');
     assert.deepEqual(
@@ -132,7 +132,7 @@ void test('failed file SQL and ledger insert rollback together while earlier mig
           'SELECT count(*)::integer AS count FROM kernel.schema_migrations',
         )
       ).rows[0]?.count,
-      14,
+      15,
     );
   });
 });

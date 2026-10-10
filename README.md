@@ -62,7 +62,10 @@ DATABASE_URL is the distinct dev runtime role. Set NODE_ENV=development,
 INSTALLATION_ID to the installation's stable UUID and optionally HOST/PORT/
 LOG_LEVEL. After the migration, grant runtime only the above object privileges
 using the local database administrator. Current business privileges: inventory USAGE and SELECT/INSERT/UPDATE on unit/balance/reservation/reservation_request, SELECT/INSERT on ledger/material_lot; procurement USAGE and SELECT/INSERT/UPDATE on goods_receipt; sales USAGE with customer SELECT and sales_order/fulfillment_assessment SELECT/INSERT/UPDATE; shipping USAGE with package/package_content/shipment SELECT/INSERT/UPDATE and dispatch SELECT/INSERT only. No history DELETE, runtime DDL or direct user SQL endpoint.
-`npm run start` exposes health, personal identity and the delivered receipt/Sales/reservation/shipping routes. Readiness verifies PG18.6/UTF-8 with a bounded probe;
+Purchasing documentary privileges additionally require SELECT/INSERT only on
+procurement.completed_purchase and procurement.purchase_proforma_sent. Their
+records remain immutable; no runtime UPDATE/DELETE or second receiving path.
+`npm run start` exposes health, personal identity and delivered receipt/Sales/reservation/shipping/production/genealogy/purchasing routes. Readiness verifies PG18.6/UTF-8 with a bounded probe;
 no synthetic production identity or fixture is installed.
 Shutdown closes the listener and pool. JSON logs exclude payload/results/URLs/
 credentials and unknown fields.

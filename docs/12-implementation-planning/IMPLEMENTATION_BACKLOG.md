@@ -270,6 +270,13 @@ durable replay, audit, concurrency and compensating-correction contracts.
 
 ## 8. SLICE-PURCHASE purchasing increment — procurement where applicable
 
+Owner [APR-027](../00-governance/approved-baselines/APR-027-purchasing-evidence-scope.md)
+authorizes the bounded completed-purchase and optional sent-proforma recording
+increment. See [actual implementation/evidence](SLICE_PURCHASE_IMPLEMENTATION_STATUS.md).
+Organization-scoped ACT-PROC recording fields/authority are answered for this
+increment; the candidate PO lifecycle and other residual branches below remain
+unconfirmed. No stock/financial effect or supplier master/approval is introduced.
+
 - **Objective/dependencies:** add only confirmed purchasing coordination around
   established intake; depends on receipt, authorization and supplier/policy inputs.
   Its position can precede production if purchasing evidence becomes available.

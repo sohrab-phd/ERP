@@ -11,11 +11,19 @@ export interface HealthOptions {
   reservation?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
   sales?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
   receipt?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
+  purchase?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
 }
 export function createHttpHost(options: HealthOptions): Server {
   const server = createServer(
     { maxHeaderSize: 8192, headersTimeout: 5000, requestTimeout: 10000, keepAliveTimeout: 5000 },
     (request, response) => {
+      if (options.purchase && request.url?.startsWith('/purchasing/')) {
+        void options.purchase(request, response).catch(() => {
+          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+          else response.destroy();
+        });
+        return;
+      }
       if (options.genealogy && request.url?.startsWith('/genealogy/')) {
         void options.genealogy(request, response).catch(() => {
           if (!response.headersSent) respond(response, 503, { error: 'unavailable' });

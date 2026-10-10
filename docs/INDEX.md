@@ -349,3 +349,9 @@ SLICE-MAKE actual delivery: [implementation status](12-implementation-planning/S
 - [Owner scope](00-governance/approved-baselines/APR-026-genealogy-trace-scope.md)
 - [Plan/Definition of Done](12-implementation-planning/GENEALOGY_TRACE_PLAN.md)
 - [Actual implementation and acceptance](12-implementation-planning/GENEALOGY_TRACE_IMPLEMENTATION_STATUS.md)
+
+## Current purchasing record-and-evidence increment — 2026-10-10
+
+- [Owner scope](00-governance/approved-baselines/APR-027-purchasing-evidence-scope.md)
+- [Plan/Definition of Done](12-implementation-planning/SLICE_PURCHASE_PLAN.md)
+- [Actual implementation and acceptance](12-implementation-planning/SLICE_PURCHASE_IMPLEMENTATION_STATUS.md)

@@ -12,6 +12,7 @@ const files = [
   'apps/backend/dist/tests/unit/inventory-quantity.test.js',
   'apps/backend/dist/tests/unit/inventory-boundaries.test.js',
   'apps/backend/dist/tests/unit/receipt.test.js',
+  'apps/backend/dist/tests/unit/purchase.test.js',
   'apps/backend/dist/tests/unit/inventory-availability.test.js',
   'apps/backend/dist/tests/unit/sales.test.js',
   'apps/backend/dist/tests/unit/reservation.test.js',

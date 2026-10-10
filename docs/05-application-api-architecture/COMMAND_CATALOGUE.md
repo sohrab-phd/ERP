@@ -117,6 +117,16 @@ supplier approval, or a procurement payment. They are not deleted.
 Ms. Masoumi's purchase registration and proforma sending are not these
 commands.
 
+[APR-027](../00-governance/approved-baselines/APR-027-purchasing-evidence-scope.md)
+authorizes two documentary v1 commands, separate from the candidate PO machine:
+RecordCompletedPurchase (target purchase-record) and RecordPurchaseProformaSent
+(target purchase-proforma). The former records document/supplier references,
+purchase date and material description; the optional latter records purchase UUID,
+proforma reference and sent date. Individual current organization-scoped ACT-PROC
+only; immutable evidence plus outcome/audit, no stock/payment/transmission effect.
+Same-key replay and UUID binding apply. [Actual contracts and limits](../12-implementation-planning/SLICE_PURCHASE_IMPLEMENTATION_STATUS.md)
+describe this increment; no candidate ApprovePurchaseOrder/SendPurchaseOrder is activated.
+
 ## Inventory / ACT-IPS
 
 PostGoodsReceipt, ReverseGoodsReceipt, RequestReservation (commanded),

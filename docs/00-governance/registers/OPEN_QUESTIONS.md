@@ -1795,6 +1795,17 @@ correction. No procurement tolerance and no procurement payment workflow
 are defined. No mandatory link from an intake record to a purchase
 record is defined.
 
+## Purchasing record-and-evidence — Owner confirmation 2026-10-10
+
+Bounded purchasing Owner confirmation (2026-10-10),
+[APR-027](../approved-baselines/APR-027-purchasing-evidence-scope.md): individual
+organization-scoped ACT-PROC may record completed purchases using purchase document
+reference, descriptive supplier name/reference, purchase date and short material
+description, with optional sent-proforma reference/date evidence. No named account
+grant is inferred. This resolves only these record-and-evidence fields/authority;
+supplier master/selection/approval, candidate PO lifecycle, financial/receipt/
+correction policy and unrelated OQ-019 residuals remain open. No message is sent.
+
 ## Normal manual receiving — Owner confirmation 2026-10-07
 
 [APR-021](../approved-baselines/APR-021-receipt-increment-scope.md) records

@@ -37,6 +37,7 @@ for (const file of files) {
           'inventory-store.ts',
           'inventory-receipt-store.ts',
           'receipt-store.ts',
+          'purchase-store.ts',
           'sales-store.ts',
           'inventory-reservation-store.ts',
           'shipping-store.ts',
@@ -108,6 +109,13 @@ for (const file of files) {
       file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-receipt-store.ts')
     )
       issues.push(relative(root, file) + ': inventory origin SQL outside persistence owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\bprocurement\.(completed_purchase|purchase_proforma_sent)\b/i.test(node.text) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/purchase-store.ts')
+    )
+      issues.push(relative(root, file) + ': purchasing SQL outside Procurement owner');
     if (
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
       /\bprocurement\.goods_receipt\b/i.test(node.text) &&

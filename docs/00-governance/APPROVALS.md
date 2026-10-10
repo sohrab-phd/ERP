@@ -737,3 +737,8 @@ review and authorization.
 
 - [Actual Owner scope](approved-baselines/APR-026-genealogy-trace-scope.md): final SLICE-MAKE e5997f506c753bc73426128a88558d9c633e7f88 accepted/pushed and explicit next-capability continuation.
 - Gate/local ignored unlock match APR-026; architecture APR-018 unchanged. Read projection only from immutable owner sources; no new business policy or remote push. Stop for Owner review/push after delivery.
+
+### APR-027 — Purchasing record and proforma evidence
+
+- [Actual Owner continuation and policy](approved-baselines/APR-027-purchasing-evidence-scope.md): genealogy601e52a02430ee3f81b737c1b8ffdabc2123b63c accepted/pushed; purchasing increment explicitly authorized; bounded organization-scoped ACT-PROC recording fields/authority approved in the subsequent reply.
+- Gate/local ignored unlock match APR-027; architecture APR-018 unchanged. Immutable completed-purchase and optional linked sent-proforma evidence only. No supplier master/approval, PO lifecycle, financial or stock changes, actual transmission or remote push. Stop after delivery for Owner acceptance/push.

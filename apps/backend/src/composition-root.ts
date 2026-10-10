@@ -53,6 +53,9 @@ import { PostgresInventoryProductionStore } from './infrastructure/postgresql/in
 import { createProductionHandler } from './transport/production-http.js';
 import { GenealogyProjection, type GenealogyReference } from './modules/genealogy/index.js';
 import { createGenealogyHandler } from './transport/genealogy-http.js';
+import { PurchaseService, type PurchaseContext } from './modules/procurement/index.js';
+import { PostgresPurchaseStore } from './infrastructure/postgresql/purchase-store.js';
+import { createPurchaseHandler } from './transport/purchase-http.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -95,6 +98,28 @@ export function compose(config: Readonly<Config>) {
     (await current(ctx.actor, ctx.transaction));
   const canPost = async (ctx: ReceiptContext) =>
     ctx.actor.actorRole === 'ACT-WH' && (await current(ctx.actor, ctx.transaction));
+  const purchaseStore = new PostgresPurchaseStore();
+  const purchases = new PurchaseService(purchaseStore, {
+    current: async (ctx: PurchaseContext) =>
+      ctx.actor.actorRole === 'ACT-PROC' && current(ctx.actor, ctx.transaction),
+  });
+  const purchasePolicies = purchases.contracts().map((contract) => ({
+    command: contract.command,
+    version: 1,
+    roles: ['ACT-PROC' as const],
+    canTarget: (actor: ExecutionContext, request: CommandRequest) =>
+      Promise.resolve(
+        actor.actorRole === 'ACT-PROC' &&
+          org(actor) &&
+          validUuid(request.target.id) &&
+          request.target.kind ===
+            (request.command === 'RecordCompletedPurchase'
+              ? 'purchase-record'
+              : 'purchase-proforma'),
+      ),
+    canDisclose: (actor: ExecutionContext) =>
+      Promise.resolve(actor.actorRole === 'ACT-PROC' && org(actor)),
+  }));
   const salesStore = new PostgresSalesStore();
   const salesCurrent = (ctx: SalesContext, customerId = ctx.actor.customerScope) =>
     ctx.actor.actorRole === 'ACT-SALES' &&
@@ -469,6 +494,7 @@ export function compose(config: Readonly<Config>) {
   const ports: ExecutionPorts = {
     registry: new CommandRegistry([
       receipts.contract(),
+      ...purchases.contracts(),
       ...sales.contracts(),
       ...reservations.contracts(),
       ...shipping.contracts(),
@@ -478,6 +504,7 @@ export function compose(config: Readonly<Config>) {
     outcomes: new PostgresOutcomes(),
     audits: new PostgresAudit(),
     authorization: new IdentityAuthorization(identity, [
+      ...purchasePolicies,
       ...salesPolicies,
       ...reservationPolicies,
       ...shippingPolicies,
@@ -503,6 +530,38 @@ export function compose(config: Readonly<Config>) {
   };
   const command = (input: string | Uint8Array, context: ExecutionContext) =>
     executeCommand(input, context, ports);
+  const purchaseQuery = async (
+    kind: 'GetCompletedPurchase' | 'GetPurchaseProforma',
+    id: string,
+    actor: ExecutionContext,
+  ) => {
+    const tx = await transactions.begin();
+    try {
+      const data = await purchases.get(
+        {
+          actor,
+          transaction: tx.context,
+          request: {
+            command: kind,
+            contract_version: 1,
+            idempotency_key: randomUUID(),
+            target: { kind: 'query', id },
+            payload: {},
+            preconditions: {},
+          },
+        },
+        kind,
+        id,
+      );
+      await tx.commit();
+      return data;
+    } catch (error) {
+      await tx.rollback();
+      throw error;
+    } finally {
+      await tx.release();
+    }
+  };
   const query = async (
     kind: 'GetGoodsReceipt' | 'GetInventoryUnit' | 'GetLot',
     id: string,
@@ -748,6 +807,7 @@ export function compose(config: Readonly<Config>) {
     production: createProductionHandler({ identity, command, query: productionQuery }),
     genealogy: createGenealogyHandler({ identity, query: genealogyQuery }),
     receipt: createReceiptHandler({ identity, command, query }),
+    purchase: createPurchaseHandler({ identity, command, query: purchaseQuery }),
     sales: createSalesHandler({ identity, command, query: salesQuery }),
     shipping: createShippingHandler({ identity, command, query: shippingQuery }),
     reservation: createReservationHandler({ identity, command, query: reservationQuery }),
@@ -761,6 +821,8 @@ export function compose(config: Readonly<Config>) {
     identity,
     inventory,
     receipts,
+    purchases,
+    purchaseQuery,
     sales,
     salesQuery,
     shipping,
