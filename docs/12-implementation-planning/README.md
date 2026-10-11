@@ -3,20 +3,25 @@ id: PHASE-12
 title: Implementation Planning
 phase: 12-implementation-planning
 status: approved
-version: 0.4.0
+version: 0.5.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [PHASE-11, APR-013, APR-014, VAL-P12-HANDOFF-001, ASM-025]
-last_reviewed: 2026-09-07
+last_reviewed: 2026-10-11
 approval: APR-014
 supersedes: null
 ---
 
 # Phase 12 — Implementation Planning
 
-Current implementation authority is
-[APR-021](../00-governance/approved-baselines/APR-021-receipt-increment-scope.md),
-for the receipt increment after accepted foundation, Identity and IPS; architecture baseline
-remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d. See the
+Current task authority is
+[APR-029](../00-governance/approved-baselines/APR-029-weighbridge-scope-review.md):
+Finance-Lite invoice evidence is formally Owner-accepted/confirmed pushed as the
+eleventh backend capability; Weighbridge human-ticket/fallback review is authorized
+for planning only. See the [review and decision gate](WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
+and [current scope](../00-governance/CURRENT_PHASE.md). No weighbridge implementation
+or gate/unlock expansion is authorized. Architecture baseline
+remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d. Earlier slice/gate statements
+below are historical. See the
 [Identity implementation record](IDENTITY_AUTHORIZATION_IMPLEMENTATION_STATUS.md).
 See [IPS plan](SLICE_IPS_IMPLEMENTATION_PLAN.md),
 [actual delivery](SLICE_IPS_IMPLEMENTATION_STATUS.md) and

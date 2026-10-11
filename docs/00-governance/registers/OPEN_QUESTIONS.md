@@ -3,10 +3,10 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: in_review
-version: 0.30.0
+version: 0.31.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
-last_reviewed: 2026-10-10
+last_reviewed: 2026-10-11
 approval: null
 supersedes: null
 ---
@@ -743,6 +743,20 @@ Ledger writer and does not add a second inventory posting path.
 Incoming-material weight is also not assumed to come from a named
 device. No scale, protocol, or automatic integration is defined for
 intake.
+
+### Scope-review residuals (2026-10-11; no new factory answer)
+
+[APR-029](../approved-baselines/APR-029-weighbridge-scope-review.md) authorizes
+planning only after formal Finance-Lite acceptance. The
+[human-ticket/fallback review and exact questions](../../12-implementation-planning/WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md#exact-ownerfactory-clarification-questions)
+separate intake evidence from commercial/shipment weight. Ticket fields/actual kg
+source, issuer/reference/reuse scope, receipt cardinality, attachment timing,
+ticket-specific reads/custody, fallback reason and unavailable/disputed-print
+procedure need actual decisions. No ticket uniqueness, correction/tolerance or
+financial effect is inferred. OQ-011 remains **treating**; OQ-019 named assignments
+remain open. Existing APR-021 normal personal ACT-WH receiving is already approved
+without a mandatory ticket; it is not reopened. Device/protocol gaps block the
+automatic branch, not necessarily a separately approved manual-only increment.
 
 ---
 

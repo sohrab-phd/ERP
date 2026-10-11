@@ -3,27 +3,26 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [chief-solution-architect]
 depends_on: [ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
-last_reviewed: 2026-10-10
+last_reviewed: 2026-10-11
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
 
-Current direction: [APR-028](../00-governance/approved-baselines/APR-028-finance-lite-continuation.md),
-conditional Finance-Lite continuation after Owner acceptance and confirmed push
-of Purchasing `b2619790ca7f20a57978279cd7392199c331f0b3`. Eleven capabilities are
-engineering accepted with this local delivery; see the [committed progress](FINANCE_LITE_IMPLEMENTATION_STATUS.md#overall-committed-capability-progress).
-The subsequent actual Owner policy approves [Finance-Lite Invoice Evidence First](FINANCE_LITE_PLAN.md):
-immutable existing-invoice evidence only; org ACT-SALES records/reads, org ACT-FIN
-reads, validated existing Sales order/customer. Money/payment/numbering/upload
-remain excluded and their policies open for affected future increments. Gate/local
-unlock match APR-028 under APR-019. Invoice evidence passes its DoD and independent
-reviews; stop for Owner acceptance/push. Next recommended task is Weighbridge
-human ticket/fallback scope review (§10), resolving its actual inputs before implementation.
+Current direction: [APR-029](../00-governance/approved-baselines/APR-029-weighbridge-scope-review.md),
+Owner formal acceptance and confirmed push of Finance-Lite invoice-evidence commit
+`67e3346dc93584123885cefb228c960f8940a7f6` on 2026-10-11. Eleven backend capabilities
+are accepted; see [committed progress](FINANCE_LITE_IMPLEMENTATION_STATUS.md#overall-committed-capability-progress).
+Finance-Lite remains partial; money/payments/accounting/corrections remain deferred.
+Current task is the authorized Weighbridge human-ticket/fallback **scope review**
+(§10), not implementation. The [review and questions](WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
+retain unresolved ticket policy and stop for Owner/factory decisions and bounded
+scope approval. No gate/local unlock expansion; APR-028 remains invoice-evidence
+product authority only. Factory UAT and deployment remain separate gates.
 
 Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers
@@ -326,6 +325,11 @@ unconfirmed. No stock/financial effect or supplier master/approval is introduced
 
 ## 10. Weighbridge adapter and human fallback
 
+- **Current authority/status (2026-10-11):** APR-029 planning-only review complete;
+  candidate implementation BLOCKED / NOT AUTHORIZED. See the
+  [bounded candidate, evidence, risks, acceptance intent and exact questions](WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md).
+  Recommended first candidate is Procurement-owned intake printed-ticket evidence,
+  with commercial/device branches deferred. No twelfth backend capability delivered.
 - **Objective/dependencies:** attach attributed weight evidence to accepted
   receiving/commercial flows; depends on the consuming domain command and
   integration authorization. Device work can proceed independently when known.
@@ -336,11 +340,17 @@ unconfirmed. No stock/financial effect or supplier master/approval is introduced
   second stock truth. Measured/expected difference is shown, not automatically
   acceptable, process loss, Residual or Scrap.
 - **Tests/acceptance:** repeated/reordered tickets, unavailable device, attribution,
-  stale/invalid evidence and authorized fallback; consumers deduplicate through
-  the envelope and original ticket identity without duplicate stock/commercial facts.
-- **Out of scope/residuals:** OQ-011 device/model/protocol/location/operator (B),
-  actual ticket validation (C/D), automatic difference threshold (B if requested).
-  No manual-fallback elimination or assumed device network protocol.
+  stale/invalid evidence and authorized fallback according to approved rules;
+  envelope retry identity is not physical-ticket identity. Source identity/reuse
+  scope and receipt cardinality must be approved before source dedup tests can pass.
+- **Out of scope/residuals:** device/model/protocol/location/identity block the
+  automatic path, not inherently a human-only branch. Existing APR-021 personal
+  ACT-WH normal manual intake is approved without mandatory ticket; exact physical
+  ticket operator/custodian, fields, source identity/cardinality, ticket read policy,
+  linkage timing and unusable-print handling remain open for this candidate.
+  Actual ticket validation is required before delivery/UAT. Automatic difference
+  thresholds need separate policy if requested. No fallback elimination, assumed
+  protocol, commercial effects, correction/restoration or UI in the first candidate.
 
 ## 11. Portal visibility and reporting/audit capability
 

@@ -3,10 +3,10 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.14.0
+version: 0.15.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-10-10
+last_reviewed: 2026-10-11
 approval: null
 supersedes: null
 ---
@@ -756,3 +756,19 @@ review and authorization.
   unlock match APR-028 under standing APR-019; no money/allocation/upload is granted.
 - No Purchasing reapproval, factory UAT, production deployment, remote push,
   unrelated backlog work or invented ACT authority.
+
+### APR-029 — Finance-Lite acceptance and Weighbridge planning-only review
+
+- [Actual Owner message recorded 2026-10-11](approved-baselines/APR-029-weighbridge-scope-review.md):
+  Finance-Lite invoice evidence `67e3346dc93584123885cefb228c960f8940a7f6` formally
+  accepted and confirmed pushed; eleventh accepted backend capability, no repeat
+  acceptance. Existing 177 unit/260 PostgreSQL evidence and reviews accepted,
+  not freshly rerun. Factory UAT/deployment remain separate; Finance-Lite partial.
+- Authorizes requirements clarification, policy reconciliation, technical analysis
+  and planning for Weighbridge Human Ticket / Fallback only. The
+  [scope review](../12-implementation-planning/WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
+  retains OPEN questions and stops before policy/scope approval. No implementation,
+  device protocol, new permission, financial effect or gate/local unlock expansion.
+- APR-018 architecture remains unchanged. This explicit planning-only restriction
+  controls the current task despite standing APR-019 progression delegation.
+  Documentation local commit allowed; no push/history rewrite or invented approval.

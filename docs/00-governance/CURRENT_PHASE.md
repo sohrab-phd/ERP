@@ -3,15 +3,42 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.47.0
+version: 0.48.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-10-10
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+last_reviewed: 2026-10-11
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
+
+Current Owner decision (2026-10-11): Finance-Lite — Invoice Evidence First is
+formally accepted; delivery commit `67e3346dc93584123885cefb228c960f8940a7f6` is
+confirmed pushed by the Owner. This is the eleventh accepted backend capability.
+No repeat acceptance is required. Factory UAT and production deployment remain
+separate. Finance-Lite is partial: monetary calculations, payments/allocations,
+external accounting and financial corrections remain deferred.
+
+[APR-029](approved-baselines/APR-029-weighbridge-scope-review.md) authorizes
+**Weighbridge — Human Ticket / Fallback Scope Review only**: requirements,
+policy reconciliation, technical analysis and bounded planning. The
+[review and exact decision questions](../12-implementation-planning/WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
+find unresolved ticket fields/source identity/cardinality, evidence handling and
+ticket-specific access. Existing ACT-WH normal manual receiving policy stays
+approved; physical ticket roles/custody are not inferred from personnel titles.
+OQ-011/OQ-019 remain treating. Automatic device/protocol and commercial-weight
+branches are deferred; no weighing-derived financial or shipment/production effect.
+
+WEIGHBRIDGE_IMPLEMENTATION_AUTHORIZED: `false`. Policy decisions and explicit
+bounded scope approval must precede implementation and a reconciled product
+gate/local unlock. No gate/unlock expansion is made for planning; the existing
+APR-028 product grant covers invoice evidence only. APR-018 architecture is
+unchanged; the explicit APR-029 restriction controls over standing progression
+delegation. Stop at the policy/scope approval gate after the reviewed local
+documentation commit; no remote push or unrelated backlog work.
+
+## Prior Finance-Lite delivery authorization (2026-10-10, superseded status)
 
 Current Owner decision (2026-10-10): SLICE-PURCHASE purchasing commit
 `b2619790ca7f20a57978279cd7392199c331f0b3` is formally accepted and confirmed

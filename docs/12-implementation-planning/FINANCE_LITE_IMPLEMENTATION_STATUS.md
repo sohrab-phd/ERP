@@ -3,18 +3,22 @@ id: IMPL-FINANCE-LITE-001
 title: Finance-Lite invoice evidence implementation status
 phase: 12-implementation-planning
 status: accepted
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-028, PLAN-FINANCE-LITE-001, INV-012, INV-014, INV-015, INV-016]
-last_reviewed: 2026-10-10
-approval: APR-028 product scope; engineering DoD accepted after tests and independent reviews
+depends_on: [APR-028, APR-029, PLAN-FINANCE-LITE-001, INV-012, INV-014, INV-015, INV-016]
+last_reviewed: 2026-10-11
+approval: APR-028 product scope; engineering DoD accepted; APR-029 formal Owner acceptance
 supersedes: null
 ---
 
 # Finance-Lite — Invoice Evidence First
 
-STATUS: ACCEPTED for engineering delivery. Owner acceptance, factory UAT and
-deployment are separate gates. Authority is the actual Owner
+STATUS: ACCEPTED for engineering delivery and formally accepted by the Owner
+on 2026-10-11. [APR-029](../00-governance/approved-baselines/APR-029-weighbridge-scope-review.md)
+records Owner-confirmed push of delivery commit `67e3346dc93584123885cefb228c960f8940a7f6`
+and acceptance of the reported tests/reviews/documentation. No repeat acceptance
+is required. Factory UAT and deployment remain separate gates. Product authority
+is the actual Owner
 [APR-028 scope/policy decision](../00-governance/approved-baselines/APR-028-finance-lite-continuation.md),
 after accepted/pushed Purchasing `b2619790ca7f20a57978279cd7392199c331f0b3`.
 The [plan/DoD](FINANCE_LITE_PLAN.md) replaces the earlier planning gate only for
@@ -155,9 +159,10 @@ configuration, factory UAT and production cutover remain separate human work.
 
 ## Overall committed capability progress
 
-This delivery completes the eleventh major increment with a coherent local commit;
-its hash is reported in the delivery message to avoid a self-referential document.
-Finance-Lite remains partially implemented.
+This is the eleventh accepted backend capability, delivered in commit
+`67e3346dc93584123885cefb228c960f8940a7f6`, formally Owner-accepted and confirmed
+pushed on 2026-10-11. Finance-Lite remains partially implemented. Reported test
+results above are the original implementation runs, not this documentation update.
 
 1. SLICE-ENVELOPE foundation — durable commands, transactions, atomic outcome/audit and health.
 2. Identity/authorization foundation — personal accounts, revocable sessions and explicit grants.
@@ -177,12 +182,13 @@ Current project state:
 - Purchasing and issued-invoice evidence support documentary coordination with restricted personal grants.
 - Browser workflows, commercial calculations and payment settlement remain undelivered; factory UAT and production cutover remain separate.
 
-Next recommended backlog task after Owner acceptance/push: scope the Weighbridge
-human ticket/fallback increment, resolving actual ticket/operator/protocol inputs
-needed by its consuming owner. Monetary Finance-Lite/payment allocation requires
+Current authorized next task: [Weighbridge human-ticket/fallback scope review](WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
+under APR-029, planning only. Ticket-policy decisions and explicit bounded scope
+approval are required before implementation; protocol details block automation.
+Monetary Finance-Lite/payment allocation requires
 separate business-policy approval. Remaining major areas: those financial branches,
 weighbridge/device adapter, portal visibility/reporting/UI, correction/restore,
 factory UAT and cutover. No invented percentage-complete metric.
 
-COMMIT: coherent local implementation commit; SHA in the delivery message.
-READY TO PUSH: YES after that successful local commit. Stop for Owner acceptance/push.
+COMMIT: `67e3346dc93584123885cefb228c960f8940a7f6`.
+OWNER ACCEPTANCE / PUSH: CONFIRMED 2026-10-11 (APR-029); no repeat approval needed.
