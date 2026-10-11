@@ -3,7 +3,7 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.15.0
+version: 0.16.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-10-11
@@ -772,3 +772,19 @@ review and authorization.
 - APR-018 architecture remains unchanged. This explicit planning-only restriction
   controls the current task despite standing APR-019 progression delegation.
   Documentation local commit allowed; no push/history rewrite or invented approval.
+
+### APR-030 — Weighbridge review acceptance and final clarification preparation
+
+- [Actual Owner message](approved-baselines/APR-030-weighbridge-clarification-preparation.md)
+  accepts scope review `8f9920322e295f5a18576a00a7c147f2fb0df017` and confirms remote
+  push on 2026-10-11, including planning reviews/checks and no rerun product/DB tests.
+  No repeated Finance-Lite/scope-review acceptance; eleven backend capabilities remain.
+- Owner prefers optional personal human paper-ticket evidence atomically with normal
+  receiving, preferably initially; preserves no-ticket/ACT-WH/whole-kg rules and
+  Procurement/IPS ownership. This preference is not final factory policy/product approval.
+- Authorizes [factory questionnaire](WEIGHBRIDGE_FACTORY_CLARIFICATION.md) and
+  [conditional implementation plan/DoD](../12-implementation-planning/WEIGHBRIDGE_IMPLEMENTATION_PLAN.md),
+  decision mapping, options and genuine sanitized evidence requests only.
+- Necessary factory answers, reconciled policy/scope, finalized plan/criteria and
+  explicit Owner product gate/unlock approval are all required before implementation.
+  No gate/unlock expansion, OQ closure, API/SQL/runtime changes or remote push.

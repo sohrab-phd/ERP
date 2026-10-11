@@ -3,7 +3,7 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: in_review
-version: 0.31.0
+version: 0.32.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
 last_reviewed: 2026-10-11
@@ -757,6 +757,20 @@ financial effect is inferred. OQ-011 remains **treating**; OQ-019 named assignme
 remain open. Existing APR-021 normal personal ACT-WH receiving is already approved
 without a mandatory ticket; it is not reopened. Device/protocol gaps block the
 automatic branch, not necessarily a separately approved manual-only increment.
+
+### Final clarification preparation (2026-10-11; replies pending)
+
+[APR-030](../approved-baselines/APR-030-weighbridge-clarification-preparation.md)
+records accepted/pushed scope-review documentation and prefers optional atomic
+incoming ticket evidence; no factory answer or product authorization is supplied.
+Use the [F01–F08 factory response form](../WEIGHBRIDGE_FACTORY_CLARIFICATION.md)
+and [conditional dependency/contract/DoD plan](../../12-implementation-planning/WEIGHBRIDGE_IMPLEMENTATION_PLAN.md).
+The form distinguishes approved ACT-WH/no-ticket/whole-kg rules from outstanding
+ticket duties, permissions, real evidence, source reuse/cardinality, custody and
+failure/error procedures. Checklist references are not new OQs. Ticket-linked
+duplicate control cannot identify an unrecorded ticket in normal no-ticket intake;
+factory operating procedures/guarantee limits must be reconciled. OQ-011/OQ-019
+and unresolved residuals remain OPEN/treating. No API/SQL/runtime or gate/unlock change.
 
 ---
 

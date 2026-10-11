@@ -3,7 +3,7 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.4.0
+version: 0.5.0
 owners: [chief-solution-architect]
 depends_on: [ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-10-11
@@ -13,16 +13,16 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current direction: [APR-029](../00-governance/approved-baselines/APR-029-weighbridge-scope-review.md),
-Owner formal acceptance and confirmed push of Finance-Lite invoice-evidence commit
-`67e3346dc93584123885cefb228c960f8940a7f6` on 2026-10-11. Eleven backend capabilities
-are accepted; see [committed progress](FINANCE_LITE_IMPLEMENTATION_STATUS.md#overall-committed-capability-progress).
-Finance-Lite remains partial; money/payments/accounting/corrections remain deferred.
-Current task is the authorized Weighbridge human-ticket/fallback **scope review**
-(§10), not implementation. The [review and questions](WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
-retain unresolved ticket policy and stop for Owner/factory decisions and bounded
-scope approval. No gate/local unlock expansion; APR-028 remains invoice-evidence
-product authority only. Factory UAT and deployment remain separate gates.
+Current direction: [APR-030](../00-governance/approved-baselines/APR-030-weighbridge-clarification-preparation.md),
+Owner acceptance/confirmed push of scope review `8f9920322e295f5a18576a00a7c147f2fb0df017`.
+Eleven backend capabilities remain accepted, including Finance-Lite invoice-evidence
+`67e3346dc93584123885cefb228c960f8940a7f6`; see [committed progress](FINANCE_LITE_IMPLEMENTATION_STATUS.md#overall-committed-capability-progress).
+Finance-Lite remains partial. Current task (§10) is final factory clarification and
+conditional implementation preparation only: [response form](../00-governance/WEIGHBRIDGE_FACTORY_CLARIFICATION.md),
+[plan/contract/DoD](WEIGHBRIDGE_IMPLEMENTATION_PLAN.md). Optional initial atomic ticket
+evidence is preferred, not product-authorized. Factory decisions and explicit Owner
+product gate/unlock approval remain required before implementation. No unlock
+expansion; UAT/deployment and monetary/payment/accounting/correction branches remain separate.
 
 Historical foundation status: the Owner authorized implementation in APR-018 from baseline
 e80a04b15ddf93451cc79ccf81722f564912596d. The recorded canonical grant covers
@@ -325,11 +325,12 @@ unconfirmed. No stock/financial effect or supplier master/approval is introduced
 
 ## 10. Weighbridge adapter and human fallback
 
-- **Current authority/status (2026-10-11):** APR-029 planning-only review complete;
-  candidate implementation BLOCKED / NOT AUTHORIZED. See the
-  [bounded candidate, evidence, risks, acceptance intent and exact questions](WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md).
-  Recommended first candidate is Procurement-owned intake printed-ticket evidence,
-  with commercial/device branches deferred. No twelfth backend capability delivered.
+- **Current authority/status (2026-10-11):** scope review accepted/pushed by Owner;
+  APR-030 authorizes [factory clarification](../00-governance/WEIGHBRIDGE_FACTORY_CLARIFICATION.md)
+  and [conditional contract/DoD preparation](WEIGHBRIDGE_IMPLEMENTATION_PLAN.md) only.
+  Candidate implementation BLOCKED / NOT AUTHORIZED. Owner prefers optional initial
+  atomic Procurement-owned ticket evidence with ordinary receiving unchanged.
+  Factory policy remains pending; no twelfth backend capability delivered.
 - **Objective/dependencies:** attach attributed weight evidence to accepted
   receiving/commercial flows; depends on the consuming domain command and
   integration authorization. Device work can proceed independently when known.

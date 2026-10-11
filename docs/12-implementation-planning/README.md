@@ -3,7 +3,7 @@ id: PHASE-12
 title: Implementation Planning
 phase: 12-implementation-planning
 status: approved
-version: 0.5.0
+version: 0.6.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [PHASE-11, APR-013, APR-014, VAL-P12-HANDOFF-001, ASM-025]
 last_reviewed: 2026-10-11
@@ -14,10 +14,12 @@ supersedes: null
 # Phase 12 — Implementation Planning
 
 Current task authority is
-[APR-029](../00-governance/approved-baselines/APR-029-weighbridge-scope-review.md):
+[APR-030](../00-governance/approved-baselines/APR-030-weighbridge-clarification-preparation.md):
 Finance-Lite invoice evidence is formally Owner-accepted/confirmed pushed as the
-eleventh backend capability; Weighbridge human-ticket/fallback review is authorized
-for planning only. See the [review and decision gate](WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
+eleventh backend capability; Weighbridge human-ticket/fallback review is now
+Owner-accepted/confirmed pushed. Final [factory clarification](../00-governance/WEIGHBRIDGE_FACTORY_CLARIFICATION.md)
+and [conditional contract/DoD preparation](WEIGHBRIDGE_IMPLEMENTATION_PLAN.md) are
+authorized for planning only. See the [accepted scope review](WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
 and [current scope](../00-governance/CURRENT_PHASE.md). No weighbridge implementation
 or gate/unlock expansion is authorized. Architecture baseline
 remains APR-018/e80a04b15ddf93451cc79ccf81722f564912596d. Earlier slice/gate statements

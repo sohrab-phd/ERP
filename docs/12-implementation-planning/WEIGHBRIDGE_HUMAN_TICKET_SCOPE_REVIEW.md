@@ -2,16 +2,26 @@
 id: PLAN-WEIGHBRIDGE-SCOPE-001
 title: Weighbridge human ticket and fallback scope review
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 0.2.0
 owners: [chief-solution-architect, business-process-owner, integration-architect]
-depends_on: [APR-029, APR-021, ADR-0016, GOV-QUESTIONS-001, PLAN-IMPLEMENTATION-BACKLOG-001]
+depends_on: [APR-029, APR-030, APR-021, ADR-0016, GOV-QUESTIONS-001, PLAN-IMPLEMENTATION-BACKLOG-001]
 last_reviewed: 2026-10-11
-approval: APR-029 authorizes review only; candidate implementation approval pending
+approval: APR-030 Owner acceptance of delivered review; candidate implementation approval pending
 supersedes: null
 ---
 
 # Weighbridge — Human Ticket / Fallback Scope Review
+
+Owner formally accepted the delivered review and confirmed push of
+`8f9920322e295f5a18576a00a7c147f2fb0df017` on 2026-10-11; see
+[APR-030](../00-governance/approved-baselines/APR-030-weighbridge-clarification-preparation.md).
+No repeat acceptance is required. The Owner now prefers the optional initial
+atomic intake-ticket direction while withholding implementation approval.
+Current follow-up is the [factory response form](../00-governance/WEIGHBRIDGE_FACTORY_CLARIFICATION.md)
+and [conditional implementation plan](WEIGHBRIDGE_IMPLEMENTATION_PLAN.md); the
+original questions/validation below are the accepted review's historical evidence.
+No actual factory replies have been supplied by that preferred direction.
 
 Review result: **planning complete; implementation BLOCKED and NOT AUTHORIZED**.
 The printed-ticket fallback and existing manual receiving authority are accepted.

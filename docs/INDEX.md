@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.11.0
+version: 0.12.0
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-10-11
@@ -16,6 +16,9 @@ supersedes: null
 ## Current capability decision gate (2026-10-11)
 
 - [Current scope](00-governance/CURRENT_PHASE.md)
+- [Owner scope-review acceptance and clarification-preparation authority](00-governance/approved-baselines/APR-030-weighbridge-clarification-preparation.md)
+- [Factory weighbridge clarification response form](00-governance/WEIGHBRIDGE_FACTORY_CLARIFICATION.md)
+- [Conditional weighbridge implementation contract, blocker map and DoD](12-implementation-planning/WEIGHBRIDGE_IMPLEMENTATION_PLAN.md)
 - [Owner Finance-Lite acceptance and Weighbridge planning-only authority](00-governance/approved-baselines/APR-029-weighbridge-scope-review.md)
 - [Weighbridge human-ticket/fallback scope review and decision questions](12-implementation-planning/WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
 - [Owner Purchasing acceptance and Finance-Lite invoice-evidence authority](00-governance/approved-baselines/APR-028-finance-lite-continuation.md)

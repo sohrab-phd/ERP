@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.48.0
+version: 0.49.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-11
 approval: null
 supersedes: null
@@ -20,23 +20,30 @@ No repeat acceptance is required. Factory UAT and production deployment remain
 separate. Finance-Lite is partial: monetary calculations, payments/allocations,
 external accounting and financial corrections remain deferred.
 
-[APR-029](approved-baselines/APR-029-weighbridge-scope-review.md) authorizes
-**Weighbridge — Human Ticket / Fallback Scope Review only**: requirements,
-policy reconciliation, technical analysis and bounded planning. The
-[review and exact decision questions](../12-implementation-planning/WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
-find unresolved ticket fields/source identity/cardinality, evidence handling and
-ticket-specific access. Existing ACT-WH normal manual receiving policy stays
-approved; physical ticket roles/custody are not inferred from personnel titles.
-OQ-011/OQ-019 remain treating. Automatic device/protocol and commercial-weight
-branches are deferred; no weighing-derived financial or shipment/production effect.
+[APR-030](approved-baselines/APR-030-weighbridge-clarification-preparation.md)
+records formal Owner acceptance and confirmed push of scope-review commit
+`8f9920322e295f5a18576a00a7c147f2fb0df017`. No repeat acceptance is required.
+The current authorized task is **Weighbridge — Final Factory Clarification and
+Bounded Implementation Preparation**, planning only. The Owner prefers optional
+human paper-ticket evidence atomically with normal intake, preferably initially;
+this is NOT final implementation approval or supplied factory policy.
 
-WEIGHBRIDGE_IMPLEMENTATION_AUTHORIZED: `false`. Policy decisions and explicit
-bounded scope approval must precede implementation and a reconciled product
-gate/local unlock. No gate/unlock expansion is made for planning; the existing
-APR-028 product grant covers invoice evidence only. APR-018 architecture is
-unchanged; the explicit APR-029 restriction controls over standing progression
-delegation. Stop at the policy/scope approval gate after the reviewed local
-documentation commit; no remote push or unrelated backlog work.
+The [factory response form](WEIGHBRIDGE_FACTORY_CLARIFICATION.md) separates settled
+facts from pending duties/access, genuine paper fields/material weight, source
+identity/cardinality/reuse, reason/custody and unavailable/disputed/incorrect-record
+procedures. The [conditional plan/DoD](../12-implementation-planning/WEIGHBRIDGE_IMPLEMENTATION_PLAN.md)
+maps those blockers to contracts, invariants and operating procedures. OQ-011/OQ-019
+remain treating. Existing personal organizational ACT-WH/no-ticket receiving and
+whole-kg policy remain approved. Automatic device/commercial branches, corrections,
+attachments/UI and financial effects remain deferred.
+
+WEIGHBRIDGE_IMPLEMENTATION_AUTHORIZED: `false`. Necessary factory answers,
+governance/policy reconciliation and final plan/criteria must precede explicit
+Owner product gate/unlock approval, and all must precede API/SQL/runtime work.
+No gate/unlock expansion for preparation; APR-028 covers invoice evidence only.
+APR-018 architecture remains; APR-030's explicit restriction controls over standing
+progression delegation. Stop after reviewed local documentation commit for genuine
+factory decisions and Owner authorization; no remote push or unrelated backlog work.
 
 ## Prior Finance-Lite delivery authorization (2026-10-10, superseded status)
 

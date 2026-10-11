@@ -3,7 +3,7 @@ id: IMPL-FINANCE-LITE-001
 title: Finance-Lite invoice evidence implementation status
 phase: 12-implementation-planning
 status: accepted
-version: 0.2.0
+version: 0.3.0
 owners: [delivery-lead, chief-solution-architect]
 depends_on: [APR-028, APR-029, PLAN-FINANCE-LITE-001, INV-012, INV-014, INV-015, INV-016]
 last_reviewed: 2026-10-11
@@ -182,9 +182,10 @@ Current project state:
 - Purchasing and issued-invoice evidence support documentary coordination with restricted personal grants.
 - Browser workflows, commercial calculations and payment settlement remain undelivered; factory UAT and production cutover remain separate.
 
-Current authorized next task: [Weighbridge human-ticket/fallback scope review](WEIGHBRIDGE_HUMAN_TICKET_SCOPE_REVIEW.md)
-under APR-029, planning only. Ticket-policy decisions and explicit bounded scope
-approval are required before implementation; protocol details block automation.
+Current authorized planning task: [Weighbridge factory clarification and conditional implementation preparation](WEIGHBRIDGE_IMPLEMENTATION_PLAN.md)
+under APR-030, after Owner acceptance/confirmed push of its scope review. Ticket
+policy, finalized plan and explicit product gate approval are required before
+implementation; protocol details block deferred automation.
 Monetary Finance-Lite/payment allocation requires
 separate business-policy approval. Remaining major areas: those financial branches,
 weighbridge/device adapter, portal visibility/reporting/UI, correction/restore,
