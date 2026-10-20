@@ -3,15 +3,27 @@ id: GOV-WEIGHBRIDGE-CLARIFICATION-001
 title: Factory clarification for incoming weighbridge tickets
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [business-process-owner, project-sponsor]
 depends_on: [APR-030, GOV-QUESTIONS-001, PLAN-WEIGHBRIDGE-SCOPE-001]
-last_reviewed: 2026-10-11
+last_reviewed: 2026-10-20
 approval: Questionnaire only; factory replies and implementation approval pending
 supersedes: null
 ---
 
 # Factory response form — incoming weighbridge tickets
+
+**Historical questionnaire — reassess before further use.** The Owner's
+2026-10-20 [confirmed investigation source](team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)
+now supplies the broader PO/line/multi-arrival/unit workflow and W1/W2/W3 meanings.
+See the [draft baseline](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+and [individual F01–F08 reassessment/remaining questions](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md).
+The original text below is retained as the 2026-10-11 question snapshot; “all
+replies pending” and its ticket-only options are historical, not a current claim
+that the newly confirmed facts are unknown. Do not re-ask settled facts, close
+all items, require a new mandatory fallback reason or use this as implementation
+scope. Separate ticket/device capture remains unauthorized. Step 1 stops for
+Owner review before Step 2; no runtime/grant/gate changes.
 
 Purpose: agree how staff record an existing paper weighing ticket with an incoming
 Goods Receipt. Please answer F01–F08 in order, identify the person supplying each

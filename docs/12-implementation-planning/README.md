@@ -3,17 +3,24 @@ id: PHASE-12
 title: Implementation Planning
 phase: 12-implementation-planning
 status: approved
-version: 0.6.0
+version: 0.7.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [PHASE-11, APR-013, APR-014, VAL-P12-HANDOFF-001, ASM-025]
-last_reviewed: 2026-10-11
+last_reviewed: 2026-10-20
 approval: APR-014
 supersedes: null
 ---
 
 # Phase 12 — Implementation Planning
 
-Current task authority is
+Current task: [APR-031](../00-governance/approved-baselines/APR-031-factory-requirements-step-1.md),
+Step 1 factory purchase/receiving requirements documentation and analysis only.
+See the [draft baseline and field/trace companions](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+and [preliminary reconciliation](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md).
+New factory facts require governance reconciliation; no API/SQL/runtime/grant or
+product gate changes. Stop for Owner review before Step 2. Backend count remains eleven.
+
+Earlier task authority was
 [APR-030](../00-governance/approved-baselines/APR-030-weighbridge-clarification-preparation.md):
 Finance-Lite invoice evidence is formally Owner-accepted/confirmed pushed as the
 eleventh backend capability; Weighbridge human-ticket/fallback review is now

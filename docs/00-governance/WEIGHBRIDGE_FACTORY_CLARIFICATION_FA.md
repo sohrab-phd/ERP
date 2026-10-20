@@ -3,10 +3,10 @@ id: GOV-WEIGHBRIDGE-CLARIFICATION-FA-001
 title: پرسش‌نامه کارخانه درباره قبض‌های باسکول مواد ورودی
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [business-process-owner, project-sponsor]
 depends_on: [GOV-WEIGHBRIDGE-CLARIFICATION-001, APR-030, GOV-QUESTIONS-001, PLAN-WEIGHBRIDGE-SCOPE-001]
-last_reviewed: 2026-10-12
+last_reviewed: 2026-10-20
 approval: Translation only; factory replies and implementation approval pending
 supersedes: null
 language: fa
@@ -14,8 +14,21 @@ language: fa
 
 # فرم پاسخ کارخانه — قبض‌های باسکول مواد ورودی
 
+**پرسش‌نامهٔ تاریخی — پیش از استفادهٔ مجدد بازنگری شود.** اطلاعات تأییدشدهٔ
+مالک پروژه در تاریخ ۲۰۲۶-۱۰-۲۰، فرایند سفارش خرید، ردیف‌ها، چند ورود مستقل،
+واحدهای فیزیکی و معنای سه وزن W1، W2 و W3 را روشن کرده است. برای وضعیت فعلی،
+[منبع بررسی کارخانه](team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)،
+[پیش‌نویس نیازمندی‌ها](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+و [بازنگری جداگانهٔ F01 تا F08 و پرسش‌های باقی‌مانده](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md)
+را ببینید. متن زیر، تصویر تاریخی پرسش‌ها پیش از این اطلاعات است؛ عبارت «هنوز
+پاسخی ثبت نشده» دربارهٔ آن مقطع است. واقعیت‌های اکنون تأییدشده را دوباره نپرسید
+و همهٔ پرسش‌ها را هم بسته تلقی نکنید. طرح قدیمیِ صرفاً مبتنی بر قبض، دامنهٔ فعلی
+پیاده‌سازی نیست. وزن W3 اختیاری است و دلیل جایگزین جدیدی به فهرست ۲۳ فیلد اضافه
+نمی‌شود. ثبت مستقل قبض یا اتصال دستگاه مجاز نشده و کار در گام اولِ مستندسازی،
+پیش از گام دوم و پیاده‌سازی، متوقف می‌ماند.
+
 این فایل ترجمهٔ فارسی [پرسش‌نامهٔ اصلی انگلیسی](WEIGHBRIDGE_FACTORY_CLARIFICATION.md)
-با نسخهٔ 0.1.0 است و برای استفادهٔ کارکنان کارخانه تهیه شده است. متن انگلیسی
+در نسخهٔ تاریخی 0.1.0، با یادداشت بازنگری فوق، است. متن انگلیسی
 مرجع اصلی مستندات پروژه باقی می‌ماند؛ این ترجمه تصمیم یا مجوز جدیدی ایجاد نمی‌کند.
 
 هدف: مشخص شود کارکنان چگونه اطلاعات یک قبض کاغذی موجودِ باسکول را همراه با

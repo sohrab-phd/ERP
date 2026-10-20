@@ -2,12 +2,12 @@
 id: GOV-SOURCES-001
 title: Source Register
 phase: 00-governance
-status: approved
-version: 0.1.0
+status: in_review
+version: 0.2.0
 owners: [chief-solution-architect]
 depends_on: []
-last_reviewed: 2026-09-04
-approval: APR-002
+last_reviewed: 2026-10-20
+approval: APR-002 historical structure; current factual source addition under APR-031
 supersedes: null
 ---
 
@@ -39,6 +39,23 @@ supersedes: null
   `../01-project-assimilation/ARCHITECTURE_ASSIMILATION_REPORT.md`
 - Authority: Derived synthesis; not a substitute for SRC-001 or SRC-002
 - Status: Awaiting Phase 01 approval
+
+## SRC-004 — Owner-confirmed purchase and receiving investigation
+
+- Origin: actual Owner message dated 2026-10-20; confirmed on-site investigation
+  findings, not an agent-fabricated interview or attendance record.
+- Recorded source: [factory workflow and exact 23 fields](team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md).
+- Authority: authoritative business input for this workflow; does not override
+  architecture or authorize runtime/API/SQL/grant/gate changes.
+- Derived draft: [requirements baseline](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md),
+  [field dictionary](../02-domain-business-architecture/PURCHASE_RECEIVING_FIELD_REGISTER.md),
+  [trace](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_TRACE.md),
+  [preliminary reconciliation](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md).
+- Missing evidence: no actual purchase/waybill/receipt/scale document attached;
+  investigation date, formats and unresolved policies are not invented.
+- Current register revision records evidence; it does not approve the derived
+  draft or close the residual OQs. [APR-031](approved-baselines/APR-031-factory-requirements-step-1.md)
+  permits Step 1 documentation/analysis and stop before Step 2.
 
 ## Provenance rules
 

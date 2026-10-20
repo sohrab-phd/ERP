@@ -3,10 +3,10 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.16.0
+version: 0.17.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-10-11
+last_reviewed: 2026-10-20
 approval: null
 supersedes: null
 ---
@@ -788,3 +788,16 @@ review and authorization.
 - Necessary factory answers, reconciled policy/scope, finalized plan/criteria and
   explicit Owner product gate/unlock approval are all required before implementation.
   No gate/unlock expansion, OQ closure, API/SQL/runtime changes or remote push.
+
+### APR-031 — Factory purchase/receiving requirements Step 1
+
+- [Actual Owner task](approved-baselines/APR-031-factory-requirements-step-1.md)
+  provides authoritative business input [SRC-004](team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)
+  on 2026-10-20 and authorizes requirements documentation/analysis only.
+- [Draft baseline and field/trace/reconciliation companions](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+  require Owner review; confirmed facts do not silently replace architecture.
+- No API contracts, code, migration, runtime permission or product gate changes.
+  Independent engineering/architecture review and relevant documentation checks
+  precede a permitted local documentation commit. Stop before Step 2 and implementation.
+- No extra backend capability, prior local-commit acceptance/push, UAT, production
+  approval, invented factory answer or remote push is recorded.

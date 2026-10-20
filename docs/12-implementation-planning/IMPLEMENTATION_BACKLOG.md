@@ -3,21 +3,31 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.5.0
+version: 0.6.0
 owners: [chief-solution-architect]
 depends_on: [ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
-last_reviewed: 2026-10-11
+last_reviewed: 2026-10-20
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
 
-Current direction: [APR-030](../00-governance/approved-baselines/APR-030-weighbridge-clarification-preparation.md),
+Current task: [APR-031](../00-governance/approved-baselines/APR-031-factory-requirements-step-1.md),
+Step 1 purchase/receiving business requirements documentation/analysis only.
+[Draft baseline/23 fields/trace](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+and [preliminary reconciliation/F01–F08 reassessment](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md)
+record new confirmed PO/line/multi-arrival/unit/discrepancy/visibility facts and
+explicit architecture conflicts. The earlier optional ticket plan is on hold for
+reassessment and is not the new workflow's implementation scope. Stop for Owner
+review before Step 2; no API/SQL/runtime/grant/product gate change or new major
+implementation backlog authorization is created.
+
+Historical planning direction: [APR-030](../00-governance/approved-baselines/APR-030-weighbridge-clarification-preparation.md),
 Owner acceptance/confirmed push of scope review `8f9920322e295f5a18576a00a7c147f2fb0df017`.
 Eleven backend capabilities remain accepted, including Finance-Lite invoice-evidence
 `67e3346dc93584123885cefb228c960f8940a7f6`; see [committed progress](FINANCE_LITE_IMPLEMENTATION_STATUS.md#overall-committed-capability-progress).
-Finance-Lite remains partial. Current task (§10) is final factory clarification and
+Finance-Lite remains partial. That earlier task (§10) was final factory clarification and
 conditional implementation preparation only: [response form](../00-governance/WEIGHBRIDGE_FACTORY_CLARIFICATION.md),
 [plan/contract/DoD](WEIGHBRIDGE_IMPLEMENTATION_PLAN.md). Optional initial atomic ticket
 evidence is preferred, not product-authorized. Factory decisions and explicit Owner
@@ -325,6 +335,13 @@ unconfirmed. No stock/financial effect or supplier master/approval is introduced
 
 ## 10. Weighbridge adapter and human fallback
 
+- **Latest evidence (2026-10-20):** SRC-004 and the [Step 1 baseline](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+  show broader operational purchasing/receiving dependencies; W1 accepted per-unit
+  stock, W2 mandatory waybill consignment and W3 optional destination consignment
+  cannot be reduced to an optional printed-ticket extension. [Reassessment](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md)
+  is documentation only. Device/separate ticket capture and all implementation
+  remain unauthorized; Step 2 waits for Owner review. Historical bullets below
+  describe the earlier conditional scope, not approved current implementation.
 - **Current authority/status (2026-10-11):** scope review accepted/pushed by Owner;
   APR-030 authorizes [factory clarification](../00-governance/WEIGHBRIDGE_FACTORY_CLARIFICATION.md)
   and [conditional contract/DoD preparation](WEIGHBRIDGE_IMPLEMENTATION_PLAN.md) only.

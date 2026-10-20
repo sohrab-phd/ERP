@@ -3,15 +3,24 @@ id: PLAN-WEIGHBRIDGE-SCOPE-001
 title: Weighbridge human ticket and fallback scope review
 phase: 12-implementation-planning
 status: accepted
-version: 0.2.0
+version: 0.3.0
 owners: [chief-solution-architect, business-process-owner, integration-architect]
 depends_on: [APR-029, APR-030, APR-021, ADR-0016, GOV-QUESTIONS-001, PLAN-IMPLEMENTATION-BACKLOG-001]
-last_reviewed: 2026-10-11
+last_reviewed: 2026-10-20
 approval: APR-030 Owner acceptance of delivered review; candidate implementation approval pending
 supersedes: null
 ---
 
 # Weighbridge — Human Ticket / Fallback Scope Review
+
+**Historical accepted scope review; newer requirements need reconciliation.**
+The 2026-10-20 [Owner-confirmed investigation](../00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)
+supplies operational PO/line/multi-arrival/unit facts and three distinct weight
+meanings. See the [Step 1 draft baseline](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+and [F01–F08 reassessment](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md).
+The chronology and recommendations below retain their historical acceptance;
+they do not make the old ticket-only candidate sufficient or authorize runtime.
+Step 1 documentation now stops for Owner review before Step 2.
 
 Owner formally accepted the delivered review and confirmed push of
 `8f9920322e295f5a18576a00a7c147f2fb0df017` on 2026-10-11; see

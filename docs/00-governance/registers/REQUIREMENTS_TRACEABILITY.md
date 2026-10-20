@@ -3,15 +3,27 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: in_review
-version: 0.9.1
+version: 0.10.0
 owners: [requirements-owner, qa-architect]
-depends_on: [SRC-001, SRC-002, DOM-MVP-RULES-001, SM-INV-001, APR-005]
-last_reviewed: 2026-10-04
+depends_on: [SRC-001, SRC-002, SRC-004, DOM-MVP-RULES-001, SM-INV-001, APR-005]
+last_reviewed: 2026-10-20
 approval: null
 supersedes: null
 ---
 
 # Requirements Traceability Matrix
+
+## Owner-provided incoming workflow decomposition (2026-10-20)
+
+The Owner now explicitly requests stable requirements from confirmed factory
+input [SRC-004](../team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md), under
+[APR-031 documentation-only authority](../approved-baselines/APR-031-factory-requirements-step-1.md).
+The [bounded field/rule trace](../../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_TRACE.md)
+defines draft REQ-INBOUND-F01–F23 for every factory field and REQ-INBOUND-001–025
+for every confirmed workflow rule, linked to the source and [draft baseline](../../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md).
+This is not a fabricated workshop, TEST catalogue, approved invariant or product
+implementation. Older missing workshop-decomposition statements below remain
+historical; existing requirements/approvals are not retroactively changed.
 
 ## Required trace chain
 

@@ -3,15 +3,28 @@ id: PLAN-WEIGHBRIDGE-IMPLEMENTATION-001
 title: Conditional incoming printed-ticket implementation plan
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [chief-solution-architect, business-process-owner, security-architect]
 depends_on: [APR-030, PLAN-WEIGHBRIDGE-SCOPE-001, GOV-WEIGHBRIDGE-CLARIFICATION-001, APR-021, ADR-0016]
-last_reviewed: 2026-10-11
+last_reviewed: 2026-10-20
 approval: Preparation authorized only; factory policy and explicit product gate approval pending
 supersedes: null
 ---
 
 # Conditional plan — optional incoming printed-ticket evidence
+
+**ON HOLD — historical candidate, not current implementation scope.** New
+2026-10-20 [factory evidence](../00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)
+requires a broader operational purchase/receiving baseline; accepted W1 per-unit
+stock, mandatory W2 and optional W3 differ from the earlier ticket assumptions.
+Use the [Step 1 draft](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+and [reconciliation/F01–F08 analysis](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md).
+The proposed v2/API/schema/DoD and “all F01–F08 pending” text below remain the
+earlier conditional snapshot, not a newly approved contract or current claim.
+Do not apply its mandatory-PO exclusion to the new business requirements or remove
+the existing no-PO/no-ticket runtime. Separate ticket/device capture remains
+unauthorized. Step 1 documentation stops before Step 2 and all implementation;
+no API contract, role or product gate change is made here.
 
 **Implementation BLOCKED / NOT AUTHORIZED.** This is a proposed contract and DoD,
 not a finalized factory policy, active API contract, schema or product unlock.
