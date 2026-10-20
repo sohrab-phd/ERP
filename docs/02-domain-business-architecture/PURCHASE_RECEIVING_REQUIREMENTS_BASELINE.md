@@ -1,24 +1,26 @@
 ---
 id: DOM-INBOUND-REQ-001
-title: Draft authoritative-input purchase and receiving business baseline
+title: Accepted purchase and receiving business requirements baseline
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 0.2.0
 owners: [business-process-owner, chief-solution-architect]
 depends_on: [SRC-004, GOV-CURRENT-001, ADR-0016, APR-027]
 last_reviewed: 2026-10-20
-approval: null
+approval: APR-032
 supersedes: null
 ---
 
-# Draft business requirements — purchase to confirmed warehouse intake
+# Accepted business requirements — purchase to confirmed warehouse intake
 
-**Step 1 only; draft for Owner review.** [SRC-004](../00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)
-records actual Owner-confirmed investigation findings. Those business facts are
-authoritative inputs. This derived document is not yet an Owner-approved
-requirements artifact, an architectural reconciliation, implementation permission,
-factory UAT or production acceptance. It does not accept/push earlier commits on
-the Owner's behalf. Eleven accepted backend capabilities remain; no twelfth is delivered.
+**Step 1 accepted as requirements input for architectural analysis**, per actual
+Owner acceptance/push of `5399e2f74dac0cdcb633e8cadb9a51124a14d0d8` recorded in
+[APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md).
+[SRC-004](../00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)
+remains authoritative business evidence. Acceptance does not approve proposed
+architecture choices, resolve open policies or authorize implementation/UAT/production.
+Requirement rows remain unchanged. The [Step 2 code-grounded analysis](../12-implementation-planning/PURCHASE_RECEIVING_TECHNICAL_GAP_ANALYSIS.md)
+cross-links this baseline; eleven accepted backend capabilities remain.
 
 Bounded goal: accurately register ordered raw materials, receive actual units
 across separate arrivals, preserve discrepancies/origins and provide purchasing
@@ -27,7 +29,7 @@ Ms. Masoumi (ordering/registration and receiving visibility) and Mr. Karimi
 (arrival/physical verification/receiving). Names express factory duties, not software
 grant checks. Prerequisites remain personal Identity, atomic command/audit and sole IPS.
 
-This task's execution plan: record source and exact fields; model the AS-IS process,
+Historical Step 1 execution plan: record source and exact fields; model the AS-IS process,
 weights and relationships; assign traceable requirements; compare actual accepted
 behavior and reassess old F01–F08; independently review, validate and commit docs;
 stop for Owner review before Step 2. Excluded now: code, APIs/contracts, SQL,

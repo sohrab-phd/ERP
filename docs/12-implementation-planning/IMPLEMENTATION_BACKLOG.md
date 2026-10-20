@@ -3,7 +3,7 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.6.0
+version: 0.7.0
 owners: [chief-solution-architect]
 depends_on: [ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-10-20
@@ -13,15 +13,19 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current task: [APR-031](../00-governance/approved-baselines/APR-031-factory-requirements-step-1.md),
-Step 1 purchase/receiving business requirements documentation/analysis only.
-[Draft baseline/23 fields/trace](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+Current task: [APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md),
+Step 1 accepted/push confirmed; Step 2 code-informed gaps and architecture analysis only.
+[Accepted baseline/23 fields/trace](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
 and [preliminary reconciliation/F01–F08 reassessment](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md)
 record new confirmed PO/line/multi-arrival/unit/discrepancy/visibility facts and
 explicit architecture conflicts. The earlier optional ticket plan is on hold for
-reassessment and is not the new workflow's implementation scope. Stop for Owner
-review before Step 2; no API/SQL/runtime/grant/product gate change or new major
-implementation backlog authorization is created.
+reassessment and is not the new workflow's implementation scope. The
+[Step 2 package](PURCHASE_RECEIVING_TECHNICAL_GAP_ANALYSIS.md) maps all 48 requirements,
+open business/design dependencies and two PROPOSED backend increments: operational
+PO/lines/lookup, then coherent receiving/stock/lineage/progress/visibility.
+Stop for Owner review before Step 3; no API/SQL/runtime/grant/dependency/product gate
+change or new implementation backlog authorization is created. Later visibility/UI,
+corrections/restoration, device integration, UAT and production cutover remain tracked.
 
 Historical planning direction: [APR-030](../00-governance/approved-baselines/APR-030-weighbridge-clarification-preparation.md),
 Owner acceptance/confirmed push of scope review `8f9920322e295f5a18576a00a7c147f2fb0df017`.

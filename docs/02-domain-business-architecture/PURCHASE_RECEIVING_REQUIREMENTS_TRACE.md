@@ -1,21 +1,25 @@
 ---
 id: DOM-INBOUND-TRACE-001
-title: Draft purchase and receiving requirement traceability
+title: Accepted purchase and receiving requirement traceability
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 0.2.0
 owners: [business-process-owner, delivery-lead]
 depends_on: [SRC-004, DOM-INBOUND-REQ-001, DOM-INBOUND-FIELDS-001, DOM-INBOUND-RECON-001]
 last_reviewed: 2026-10-20
-approval: null
+approval: APR-032
 supersedes: null
 ---
 
 # Requirements trace — all factory fields and confirmed workflow rules
 
+Step 1 is accepted as requirements input by [APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md).
+All trace rows remain unchanged. The [Step 2 implementation matrix](../12-implementation-planning/PURCHASE_RECEIVING_COVERAGE_MATRIX.md)
+adds verified code/gap/decision/test mapping; it does not approve runtime changes.
+
 Source is the Owner message recorded as [SRC-004](../00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md).
 [Baseline rule IDs](PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md) and
-[field IDs](PURCHASE_RECEIVING_FIELD_REGISTER.md) are stable draft requirement
+[field IDs](PURCHASE_RECEIVING_FIELD_REGISTER.md) are stable accepted requirement
 identifiers; they are not runtime contracts, approved invariants or fabricated
 TEST IDs. This matrix provides later acceptance/test intent only, not executed
 tests. [C/Q references](PURCHASE_RECEIVING_RECONCILIATION.md) identify unresolved

@@ -2,19 +2,23 @@
 id: DOM-INBOUND-RECON-001
 title: Preliminary purchase and receiving architecture reconciliation
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 0.2.0
 owners: [chief-solution-architect, business-process-owner, security-architect]
 depends_on: [SRC-004, DOM-INBOUND-REQ-001, DOM-INBOUND-FIELDS-001, ADR-0016, APR-027, APR-030]
 last_reviewed: 2026-10-20
-approval: null
+approval: APR-032
 supersedes: null
 ---
 
 # Preliminary impacts, conflicts and genuine remaining questions
 
-This is Step 1 analysis accompanying the [draft requirements baseline](PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md).
-It is not Step 2 execution, a new ADR, physical design, API contract, migration,
+This is accepted Step 1 analysis accompanying the [requirements baseline](PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md),
+per [APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md).
+Acceptance covers identified conflicts/questions, not approval of their proposed
+answers. All C/F/Q rows remain unchanged. [Step 2](../12-implementation-planning/PURCHASE_RECEIVING_TECHNICAL_GAP_ANALYSIS.md)
+adds code-grounded impact and [Q1–Q11 disposition](../12-implementation-planning/PURCHASE_RECEIVING_DECISION_REGISTER.md).
+This historical Step 1 record is not a new ADR, physical design, API contract, migration,
 permission change or unlock. [SRC-004](../00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)
 is authoritative business evidence; accepted runtime/architecture remain until
 explicit reconciliation and later authorization. Counts/field facts are in the

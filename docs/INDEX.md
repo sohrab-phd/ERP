@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.13.0
+version: 0.14.0
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-10-20
@@ -13,11 +13,17 @@ supersedes: null
 
 # Architecture Documentation Index
 
-## Current requirements task (2026-10-20)
+## Current purchase/receiving analysis (2026-10-20)
 
+- [Step 1 acceptance and Step 2 analysis-only Owner authority](00-governance/approved-baselines/APR-032-inbound-gap-analysis.md)
+- [Step 2 technical gap analysis and code evidence](12-implementation-planning/PURCHASE_RECEIVING_TECHNICAL_GAP_ANALYSIS.md)
+- [Exact 48-requirement implementation coverage matrix](12-implementation-planning/PURCHASE_RECEIVING_COVERAGE_MATRIX.md)
+- [Proposed architecture impact and transaction options](12-implementation-planning/PURCHASE_RECEIVING_ARCHITECTURE_IMPACT.md)
+- [Open business decisions, Q1–Q11 disposition and technical choices](12-implementation-planning/PURCHASE_RECEIVING_DECISION_REGISTER.md)
+- [Conditional incremental roadmap and Definition of Done](12-implementation-planning/PURCHASE_RECEIVING_DELIVERY_ROADMAP.md)
 - [Step 1 documentation-only Owner authority](00-governance/approved-baselines/APR-031-factory-requirements-step-1.md)
 - [Confirmed investigation source and exact original fields](00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)
-- [Draft purchase-to-receiving business requirements baseline](02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+- [Accepted purchase-to-receiving business requirements baseline](02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
 - [Exact 23-field Persian/English dictionary](02-domain-business-architecture/PURCHASE_RECEIVING_FIELD_REGISTER.md)
 - [Field and workflow requirement traceability](02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_TRACE.md)
 - [Preliminary impacts, genuine questions and F01–F08 reassessment](02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md)

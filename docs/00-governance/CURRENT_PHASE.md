@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.50.0
+version: 0.51.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, SRC-004, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, SRC-004, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-20
 approval: null
 supersedes: null
@@ -13,24 +13,29 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner instruction (2026-10-20), [APR-031](approved-baselines/APR-031-factory-requirements-step-1.md):
-**Step 1 factory purchase/receiving requirements documentation and analysis only.**
+Current Owner instruction (2026-10-20), [APR-032](approved-baselines/APR-032-inbound-gap-analysis.md):
+**Step 1 requirements accepted/push confirmed; Step 2 technical gap analysis and
+architecture impact assessment only.** The Owner accepts all four Step 1 documents
+at `5399e2f74dac0cdcb633e8cadb9a51124a14d0d8` as requirements input, not architecture
+or runtime approval. No repeat Step 1 acceptance is needed.
 [SRC-004](team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md) is authoritative
 business input for PO/item-line/multi-arrival actual-unit receiving, discrepancy
 history, distinct physical codes and purchasing visibility. The [baseline](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md),
 [23-field dictionary](../02-domain-business-architecture/PURCHASE_RECEIVING_FIELD_REGISTER.md),
 [trace](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_TRACE.md)
 and [preliminary reconciliation](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md)
-are drafts for Owner review. W1 accepted per-unit stock basis conflicts with earlier
+are accepted requirements inputs. W1 accepted per-unit stock basis conflicts with earlier
 measured-origin semantics; W2/W3 are consignment evidence, never allocated to units.
 Internal Code uniqueness, receipt grain and new purchasing read authority also need
-explicit reconciliation. No silent architecture override or OQ-wide closure.
+explicit reconciliation. The [Step 2 package](../12-implementation-planning/PURCHASE_RECEIVING_TECHNICAL_GAP_ANALYSIS.md)
+contains DRAFT code-grounded 48-row gaps, architectural options, decision register
+and conditional delivery roadmap. No silent architecture override or OQ-wide closure.
 
 No application/API/API-contract/migration/permission or product gate/unlock changes.
 Existing accepted behavior, no-ticket/potentially no-PO intake, sole IPS, exact kg,
 atomic audit and personal current authorization remain. Earlier ticket documents
 are historical/reassessment inputs, not current implementation scope. Stop after
-reviewed local documentation commit for Owner review; Step 2 and implementation
+reviewed local documentation commit for Owner review; Step 3 and implementation
 require subsequent explicit authorization. No push, UAT or production approval.
 Backend capability count remains eleven. No acceptance/push of the preparation or
 translation commits is inferred from this task.

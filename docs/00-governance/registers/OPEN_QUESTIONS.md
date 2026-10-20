@@ -3,7 +3,7 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: in_review
-version: 0.33.0
+version: 0.34.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
 last_reviewed: 2026-10-20
@@ -22,7 +22,7 @@ original-vs-actual discrepancy history and purchasing-side visibility. W1 accept
 per-unit stock, W2 mandatory waybill consignment net and W3 optional destination
 consignment net are now confirmed meanings, not unanswered alternatives.
 
-[Draft baseline/field trace](../../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+[Accepted baseline/field trace](../../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
 and [remaining questions/F01–F08 mapping](../../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md)
 record what is answered, partly answered, reframed or deferred. Existing OQ-001/
 OQ-011/OQ-019 residual statuses remain treating; OQ-002/OQ-004 architectural
@@ -30,8 +30,12 @@ decisions are not silently rewritten. New W1 provenance/Internal Code/receipt
 grain and read-scope conflicts need explicit reconciliation. Namespace/reuse,
 field 19 meaning, exception/over-delivery/changed-W1 authority and actual formats
 are not invented. OQ-015 legacy/opening-stock and OQ-016 retention residuals stay
-separate. No new OQ identifier or blanket F01–F08 closure. [APR-031](../approved-baselines/APR-031-factory-requirements-step-1.md)
-authorizes Step 1 documentation only, not Step 2, runtime or product gate changes.
+separate. No new OQ identifier or blanket F01–F08 closure.
+[APR-032](../approved-baselines/APR-032-inbound-gap-analysis.md) accepts Step 1 and
+authorizes Step 2 code-informed analysis only. Its [decision register](../../12-implementation-planning/PURCHASE_RECEIVING_DECISION_REGISTER.md)
+disposes Q1–Q11 into confirmed/governed facts, B01–B10 business residuals, D01–D08
+technical choices and deferrals. None is a new factory answer or OQ closure.
+Step 3, runtime and product gate changes remain unauthorized.
 
 APR-005 remains historical approval evidence. This 0.29.0 revision records
 delegated pre-implementation blocking-scope classification, now under ADR-0012;

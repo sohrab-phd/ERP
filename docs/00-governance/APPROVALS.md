@@ -3,7 +3,7 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.17.0
+version: 0.18.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-10-20
@@ -801,3 +801,16 @@ review and authorization.
   precede a permitted local documentation commit. Stop before Step 2 and implementation.
 - No extra backend capability, prior local-commit acceptance/push, UAT, production
   approval, invented factory answer or remote push is recorded.
+
+### APR-032 — Step 1 acceptance and Step 2 technical analysis only
+
+- [Actual Owner acceptance/authority](approved-baselines/APR-032-inbound-gap-analysis.md)
+  confirms push of `5399e2f74dac0cdcb633e8cadb9a51124a14d0d8` and accepts all four
+  Step 1 documents as requirements input for architectural analysis. No repeat approval.
+- Authorizes [Step 2 code-informed gaps/architecture/security analysis](../12-implementation-planning/PURCHASE_RECEIVING_TECHNICAL_GAP_ANALYSIS.md),
+  exact 48-row matrix, Q1–Q11 disposition, conditional roadmap, independent reviews,
+  relevant documentation checks and local documentation commit only.
+- Resulting options remain DRAFT / PROPOSED. No runtime/SQL/API-contract/grant,
+  dependency or product gate/unlock change. Stop before Step 3 and implementation;
+  explicit next authorization required. No remote push, UAT or production approval.
+  Eleven accepted backend capabilities and unresolved policy residuals remain.

@@ -3,7 +3,7 @@ id: PHASE-12
 title: Implementation Planning
 phase: 12-implementation-planning
 status: approved
-version: 0.7.0
+version: 0.8.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [PHASE-11, APR-013, APR-014, VAL-P12-HANDOFF-001, ASM-025]
 last_reviewed: 2026-10-20
@@ -13,12 +13,15 @@ supersedes: null
 
 # Phase 12 — Implementation Planning
 
-Current task: [APR-031](../00-governance/approved-baselines/APR-031-factory-requirements-step-1.md),
-Step 1 factory purchase/receiving requirements documentation and analysis only.
-See the [draft baseline and field/trace companions](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
+Current task: [APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md),
+Step 1 accepted/push confirmed; Step 2 technical gap/architecture analysis only.
+See the [accepted baseline and field/trace companions](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
 and [preliminary reconciliation](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md).
 New factory facts require governance reconciliation; no API/SQL/runtime/grant or
-product gate changes. Stop for Owner review before Step 2. Backend count remains eleven.
+product gate changes. The [Step 2 package](PURCHASE_RECEIVING_TECHNICAL_GAP_ANALYSIS.md)
+contains code evidence, all 48 requirements, architecture/security/transaction impact,
+OPEN decisions and a conditional roadmap. Stop before Step 3; detailed design and
+implementation need new explicit authorization. Backend count remains eleven.
 
 Earlier task authority was
 [APR-030](../00-governance/approved-baselines/APR-030-weighbridge-clarification-preparation.md):

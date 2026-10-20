@@ -1,17 +1,22 @@
 ---
 id: DOM-INBOUND-FIELDS-001
-title: Draft factory purchase and receiving 23-field dictionary
+title: Accepted factory purchase and receiving 23-field dictionary
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 0.2.0
 owners: [business-process-owner, data-architect]
 depends_on: [SRC-004, DOM-INBOUND-REQ-001]
 last_reviewed: 2026-10-20
-approval: null
+approval: APR-032
 supersedes: null
 ---
 
-# Draft 23-field business dictionary
+# Accepted 23-field business dictionary
+
+Accepted as Step 1 requirements input under [APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md),
+not approval of proposed ownership/schema choices or unresolved policy. All field
+rows remain unchanged; [Step 2 coverage](../12-implementation-planning/PURCHASE_RECEIVING_COVERAGE_MATRIX.md)
+records actual implementation gaps without replacing this dictionary.
 
 Source: [SRC-004](../00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md).
 Every Persian label below preserves the Owner's spelling. English text is an

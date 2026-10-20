@@ -3,7 +3,7 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: in_review
-version: 0.10.0
+version: 0.11.0
 owners: [requirements-owner, qa-architect]
 depends_on: [SRC-001, SRC-002, SRC-004, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-10-20
@@ -19,8 +19,12 @@ The Owner now explicitly requests stable requirements from confirmed factory
 input [SRC-004](../team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md), under
 [APR-031 documentation-only authority](../approved-baselines/APR-031-factory-requirements-step-1.md).
 The [bounded field/rule trace](../../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_TRACE.md)
-defines draft REQ-INBOUND-F01–F23 for every factory field and REQ-INBOUND-001–025
-for every confirmed workflow rule, linked to the source and [draft baseline](../../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md).
+defines REQ-INBOUND-F01–F23 for every factory field and REQ-INBOUND-001–025
+for every confirmed workflow rule, linked to the source and [accepted baseline](../../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md).
+[APR-032](../approved-baselines/APR-032-inbound-gap-analysis.md) records Step 1
+acceptance and Step 2 analysis-only authority. The [48-row implementation coverage](../../12-implementation-planning/PURCHASE_RECEIVING_COVERAGE_MATRIX.md)
+adds actual code/status/gap, separate policy/design gates, proposed increment and
+future acceptance obligations; it does not replace the accepted requirement rows.
 This is not a fabricated workshop, TEST catalogue, approved invariant or product
 implementation. Older missing workshop-decomposition statements below remain
 historical; existing requirements/approvals are not retroactively changed.
