@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.52.0
+version: 0.53.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, SRC-004, SRC-005, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, SRC-004, SRC-005, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-20
 approval: null
 supersedes: null
@@ -13,7 +13,32 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner instruction (2026-10-20), [APR-033](approved-baselines/APR-033-i1-policy-clarification.md):
+Current Owner instruction (2026-10-20), [APR-034](approved-baselines/APR-034-i1-detailed-design.md):
+**STEP 3 — DETAILED TECHNICAL DESIGN OF I1 ONLY is explicitly authorized.**
+The Owner references local policy/readiness commit
+`38cb85558e7dbc2c02d06fc91f6b99b08e8d925f`; no remote push or extra acceptance is
+inferred. Step 2 analysis remains accepted under APR-033. Confirmed policy remains
+SRC-004/SRC-005: factory-wide PO identity, m/mm/m, Jalali registration date and
+three shared extensible catalogues with addition/selection by both personal org
+ACT-PROC/ACT-WH. No reopening those facts or blanket I2/OQ resolution.
+
+The [six-file I1 detailed design package](../12-implementation-planning/I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
+specifies separate immutable operational order/lines and references, proposed
+commands/queries, PostgreSQL/atomic transactions, narrow role reads, exact values,
+calendar profile and future acceptance. All fourteen technical decisions remain
+DRAFT / PROPOSED / OWNER ACCEPTANCE REQUIRED. Technical bounds/equality/calendar
+horizon and a DB completeness guard are proposals, not factory-confirmed policy.
+
+No application/test code, executable API/domain contract or SQL migration file,
+runtime permission, Inventory enum, IPS/Goods Receipt behavior, dependency or
+product gate/unlock changes. No I2 implementation/final detailed design, browser
+UI/deployment, UAT/production approval or remote push. Stop after reviewed/validated
+local documentation delivery. Owner design acceptance and separate bounded
+implementation authorization must precede runtime work. Backend count stays eleven.
+
+## Earlier policy/readiness scope (historical, before Step 3)
+
+Prior Owner instruction (2026-10-20), [APR-033](approved-baselines/APR-033-i1-policy-clarification.md):
 **Step 2 analysis accepted; focused I1 policy documentation and readiness only.**
 Accepted local commit `b8666b76602f2d002c4cacc5e8b689fe0130fb24` is NOT confirmed
 pushed. Acceptance approves analysis, not proposed design/runtime choices.

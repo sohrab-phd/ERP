@@ -3,7 +3,7 @@ id: DOM-INBOUND-POLICY-001
 title: Confirmed I1 Owner policy amendment and readiness assessment
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [business-process-owner, chief-solution-architect, security-architect]
 depends_on: [APR-033, SRC-005, DOM-INBOUND-REQ-001, DOM-INBOUND-FIELDS-001, DOM-INBOUND-TRACE-001]
 last_reviewed: 2026-10-20
@@ -12,6 +12,13 @@ supersedes: null
 ---
 
 # Confirmed policy amendment and I1 readiness — documentation only
+
+Subsequent scope update: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
+now explicitly authorizes Step 3 I1 detailed design. The [six-file technical proposal](../12-implementation-planning/I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
+is for Owner review, not implementation. Policy facts and S01–S12 rows below are
+unchanged; the readiness/stop statements describe this amendment's earlier delivery
+at local38cb855 before that new design authorization. Sources/remote status remain
+unchanged, and no technical choice is thereby approved.
 
 Business facts below are **OWNER CONFIRMED** by subsequent [SRC-005](../00-governance/team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md)
 and [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md).

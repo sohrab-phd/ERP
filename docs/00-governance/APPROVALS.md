@@ -3,7 +3,7 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.19.0
+version: 0.20.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-10-20
@@ -830,3 +830,19 @@ review and authorization.
   and live roadmap/register record the bounded update. Stop before Step 3 and any
   runtime/API/SQL/permission/enum/catalogue/IPS/gate change. No remote push, UAT,
   production approval or twelfth backend capability.
+
+### APR-034 — Explicit Step 3 I1 detailed-design authorization only
+
+- [Actual Owner authorization](approved-baselines/APR-034-i1-detailed-design.md)
+  explicitly permits detailed technical DESIGN of I1 after review of policy/readiness
+  at local `38cb85558e7dbc2c02d06fc91f6b99b08e8d925f`. Push is not confirmed; no
+  additional acceptance or remote status is invented. APR-033 Step 2 acceptance stands.
+- [Six-file design package](../12-implementation-planning/I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
+  covers domain/data, proposed commands/queries, PostgreSQL/transactions, security,
+  requirements-linked future acceptance and decisions/risks. Every new technical
+  choice remains PROPOSED and requires Owner acceptance before implementation.
+- Scope includes independent architecture/security review, documentation checks
+  and local documentation commit only. No runtime/test code, executable migration/
+  contract/permission, enum, IPS/receipt, dependency or product gate/unlock change;
+  no final I2 design, UI/deployment, push or twelfth capability. Stop for Owner
+  design review and separate bounded implementation authorization.

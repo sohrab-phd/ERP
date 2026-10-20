@@ -3,7 +3,7 @@ id: PHASE-12
 title: Implementation Planning
 phase: 12-implementation-planning
 status: approved
-version: 0.9.0
+version: 0.10.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [PHASE-11, APR-013, APR-014, VAL-P12-HANDOFF-001, ASM-025]
 last_reviewed: 2026-10-20
@@ -13,7 +13,17 @@ supersedes: null
 
 # Phase 12 — Implementation Planning
 
-Current task: [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md),
+Current task: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md),
+Step 3 detailed technical DESIGN of I1 only. The [six-file package](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
+covers separate immutable operational orders/lines, both-role shared reference
+catalogues, proposed API/SQL/transactions/security and 60-ID future acceptance.
+All technical choices are PROPOSED / OWNER ACCEPTANCE REQUIRED. No implementation,
+executable migration/contract/test/permission, enum/IPS change, I2 final design,
+UI/deployment or product gate/unlock expansion. Stop for Owner design review and
+separate bounded implementation authority; eleven backend capabilities remain.
+Latest referenced local38cb855 has no confirmed remote push.
+
+Previous task: [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md),
 Step 2 analysis accepted at local b8666b7, push unconfirmed; focused I1 policy
 documentation and readiness only. The [subsequent policy amendment](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
 records resolved factory-wide PO identity, units/Jalali date, shared extensible

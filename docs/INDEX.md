@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.15.0
+version: 0.16.0
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-10-20
@@ -15,6 +15,13 @@ supersedes: null
 
 ## Current purchase/receiving analysis (2026-10-20)
 
+- [Step 3 I1 detailed-design-only Owner authority](00-governance/approved-baselines/APR-034-i1-detailed-design.md)
+- [I1 domain model and exact twelve-field design](12-implementation-planning/I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
+- [I1 proposed command/query/HTTP contracts](12-implementation-planning/I1_PURCHASE_ORDER_API_DESIGN.md)
+- [I1 proposed PostgreSQL, locks and transaction design](12-implementation-planning/I1_PURCHASE_ORDER_DATABASE_DESIGN.md)
+- [I1 security matrix and narrow scoped reads](12-implementation-planning/I1_PURCHASE_ORDER_SECURITY_DESIGN.md)
+- [I1 acceptance cases and complete 60-ID scope trace](12-implementation-planning/I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md)
+- [I1 fourteen technical proposals, risks and review record](12-implementation-planning/I1_PURCHASE_ORDER_DECISIONS.md)
 - [Step 2 acceptance and focused I1 policy-only Owner authority](00-governance/approved-baselines/APR-033-i1-policy-clarification.md)
 - [Subsequent Owner clarification, separate from SRC-004](00-governance/team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md)
 - [Confirmed I1 policy amendment, 12 supplemental requirements and readiness](02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)

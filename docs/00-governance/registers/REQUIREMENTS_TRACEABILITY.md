@@ -3,7 +3,7 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: in_review
-version: 0.12.0
+version: 0.13.0
 owners: [requirements-owner, qa-architect]
 depends_on: [SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-10-20
@@ -12,6 +12,17 @@ supersedes: null
 ---
 
 # Requirements Traceability Matrix
+
+## Proposed I1 detailed acceptance trace (2026-10-20)
+
+Under [APR-034](../approved-baselines/APR-034-i1-detailed-design.md), the
+[I1 detailed acceptance specification](../../12-implementation-planning/I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md)
+maps every original workflow001–025, fieldF01–F23 and supplementalS01–S12 ID: sixty
+unique rows, explicitly separating I1 outcomes/prerequisites/guards from undelivered
+I2 obligations. A01–A28 are local proposed case labels, not executed tests or new
+factory requirements. All twelve Masoumi fields preserve exact names/requiredness;
+no original23-field/25-rule ID is renumbered. [Fourteen technical proposals](../../12-implementation-planning/I1_PURCHASE_ORDER_DECISIONS.md)
+remain for Owner acceptance. No API/SQL/runtime/gate or backend-capability change.
 
 ## Subsequent I1 policy amendment (2026-10-20)
 

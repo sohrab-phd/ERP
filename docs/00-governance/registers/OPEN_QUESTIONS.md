@@ -3,7 +3,7 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: in_review
-version: 0.35.0
+version: 0.36.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
 last_reviewed: 2026-10-20
@@ -12,6 +12,17 @@ supersedes: null
 ---
 
 # Open Questions Register
+
+## Current I1 detailed-design boundary (2026-10-20)
+
+[APR-034](../approved-baselines/APR-034-i1-detailed-design.md) explicitly authorizes
+Step 3 I1 design only. The [proposed technical decision/risk log](../../12-implementation-planning/I1_PURCHASE_ORDER_DECISIONS.md)
+records fourteen Owner-acceptance choices, not new factory answers. No demonstrated
+missing I1 business policy; exact equality, numeric/text/resource bounds, Jalali
+finite profile and integrity/transaction mechanisms require design acceptance.
+Do not reopen resolved B01/B07/B08 facts. I2 B02–B09 residuals, technical mapping,
+OQ-011/OQ-019 and other recorded statuses remain open/treating at their dependent
+scope. No blanket closure, final I2 design, runtime implementation or gate change.
 
 ## Subsequent I1 policy decisions (2026-10-20)
 

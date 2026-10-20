@@ -3,7 +3,7 @@ id: PLAN-INBOUND-GAP-001
 title: Purchase and receiving Step 2 technical gap analysis
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [APR-032, SRC-004, DOM-INBOUND-REQ-001, DOM-INBOUND-FIELDS-001, DOM-INBOUND-TRACE-001, DOM-INBOUND-RECON-001]
 last_reviewed: 2026-10-20
@@ -12,6 +12,12 @@ supersedes: null
 ---
 
 # Step 2 technical gap analysis — DRAFT / NOT AUTHORIZED FOR IMPLEMENTATION
+
+Current scope update: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
+explicitly authorizes Step 3 detailed design of I1 only. The [six-file proposed
+design package](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md) cross-links this actual-code
+evidence; older readiness/stop statements below are historical. No implementation,
+product gate or I2 final-design authority follows. Runtime observations are unchanged.
 
 Subsequent status: [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md)
 records Owner acceptance of the v0.1 Step 2 analysis at

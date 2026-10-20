@@ -3,7 +3,7 @@ id: PLAN-INBOUND-ROADMAP-001
 title: Purchase and receiving proposed incremental delivery and Definition of Done
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [delivery-lead, chief-solution-architect, business-process-owner]
 depends_on: [APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-10-20
@@ -12,6 +12,13 @@ supersedes: null
 ---
 
 # Delivery strategy — PROPOSED / NOT AUTHORIZED
+
+Current step: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
+authorizes I1 detailed design only. Its [domain/API/DB/security/test/risk package](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
+is DRAFT / PROPOSED and concretizes this roadmap without authorizing implementation
+or final I2 design. The [fourteen technical choices](I1_PURCHASE_ORDER_DECISIONS.md)
+and [60-ID acceptance scope trace](I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md) await Owner
+review; no runtime behavior, gate or backend capability changes.
 
 Step 2 v0.1 analysis at `b8666b76602f2d002c4cacc5e8b689fe0130fb24` is Owner
 accepted; push unconfirmed. Subsequent [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md)
@@ -34,9 +41,9 @@ later scope decision. No completion percentage or new implemented capability is 
    business-policy blocker. Keep technical representation/identity/class separation
    as DESIGN REQUIRED. Resolve only I2 business residuals before their affected
    design/stock scope; B10 linking can be explicitly deferred.
-2. **Only after explicit Owner Step 3 authorization**, prepare affected detailed
-   owner contracts, version/admission, data/transaction/lock/read design and final
-   acceptance criteria. Required business decisions must precede their finalization.
+2. Explicit Owner Step 3 authorization is now recorded in APR-034 for I1 only.
+   Its detailed contracts/data/transaction/lock/read and acceptance specifications
+   are proposed for Owner review; affected I2 decisions/contracts remain separate.
 3. Owner explicitly approves a bounded implementation scope and applicable product
    gate/unlock. Step 2 acceptance alone will not grant implementation authority.
 4. Deliver I1, then I2 as separate coherent backend increments with relevant tests,
@@ -73,8 +80,8 @@ addition/selection. DESIGN REQUIRED: exact numeric/date representation, catalogu
 identity/duplicate admission, distinct repeated lines, historical value preservation
 and separation from technical material class. No I1 requirement to finalize I2
 mapping, F19, truck grain, exceptions or device protocols. B10 historical links
-remain excluded unless approved. Step 3 and implementation still require their
-explicit authorizations; technical contracts have not been finalized.
+remain excluded unless approved. Step 3 design is now authorized; its technical
+contracts remain proposed, and implementation still requires separate authorization.
 
 Likely affected later: Procurement owner contracts/service/store/transport and additive
 persistence, composition policy/admission and owner boundary checks. Shared reference
@@ -247,10 +254,9 @@ architecture/security review and documentation/source/link/diff checks. It requi
 no runtime test execution for Markdown-only edits and approves no runtime behavior.
 The accompanying technical-gap report records actual reviews/checks and limitations.
 
-Step 2 is accepted as analysis; remote push remains unconfirmed. I1 is READY FOR
-OWNER AUTHORIZATION OF STEP 3, with no demonstrated remaining I1 business-policy
-blocker and explicit technical design obligations. The next action is Owner review
-of the focused policy/readiness update, then a separate bounded Step 3 instruction
-if desired. I2 still requires its scoped decisions. This roadmap's technical
-choices remain DRAFT / PROPOSED, with neither detailed design nor implementation
-authorized by acceptance or readiness.
+Step 2 is accepted as analysis; remote push remains unconfirmed. APR-034 authorizes
+I1 detailed design, now in the linked proposed package. No demonstrated missing I1
+business policy remains; all selected technical limits/equality/calendar/transaction
+choices require Owner acceptance. The next action is Owner design review, then
+separate bounded implementation authorization if desired. I2 still requires its
+scoped decisions and is not made ready by I1 design. No implementation is authorized.

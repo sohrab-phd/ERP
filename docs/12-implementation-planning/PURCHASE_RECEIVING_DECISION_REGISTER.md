@@ -3,15 +3,23 @@ id: PLAN-INBOUND-DECISIONS-001
 title: Purchase and receiving Step 2 policy and design register
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [business-process-owner, chief-solution-architect, security-architect]
-depends_on: [APR-032, APR-033, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001]
+depends_on: [APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
 last_reviewed: 2026-10-20
 approval: null
 supersedes: null
 ---
 
 # Policy and design register — resolved business portions and OPEN residuals
+
+Current authority [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
+explicitly authorizes Step 3 I1 design only. The [six-file detailed proposal](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
+now addresses I1 portions of D01/D02/D05/D06/D08/D09/D10 and relevant envelope/
+compatibility boundaries through [I1-D01–I1-D14](I1_PURCHASE_ORDER_DECISIONS.md).
+Their state is **DESIGN PROPOSED — OWNER ACCEPTANCE REQUIRED**, not approved
+contracts or implemented/resolved runtime work. I2 portions of D01–D10 and B02–B09
+remain open at their actual dependent scope. No source/field requirement is changed.
 
 Step 2 v0.1 analysis at `b8666b76602f2d002c4cacc5e8b689fe0130fb24` is formally
 Owner accepted; push is unconfirmed. [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md)
@@ -101,10 +109,12 @@ remain DEFERRED / NOT AUTHORIZED. OQ-011/OQ-019 and residuals remain open/treati
 F01–F08 partial answers are in the accepted Step 1 reconciliation and are not
 blanket closure. No tolerance, invoice amount or settlement rule is introduced.
 
-Step 2 analysis is Owner accepted; push unconfirmed. I1 is **READY FOR OWNER
-AUTHORIZATION OF STEP 3**, with technical design still required and no demonstrated
-remaining I1 business-policy blocker. The broader I2 design cannot be finalized
-without its scoped residuals/reconciliation. Step 3 itself remains **NOT AUTHORIZED**.
+Step 2 analysis is Owner accepted; push unconfirmed. Step 3 I1 detailed design is
+now explicitly authorized by APR-034 and documented as PROPOSED, with no demonstrated
+missing I1 business policy. The broader I2 design cannot be finalized without its
+scoped residuals/reconciliation. I1 requires Owner review/acceptance of technical
+choices and separate bounded implementation authorization; implementation remains
+NOT AUTHORIZED. No new approved ADR, contract or gate is published.
 Later implementation additionally needs finalized plan/criteria and explicit
 bounded product approval and applicable gate/unlock reconciliation. No tool or
 successful documentation review provides that authority.
