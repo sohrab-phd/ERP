@@ -3,15 +3,28 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: in_review
-version: 0.11.0
+version: 0.12.0
 owners: [requirements-owner, qa-architect]
-depends_on: [SRC-001, SRC-002, SRC-004, DOM-MVP-RULES-001, SM-INV-001, APR-005]
+depends_on: [SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-10-20
 approval: null
 supersedes: null
 ---
 
 # Requirements Traceability Matrix
+
+## Subsequent I1 policy amendment (2026-10-20)
+
+[SRC-005](../team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md) supplies new
+Owner decisions under [APR-033](../approved-baselines/APR-033-i1-policy-clarification.md).
+The [supplemental policy trace](../../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+defines REQ-INBOUND-S01–S12 for factory-wide PO identity, units/Jalali date,
+three shared extensible lists, both-role addition/selection, scoped reuse/creation
+integrity, authority separation, technical-class reconciliation, historical values
+and core I1 access. Each maps to source, original requirements, I1/I2 boundary and
+future acceptance. This supplements the original 48 entries without renumbering
+25 workflow rules or changing the exact 23-field register/actor assignments.
+No new mandatory factory field, runtime feature or executed test is claimed.
 
 ## Owner-provided incoming workflow decomposition (2026-10-20)
 

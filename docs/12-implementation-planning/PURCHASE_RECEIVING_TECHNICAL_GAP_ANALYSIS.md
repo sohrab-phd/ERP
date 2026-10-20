@@ -3,7 +3,7 @@ id: PLAN-INBOUND-GAP-001
 title: Purchase and receiving Step 2 technical gap analysis
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [APR-032, SRC-004, DOM-INBOUND-REQ-001, DOM-INBOUND-FIELDS-001, DOM-INBOUND-TRACE-001, DOM-INBOUND-RECON-001]
 last_reviewed: 2026-10-20
@@ -12,6 +12,18 @@ supersedes: null
 ---
 
 # Step 2 technical gap analysis — DRAFT / NOT AUTHORIZED FOR IMPLEMENTATION
+
+Subsequent status: [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md)
+records Owner acceptance of the v0.1 Step 2 analysis at
+`b8666b76602f2d002c4cacc5e8b689fe0130fb24`; remote push is unconfirmed. Acceptance
+does not approve proposed technical choices. The separate [SRC-005 policy amendment
+and I1 readiness assessment](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+resolves the specified B01/B07/B08 portions, requires both-role extensible catalogue
+addition and adds 12 supplemental requirements. I1 is ready for explicit Step 3
+authorization, with technical design required; Step 3 remains unauthorized.
+The code catalogue and dated review/check evidence below describe the accepted
+Step 2 snapshot, not a fresh product test or current-policy blocker list. Current
+business disposition is in the updated decision register; I2 residuals stay open.
 
 Analysis baseline: actual working repository at accepted/pushed Step 1 commit
 `5399e2f74dac0cdcb633e8cadb9a51124a14d0d8`. The Owner accepts all four Step 1

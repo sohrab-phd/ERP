@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.14.0
+version: 0.15.0
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-10-20
@@ -15,6 +15,9 @@ supersedes: null
 
 ## Current purchase/receiving analysis (2026-10-20)
 
+- [Step 2 acceptance and focused I1 policy-only Owner authority](00-governance/approved-baselines/APR-033-i1-policy-clarification.md)
+- [Subsequent Owner clarification, separate from SRC-004](00-governance/team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md)
+- [Confirmed I1 policy amendment, 12 supplemental requirements and readiness](02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
 - [Step 1 acceptance and Step 2 analysis-only Owner authority](00-governance/approved-baselines/APR-032-inbound-gap-analysis.md)
 - [Step 2 technical gap analysis and code evidence](12-implementation-planning/PURCHASE_RECEIVING_TECHNICAL_GAP_ANALYSIS.md)
 - [Exact 48-requirement implementation coverage matrix](12-implementation-planning/PURCHASE_RECEIVING_COVERAGE_MATRIX.md)

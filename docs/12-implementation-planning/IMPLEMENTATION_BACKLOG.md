@@ -3,7 +3,7 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.7.0
+version: 0.8.0
 owners: [chief-solution-architect]
 depends_on: [ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-10-20
@@ -13,7 +13,20 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current task: [APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md),
+Current task: [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md),
+Step 2 analysis accepted at local b8666b7; push unconfirmed. Focused documentation
+and I1 readiness only. [SRC-005 / policy amendment](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+resolves the specified B01/B07/B08 business portions and adds 12 supplemental
+requirements: I1 includes operational orders/lines/lookup PLUS shared extensible
+Material Type/Quality/Color add/select by BOTH ACT-PROC and ACT-WH. No third-party
+approval or extra register field; catalogue addition is distinct from PO editing,
+B06 acceptance and stock. Technical-class separation, exact representation and
+catalogue identity/races remain design work, mapping before I2 stock.
+I1 is ready for explicit Owner Step 3 authorization with no demonstrated business
+blocker; Step 3 and implementation remain unauthorized. No runtime/grant/enum/gate
+change or additional backend capability. All I2-only residuals remain scoped open.
+
+Previous task authority: [APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md),
 Step 1 accepted/push confirmed; Step 2 code-informed gaps and architecture analysis only.
 [Accepted baseline/23 fields/trace](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
 and [preliminary reconciliation/F01–F08 reassessment](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md)

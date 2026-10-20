@@ -3,7 +3,7 @@ id: PHASE-12
 title: Implementation Planning
 phase: 12-implementation-planning
 status: approved
-version: 0.8.0
+version: 0.9.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [PHASE-11, APR-013, APR-014, VAL-P12-HANDOFF-001, ASM-025]
 last_reviewed: 2026-10-20
@@ -13,7 +13,16 @@ supersedes: null
 
 # Phase 12 — Implementation Planning
 
-Current task: [APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md),
+Current task: [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md),
+Step 2 analysis accepted at local b8666b7, push unconfirmed; focused I1 policy
+documentation and readiness only. The [subsequent policy amendment](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+records resolved factory-wide PO identity, units/Jalali date, shared extensible
+lists and BOTH roles' add/select authority. The [updated roadmap](PURCHASE_RECEIVING_DELIVERY_ROADMAP.md)
+includes both-role catalogue capability in I1. No demonstrated I1 business-policy
+blocker remains for detailed design; technical choices/I2 residuals stay separate.
+Step 3 remains unauthorized. No implementation, gate change or twelfth capability.
+
+Previous authority: [APR-032](../00-governance/approved-baselines/APR-032-inbound-gap-analysis.md),
 Step 1 accepted/push confirmed; Step 2 technical gap/architecture analysis only.
 See the [accepted baseline and field/trace companions](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
 and [preliminary reconciliation](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md).

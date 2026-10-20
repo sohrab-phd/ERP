@@ -3,7 +3,7 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: in_review
-version: 0.34.0
+version: 0.35.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
 last_reviewed: 2026-10-20
@@ -13,7 +13,27 @@ supersedes: null
 
 # Open Questions Register
 
-## Current factory purchase/receiving evidence (2026-10-20)
+## Subsequent I1 policy decisions (2026-10-20)
+
+[SRC-005](../team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md) and
+[APR-033](../approved-baselines/APR-033-i1-policy-clarification.md) record Step 2
+analysis acceptance (local b8666b7, push unconfirmed) and scoped B01/B07/B08 answers.
+PO references are factory-wide unique regardless of supplier; width m, thickness
+mm and optional length m; registration date Jalali only; Material Type/Quality/Color
+are REQUIRED extensible lists with addition/selection by BOTH personal org ACT-PROC
+and ACT-WH. PROC operational register/read and WH number lookup/original specs are
+confirmed I1 policy, not questions to reopen or executable role changes.
+
+The [current decision breakdown](../../12-implementation-planning/PURCHASE_RECEIVING_DECISION_REGISTER.md)
+keeps non-PO identity, I2 receiving/exception/source and sensitive-field residuals
+OPEN. Catalogue addition does not permit PO editing, B06 unordered-goods acceptance,
+stock or technical-class administration. [Readiness assessment](../../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+finds no demonstrated I1 business blocker; remaining exact representation, duplicate/
+equivalence, repeated-line identity and technical-class separation are design work.
+OQ-011/OQ-019 and other residual row statuses remain treating, not broadly closed.
+SRC-004 is unchanged. Step 3 remains unauthorized; no runtime or gate changes.
+
+## Earlier factory purchase/receiving evidence (2026-10-20)
 
 [SRC-004](../team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md) supplies actual
 Owner-confirmed PO/line/multi-arrival receiving duties, the exact 23 fields,

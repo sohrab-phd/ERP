@@ -3,15 +3,22 @@ id: PLAN-INBOUND-ROADMAP-001
 title: Purchase and receiving proposed incremental delivery and Definition of Done
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, chief-solution-architect, business-process-owner]
-depends_on: [APR-032, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-10-20
 approval: null
 supersedes: null
 ---
 
 # Delivery strategy — PROPOSED / NOT AUTHORIZED
+
+Step 2 v0.1 analysis at `b8666b76602f2d002c4cacc5e8b689fe0130fb24` is Owner
+accepted; push unconfirmed. Subsequent [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md)
+confirms B01 PO, specified B07 units/Jalali/reference lists and B08 core operations.
+These business requirements are settled. The [12 supplemental requirements and
+readiness analysis](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+update this roadmap; proposed technical delivery choices remain unapproved.
 
 This is Step 2 analysis, not Step 3 detailed design or a published command/schema.
 The [48-row coverage matrix](PURCHASE_RECEIVING_COVERAGE_MATRIX.md) binds every
@@ -22,9 +29,11 @@ later scope decision. No completion percentage or new implemented capability is 
 
 ## Dependency-aware sequence and approval gates
 
-1. Owner/factory answers the actual business residuals B01–B09 used by the proposed
-   scope; explicitly defer B10 historical linking if unnecessary. Reconcile W1,
-   physical identity, receipt grain and narrow read scopes through governance.
+1. Use resolved I1 business policies without re-asking them. I1 registration,
+   lookup and both-role catalogue add/select have no demonstrated outstanding
+   business-policy blocker. Keep technical representation/identity/class separation
+   as DESIGN REQUIRED. Resolve only I2 business residuals before their affected
+   design/stock scope; B10 linking can be explicitly deferred.
 2. **Only after explicit Owner Step 3 authorization**, prepare affected detailed
    owner contracts, version/admission, data/transaction/lock/read design and final
    acceptance criteria. Required business decisions must precede their finalization.
@@ -44,40 +53,81 @@ independently shipped stock increments risks accepted inventory without the
 required trace or misleading delivery progress. Internal implementation tasks can
 follow that order, but these required behaviors must pass one coherent I2 DoD.
 
-## I1 — Operational purchase registration and receiving lookup
+## I1 — Operational purchase registration, shared references and receiving lookup
 
 Business outcome: Masoumi can register a pre-arrival seller order with distinct
 ordered lines/specifications/count and one-unit W1; Karimi can retrieve the original
-order/lines by the approved unambiguous seller-number workflow. No stock or received
-progress is created. This is an operational concept separate from completed-purchase
-and sent-proforma evidence.
+order/lines by the factory-wide seller number. Both ACT-PROC and ACT-WH can read/select
+and add missing legitimate Material Type, Quality/Grade and Color options in the
+same relevant reusable lists within authorized scope, then select newly added values.
+No different employee or administrator approval is required. No stock or received
+progress is created. Operational orders remain distinct from completed-purchase
+and sent-proforma evidence. WH catalogue capability is included in I1 even though
+its actual receiving-command use belongs to I2.
 
 Dependencies/gates: existing Identity, command envelope, atomic audit and Procurement
-owner; B01 PO namespace, B07 order-field semantics/line selection/date representation,
-B08 operational commands and WH lookup field scope. No need to solve device protocols,
-F19 or truck receipt grain to register an ordinary order, but later linking must remain
-possible. B10 historical links excluded unless specifically approved. All details are
-conditional on those answers and explicit implementation approval.
+owner. OWNER RESOLVED: B01 factory-wide PO uniqueness regardless of supplier,
+B07 width m/thickness mm/optional length m, Jalali registration date and shared
+extensible lists, B08 PROC register/read and WH lookup/original specs plus both-role
+addition/selection. DESIGN REQUIRED: exact numeric/date representation, catalogue
+identity/duplicate admission, distinct repeated lines, historical value preservation
+and separation from technical material class. No I1 requirement to finalize I2
+mapping, F19, truck grain, exceptions or device protocols. B10 historical links
+remain excluded unless approved. Step 3 and implementation still require their
+explicit authorizations; technical contracts have not been finalized.
 
 Likely affected later: Procurement owner contracts/service/store/transport and additive
-persistence, composition policy/admission and owner boundary checks. Existing completed
+persistence, composition policy/admission and owner boundary checks. Shared reference
+selection/addition can PROPOSED remain within Procurement's existing inbound ownership;
+no separate master-data platform is justified. Existing completed
 purchase/proforma v1 inputs, routes, tables and authorization stay compatible. No
 Procurement Inventory write dependency; no supplier master or approval lifecycle is
 introduced by assuming seller context. A narrower registered-order immutable source
 is preferred initially; any edit/amendment lifecycle needs separate policy, not
 destructive changes to historical evidence.
 
-Security/transaction requirements: trusted personal ACT-PROC registration and scoped
-ACT-WH lookup after B08; one atomic order+line+outcome+audit bundle; bound full input,
+Security/transaction requirements: trusted personal ACT-PROC registration/read and scoped
+ACT-WH number lookup/original-specification read under resolved B08; both roles
+can add/select all three catalogues with current organizational grants. Addition
+does not grant PO edit, receipt/exception acceptance, stock, correction or technical-
+mapping administration. Preserve one atomic order+line+outcome+audit bundle; bound full input,
 current grants, safe ambiguous/not-found behavior, no cross-org or documentary-read
-widening. Concurrent identical seller references resolve according to approved identity;
-unknown COMMIT uses same-key recovery, not a second order.
+widening. Duplicate PO registration preserves the original without overwrite/merge,
+including distinct users and suppliers within the same factory boundary. Catalogue
+creation must retain trusted creator, atomic outcome/audit, scoped reuse and race-safe
+duplicate behavior under the future explicit identity design. Whether creation and
+order registration are separate durable operations or one atomic intent is a future
+design comparison: either must permit add/select/continue without third-party approval,
+with no misleading partial order result. Unknown COMMIT uses the original bound key,
+not fresh IDs; no duplicate policy or API shape is selected here.
 
 Conditional I1 Definition of Done:
 
 - All 12 Masoumi fields have their accepted requiredness (7 mandatory, 5 optional),
   exact Persian terms/technical translations and approved semantics. Multiple distinct
   lines survive even without optional item numbers. W1 is per unit, not total line kg.
+- Enforce exact supplied PO reference factory-wide regardless of supplier within
+  the correct trusted installation/factory mapping. Duplicate order attempts cannot
+  overwrite/merge, while distinct waybills may later reference the same order.
+  No supplier-master dependency, extra mandatory field or documentary-reference change.
+- Width m and thickness mm are mandatory, length m optional; preserve units/exact
+  accepted values without automatic conversion, rounding, tolerance or assumed precision.
+  Jalali registration dates pass valid/invalid and leap-year boundary cases and exact
+  roundtrip without timezone/conversion shifts. DB timestamps remain independent;
+  Gregorian internal storage is not an approved contract, nor is F18's calendar resolved.
+- For EACH of the three lists, BOTH roles pass add/select/reuse tests under current
+  personal organizational grants: PROC creates then WH selects; WH creates then PROC
+  selects; each can add/use during its workflow without another employee's approval.
+  Type remains mandatory, quality/color optional, separate RAL optional. No arbitrary
+  free-text substitute, new mandatory catalogue ID/metadata entry or admin-only gate.
+- Future explicit catalogue identity rules pass exact/equivalent-input race, repeated
+  request, changed-payload conflict and unknown-outcome tests without silent merging
+  distinct factory terms, cross-list conflation or cross-organization reuse/leakage.
+  Preserve trusted creation attribution/audit and historical selected label meaning.
+- Business Material Type addition creates no technical enum entry or implicit OTHER
+  mapping. Legitimate I1 order/catalogue use is stock-free and need not await I2 mapping;
+  supported mapping/authority must be reconciled before I2 effects. Catalogue addition
+  never modifies original ordered specifications or accepts unordered goods (B06).
 - Pre-arrival registration and WH lookup satisfy REQ-INBOUND-001/002/003 and the
   order-lookup part of 005, with no Unit/Lot/Ledger/Balance or financial writes.
 - Real PostgreSQL proves order/line/outcome/audit atomicity, scoped uniqueness,
@@ -85,6 +135,10 @@ Conditional I1 Definition of Done:
 - Parser/API and security tests prove stage-aware mandatory/optional fields, approved
   representations, closed schemas, current personal grants, organization isolation,
   revocation/replay disclosure and narrowly permitted lookup fields.
+- Negative tests deny catalogue modification to customers/unrelated roles, WH order
+  edits through lookup/add, PROC receiving/stock and inferred broad ACT-SEC access.
+  Scoped IDs/lookups cannot cross installation/organization boundaries; catalogue
+  addition never widens completed-purchase/proforma documentary access.
 - Existing documentary purchase/proforma reads/writes/replay/attribution remain unchanged;
   relevant existing tests run, final owner/dependency rules and documentation reviewed.
 - Independent engineering/security reviews close required findings; final diff/checks,
@@ -92,7 +146,10 @@ Conditional I1 Definition of Done:
 
 Exclusions: receiving/stock, arrivals/waybills/discrepancy capture, received projections,
 historical conversion/linking, amendments/cancellation/closure, supplier approval,
-Finance, QC, UI and device/ticket work. I1 alone does not deliver the full factory process.
+Finance, QC, UI and device/ticket work. Catalogue edit/delete/merge/reclassification
+or technical mapping administration is not authorized by addition. I1 alone does
+not deliver the full factory process. Cases A/B/C and REQ-INBOUND-S01–S12 supplement
+the original 48-requirement trace without changing the 23-field register.
 
 ## I2 — Coherent purchase-linked multi-unit receiving and committed visibility
 
@@ -106,8 +163,10 @@ Dependencies/gates: accepted I1 operational order/lookup; all B01–B09 residual
 affecting receiving answered or an explicit ordinary-case/exception limitation
 approved; ADR/dependency reconciliation for W1 and physical identity; approved
 business cardinality, F19 meaning, mixed old/new identity rollout and narrow
-receiving/SEC read scope. D01–D08 detailed design and tests finalized under later
-authority. B10 linking/backfill and full correction remain excluded by default as a
+receiving/SEC read scope. D01–D10 applicable detailed design and tests finalized under later
+authority. B08 core roles/list addition and specified B07 I1 semantics are already
+resolved, not prerequisites to re-ask. I2-only fields/mapping/source/exception
+residuals remain open. B10 linking/backfill and full correction remain excluded by default as a
 proposal, not an approved policy.
 
 Likely affected later: Procurement arrival/confirmation/discrepancy/progress owner
@@ -140,6 +199,10 @@ Conditional I2 Definition of Done and acceptance strategy:
 - Original order evidence remains immutable; confirmed actual attributes/discrepancy
   marker/source/actor/line/unit/arrival/receipt links persist. Ordinary partial receiving
   is not mismatch. Only the explicitly approved exception branches may post goods.
+- WH can add/select the shared catalogue values for actual specifications, including
+  describing unordered goods, without editing the original order or authorizing
+  their acceptance/stock. Explicit supported technical-class mapping and its authority
+  precede posting; no implicit OTHER, enum expansion or catalogue-creation bypass.
 - Each received physical unit has its own approved scoped physical code and Inventory
   identity. Real PostgreSQL proves duplicate source/code admission and legacy/mixed-path
   scenarios under the approved rollout policy; no claim of physical deduplication
@@ -184,6 +247,10 @@ architecture/security review and documentation/source/link/diff checks. It requi
 no runtime test execution for Markdown-only edits and approves no runtime behavior.
 The accompanying technical-gap report records actual reviews/checks and limitations.
 
-The next useful action is the concise B01–B09 decision round, then an explicit
-Owner instruction for Step 3. This roadmap remains DRAFT / PROPOSED; successful
-Step 2 delivery is neither a product unlock nor permission to start detailed design.
+Step 2 is accepted as analysis; remote push remains unconfirmed. I1 is READY FOR
+OWNER AUTHORIZATION OF STEP 3, with no demonstrated remaining I1 business-policy
+blocker and explicit technical design obligations. The next action is Owner review
+of the focused policy/readiness update, then a separate bounded Step 3 instruction
+if desired. I2 still requires its scoped decisions. This roadmap's technical
+choices remain DRAFT / PROPOSED, with neither detailed design nor implementation
+authorized by acceptance or readiness.

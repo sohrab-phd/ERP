@@ -3,11 +3,11 @@ id: GOV-SOURCES-001
 title: Source Register
 phase: 00-governance
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-10-20
-approval: APR-002 historical structure; current factual source addition under APR-031
+approval: APR-002 historical structure; subsequent Owner source recorded under APR-033
 supersedes: null
 ---
 
@@ -47,15 +47,30 @@ supersedes: null
 - Recorded source: [factory workflow and exact 23 fields](team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md).
 - Authority: authoritative business input for this workflow; does not override
   architecture or authorize runtime/API/SQL/grant/gate changes.
-- Derived draft: [requirements baseline](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md),
+- Derived Step 1 requirements (subsequently accepted under APR-032): [requirements baseline](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md),
   [field dictionary](../02-domain-business-architecture/PURCHASE_RECEIVING_FIELD_REGISTER.md),
   [trace](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_TRACE.md),
   [preliminary reconciliation](../02-domain-business-architecture/PURCHASE_RECEIVING_RECONCILIATION.md).
 - Missing evidence: no actual purchase/waybill/receipt/scale document attached;
   investigation date, formats and unresolved policies are not invented.
-- Current register revision records evidence; it does not approve the derived
-  draft or close the residual OQs. [APR-031](approved-baselines/APR-031-factory-requirements-step-1.md)
-  permits Step 1 documentation/analysis and stop before Step 2.
+- Original authority [APR-031](approved-baselines/APR-031-factory-requirements-step-1.md)
+  permitted Step 1 documentation only. Later actual acceptances are recorded in
+  APR-032/APR-033; this source entry does not close residual OQs or rewrite SRC-004.
+
+## SRC-005 — Subsequent I1 Owner policy clarification
+
+- Origin: actual subsequent Owner acceptance/policy message on 2026-10-20, recorded
+  separately from the earlier factory investigation; SRC-004 remains unchanged.
+- Recorded source: [Owner I1 clarification](team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md).
+- Authority: confirmed business policy, scoped to factory-wide PO uniqueness,
+  m/mm/m dimensions, Jalali registration date, required shared extensible lists,
+  both-role addition/selection and core I1 register/read/lookup. Remaining I2
+  questions and unchosen technical representations/equivalence/mapping stay separate.
+- [APR-033](approved-baselines/APR-033-i1-policy-clarification.md) records acceptance
+  of Step 2 local commit b8666b7, push unconfirmed; no Step 3 or implementation grant.
+- [Policy amendment and supplemental trace](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+  adds REQ-INBOUND-S01–S12 without changing the original 23 fields or 25 rules.
+  No real sample records, technical enum/mapping decision or normalization rule supplied.
 
 ## Provenance rules
 

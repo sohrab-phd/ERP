@@ -3,7 +3,7 @@ id: PLAN-INBOUND-COVERAGE-001
 title: Purchase and receiving Step 2 requirements implementation coverage
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, chief-solution-architect]
 depends_on: [APR-032, DOM-INBOUND-TRACE-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-DECISIONS-001]
 last_reviewed: 2026-10-20
@@ -12,6 +12,15 @@ supersedes: null
 ---
 
 # Exact 48-requirement gap matrix — DRAFT
+
+Step 2 v0.1 analysis is Owner accepted under [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md);
+commit `b8666b76602f2d002c4cacc5e8b689fe0130fb24` push is unconfirmed. The 48 primary
+rows below remain the accepted code-analysis snapshot. Their B references now
+resolve through the current decision register: PO-specific B01, specified B07
+units/Jalali/lists and core B08 duties are OWNER RESOLVED. No runtime status changes.
+The [policy amendment](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+adds REQ-INBOUND-S01–S12, including both-role catalogue creation/selection, as a
+separate trace rather than rewriting the original 25 rules or 23 fields.
 
 Requirement meanings come from the accepted [25 workflow rules](../02-domain-business-architecture/PURCHASE_RECEIVING_REQUIREMENTS_BASELINE.md)
 and [23-field dictionary](../02-domain-business-architecture/PURCHASE_RECEIVING_FIELD_REGISTER.md).
@@ -23,7 +32,7 @@ No absent feature is marked implemented because documentation proposed it.
 Current-code status is separate from **BLOCKED BY POLICY** (B references) and
 **DESIGN REQUIRED** (D references) in the next columns. A dash means no additional
 business decision for that requirement, not permission to implement. All D items
-remain DESIGN REQUIRED; all cited B gates are OPEN as scoped in the
+remain DESIGN REQUIRED; cited B gates have the current resolved/OPEN breakdown in the
 [decision register](PURCHASE_RECEIVING_DECISION_REGISTER.md). Proposed I1/I2 refer
 to the [roadmap](PURCHASE_RECEIVING_DELIVERY_ROADMAP.md), not authorized work.
 

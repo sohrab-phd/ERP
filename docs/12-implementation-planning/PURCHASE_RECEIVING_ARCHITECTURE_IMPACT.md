@@ -3,7 +3,7 @@ id: PLAN-INBOUND-ARCH-001
 title: Purchase and receiving Step 2 architecture impact assessment
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [chief-solution-architect, security-architect]
 depends_on: [APR-032, PLAN-INBOUND-GAP-001, DOM-INBOUND-RECON-001, ADR-0015, ADR-0016]
 last_reviewed: 2026-10-20
@@ -13,10 +13,17 @@ supersedes: null
 
 # Architecture impact — DRAFT / PROPOSED / NOT AUTHORIZED
 
+Owner acceptance of Step 2 v0.1 analysis at `b8666b76602f2d002c4cacc5e8b689fe0130fb24`
+is recorded in [APR-033](../00-governance/approved-baselines/APR-033-i1-policy-clarification.md);
+push is unconfirmed and technical choices are not thereby approved. Subsequent
+[SRC-005 / policy amendment](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+settles PO-wide uniqueness, specified units/Jalali date, shared extensible lists
+and both-role core I1 authority. Existing-runtime descriptions remain unchanged.
+
 Use the exact paths/symbols and inspected tests in the [E01–E09 evidence catalogue](PURCHASE_RECEIVING_TECHNICAL_GAP_ANALYSIS.md).
 This assessment proposes responsibility boundaries and compares options; it does
 not publish a new command/query contract, select API versions, define tables or
-amend accepted ADRs. [Business B01–B10 and design D01–D08](PURCHASE_RECEIVING_DECISION_REGISTER.md)
+amend accepted ADRs. [Business B01–B10 and design D01–D10](PURCHASE_RECEIVING_DECISION_REGISTER.md)
 remain independently tracked. The [coverage matrix](PURCHASE_RECEIVING_COVERAGE_MATRIX.md)
 is the requirements-level inventory of gaps.
 
@@ -41,9 +48,11 @@ evidence requiring a new module, service, queue, cache or dependency.
 The current completed-purchase UUID and purchaseDocumentReference identify
 documentary evidence, not an operational seller PO. Tests deliberately permit
 repeated references. An operational PO needs its own identity, ordered lines and
-approved scoped seller reference lookup. B01 must settle whether the namespace is
-organization-wide or needs seller/year/other real context. Do not silently add a
-24th mandatory business field to achieve a guessed composite key. Lookup must
+factory-wide seller reference lookup regardless of supplier, now confirmed in B01.
+Preserve exact supplied reference and prevent duplicate registration overwrite/merge;
+technical enforcement must cover the appropriate trusted installation/factory
+boundary, not a supplier partition. No supplier master or additional mandatory
+field is required. Other B01 document namespaces remain unresolved. Lookup must
 never choose the first of several matches or expose other organizations while
 disambiguating. A technical UUID can bind subsequent commands but cannot replace
 the operator's seller-number workflow.
@@ -210,8 +219,12 @@ write/read capability for ACT-PROC; a restricted operational-order/line/specific
 lookup for ACT-WH; and a PO-grouped committed receiving/progress/discrepancy view
 for ACT-PROC. Receipt-owner projections may expose only needed linked facts.
 No ACT-PROC stock posting, broad documentary access for WH, or broad Lot/Unit
-access for PROC follows. B08 must approve exact fields, scope, ACT-SEC new-data
-access and backup grants. An expanded payload on an existing WH/SEC read route
+access for PROC follows. B08 now confirms PROC operational register/read, WH
+number lookup/original needed specifications and both roles' catalogue add/select.
+The shared reference owner capability may remain in Procurement (PROPOSED minimal
+placement); addition is independent of PO edits, B06 goods acceptance and stock.
+Exact new I2 sensitive-field scope and ACT-SEC exposure remain open; personal backup
+account provisioning is separate from approved role policy. An expanded payload on an existing WH/SEC read route
 could silently widen sensitive data: preserve base reads and project new fields
 explicitly. Driver name/truck details require a demonstrated purpose; logs/audits
 should not echo unsafe text or full PII payloads merely for debugging.
@@ -262,3 +275,12 @@ nonunique Internal Code versus physical identity, one-unit receipt/origin grain,
 new read scopes and business reference/cardinality policies. These are proposed
 decisions, not amendments to accepted ADRs or executable contracts. No historical
 migration, record, role or product gate changes in Step 2.
+
+Subsequent I1 reconciliation also requires separating extensible business Material
+Type from the fixed technical receipt classification. I1 add/select/order operations
+need no stock effect or mandatory operator-entered mapping field. D09/D10 must
+preserve shared scoped references, trusted creation, historical values and safe
+duplicates without assuming equivalence; supported mapping/authority is required
+before affected I2 posting. No automatic OTHER, enum expansion, class-administration
+grant or large master-data subsystem follows from catalogue addition. See the
+policy amendment for current readiness; this is not detailed design.

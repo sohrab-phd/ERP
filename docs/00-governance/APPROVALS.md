@@ -3,7 +3,7 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.18.0
+version: 0.19.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-10-20
@@ -814,3 +814,19 @@ review and authorization.
   dependency or product gate/unlock change. Stop before Step 3 and implementation;
   explicit next authorization required. No remote push, UAT or production approval.
   Eleven accepted backend capabilities and unresolved policy residuals remain.
+
+### APR-033 — Step 2 acceptance and subsequent confirmed I1 policy
+
+- [Actual Owner decision](approved-baselines/APR-033-i1-policy-clarification.md)
+  accepts the five Step 2 analysis documents at local `b8666b76602f2d002c4cacc5e8b689fe0130fb24`.
+  Push is not confirmed. Acceptance does not approve proposed technical choices.
+- Subsequent [SRC-005](team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md)
+  resolves PO-specific B01, specified B07 units/Jalali date/shared extensible lists,
+  and B08 core operations including addition/selection by BOTH ACT-PROC and ACT-WH.
+  No mandatory third-party approval, PO-edit/B06/stock/class-administration authority
+  or new register field follows. Other scopes/residuals remain separate.
+- Authorizes policy documentation/readiness, review/checks and local commit only;
+  [supplemental requirements/readiness](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+  and live roadmap/register record the bounded update. Stop before Step 3 and any
+  runtime/API/SQL/permission/enum/catalogue/IPS/gate change. No remote push, UAT,
+  production approval or twelfth backend capability.

@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.51.0
+version: 0.52.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, SRC-004, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, SRC-004, SRC-005, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-20
 approval: null
 supersedes: null
@@ -13,7 +13,36 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner instruction (2026-10-20), [APR-032](approved-baselines/APR-032-inbound-gap-analysis.md):
+Current Owner instruction (2026-10-20), [APR-033](approved-baselines/APR-033-i1-policy-clarification.md):
+**Step 2 analysis accepted; focused I1 policy documentation and readiness only.**
+Accepted local commit `b8666b76602f2d002c4cacc5e8b689fe0130fb24` is NOT confirmed
+pushed. Acceptance approves analysis, not proposed design/runtime choices.
+[SRC-005](team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md) supplies subsequent
+confirmed policy: factory-wide PO reference regardless of supplier; width m,
+thickness mm, optional length m; Jalali registration date; REQUIRED shared extensible
+Material Type/Quality/Color lists. BOTH personal organizational ACT-PROC and ACT-WH
+may add/select missing options without another employee's approval. Core PROC
+operational register/read and WH number lookup/original-specification read are
+resolved business policy, not new executable grants.
+
+The [policy amendment and readiness](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)
+adds 12 supplemental requirements without changing the 23 fields/25 rules or
+historical SRC-004. No demonstrated I1 business blocker remains for design;
+representation, catalogue identity/duplicates, repeated-line IDs and technical-class
+separation remain design work. I1 is READY FOR OWNER AUTHORIZATION OF STEP 3;
+**Step 3 remains NOT AUTHORIZED**. I2 identity/source/exception/sensitive-read
+residuals remain open. Catalogue addition grants no PO edit, B06 acceptance,
+receiving/stock/correction or technical-mapping administration. No enum/IPS change,
+automatic OTHER mapping or catalogue implementation.
+
+Only reviewed/checked local documentation updates are authorized. No code, SQL,
+implemented API/permission/dependency change or gate/unlock expansion. Stop after
+policy/readiness delivery for Owner review; no remote push or UAT/production claim.
+Backend capability count remains eleven.
+
+## Earlier requirements and Step 2 analysis authority (historical)
+
+Prior Owner instruction (2026-10-20), [APR-032](approved-baselines/APR-032-inbound-gap-analysis.md):
 **Step 1 requirements accepted/push confirmed; Step 2 technical gap analysis and
 architecture impact assessment only.** The Owner accepts all four Step 1 documents
 at `5399e2f74dac0cdcb633e8cadb9a51124a14d0d8` as requirements input, not architecture
