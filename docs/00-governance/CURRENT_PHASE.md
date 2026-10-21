@@ -3,17 +3,29 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.53.0
+version: 0.54.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, SRC-004, SRC-005, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-10-20
+depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, SRC-004, SRC-005, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
 
-Current Owner instruction (2026-10-20), [APR-034](approved-baselines/APR-034-i1-detailed-design.md):
+Current Owner instruction (2026-10-21), [APR-035](approved-baselines/APR-035-i1-final-design-review.md):
+focused final I1 design verification/corrections only, based on local16115d7;
+push unverified. The [final review](../12-implementation-planning/I1_PURCHASE_ORDER_FINAL_REVIEW.md)
+records all fourteen review dispositions, corrected numeric/UTF8/resource/PG
+conditions and OPEN R1 reference equivalence. Factory-wide scope stays resolved;
+source preservation alone does not decide variant identity. No formal Owner design
+acceptance or implementation authority is recorded. Ready for conditional Owner
+review, not unconditional identity acceptance while R1 is unanswered. All technical
+choices remain proposed. Stop before runtime/gate changes or I2 design.
+
+## Original Step3 design scope (historical16115d7)
+
+Prior Owner instruction (2026-10-20), [APR-034](approved-baselines/APR-034-i1-detailed-design.md):
 **STEP 3 — DETAILED TECHNICAL DESIGN OF I1 ONLY is explicitly authorized.**
 The Owner references local policy/readiness commit
 `38cb85558e7dbc2c02d06fc91f6b99b08e8d925f`; no remote push or extra acceptance is

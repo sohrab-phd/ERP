@@ -3,17 +3,25 @@ id: PLAN-INBOUND-DECISIONS-001
 title: Purchase and receiving Step 2 policy and design register
 phase: 12-implementation-planning
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [business-process-owner, chief-solution-architect, security-architect]
 depends_on: [APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
-last_reviewed: 2026-10-20
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Policy and design register — resolved business portions and OPEN residuals
 
-Current authority [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
+Current [APR-035 final review](../00-governance/approved-baselines/APR-035-i1-final-design-review.md)
+qualifies the prior no-missing-I1-policy assessment: [R1](I1_PURCHASE_ORDER_FINAL_REVIEW.md#r1--factory-scope-resolved-identifier-equivalence-still-open)
+requires Owner decision on reference variants. B01 factory-wide namespace remains
+resolved; source preservation does not establish business equivalence. No silent
+normalizer or supplier partition. I1-D01–D14 have review dispositions, not acceptance.
+Numeric/calendar/catalogue/resource conditions remain explicit proposals and I2
+residuals remain at their prior scope. No implementation or gate authority follows.
+
+Original design authority [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
 explicitly authorizes Step 3 I1 design only. The [six-file detailed proposal](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
 now addresses I1 portions of D01/D02/D05/D06/D08/D09/D10 and relevant envelope/
 compatibility boundaries through [I1-D01–I1-D14](I1_PURCHASE_ORDER_DECISIONS.md).
@@ -78,7 +86,8 @@ design/implementation, not that Step 2 documentation is blocked.
 | B10 OPEN IF INCLUDED / otherwise DEFERRED | Is explicit linkage of operational POs to old completed-purchase/proforma evidence or historical no-PO receipts required in the initial workflow, and what real document relationship supports it? | Only historical association/backfill, not ordinary new PO registration; safe to defer from I1/I2 if excluded explicitly | Coexist as distinct immutable concepts initially; do not infer matching from similar references/dates/descriptions. Any future link needs approved cardinality, provenance and read scope, without automatic financial or stock effects. |
 
 B01 PO, B07 specified I1 policies and B08 core operations are resolved, not OPEN.
-No demonstrated I1 business blocker remains for registration, lookup and both-role
+Earlier policy-update assessment (qualified by final-review R1): no demonstrated
+I1 business blocker remained for registration, lookup and both-role
 catalogue add/select. [Readiness analysis](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md#i1-readiness-assessment--analysis-not-design-authorization)
 separates remaining technical work from policy. Other B01 namespaces, B02–B06,
 B07 receiving residuals, B08 I2 disclosure and B09 remain blockers only for affected
@@ -110,8 +119,9 @@ F01–F08 partial answers are in the accepted Step 1 reconciliation and are not
 blanket closure. No tolerance, invoice amount or settlement rule is introduced.
 
 Step 2 analysis is Owner accepted; push unconfirmed. Step 3 I1 detailed design is
-now explicitly authorized by APR-034 and documented as PROPOSED, with no demonstrated
-missing I1 business policy. The broader I2 design cannot be finalized without its
+now explicitly authorized by APR-034 and documented as PROPOSED. APR-035 final review
+identifies R1 reference equivalence as a remaining narrow business decision before
+unconditional design acceptance. The broader I2 design cannot be finalized without its
 scoped residuals/reconciliation. I1 requires Owner review/acceptance of technical
 choices and separate bounded implementation authorization; implementation remains
 NOT AUTHORIZED. No new approved ADR, contract or gate is published.

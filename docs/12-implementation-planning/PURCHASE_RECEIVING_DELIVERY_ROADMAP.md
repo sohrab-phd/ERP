@@ -3,17 +3,24 @@ id: PLAN-INBOUND-ROADMAP-001
 title: Purchase and receiving proposed incremental delivery and Definition of Done
 phase: 12-implementation-planning
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [delivery-lead, chief-solution-architect, business-process-owner]
 depends_on: [APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
-last_reviewed: 2026-10-20
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Delivery strategy — PROPOSED / NOT AUTHORIZED
 
-Current step: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
+Current [focused final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md), authorized by
+APR-035, records corrected proposals and fourteen review dispositions. R1 reference
+equivalence remains an Owner business decision before unconditional design acceptance;
+factory-wide scope is already resolved. Numeric/calendar/catalogue/resource limits
+remain conditional. Earlier no-missing-policy assessments below are historical and
+qualified by R1. This roadmap authorizes no implementation, gate change or I2 design.
+
+Earlier design step: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
 authorizes I1 detailed design only. Its [domain/API/DB/security/test/risk package](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
 is DRAFT / PROPOSED and concretizes this roadmap without authorizing implementation
 or final I2 design. The [fourteen technical choices](I1_PURCHASE_ORDER_DECISIONS.md)
@@ -38,7 +45,8 @@ later scope decision. No completion percentage or new implemented capability is 
 
 1. Use resolved I1 business policies without re-asking them. I1 registration,
    lookup and both-role catalogue add/select have no demonstrated outstanding
-   business-policy blocker. Keep technical representation/identity/class separation
+   business-policy blocker in that earlier assessment; final-review R1 now qualifies
+   reference equivalence. Keep technical representation/identity/class separation
    as DESIGN REQUIRED. Resolve only I2 business residuals before their affected
    design/stock scope; B10 linking can be explicitly deferred.
 2. Explicit Owner Step 3 authorization is now recorded in APR-034 for I1 only.
@@ -255,8 +263,9 @@ no runtime test execution for Markdown-only edits and approves no runtime behavi
 The accompanying technical-gap report records actual reviews/checks and limitations.
 
 Step 2 is accepted as analysis; remote push remains unconfirmed. APR-034 authorizes
-I1 detailed design, now in the linked proposed package. No demonstrated missing I1
-business policy remains; all selected technical limits/equality/calendar/transaction
-choices require Owner acceptance. The next action is Owner design review, then
+I1 detailed design, now in the linked proposed package. Final review identifies
+R1 reference equivalence before unconditional design acceptance; all selected
+technical limits/equality/calendar/transaction choices require Owner acceptance.
+The next action is Owner decision/conditional design review, then
 separate bounded implementation authorization if desired. I2 still requires its
 scoped decisions and is not made ready by I1 design. No implementation is authorized.

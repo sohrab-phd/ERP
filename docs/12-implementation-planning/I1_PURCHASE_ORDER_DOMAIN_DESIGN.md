@@ -3,18 +3,21 @@ id: PLAN-I1-DOMAIN-001
 title: I1 operational purchase order domain and field design
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [chief-solution-architect, business-process-owner]
-depends_on: [APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001]
-last_reviewed: 2026-10-20
+depends_on: [APR-035, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001]
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # I1 domain and data model — DRAFT / PROPOSED / NOT AUTHORIZED FOR IMPLEMENTATION
 
-Design baseline is local `38cb85558e7dbc2c02d06fc91f6b99b08e8d925f`; remote status
-is unverified. [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
+Final review baseline is local `16115d7655fb2b635165aec03b84760082194b45`; remote
+status is unverified. The [focused reconciliation](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
+records corrections, conditional recommendations and the outstanding reference-
+equivalence decision; it does not record Owner design acceptance.
+[APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
 authorizes detailed I1 documentation only. FACT means actual Owner policy in
 [SRC-004](../00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)/
 [SRC-005](../00-governance/team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md).
@@ -100,13 +103,24 @@ requires authority_scope = installation_id, and enforces reference uniqueness on
 installation_id plus exact reference with deterministic C collation. No role,
 person, supplier, date or command key partitions that business number.
 
-Comparison is exact Unicode scalar/UTF-8 text identity; no trimming, case folding,
+The exact-comparison branch below is PROPOSED, pending the Owner's business
+equivalence decision R1 in the final review. It is not proof of semantic business
+deduplication. Comparison is exact Unicode scalar/UTF-8 text identity; no trimming, case folding,
 digit conversion, Unicode normalization or Persian/Arabic substitution. Source
 text is returned unchanged. Nonblank text with outer spaces remains exact text,
-not silently collapsed. Formatting variants can remain distinct: this conservative
-technical equality rule and its residual duplicate risk require Owner acceptance
-(I1-D02); any later broader business equivalence requires an explicit decision.
-This does not reopen the confirmed factory-wide namespace.
+not silently collapsed. Thus `PO-12`, ` PO-12`, case variants, Persian/Arabic digit
+or letter variants and canonically equivalent Unicode sequences can all occupy
+different rows. Source preservation does not decide whether these denote the same
+business order. The installation-wide namespace is resolved; this equality question
+is not. Exact lookup is unambiguous only among identical strings; it can miss a
+variant or return a separately registered variant of the same real order.
+
+Recommendation: accept exact identity only if the Owner explicitly confirms these
+variants are distinct identifiers for I1. If variants mean the same order, retain
+the original reference and design a separate agreed comparison key used identically
+by UNIQUE, locks and lookup. Do not choose trim/NFC/case/digit/letter folding now.
+Until that decision, the proposed exact UNIQUE prevents byte-identical duplicates
+but cannot be claimed to fully enforce the confirmed business-identity rule.
 
 Current completed-purchase/proforma UUIDs and reference strings remain separate
 records with their existing rules and routes. Equal strings do not link histories.
@@ -158,7 +172,7 @@ explains why declared scale can round whereas unscaled numeric comparisons do no
 | widthM, thicknessMm, lengthM if present | ASCII integer part `0` or 1–20 digits without leading zero, optional dot plus 1–18 digits; at most 39 characters | Strictly positive, magnitude <10^20; preserve input string; no exponent, sign, grouping separator or implicit unit conversion |
 | unitWeightKg | ASCII 1–20 digits, first digit 1–9 | Confirmed positive whole W1, <10^20 kg; BigInt for exact arithmetic |
 | orderedUnitCount | Same positive integer-string syntax | PROPOSED strictly positive count, <10^20 units; not PostgreSQL bigint capacity and not old receipt's nonnegative descriptive Count |
-| derived orderedLineWeightKg | Not an input field or persisted stock source | Exact BigInt(unitWeightKg) × BigInt(orderedUnitCount), at most 40 digits; expose only with a name clearly meaning derived line total if later required. I1 public minimum projection omits it |
+| derived orderedLineWeightKg | Not an input field or persisted stock source | Exact Procurement-only BigInt product, at most 40 digits; a distinct derived-total type, never Inventory Kg. I1 public minimum projection omits it |
 
 Examples are synthetic validation cases: width `1.200` round-trips unchanged;
 thickness `0.35` means mm, not meters; weight `2000` and count `5` imply derived
@@ -169,12 +183,51 @@ positive dimensions/count and text grammar are **PROPOSED technical restrictions
 not factory-confirmed measurement precision. Owner must accept them or identify
 an actual excluded input before implementation; no new tolerance is assumed.
 
+Capacity evidence is narrower than physical plausibility. Existing
+[Kg](../../apps/backend/src/modules/inventory/quantity.ts) scales integers by10^18
+and bounds the scaled magnitude below10^38; [0005](../../database/migrations/0005_inventory_posting.sql)
+uses unconstrained numeric with explicit magnitude<10^20 and scale<=18 guards.
+[0006](../../database/migrations/0006_goods_receipt.sql) admits positive whole receipt
+kg<10^20 and nonnegative descriptive count<10^20. Thus the proposed W1 fits one
+current Unit's numeric capacity; it does not resolve receiving provenance or admit
+stock. Positive ordered count and dimension20/18 remain new bounded representation
+proposals, not proven operating limits or factory precision.
+
+Never cast a derived product/sum into Kg, receipt measuredKg, Ledger or Balance.
+For example, individually valid W1 `10000000000000000000` and count `10` have a
+derived total `100000000000000000000`, outside Kg capacity. The exact total stays
+Procurement-only. No I1 requirement needs a total<10^20 restriction: multiple valid
+Units may legitimately have a larger combined total. A future optional 128-line
+sum needs at most43digits and its own derived-total bound. I2 must independently
+validate each confirmed Unit/effect and any actual receiving-group arithmetic with
+Inventory owner limits; no total or W2/W3 substitution. Do not allocate Units, loop,
+reserve memory or generate records proportional to orderedUnitCount in I1.
+
+Lexical and numeric equality are separate: `1.2` and `1.200` retain different source
+strings and bind differently to a command, while exact decimal comparison yields
+the same magnitude. Do not infer a discrepancy rule from that lexical difference.
+Check full-string grammar/length before any BigInt/numeric parse; reject signs,
+leading zeros, Persian digits, comma/slash separators, exponent, whitespace and
+numeric JSON rather than silently converting. Zero is invalid even as `0.000`.
+Integer operations use BigInt and JSON emits strings; no coercion through Number,
+parseFloat, PG int8 or declared NUMERIC(p,s). Bounded20/18 operands make arithmetic
+cost fixed per input line, not dependent on the magnitude's represented unit count.
+
 ## Jalali proposal — explicit civil date and a frozen validation profile
 
 I1-D05 proposes ASCII `YYYY-MM-DD`, calendar always Jalali, supported years
 1206–1498 inclusive. This finite technical horizon needs Owner acceptance; no
 factory historical/future date limit was supplied. Do not infer a date-in-future,
 order-before-today or chronology business rule.
+
+The endpoints follow the published table's coverage, not factory age or a chosen
+database type. It covers current registration and many historical dates, but the
+factory's earliest required purchase date has not been established. A meaningful
+1205/1499 date is unsupported, not declared an impossible Jalali date. Return a
+safe durable GUARD_INVARIANT with stable `I1_DATE_OUTSIDE_PROFILE` indication and
+the supported range; preserve entered input, never clamp or substitute today.
+The Owner may accept this finite I1 capacity or require a reviewed wider profile
+before design acceptance. No automatic calendar-range extension is proposed.
 
 Store Jalali year/month/day as small integers plus fixed technical profile
 `UT-JALALI-1206-1498-v1`. Return the exact canonical Jalali date string and
@@ -193,6 +246,13 @@ source receipt/checksum and independently verify all 293 year flags before use.
 The [official 1404 calendar](https://calendar.ut.ac.ir/documents/2139738/7092644/Calendar-1404.pdf/4321b7e0-d043-78ca-49f5-fbfc911e7901?t=1729620775906)
 also explicitly identifies 1403-12-30. These are technical calendar references,
 not new factory evidence or an online runtime dependency.
+
+The table is a Calendar Center research/calculation result, not evidence that
+every future civil year is already an enacted annual calendar. Treat it as a
+versioned technical profile; a subsequently published authoritative conflict must
+block use of the affected profile pending explicit reconciliation, not silently
+rewrite historical dates. The annual1404publication independently checks a current
+boundary; the complete293year vector has not been implemented or verified here.
 
 Application and DB CHECK leap predicates must share this versioned profile and
 pass exhaustive cross-checks; fail closed outside the supported range. No runtime

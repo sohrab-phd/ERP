@@ -3,10 +3,10 @@ id: PLAN-I1-SECURITY-001
 title: Proposed I1 operation authorization isolation and disclosure design
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [security-architect, chief-solution-architect]
-depends_on: [APR-034, SRC-005, ADR-0014, SEC-RBAC-001, SEC-ISO-001, PLAN-I1-API-001]
-last_reviewed: 2026-10-20
+depends_on: [APR-035, APR-034, SRC-005, ADR-0014, SEC-RBAC-001, SEC-ISO-001, PLAN-I1-API-001]
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
@@ -17,7 +17,9 @@ Business authority is confirmed by [SRC-005](../00-governance/team-answers/OWNER
 and [policy amendment](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md).
 This proposed translation into owner/object/transport checks changes no runtime
 policy. Use [API](I1_PURCHASE_ORDER_API_DESIGN.md), [transactions](I1_PURCHASE_ORDER_DATABASE_DESIGN.md)
-and [acceptance cases](I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md). Named factory people
+and [acceptance cases](I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md). The [final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
+records unresolved PO equivalence separately from trusted scope and conditional
+catalogue equality/resource recommendations. Named factory people
 explain duties only; never compare names, display names or station labels.
 
 ## Effective operation-by-role matrix
@@ -137,6 +139,10 @@ Exact label equality intentionally does not merge case, whitespace, Arabic/Persi
 variants or Unicode normalization forms. This conservative proposal must be accepted
 explicitly; distinct terms remain distinct. Broader equivalence/aliases require
 later policy, not a hidden normalizer or a semantic deduplication claim.
+For PO references the comparison policy is an outstanding Owner business decision:
+byte equality alone cannot guarantee one row per real order when equivalent-looking
+variants are allowed. Same-scope duplicate disclosure stays authorized and minimal;
+do not broaden search across installations or leak creators while resolving it.
 
 Order lines reference immutable same-scope options of the expected kind. Wrong-kind
 or foreign option IDs fail with the same safe state guard; no arbitrary free-text
@@ -152,12 +158,12 @@ mapping meaning/authority must be reconciled separately before I2 Inventory admi
 | Cross-organization object references or scope injection | Trusted context only, both scope predicates, typed scoped FKs, same absent/foreign outcome; A18/A26 |
 | WH edits an order through lookup or catalogue add | Closed distinct operations, immutable header/lines and DB append guard; A14/A17 |
 | PROC or WH catalogue addition becomes stock/class authority | No technical-class/mapping field, no Inventory port, unchanged fixed enums and foreign tables; A15/A25 |
-| Label/query injection or unsafe display | Parameterized values, valid Unicode/no Cc/byte bounds, JSON data encoding, no HTML/template evaluation; A05/A13/A26 |
+| Label/query injection or unsafe display | Parameterized values, API's explicit non-mutating blank/control predicate, validUnicode then128scalar/512byte decoded limits, JSON encoding, no HTML/template evaluation; A05/A13/A26 |
 | Concurrent exact duplicate creation / changed target reuse | Sorted owner resource locks, authoritative PK/label uniqueness, DUP/CONFLICT semantics; A12/A20/A24 |
 | Stale/forged identity and saved outcome leakage | Issued capability tracking, current grants/wait/replay checks and narrow projection; A19/A20 |
 | Partial immutable source or false success after failure | One owner transaction, complete-line guard, outcome/audit atomicity and original-key recovery; A21–A24 |
 | Sensitive input leaked in logs/errors | Fixed safe messages, no raw body/reference/label/token/SQL/constraint dumps; A18/A26 |
-| Unbounded body/result/selection query | Dedicated bounded order reader, strict schemas, 1–128 lines, 256 KiB projection preflight, <=100 options/page; A26 |
+| Unbounded body/result/selection query | Dedicated bounded order reader, strict schemas, 1–128 lines independent of ordered unit count/IPS, exact serialized HTTP projection preflight<=256KiB including referenced labels, <=100 options/page; A26 |
 | Historical label/order rewrite | SELECT/INSERT-only new-source runtime grants, immutable reference rows, no update/delete/append routes; A14/A27 |
 
 Browser XSS/CSRF page flows, uploads/attachments, outbound device/file requests,

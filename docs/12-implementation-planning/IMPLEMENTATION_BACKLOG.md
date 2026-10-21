@@ -3,17 +3,23 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.9.0
+version: 0.10.0
 owners: [chief-solution-architect]
 depends_on: [ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
-last_reviewed: 2026-10-20
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
 
-Current task: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md),
+Current task: [APR-035](../00-governance/approved-baselines/APR-035-i1-final-design-review.md),
+focused final documentation review/corrections only. [Final dispositions](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
+leave reference-equivalence R1 OPEN for Owner decision; factory scope is resolved.
+Numeric/UTF8/calendar/PG/resource recommendations are conditional, not accepted.
+No new capability/gate or I2 readiness. Stop for Owner review; no remote push.
+
+Earlier task: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md),
 Step 3 detailed DESIGN of I1 only. [Six proposed specifications](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
 cover operational orders/lines, shared catalogue add/select by both roles,
 factory-wide reference identity, exact values/Jalali, scoped reads, PostgreSQL

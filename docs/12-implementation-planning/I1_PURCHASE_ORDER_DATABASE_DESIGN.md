@@ -3,10 +3,10 @@ id: PLAN-I1-DATABASE-001
 title: Proposed I1 PostgreSQL schema concurrency and atomic transaction design
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [data-architect, chief-solution-architect]
-depends_on: [APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, ADR-0011, ADR-0013, ADR-0014]
-last_reviewed: 2026-10-20
+depends_on: [APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, ADR-0011, ADR-0013, ADR-0014]
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
@@ -18,6 +18,8 @@ file, TypeScript contract, runtime grant or product gate is created. Refer to
 [domain/values](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md), [API/error semantics](I1_PURCHASE_ORDER_API_DESIGN.md),
 [security](I1_PURCHASE_ORDER_SECURITY_DESIGN.md) and [decision acceptance](I1_PURCHASE_ORDER_DECISIONS.md).
 PostgreSQL 18.6 and existing pg/Node/root-script pins remain unchanged.
+The [final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md) qualifies reference equality,
+quantity capacity, resource ceilings and completeness guarantees below.
 
 ## Current persistence and proposed ownership
 
@@ -66,7 +68,7 @@ below are named; ordinary unique constraints are immediate/nondeferrable.
 | installation_id, authority_scope | UUID NOT NULL | Common trusted single-factory scope |
 | option_id | UUID NOT NULL | i1_option_pk = PK(scope tuple, option_id) |
 | catalogue_kind | text NOT NULL | Exactly MATERIAL_TYPE / QUALITY_GRADE / COLOR; this enum names the three catalogues, not stock material classes |
-| label | text COLLATE C NOT NULL | 1–128 UTF-8 bytes, nonblank, valid source text, no Cc; exact comparison |
+| label | text COLLATE C NOT NULL | 1–128 Unicode scalars, <=512UTF-8bytes; API's explicit blank/control predicate, exact comparison |
 | binding and creation metadata | As above, NOT NULL | actor_role in ACT-PROC/ACT-WH; DB time independent of business dates |
 
 Named i1_option_label_uq UNIQUE(installation_id,catalogue_kind,label) is the final
@@ -81,14 +83,20 @@ seed values, mutable state, technical class mapping, soft-delete or update times
 | --- | --- | --- |
 | installation_id, authority_scope | UUID NOT NULL | Common scope |
 | order_id | UUID NOT NULL | i1_po_pk = PK(scope tuple,order_id) |
-| order_reference | text COLLATE C NOT NULL | Same exact 1–128-byte nonblank text rule as API |
+| order_reference | text COLLATE C NOT NULL | Same exact128scalar/512byte text rule and blank/control predicate as API |
 | registration_jy, registration_jm, registration_jd | smallint NOT NULL | Explicit Jalali components; fixed supported profile/year/month/day/leap CHECKs below |
 | calendar_profile | text NOT NULL | Fixed UT-JALALI-1206-1498-v1; technical provenance, not another entered field |
 | line_count | integer NOT NULL | 1–128 from the admitted array; never received quantity |
 | binding and creation metadata | As above, NOT NULL | actor_role exactly ACT-PROC |
 
-i1_po_reference_uq UNIQUE(installation_id,order_reference) enforces the confirmed
-factory-wide business identity transactionally. i1_po_count_uq UNIQUE(scope
+i1_po_reference_uq UNIQUE(installation_id,order_reference) transactionally prevents
+byte-identical duplicates across the whole current factory, including different
+keys/people. It does not decide whether variants denote the same real order.
+This exact branch is conditional on the Owner equivalence decision, not a complete
+claim of semantic business-identity enforcement. If broader equivalence is approved,
+the original text stays immutable and an agreed comparison key must govern UNIQUE,
+locks and lookup together; no alternative key/normalizer is selected now.
+i1_po_count_uq UNIQUE(scope
 tuple,order_id,line_count) supports the line's frozen declared count. No link/FK
 to completed_purchase, proforma, receipt, supplier master or Inventory. No progress,
 open/closed/amended status or inferred stock total.
@@ -129,6 +137,25 @@ double precision or JavaScript Number. Explicit schema/API checks reject unsuppo
 fraction digits instead of rounding. Store accepted source lexemes, including
 trailing zeros, so output never relies on driver numeric formatting.
 
+Existing0005numeric stock CHECKs and Kg enforce magnitude<10^20/scale<=18;0006
+whole receipt kg<10^20. New W1 fits each existing per-unit capacity, not a new
+provenance/admission rule. Count20digits and dimension20/18 are separately proposed
+representation ceilings. Derived line product may have40digits, order sum43digits:
+keep them in a distinct Procurement BigInt/derived-total representation, never
+these stock columns, Kg, measuredKg or an IPS effect. Never iterate/create Units
+from the ordered count. I2 must validate its actual per-unit and group arithmetic
+through approved owner ports; no restriction on total ordered mass is invented now.
+
+New text CHECKs use UTF8 database encoding, char_length between1and128 and
+octet_length<=512, plus the API's exact explicit codepoint predicates for Cc/blank.
+char_length counts Unicode scalars here, not UTF16 code units/graphemes. PostgreSQL
+cannot store U+0000; do not construct chr(0). Neither btrim nor locale regex classes
+are a substitute for the frozen predicate. Selected source text is never trimmed
+or normalized. The final migration must prove app/DB parity for NBSP, FEFF, ZWNJ,
+combining marks, supplementary scalars and decoded JSON escapes. Bounded512byte
+labels/references keep ordinary UTF8 btree keys small without hash-only equality;
+verify actual index limits under the pinned PostgreSQL build in future acceptance.
+
 Jalali CHECKs enforce the domain's finite profile, year 1206–1498, month 1–12 and
 day <=31/30/29-or-30. The Esfand leap predicate is the same frozen, independently
 verified official year set as the application validator. It is an inline constraint,
@@ -156,6 +183,40 @@ The application continues to own the business transaction. An alternative of onl
 application validation/privileges lacks this DB-level append/completeness guard.
 [PostgreSQL constraint triggers](https://www.postgresql.org/docs/18/sql-createtrigger.html)
 permit deferred integrity checks; no executable function/DDL is created here.
+
+Exact mechanism: one AFTER INSERT FOR EACH ROW constraint trigger on the header,
+DEFERRABLE INITIALLY DEFERRED, runs once per new header, scoped to NEW installation,
+authority and order. At end of transaction it counts lines through the indexed
+parent/position key and compares to frozenN. It sees this transaction's own complete
+line inserts. With N distinct positions all within1..N, count=N fills every slot;
+any later append must violate position uniqueness, range or parent-count FK.
+Normal FKs only require a line's parent; atomicity only commits the statements
+actually issued. Neither requires the promised N children nor stops a later insert.
+
+The SELECT-only function acquires no explicit advisory/row locks, performs no
+writes or command calls and cannot recursively trigger itself. The parent FK
+prevents another transaction from attaching to an uncommitted parent; a committed
+complete parent's bounded positions leave no free slot. Different headers need no
+common closure lock. Same-reference concurrency remains serialized/guarded by its
+owner lock and immediate UNIQUE. Ordinary FK/unique waits and timeout/deadlock
+handling still apply; no universal deadlock-free claim. Header-only/short/gapped
+aggregates fail; excess lines fail earlier position/FK guards. A failed later line
+rolls back all source inserts. ROLLBACK TO SAVEPOINT also discards pending trigger
+events for rolled-back headers; no stale closure check should block a valid durable
+rejection. A guard forced early with SET CONSTRAINTS may reject an incomplete
+transaction technically; owner registration must not force it before all lines.
+
+Alternatives: (a) application-only closure is simpler but fails direct restricted-
+role malformed insertion/append protection; (b) one immutable JSON line array
+closes the document naturally but loses ordinary typed line/catalogue FKs and
+simple future I2 line references without extra integrity machinery; (c) deferred
+cyclic seal/array-key designs replace one count check with more keys/state. Retain
+the small guard for the normalized model. Existing
+[0012 integrity migration](../../database/migrations/0012_production_sources.sql)
+is an integrity-trigger/deferred-FK precedent, not automatic approval of this new
+mechanism. Migration owner creates it; runtime only invokes approved integrity
+behavior. No stored posting kernel, trigger-based transaction owner or foreign
+module write is introduced. Real-PG proof in A14/A23/A27 remains mandatory later.
 
 ## Query indexes and limits
 
@@ -202,8 +263,10 @@ testing same-account Identity serialization only.
 
 1. **Register order:** validate closed fields, numeric/Jalali rules and complete
    array; acquire owner resources; current check; target binding then reference
-   uniqueness; read scoped typed catalogue options; preflight full read projection
-   <=256 KiB; allocate line UUIDs/positions and insert header+all lines; final current
+   uniqueness; read scoped typed catalogue options; allocate/freeze line UUIDs and
+   positions in memory; build and preflight the exact full read projection including
+   those IDs, its HTTP data wrapper and escaping <=256KiB; only then insert
+   header+all lines; final current
    check; return minimal accepted decision. Kernel records outcome/audit on the
    same opaque transaction and commits. Owner never commits or writes kernel tables.
 2. **Add option:** validate kind/label; acquire target/label resources; current check;

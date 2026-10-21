@@ -3,10 +3,10 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.20.0
+version: 0.21.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
-last_reviewed: 2026-10-20
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
@@ -846,3 +846,15 @@ review and authorization.
   contract/permission, enum, IPS/receipt, dependency or product gate/unlock change;
   no final I2 design, UI/deployment, push or twelfth capability. Stop for Owner
   design review and separate bounded implementation authorization.
+
+### APR-035 — Focused final I1 design review only
+
+- [Actual Owner instruction](approved-baselines/APR-035-i1-final-design-review.md)
+  authorizes documentation-only verification/corrections of local16115d7, whose
+  push remains unverified. It does not formally accept the design or I1-D01–D14.
+- [Final review](../12-implementation-planning/I1_PURCHASE_ORDER_FINAL_REVIEW.md)
+  records independent architecture/security/DB assessment and conditional decision
+  dispositions. R1 reference equivalence remains OPEN; factory-wide namespace stays
+  resolved. Numeric/calendar/catalogue/UTF8/resource choices remain proposed.
+- No executable code/SQL/contracts/permissions/tests, gate/unlock change, I2 detailed
+  design, remote push or additional accepted capability. Stop for Owner decision.

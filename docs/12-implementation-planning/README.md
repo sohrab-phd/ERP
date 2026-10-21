@@ -3,17 +3,23 @@ id: PHASE-12
 title: Implementation Planning
 phase: 12-implementation-planning
 status: approved
-version: 0.10.0
+version: 0.11.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [PHASE-11, APR-013, APR-014, VAL-P12-HANDOFF-001, ASM-025]
-last_reviewed: 2026-10-20
+last_reviewed: 2026-10-21
 approval: APR-014
 supersedes: null
 ---
 
 # Phase 12 — Implementation Planning
 
-Current task: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md),
+Current task: [APR-035](../00-governance/approved-baselines/APR-035-i1-final-design-review.md),
+focused I1 design review only. [Final review and14dispositions](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
+record corrected numeric/text/resource/PG proposals, the finite calendar choice
+and OPEN R1 reference equivalence before unconditional acceptance. No Owner
+acceptance/implementation/push is invented; eleven capabilities remain.
+
+Earlier task: [APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md),
 Step 3 detailed technical DESIGN of I1 only. The [six-file package](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
 covers separate immutable operational orders/lines, both-role shared reference
 catalogues, proposed API/SQL/transactions/security and 60-ID future acceptance.

@@ -3,18 +3,20 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.16.0
+version: 0.17.0
 owners: [chief-solution-architect]
 depends_on: []
-last_reviewed: 2026-10-20
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
 
-## Current purchase/receiving analysis (2026-10-20)
+## Current purchase/receiving analysis (2026-10-21)
 
+- [Focused I1 final-review-only Owner instruction](00-governance/approved-baselines/APR-035-i1-final-design-review.md)
+- [I1 final dispositions, corrections, conditions and OPEN identity decision](12-implementation-planning/I1_PURCHASE_ORDER_FINAL_REVIEW.md)
 - [Step 3 I1 detailed-design-only Owner authority](00-governance/approved-baselines/APR-034-i1-detailed-design.md)
 - [I1 domain model and exact twelve-field design](12-implementation-planning/I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
 - [I1 proposed command/query/HTTP contracts](12-implementation-planning/I1_PURCHASE_ORDER_API_DESIGN.md)

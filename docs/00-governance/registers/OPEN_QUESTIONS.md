@@ -3,17 +3,28 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: in_review
-version: 0.36.0
+version: 0.37.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
-last_reviewed: 2026-10-20
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Open Questions Register
 
-## Current I1 detailed-design boundary (2026-10-20)
+## Current final I1 review (2026-10-21)
+
+[APR-035](../approved-baselines/APR-035-i1-final-design-review.md) authorizes only
+documentation review/corrections. [R1 in the final review](../../12-implementation-planning/I1_PURCHASE_ORDER_FINAL_REVIEW.md#r1--factory-scope-resolved-identifier-equivalence-still-open)
+is OPEN: do reference spelling/space/case/Persian-Arabic/Unicode variants denote
+distinct identifiers or the same PO? Factory-wide namespace remains Owner-resolved;
+exact DB uniqueness alone proves only byte-identical deduplication. Do not silently
+normalize or claim complete business identity enforcement. Conditional catalogue
+equality, numeric/text/line/calendar capacities and PG mechanism also await design
+acceptance. No other OQ/I2 status is closed or changed by this review.
+
+## Earlier I1 detailed-design boundary (historical2026-10-20)
 
 [APR-034](../approved-baselines/APR-034-i1-detailed-design.md) explicitly authorizes
 Step 3 I1 design only. The [proposed technical decision/risk log](../../12-implementation-planning/I1_PURCHASE_ORDER_DECISIONS.md)
