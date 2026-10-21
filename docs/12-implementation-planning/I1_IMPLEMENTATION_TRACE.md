@@ -2,16 +2,22 @@
 id: IMPL-I1-TRACE-001
 title: I1 requirements to executable code and acceptance evidence
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 0.2.0
 owners: [qa-architect, delivery-lead]
-depends_on: [APR-038, IMPL-I1-001, PLAN-I1-ACCEPTANCE-001, DOM-INBOUND-TRACE-001, DOM-INBOUND-POLICY-001]
+depends_on: [APR-039, APR-038, IMPL-I1-001, PLAN-I1-ACCEPTANCE-001, DOM-INBOUND-TRACE-001, DOM-INBOUND-POLICY-001]
 last_reviewed: 2026-10-21
-approval: APR-038 implementation evidence; no Owner capability acceptance
+approval: APR-039 formal Owner I1 backend acceptance
 supersedes: null
 ---
 
 # I1 implementation trace — original sixty requirement identities preserved
+
+[APR-039](../00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
+records actual Owner acceptance of I1 backend commit e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4.
+The focused check confirmed all60IDs and executed evidence; twelve capabilities
+are Owner accepted. Every I2 DEFERRED/PARTIAL remainder below stays unimplemented.
+No requirement ID, original field mapping or I1/I2 boundary is changed.
 
 Companion to [actual delivery evidence](I1_IMPLEMENTATION_STATUS.md) and the accepted
 [future acceptance baseline](I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md). No original
@@ -56,7 +62,7 @@ actual commands/results and independent review closure.
 | REQ-INBOUND-021 | PARTIAL: business reference/key/UUID/line identity separation | raw R1 key, independent line UUIDs and command binding | A02,A04,A12,A20; physical/document identities I2 |
 | REQ-INBOUND-022 | PARTIAL: no fabricated QC/tolerance/exception/financial behavior | Closed owner contracts/no foreign effect | A05,A15,A17,A25; B06/I2 |
 | REQ-INBOUND-023 | PARTIAL: trusted current personal I1 authority | IdentityAuthorization and InboundService.current | A10,A18–A20; unrelated receiving grants deferred |
-| REQ-INBOUND-024 | IMPLEMENTED I1 regression obligation; old capabilities preserved | New owner-only adapters/routes plus full existing suites | A02,A15,A17,A25,A27; eleven still Owner accepted |
+| REQ-INBOUND-024 | IMPLEMENTED I1 regression obligation; old capabilities preserved | New owner-only adapters/routes plus full existing suites | A02,A15,A17,A25,A27; eleven prior preserved, I1 twelfth accepted |
 | REQ-INBOUND-025 | GOVERNED: earlier weighbridge questionnaire residuals retained | No ticket/device/I2 implementation | A05,A25; OQ-011/OQ-019 not blanket closed |
 | REQ-INBOUND-F01 | DEFERRED I2: شماره سیستم; YES; Mr. Karimi original receiving entry | No I1 payload alias or source field | A05/A25 closed-scope exclusion; no claim of field implementation |
 | REQ-INBOUND-F02 | IMPLEMENTED: شماره سفارش; YES; Ms. Masoumi original purchasing entry | orderReference / generated R1 key | A01–A03,A16,R1-T01–T12; receiving actual values remain I2 where applicable |
@@ -153,4 +159,5 @@ replaced by a mock; deliberate fault seams retain actual transactions/SQL/constr
 | R1-T11 | B,H,D: equivalent scoped lookup and generic absent/foreign/unauthorized results |
 | R1-T12 | V,B,D,H: catalogue exact-only separation, raw limits before transform, zero foreign authority |
 
-I2 policy/design/implementation and Owner capability acceptance remain separate.
+I2 policy/design/implementation and its future acceptance remain separate; I1 backend
+acceptance is recorded in APR-039.

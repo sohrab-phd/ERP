@@ -5,15 +5,16 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-Current scope (2026-10-21): [APR-038 explicitly authorizes bounded I1 implementation](docs/00-governance/approved-baselines/APR-038-i1-implementation-authorization.md)
-after the accepted APR-037 design. I1 operational purchase-order registration,
-shared reference catalogues for ACT-PROC/ACT-WH and original-order warehouse lookup
-are implemented locally. See [actual validation/review evidence](docs/12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
-and the [60-ID implementation trace](docs/12-implementation-planning/I1_IMPLEMENTATION_TRACE.md).
-The gate/local unlock is reconciled for I1 only. Eleven backend capabilities remain
-Owner accepted; I1 awaits separate Owner capability acceptance. No I2, browser UI,
-factory UAT, production deployment or remote push is implied. Earlier descriptions
-below are historical; [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls authority.
+Current scope (2026-10-21): [APR-039 formally records Owner acceptance of I1](docs/00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
+at implementation commit `e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4`, after the
+required focused read-only evidence check. **Twelve backend capabilities are Owner
+accepted.** [Actual I1 tests/review](docs/12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
+and [60-ID code/test trace](docs/12-implementation-planning/I1_IMPLEMENTATION_TRACE.md)
+remain the evidence; the suite was not rerun for this acceptance documentation.
+The next authorized task is only the [short Persian I2 business decision sheet](docs/12-implementation-planning/I2_BUSINESS_DECISIONS_FA.md).
+I2 is not implemented or authorized for coding/design execution; no gate/unlock
+change, UI, factory UAT, production deployment or push. Earlier descriptions below
+are historical; [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls authority.
 
 ## Earlier delivered foundation and backend capabilities
 

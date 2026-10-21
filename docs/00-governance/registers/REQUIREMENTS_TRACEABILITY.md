@@ -3,15 +3,27 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: in_review
-version: 0.16.0
+version: 0.17.0
 owners: [requirements-owner, qa-architect]
-depends_on: [APR-038, APR-037, SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
+depends_on: [APR-039, APR-038, APR-037, SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Requirements Traceability Matrix
+
+## Formal I1 backend acceptance and scoped I2 clarification
+
+[APR-039](../approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
+records I1 backend acceptance at e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4 after
+focused read-only verification of [60-ID implementation trace](../../12-implementation-planning/I1_IMPLEMENTATION_TRACE.md)
+and executed184unit/306distinct-PG evidence. Twelve capabilities are Owner accepted.
+All original25workflow/23field/12supplemental IDs and source evidence are preserved;
+I2-dependent obligations remain open. [Short I2 decision sheet](../../12-implementation-planning/I2_BUSINESS_DECISIONS_FA.md)
+maps only actual residual business policy, not a new technical gap analysis or
+implementation authorization. No runtime/gate change or test rerun is claimed.
+
 
 ## Current I1 executable trace under APR-038
 

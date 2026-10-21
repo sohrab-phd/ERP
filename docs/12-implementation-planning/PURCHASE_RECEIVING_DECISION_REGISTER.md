@@ -3,15 +3,31 @@ id: PLAN-INBOUND-DECISIONS-001
 title: Purchase and receiving Step 2 policy and design register
 phase: 12-implementation-planning
 status: in_review
-version: 0.7.0
+version: 0.8.0
 owners: [business-process-owner, chief-solution-architect, security-architect]
-depends_on: [APR-038, APR-037, APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
+depends_on: [APR-039, APR-038, APR-037, APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Policy and design register — resolved business portions and OPEN residuals
+
+[APR-039 formal Owner acceptance](../00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
+accepts I1 implementation e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4 after the focused
+read-only evidence check. Twelve capabilities are now Owner accepted; I2 is absent.
+[Existing delivery results](I1_IMPLEMENTATION_STATUS.md) and [60-ID trace](I1_IMPLEMENTATION_TRACE.md)
+remain the accepted evidence, not a fresh full test execution. No I1 design is reopened.
+
+The next task is only [unresolved I2 business decisions in Persian](I2_BUSINESS_DECISIONS_FA.md):
+B02/B03, non-PO B01/B04, changed-W1 B05, exceptions B06, receiving-only B07/B08,
+minimum evidence/escalation B09 and business meaning/authority for D10 material
+classification. Confirmed facts stay settled. Answers feed a bounded I2 design
+and separate implementation approval; no I2 design/code/migration/permission or
+gate expansion is authorized now. B10 historical linking remains excluded; no push.
+
+## Earlier delivery status (historical; current acceptance is APR-039)
+
 
 [APR-038](../00-governance/approved-baselines/APR-038-i1-implementation-authorization.md)
 is the actual bounded Owner implementation authority after accepted APR-037 design.
@@ -74,7 +90,7 @@ choices and safe deferrals. Owner-confirmed policies are not recommendations;
 remaining recommendations are PROPOSED, never approved answers.
 No decision here changes a grant, contract, invariant, gate or OQ status.
 
-## Q1–Q11 disposition
+## Q1–Q11 disposition (Step2 assessment; accepted I1 runtime supersedes its I1 design waits)
 
 | Step 1 question | Answered / governed already | Genuine business residual | Technical or deferred residual |
 | --- | --- | --- | --- |
@@ -101,14 +117,14 @@ design/implementation, not that Step 2 documentation is blocked.
 
 | ID / state | Exact question and scenario | Affected operation / invariant; timing | Preferred option, rationale, alternatives and risk |
 | --- | --- | --- | --- |
-| B01 PO: OWNER RESOLVED; non-PO: OPEN | Confirmed by SRC-005: exact seller PO reference unique across the entire factory regardless of supplier; duplicate registration never overwrites/merges. Multiple arrivals/waybills may reference it. No further PO-namespace/supplier question. Remaining: waybill/existing receipt reference reuse/cardinality only. | I1 business blocker removed; D01 must enforce the whole trusted installation/factory boundary rather than person/supplier or an accidentally narrower authority. Non-PO document decisions belong before I2. | Preserve source text and separate UUID/key identities. No extra mandatory field or supplier master. Current completed-purchase documentary references/records unchanged; equality/enforcement mechanism remains technical design, not selected index. |
+| B01 PO: OWNER RESOLVED; non-PO: OPEN | Confirmed by SRC-005: exact seller PO reference unique across the entire factory regardless of supplier; duplicate registration never overwrites/merges. Multiple arrivals/waybills may reference it. No further PO-namespace/supplier question. Remaining: waybill/existing receipt reference reuse/cardinality only. | I1 business blocker removed; D01 must enforce the whole trusted installation/factory boundary rather than person/supplier or an accidentally narrower authority. Non-PO document decisions belong before I2. | Preserve source text and separate UUID/key identities. No extra mandatory field or supplier master. Current completed-purchase documentary references/records unchanged. I1 R1/generated-key uniqueness is implemented and Owner accepted under APR-039; only non-PO equivalence/identity remains undecided. |
 | B02 OPEN | Who issues/physically associates unit codes, within what namespace may they repeat or be reused, and how are already-received units with repeated legacy codes distinguished? During coexistence, how will an operator recognize an already-posted unit across old and new receipt paths? | Physical-unit identity, double-post prevention and legacy compatibility; before I2 identity constraints/rollout | Keep legacy records immutable, introduce approved scoped identity for new confirmations and an explicit legacy reconciliation/rollout procedure. A mapping may be necessary; global uniqueness/backfill is not selected. UUID or command key alone cannot prove that two confirmations concern different physical goods. |
 | B03 OPEN | What does `شماره محصول` identify on a real document/physical item: product class, seller product, individual unit or something else? At which level is it recorded and may several units/lines share it? Is there an actual relationship to existing Sheet productCode? | Mandatory F19 ownership and validation; before I2 model finalization | Keep concept distinct until example-backed meaning is confirmed. Reusing Sheet uniqueness without evidence could reject valid coils or conflate identities. |
 | B04 OPEN | Can one truck/waybill contain several POs? Can one existing warehouse receipt document cover several arrivals or only part of one arrival? What is one physical unit for each relevant material/packaging form? | W2/W3 recorded once at true consignment grain, receipt relationships, unit origins and transaction group; before I2 | Model known PO→many arrivals and line→many units, retain each document identity separately. Select confirmation group only after these relationships are known; do not duplicate full-truck W2 on each PO slice or infer one receipt per truck. |
 | B05 OPEN / ARCHITECTURE RECONCILIATION | If accepted W1 differs from the ordered value while units cannot be weighed individually, which evidence establishes the replacement W1 and who may accept it? For unchanged W1, confirm the operational evidence reference/custody under B09 without re-asking its stock-basis rule. | Trusted new origin provenance; reconciliation with ADR-0016 measuredKg and effect validation; before I2 | Preserve ordered W1 and accepted W1 with source/actor, explicitly authorize the new provenance meaning. No reinterpretation of immutable historical measured origins. If changed-W1 cases are deferred, explicitly approve that limitation and escalation; W2/W3 allocation is never an alternative. |
 | B06 OPEN | In an order for five units, what may Karimi accept if six arrive or one has different specifications? What is recorded for rejected/held goods and who resolves the exception before stock posting? | Ordered progress, discrepancy acceptance and no posting of nonaccepted material; before affected I2 branches | Approve an ordinary matched/within-order bounded branch plus a documented escalation for exceptions if full policy is unavailable. This requires Owner agreement; do not silently reject all mismatches, accept extras, clamp outstanding to zero or introduce QC. |
-| B07 I1 policy: OWNER RESOLVED; representation: DESIGN REQUIRED; I2 residuals: OPEN | Width m/thickness mm mandatory; length m optional. Registration date Jalali only. W1/count/W2/W3 meanings remain confirmed. Shared extensible Material Type/Quality/Color lists are REQUIRED, with current field requiredness and separate optional RAL. No re-questioning these facts. | I1 business blockers removed. Exact numeric precision/encoding, Jalali validation/storage, catalogue identity/equivalence/concurrency and distinct repeated lines are technical analysis. I2 receiving date, W2/W3 source representation and actual-line matching context remain unresolved where applicable. | Preserve exact terms and units, no float/rounding/tolerance or silent equivalence/merge. Gregorian storage is only an option for later analysis. Catalogue creation does not select a technical class. D05/D09/D10; no automatic mandatory item number, RAL dependency or extra register field. |
-| B08 I1 core: OWNER RESOLVED; I2 sensitive reads: OPEN | PROC may register/read operational orders/lines; WH may number-lookup/read original needed specs. BOTH ACT-PROC and ACT-WH may add/select Material Type, Quality and Color without another employee/administrator approval. Later I2 progress and actual receiving contracts remain separate. | I1 core role policy blocker removed, executable authorization still absent. Remaining I2 arrival/driver/truck/discrepancy field disclosure and ACT-SEC extension require scoped decisions/design. | Preserve personal current org grants, isolation, attribution/revocation/replay/audit. No WH PO edits, PROC stock authority, customer/unrelated catalogue modification or widened completed-purchase/proforma reads. Catalogue-add authority is not mapping administration, receipt confirmation or B06 acceptance. Backups are individually provisioned later. |
+| B07 I1 policy/design/implementation: OWNER ACCEPTED APR-039; I2 residuals: OPEN | Width m/thickness mm mandatory; length m optional. Registration date Jalali only. W1/count/W2/W3 meanings remain confirmed. Shared extensible Material Type/Quality/Color lists are REQUIRED, with current field requiredness and separate optional RAL. No re-questioning these facts. | I1 exact numeric representation, finite Jalali YMD/profile, exact-label catalogue identity/concurrency and distinct line identities are already implemented and Owner accepted under APR-037/APR-039. Only I2 receiving-date policy, W2/W3 source representation and actual-line matching context remain where applicable. | Preserve accepted I1 exact values and direct Jalali YMD/profile without reopening its storage or identity choices. Further date/weight representation analysis applies only to I2 receiving after its business answers. No float/rounding/tolerance, silent merge, automatic technical class, mandatory item number/RAL dependency or extra factory field. |
+| B08 I1 core: OWNER ACCEPTED APR-039; I2 sensitive reads: OPEN | PROC may register/read operational orders/lines; WH may number-lookup/read original needed specs. BOTH ACT-PROC and ACT-WH may add/select Material Type, Quality and Color without another employee/administrator approval. Later I2 progress and actual receiving contracts remain separate. | I1 executable authorization is implemented and Owner accepted under APR-039. Remaining I2 arrival/driver/truck/discrepancy field disclosure and ACT-SEC extension require scoped decisions/design. | Preserve personal current org grants, isolation, attribution/revocation/replay/audit. No WH PO edits, PROC stock authority, customer/unrelated catalogue modification or widened completed-purchase/proforma reads. Catalogue-add authority is not mapping administration, receipt confirmation or B06 acceptance. Backups are individually provisioned later. |
 | B09 OPEN | What must the operator do for missing/disputed waybill W2, unavailable accepted W1, or unknown/ambiguous PO; who retains and retrieves the waybill/existing receipt evidence; and who handles an already-posted error while correction is unavailable? | Operability and mandatory evidence; before I2 acceptance/rollout | Require a named operational escalation/custody procedure and clear pending outcome handling. Missing optional W3 remains valid. Do not invent a fallback reason, ticket ID, attachment mandate, tolerance, bypass or compensating stock operation. Detailed digital attachment/retention features can be deferred once minimum custody is agreed. |
 | B10 OPEN IF INCLUDED / otherwise DEFERRED | Is explicit linkage of operational POs to old completed-purchase/proforma evidence or historical no-PO receipts required in the initial workflow, and what real document relationship supports it? | Only historical association/backfill, not ordinary new PO registration; safe to defer from I1/I2 if excluded explicitly | Coexist as distinct immutable concepts initially; do not infer matching from similar references/dates/descriptions. Any future link needs approved cardinality, provenance and read scope, without automatic financial or stock effects. |
 
@@ -121,12 +137,12 @@ B07 receiving residuals, B08 I2 disclosure and B09 remain blockers only for affe
 I2 scope. B10 historical linking may be deferred; mixed-path physical identity B02
 must be resolved before affected new stock, not before stock-free I1.
 
-## Technical choices — I1 accepted baseline; I2 design remains open
+## Technical choices — historical Step2 categories; I1 implemented/accepted, I2 remains open
 
 The D01–D10 identifiers below are the Step 2 technical work categories, distinct
 from I1-D01–I1-D14. Their original descriptions are retained for traceability:
-I1 portions are now specified/accepted in APR-037, while executable implementation
-and all affected I2 portions remain outstanding. Older statements that I1 precision,
+I1 portions are specified/accepted in APR-037 and implemented/Owner accepted in
+APR-039; only affected I2 portions remain outstanding. Older statements that I1 precision,
 calendar or catalogue equality is unselected are historical, superseded only by
 that accepted I1 baseline; no I2 mapping or receiving policy is inferred.
 
@@ -143,7 +159,7 @@ that accepted I1 baseline; no I2 mapping or receiving policy is inferred.
 | D09 | Shared reference selection/addition, identity/duplicate races, trusted creation and historical selection preservation in existing owner | Both roles authorized; exact normalization/IDs/storage not chosen; no silent business equivalence/merge; no large master-data subsystem, edit/delete/merge authority or new factory fields inferred |
 | D10 | Separate extensible business Material Type from fixed technical classes; explicit supported mapping before I2 stock | I1 may register legitimate unmapped business value without stock; no automatic OTHER/enum change; mapping meaning/ownership/assignment authority unresolved for I2 and not implied by catalogue addition |
 
-## Deferred work and gate
+## Deferred work and earlier gate assessment (historical; APR-039 controls current scope)
 
 Automatic device protocols/hardware, separate printed-ticket capture/identity,
 commercial/final-order weighing, attachments, browser UI, enhanced reporting,

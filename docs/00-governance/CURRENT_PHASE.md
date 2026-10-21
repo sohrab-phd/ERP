@@ -3,15 +3,31 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.57.0
+version: 0.58.0
 owners: [chief-solution-architect]
-depends_on: [APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
+
+Current Owner instruction: [APR-039](approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
+formally accepts I1 backend commit e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4;
+its focused evidence-consistency condition is satisfied. **Twelve Owner-accepted
+backend capabilities.** This is not UI, factory UAT or production acceptance.
+
+Current task is documentation only: record acceptance/status and prepare the
+[concise Persian unresolved I2 decision sheet](../12-implementation-planning/I2_BUSINESS_DECISIONS_FA.md).
+No I1 redesign; no I2 detailed design, runtime code, migration, executable contract,
+permission or product gate/unlock change. Existing APR-038 implementation controls
+are unchanged and confer no I2 authority. Resolve only actual business residuals,
+then bounded I2 design/implementation requires separate explicit Owner authority.
+No push. Earlier I1 delivery/acceptance-pending statements below are historical.
+
+## Earlier delivery status (historical; current acceptance is APR-039)
+
 
 Current implementation authority is [APR-038](approved-baselines/APR-038-i1-implementation-authorization.md):
 actual Owner explicitly authorizes complete I1 backend implementation, real tests,

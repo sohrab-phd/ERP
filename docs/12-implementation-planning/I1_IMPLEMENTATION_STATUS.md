@@ -2,24 +2,26 @@
 id: IMPL-I1-001
 title: I1 operational purchase orders catalogues and warehouse lookup implementation evidence
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 0.2.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
-depends_on: [APR-038, APR-037, PLAN-I1-ACCEPTANCE-001, PLAN-I1-REFERENCE-001, PLAN-I1-CALENDAR-RECEIPT-001]
+depends_on: [APR-039, APR-038, APR-037, PLAN-I1-ACCEPTANCE-001, PLAN-I1-REFERENCE-001, PLAN-I1-CALENDAR-RECEIPT-001]
 last_reviewed: 2026-10-21
-approval: APR-038 bounded implementation authority; Owner capability acceptance pending
+approval: APR-039 formal Owner I1 backend acceptance
 supersedes: null
 ---
 
 # I1 backend implementation and delivery evidence
 
-Verification status: ENGINEERING VERIFIED; required findings closed; ready for
-separate Owner capability acceptance. Authority is the
+Verification status: OWNER ACCEPTED under [APR-039](../00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md),
+implementation e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4. The Owner required a
+focused read-only check of commit/source/trace/log/review consistency; it passed.
+No application/PostgreSQL suite was rerun for this acceptance task. Original implementation authority is the
 actual Owner [APR-038 implementation instruction](../00-governance/approved-baselines/APR-038-i1-implementation-authorization.md),
 from local b47d0eb1d0a36032b311c628818846501cc4248d, following accepted I1-D01–D14
 in [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md).
-No push or remote presence is inferred. Eleven capabilities remain Owner accepted;
-I1 engineering delivery is not a twelfth Owner-accepted capability, UAT or deployment.
+No push or remote presence is inferred. I1 is now the twelfth Owner-accepted backend
+capability; acceptance is not browser UI delivery, factory UAT or production deployment.
 
 ## Implemented factory workflow and boundaries
 
@@ -226,5 +228,7 @@ historical links remain deferred. No receiving/progress/physical units/W2/W3,
 PO amendment/cancel/backfill, catalogue rename/delete/merge, UI, QC, devices,
 settlement/corrections, factory UAT or deployment. No blanket OQ-011/OQ-019 closure.
 
-Stop after verified local I1 commit for Owner review. Do not push or start I2.
-Formal I1 capability acceptance remains the Owner's separate decision.
+Formal I1 acceptance is now recorded in APR-039 after evidence verification. The
+next authorized task is only the [I2 business decision sheet](I2_BUSINESS_DECISIONS_FA.md).
+No I2 implementation, detailed design, gate/unlock change or remote push. The
+executed results above remain historical implementation evidence, not rerun tests.

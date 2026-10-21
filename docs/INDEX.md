@@ -3,15 +3,26 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.20.0
+version: 0.21.0
 owners: [chief-solution-architect]
-depends_on: [APR-038, APR-037]
+depends_on: [APR-039, APR-038, APR-037]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## I1 formally accepted; current I2 task is business clarification only
+
+- [APR-039 actual Owner backend acceptance and verified evidence](00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
+- [Concise Persian I2 factory decision sheet — OPEN recommendations](12-implementation-planning/I2_BUSINESS_DECISIONS_FA.md)
+
+Twelve backend capabilities are Owner accepted. I1 implementation is accepted;
+I2 is neither implemented nor authorized for implementation. No repeated I1 design,
+full test rerun, gate/unlock change or push is part of this documentation task.
+Earlier delivery-stage pending-acceptance statements below are historical.
+
 
 ## Current I1 implementation delivery (2026-10-21)
 

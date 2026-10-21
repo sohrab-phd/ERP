@@ -3,15 +3,27 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.24.0
+version: 0.25.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-038, APR-037, GOV-GATES-001]
+depends_on: [APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-039 — Formal I1 backend acceptance and direct I2 business clarification
+
+[Actual Owner acceptance](approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
+accepts implementation e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4 after the required
+focused read-only consistency check. Commit/source/migration,60-ID trace,305+5
+executions/306distinct integration cases,184unit and closed I1-REV-01–05 evidence
+are present and consistent. No full rerun or new I1 design cycle. **Twelve backend
+capabilities are Owner accepted.** Only [short Persian I2 business decisions](../12-implementation-planning/I2_BUSINESS_DECISIONS_FA.md)
+and necessary governance/status work are authorized now. I2 runtime, contracts,
+permissions, migrations, gate/unlock, UI, UAT, deployment and push are not authorized.
+
 
 ## APR-038 — Owner-authorized bounded I1 backend implementation
 

@@ -3,15 +3,31 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.13.0
+version: 0.14.0
 owners: [chief-solution-architect]
-depends_on: [APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
+depends_on: [APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
+
+[APR-039 formal Owner acceptance](../00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
+accepts I1 implementation e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4 after the focused
+read-only evidence check. Twelve capabilities are now Owner accepted; I2 is absent.
+[Existing delivery results](I1_IMPLEMENTATION_STATUS.md) and [60-ID trace](I1_IMPLEMENTATION_TRACE.md)
+remain the accepted evidence, not a fresh full test execution. No I1 design is reopened.
+
+The next task is only [unresolved I2 business decisions in Persian](I2_BUSINESS_DECISIONS_FA.md):
+B02/B03, non-PO B01/B04, changed-W1 B05, exceptions B06, receiving-only B07/B08,
+minimum evidence/escalation B09 and business meaning/authority for D10 material
+classification. Confirmed facts stay settled. Answers feed a bounded I2 design
+and separate implementation approval; no I2 design/code/migration/permission or
+gate expansion is authorized now. B10 historical linking remains excluded; no push.
+
+## Earlier delivery status (historical; current acceptance is APR-039)
+
 
 [APR-038](../00-governance/approved-baselines/APR-038-i1-implementation-authorization.md)
 is the actual bounded Owner implementation authority after accepted APR-037 design.
