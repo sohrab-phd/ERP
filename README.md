@@ -5,14 +5,15 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-Current scope (2026-10-21): [APR-037 formally accepts I1 detailed design](docs/00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)
-with mandatory conditions. I1 is **not implemented**; the [bounded implementation
-handoff DRAFT](docs/12-implementation-planning/I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
-is **PROPOSED — NOT AUTHORIZED FOR EXECUTION**. No product gate/unlock changes.
-Eleven backend capabilities are Owner accepted; no additional capability, factory UAT
-or production approval is implied. Reviewed local commit remote presence is unverified;
-no push is performed. Earlier delivery-stage descriptions below are historical;
-[CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls effective authority.
+Current scope (2026-10-21): [APR-038 explicitly authorizes bounded I1 implementation](docs/00-governance/approved-baselines/APR-038-i1-implementation-authorization.md)
+after the accepted APR-037 design. I1 operational purchase-order registration,
+shared reference catalogues for ACT-PROC/ACT-WH and original-order warehouse lookup
+are implemented locally. See [actual validation/review evidence](docs/12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
+and the [60-ID implementation trace](docs/12-implementation-planning/I1_IMPLEMENTATION_TRACE.md).
+The gate/local unlock is reconciled for I1 only. Eleven backend capabilities remain
+Owner accepted; I1 awaits separate Owner capability acceptance. No I2, browser UI,
+factory UAT, production deployment or remote push is implied. Earlier descriptions
+below are historical; [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls authority.
 
 ## Earlier delivered foundation and backend capabilities
 

@@ -3,15 +3,27 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: in_review
-version: 0.15.0
+version: 0.16.0
 owners: [requirements-owner, qa-architect]
-depends_on: [APR-037, SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
+depends_on: [APR-038, APR-037, SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Requirements Traceability Matrix
+
+## Current I1 executable trace under APR-038
+
+[Actual implementation trace](../../12-implementation-planning/I1_IMPLEMENTATION_TRACE.md)
+accounts for all sixty original IDs, twelve purchasing fields (seven required/five
+optional), A01–A28 and R1-T01–T12. [Delivery evidence](../../12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
+records executed validation and independent review, not merely proposed tests.
+I1-deliverable and I2-dependent obligations remain separate. Original SRC-004–006,
+23-field register and requirement identities are unchanged. Earlier future-only
+statements below describe the accepted design stage, superseded for I1 execution
+by [APR-038](../approved-baselines/APR-038-i1-implementation-authorization.md).
+
 
 ## Formal I1 design acceptance trace (2026-10-21)
 

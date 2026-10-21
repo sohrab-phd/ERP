@@ -16,6 +16,7 @@ const forbidden = new Set([
  */
 function scan(sql, ordinaryEscapes) {
   let i = 0;
+  let caseDepth = 0;
   const fail = () => {
     throw new Error('Invalid migration content');
   };
@@ -84,11 +85,15 @@ function scan(sql, ordinaryEscapes) {
         quoted("'", true);
         continue;
       }
-      if (forbidden.has(word)) fail();
+      if (word === 'CASE') caseDepth++;
+      else if (word === 'END' && caseDepth > 0) caseDepth--;
+      else if (forbidden.has(word)) fail();
       continue;
     }
+    if (sql[i] === ';' && caseDepth !== 0) fail();
     i++;
   }
+  if (caseDepth !== 0) fail();
 }
 export function validateMigrationSql(sql) {
   if (typeof sql !== 'string') throw new Error('Invalid migration content');

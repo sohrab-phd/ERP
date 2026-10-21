@@ -3,15 +3,27 @@ id: PLAN-INBOUND-DECISIONS-001
 title: Purchase and receiving Step 2 policy and design register
 phase: 12-implementation-planning
 status: in_review
-version: 0.6.0
+version: 0.7.0
 owners: [business-process-owner, chief-solution-architect, security-architect]
-depends_on: [APR-037, APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
+depends_on: [APR-038, APR-037, APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Policy and design register — resolved business portions and OPEN residuals
+
+[APR-038](../00-governance/approved-baselines/APR-038-i1-implementation-authorization.md)
+is the actual bounded Owner implementation authority after accepted APR-037 design.
+I1 original order/line registration, exact shared catalogues for both PROC/WH and
+original-order queries are implemented. [Delivery evidence](I1_IMPLEMENTATION_STATUS.md)
+and [60-ID code/test trace](I1_IMPLEMENTATION_TRACE.md) provide actual verification.
+No I2 functionality or policy closure, stock writer or new Owner-accepted capability
+is implied. The next work requires Owner review and separate I2 scope/policy authority;
+no push is authorized. Earlier design-only statuses below are historical.
+
+## Earlier status (historical; effective I1 authority is APR-038)
+
 
 Current [APR-037 Owner design acceptance](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)
 accepts all fourteen [I1 technical decisions](I1_PURCHASE_ORDER_DECISIONS.md) with

@@ -3,15 +3,31 @@ id: SEC-RBAC-001
 title: Role Permission and Scope Matrix
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.5.0
+version: 0.6.0
 owners: [security-architect, business-control-owner]
-depends_on: [DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
-last_reviewed: 2026-10-10
+depends_on: [APR-038, DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Role Permission and Scope Matrix
+
+## Implemented I1 operation policy — APR-038
+
+| Operation | ACT-PROC | ACT-WH | ACT-SEC / ACT-CUST / unrelated |
+| --- | --- | --- | --- |
+| Register original operational PO with lines | Allow | Deny | Deny |
+| Read original operational PO by reference/UUID | Allow | Allow | Deny |
+| Read/select/add Material Type, Quality/Grade, Color | Allow | Allow | Deny |
+| Modify original PO / post stock via I1 | No operation | No operation | No operation |
+
+All allows require individually authenticated current organizational personal grants,
+installation=authority scope, no customer binding or temporary actor, current checks
+through waits and replay disclosure. [Executable policy/test evidence](../12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
+preserves separate receiving and completed-purchase/proforma policies. Catalogue
+addition never authorizes unexpected-goods acceptance (B06 remains OPEN).
+
 
 APR-008 retains historical structure approval. Current live OQ/source
 reconciliation is delegated work, not human baseline approval.

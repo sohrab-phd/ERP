@@ -2,16 +2,30 @@
 id: APP-QRY-001
 title: Application Query Catalogue
 phase: 05-application-api-architecture
-status: approved
-version: 0.3.0
+status: in_review
+version: 0.4.0
 owners: [solution-architect, api-architect]
-depends_on: [APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
-last_reviewed: 2026-10-10
-approval: APR-007
+depends_on: [APR-038, APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
+last_reviewed: 2026-10-21
+approval: APR-007 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
 
 # Application Query Catalogue
+
+## Implemented I1 original-source queries under APR-038
+
+| Query / version | Owner / authorized role | Projection |
+| --- | --- | --- |
+| GetOperationalPurchaseOrderByReference v1 | Procurement / organizational ACT-PROC or ACT-WH | Original complete order and specifications, R1-equivalent lookup |
+| GetOperationalPurchaseOrder v1 | Procurement / organizational ACT-PROC or ACT-WH | Same business projection by technical UUID |
+| ListInboundCatalogueOptions v1 | Procurement / organizational ACT-PROC or ACT-WH | Scoped exact-label selection or UUID-keyset page, default50/max100 |
+
+See [implemented surfaces and disclosure boundaries](../12-implementation-planning/I1_IMPLEMENTATION_STATUS.md).
+No creator/binding/key/private-documentary/receiving/stock fields or automatic SEC/
+customer access. Existing documentary-purchase queries remain separately PROC-only.
+Older generic GetPurchaseOrder naming is conceptual, not another implemented route.
+
 
 Read models. Queries do not write Ledger, Balance, or posted documents.
 Customer isolation applies (INV-015). Portal visibility is a Sales-owned

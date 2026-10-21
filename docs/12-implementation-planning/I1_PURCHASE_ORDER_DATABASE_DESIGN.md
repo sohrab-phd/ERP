@@ -3,15 +3,23 @@ id: PLAN-I1-DATABASE-001
 title: Accepted I1 PostgreSQL schema concurrency and atomic transaction design
 phase: 12-implementation-planning
 status: accepted
-version: 1.0.0
+version: 1.1.0
 owners: [data-architect, chief-solution-architect]
-depends_on: [APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, ADR-0011, ADR-0013, ADR-0014]
+depends_on: [APR-038, APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, ADR-0011, ADR-0013, ADR-0014]
 last_reviewed: 2026-10-21
-approval: APR-037 design acceptance only; implementation remains unauthorized
+approval: APR-037 accepted design; APR-038 bounded implementation authority
 supersedes: null
 ---
 
-# I1 PostgreSQL and transactions — OWNER-ACCEPTED DESIGN / NOT AUTHORIZED FOR IMPLEMENTATION
+# I1 PostgreSQL and transactions — OWNER-ACCEPTED DESIGN / I1 EXECUTION UNDER APR-038
+
+Current implementation authority: [APR-038 actual Owner instruction](../00-governance/approved-baselines/APR-038-i1-implementation-authorization.md).
+See [delivered code and actual validation](I1_IMPLEMENTATION_STATUS.md) and
+[60-ID executable trace](I1_IMPLEMENTATION_TRACE.md). The accepted design content
+below remains normative; its earlier design-only/no-execution statements describe
+the APR-037 historical stage and are superseded only for bounded I1 execution.
+No I2 authority or Owner capability acceptance is inferred.
+
 
 Formal Owner design acceptance:2026-10-21, [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md),
 reviewed content at9c0976e0519192358e8a097f7b26fe43f4b1df6e. The design below is

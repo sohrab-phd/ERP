@@ -3,7 +3,7 @@
   "mode": "architecture-only",
   "enforcement": "locked",
   "implementationAuthorized": true,
-  "approvedBaseline": "docs/00-governance/approved-baselines/APR-028-finance-lite-continuation.md",
+  "approvedBaseline": "docs/00-governance/approved-baselines/APR-038-i1-implementation-authorization.md",
   "workspaceRoot": ".",
   "unlockMarker": ".cursor/IMPLEMENTATION_UNLOCK.json",
   "checkpointMarker": ".cursor/PHASE_CHECKPOINT_APPROVAL.json",

@@ -3,15 +3,27 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.12.0
+version: 0.13.0
 owners: [chief-solution-architect]
-depends_on: [APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
+depends_on: [APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
+
+[APR-038](../00-governance/approved-baselines/APR-038-i1-implementation-authorization.md)
+is the actual bounded Owner implementation authority after accepted APR-037 design.
+I1 original order/line registration, exact shared catalogues for both PROC/WH and
+original-order queries are implemented. [Delivery evidence](I1_IMPLEMENTATION_STATUS.md)
+and [60-ID code/test trace](I1_IMPLEMENTATION_TRACE.md) provide actual verification.
+No I2 functionality or policy closure, stock writer or new Owner-accepted capability
+is implied. The next work requires Owner review and separate I2 scope/policy authority;
+no push is authorized. Earlier design-only statuses below are historical.
+
+## Earlier status (historical; effective I1 authority is APR-038)
+
 
 Current task [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md):
 formal Owner acceptance of all14I1 detailed-design decisions with explicit conditions.

@@ -125,6 +125,16 @@ export async function withDatabase<T>(body: (fixture: DatabaseFixture) => Promis
     );
     await owner.query(`GRANT USAGE ON SCHEMA procurement TO ${quotedRole}`);
     await owner.query(
+      `GRANT SELECT,INSERT ON procurement.inbound_catalogue_option,procurement.operational_purchase_order,procurement.operational_purchase_order_line TO ${quotedRole}`,
+    );
+    await owner.query(
+      `GRANT EXECUTE ON FUNCTION procurement.po_reference_key_r1_v1(text),procurement.i1_order_complete() TO ${quotedRole}`,
+    );
+    await owner.query(
+      'TRUNCATE procurement.operational_purchase_order_line,procurement.operational_purchase_order,procurement.inbound_catalogue_option',
+    );
+
+    await owner.query(
       `GRANT SELECT,INSERT ON procurement.completed_purchase,procurement.purchase_proforma_sent TO ${quotedRole}`,
     );
     await owner.query('TRUNCATE procurement.purchase_proforma_sent,procurement.completed_purchase');

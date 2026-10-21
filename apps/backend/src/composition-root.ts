@@ -56,6 +56,9 @@ import { createGenealogyHandler } from './transport/genealogy-http.js';
 import { PurchaseService, type PurchaseContext } from './modules/procurement/index.js';
 import { PostgresPurchaseStore } from './infrastructure/postgresql/purchase-store.js';
 import { createPurchaseHandler } from './transport/purchase-http.js';
+import { InboundService, type InboundQueryName } from './modules/procurement/index.js';
+import { PostgresInboundStore } from './infrastructure/postgresql/inbound-store.js';
+import { createInboundHandler } from './transport/inbound-http.js';
 import { InvoiceEvidenceService, type InvoiceEvidenceContext } from './modules/finance/index.js';
 import { PostgresInvoiceEvidenceStore } from './infrastructure/postgresql/invoice-evidence-store.js';
 import { createInvoiceEvidenceHandler } from './transport/invoice-evidence-http.js';
@@ -101,6 +104,39 @@ export function compose(config: Readonly<Config>) {
     (await current(ctx.actor, ctx.transaction));
   const canPost = async (ctx: ReceiptContext) =>
     ctx.actor.actorRole === 'ACT-WH' && (await current(ctx.actor, ctx.transaction));
+  const inboundCurrent = (ctx: PurchaseContext) =>
+    ['ACT-PROC', 'ACT-WH'].includes(ctx.actor.actorRole) &&
+    ctx.actor.installationId === config.installationId &&
+    ctx.actor.authorityScopeId === config.installationId &&
+    current(ctx.actor, ctx.transaction);
+  const inbound = new InboundService(new PostgresInboundStore(), {
+    current: async (ctx) => inboundCurrent(ctx),
+  });
+  const inboundPolicies = inbound.contracts().map((contract) => ({
+    command: contract.command,
+    version: 1,
+    roles:
+      contract.command === 'RegisterOperationalPurchaseOrder'
+        ? ['ACT-PROC' as const]
+        : ['ACT-PROC' as const, 'ACT-WH' as const],
+    canTarget: (actor: ExecutionContext, request: CommandRequest) =>
+      Promise.resolve(
+        org(actor) &&
+          actor.installationId === config.installationId &&
+          actor.authorityScopeId === config.installationId &&
+          validUuid(request.target.id) &&
+          request.target.kind ===
+            (request.command === 'RegisterOperationalPurchaseOrder'
+              ? 'operational-purchase-order'
+              : 'inbound-catalogue-option'),
+      ),
+    canDisclose: (actor: ExecutionContext) =>
+      Promise.resolve(
+        org(actor) &&
+          actor.installationId === config.installationId &&
+          actor.authorityScopeId === config.installationId,
+      ),
+  }));
   const purchaseStore = new PostgresPurchaseStore();
   const purchases = new PurchaseService(purchaseStore, {
     current: async (ctx: PurchaseContext) =>
@@ -525,6 +561,7 @@ export function compose(config: Readonly<Config>) {
     registry: new CommandRegistry([
       receipts.contract(),
       ...purchases.contracts(),
+      ...inbound.contracts(),
       ...invoiceEvidence.contracts(),
       ...sales.contracts(),
       ...reservations.contracts(),
@@ -536,6 +573,7 @@ export function compose(config: Readonly<Config>) {
     audits: new PostgresAudit(),
     authorization: new IdentityAuthorization(identity, [
       ...purchasePolicies,
+      ...inboundPolicies,
       ...invoiceEvidencePolicies,
       ...salesPolicies,
       ...reservationPolicies,
@@ -562,6 +600,38 @@ export function compose(config: Readonly<Config>) {
   };
   const command = (input: string | Uint8Array, context: ExecutionContext) =>
     executeCommand(input, context, ports);
+  const inboundQuery = async (
+    kind: InboundQueryName,
+    input: Record<string, unknown>,
+    actor: ExecutionContext,
+  ) => {
+    const tx = await transactions.begin();
+    try {
+      const data = await inbound.query(
+        {
+          actor,
+          transaction: tx.context,
+          request: {
+            command: kind,
+            contract_version: 1,
+            idempotency_key: randomUUID(),
+            target: { kind: 'query', id: randomUUID() },
+            payload: {},
+            preconditions: {},
+          },
+        },
+        kind,
+        input,
+      );
+      await tx.commit();
+      return data;
+    } catch (error) {
+      await tx.rollback();
+      throw error;
+    } finally {
+      await tx.release();
+    }
+  };
   const invoiceEvidenceQuery = async (id: string, actor: ExecutionContext) => {
     const tx = await transactions.begin();
     try {
@@ -867,6 +937,7 @@ export function compose(config: Readonly<Config>) {
     genealogy: createGenealogyHandler({ identity, query: genealogyQuery }),
     receipt: createReceiptHandler({ identity, command, query }),
     purchase: createPurchaseHandler({ identity, command, query: purchaseQuery }),
+    inbound: createInboundHandler({ identity, command, query: inboundQuery }),
     invoiceEvidence: createInvoiceEvidenceHandler({
       identity,
       command,
@@ -886,6 +957,8 @@ export function compose(config: Readonly<Config>) {
     inventory,
     receipts,
     purchases,
+    inbound,
+    inboundQuery,
     invoiceEvidence,
     invoiceEvidenceQuery,
     purchaseQuery,

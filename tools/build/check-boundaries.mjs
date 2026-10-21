@@ -38,6 +38,7 @@ for (const file of files) {
           'inventory-receipt-store.ts',
           'receipt-store.ts',
           'purchase-store.ts',
+          'inbound-store.ts',
           'invoice-evidence-store.ts',
           'sales-store.ts',
           'inventory-reservation-store.ts',
@@ -110,6 +111,15 @@ for (const file of files) {
       file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-receipt-store.ts')
     )
       issues.push(relative(root, file) + ': inventory origin SQL outside persistence owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\bprocurement\.(operational_purchase_order(?:_line)?|inbound_catalogue_option|po_reference_key_r1_v1)\b/i.test(
+        node.text,
+      ) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/inbound-store.ts')
+    )
+      issues.push(relative(root, file) + ': operational inbound SQL outside Procurement owner');
     if (
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
       /\bprocurement\.(completed_purchase|purchase_proforma_sent)\b/i.test(node.text) &&

@@ -2,16 +2,27 @@
 id: DOM-OWN-001
 title: Module Capability and Data-Ownership Matrix
 phase: 02-domain-business-architecture
-status: approved
-version: 0.4.0
+status: in_review
+version: 0.5.0
 owners: [chief-solution-architect, data-architect]
-depends_on: [GOV-DATA-DICT-001, DOM-CAP-BC-001]
-last_reviewed: 2026-10-10
-approval: APR-004
+depends_on: [APR-038, GOV-DATA-DICT-001, DOM-CAP-BC-001]
+last_reviewed: 2026-10-21
+approval: APR-004 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
 
 # Module Capability and Data-Ownership Matrix
+
+## Current bounded I1 ownership — APR-038
+
+Procurement alone owns operational_purchase_order, operational_purchase_order_line
+and inbound_catalogue_option through its public command/query ports and opaque
+PostgreSQL transaction store. [Implementation evidence](../12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
+records the accepted additive design. Neither business Material Type creation nor
+PO registration changes Inventory classifications or writes stock. ACT-IPS remains
+the sole inventory poster. Historical pre-implementation restrictions below are
+not current scope; [CURRENT_PHASE](../00-governance/CURRENT_PHASE.md) is authoritative.
+
 
 ## Purpose
 

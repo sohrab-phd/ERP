@@ -6,3 +6,6 @@ export {
   parseCompletedPurchase,
   parsePurchaseProforma,
 } from './purchase-service.js';
+export * from './inbound-contracts.js';
+export { InboundService, parseOperationalOrder, parseCatalogueInput } from './inbound-service.js';
+export * from './inbound-values.js';

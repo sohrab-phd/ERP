@@ -3,15 +3,21 @@ id: PLAN-I1-AUTH-DRAFT-001
 title: Proposed future I1 implementation handoff from Owner-accepted design
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [project-sponsor, delivery-lead, chief-solution-architect]
-depends_on: [APR-037, APR-036, PLAN-I1-OWNER-CHECKLIST-001, PLAN-I1-REFERENCE-001, PLAN-I1-ACCEPTANCE-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-038, APR-037, APR-036, PLAN-I1-OWNER-CHECKLIST-001, PLAN-I1-REFERENCE-001, PLAN-I1-ACCEPTANCE-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # PROPOSED — NOT AUTHORIZED FOR EXECUTION
+
+Current execution authority is the actual Owner [APR-038](../00-governance/approved-baselines/APR-038-i1-implementation-authorization.md),
+not this draft. This document remains a historical PROPOSED handoff and is never
+automatically activated. [Actual implementation and verification](I1_IMPLEMENTATION_STATUS.md)
+are recorded separately; all I2 exclusions remain.
+
 
 این متن handoff طراحی پذیرفته‌شده برای یک دستور احتمالی آینده است؛ مجوز اجرا یا
 unlock نیست. Owner در [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)

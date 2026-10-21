@@ -3,15 +3,27 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.23.0
+version: 0.24.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-037, GOV-GATES-001]
+depends_on: [APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-038 — Owner-authorized bounded I1 backend implementation
+
+[Actual Owner implementation instruction](approved-baselines/APR-038-i1-implementation-authorization.md)
+explicitly authorizes I1 implementation after APR-037, from local b47d0eb1d0a36032b311c628818846501cc4248d.
+The canonical gate and ignored local unlock are reconciled only for this slice.
+[Actual code, test and review evidence](../12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
+and [sixty-ID executable trace](../12-implementation-planning/I1_IMPLEMENTATION_TRACE.md)
+distinguish delivered I1 from deferred I2. No new Owner capability acceptance,
+factory UAT, deployment or push is recorded; eleven capabilities remain Owner accepted.
+The earlier inactive handoff draft remains historical rather than the authority.
+
 
 ## APR-037 — Formal Owner I1 detailed-design acceptance, no implementation authority
 

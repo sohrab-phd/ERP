@@ -89,6 +89,15 @@ export async function resetTestDatabase(env = process.env) {
     );
     await client.query('GRANT USAGE ON SCHEMA procurement TO ' + quote(identity.runtimeRole));
     await client.query(
+      'GRANT SELECT,INSERT ON procurement.inbound_catalogue_option,procurement.operational_purchase_order,procurement.operational_purchase_order_line TO ' +
+        quote(identity.runtimeRole),
+    );
+    await client.query(
+      'GRANT EXECUTE ON FUNCTION procurement.po_reference_key_r1_v1(text),procurement.i1_order_complete() TO ' +
+        quote(identity.runtimeRole),
+    );
+
+    await client.query(
       'GRANT SELECT,INSERT ON procurement.completed_purchase,procurement.purchase_proforma_sent TO ' +
         quote(identity.runtimeRole),
     );

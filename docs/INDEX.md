@@ -3,15 +3,27 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.19.0
+version: 0.20.0
 owners: [chief-solution-architect]
-depends_on: [APR-037]
+depends_on: [APR-038, APR-037]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## Current I1 implementation delivery (2026-10-21)
+
+- [APR-038 actual bounded implementation authority](00-governance/approved-baselines/APR-038-i1-implementation-authorization.md)
+- [I1 implemented behavior, executable validation and independent review](12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
+- [Sixty original requirement IDs and A01–A28/R1 executable evidence](12-implementation-planning/I1_IMPLEMENTATION_TRACE.md)
+- [Full Jalali profile source verification receipt](12-implementation-planning/I1_JALALI_PROFILE_SOURCE_RECEIPT.md)
+
+Implementation is authorized by APR-038; earlier design-only stop statements below
+are historical. I1 delivery awaits separate Owner capability acceptance. I2 is not
+authorized and eleven existing capabilities remain Owner accepted.
+
 
 ## Owner-accepted I1 detailed design and inactive implementation handoff
 

@@ -3,15 +3,23 @@ id: PLAN-I1-OWNER-CHECKLIST-001
 title: Recorded Owner acceptance of I1 detailed design and mandatory conditions
 phase: 12-implementation-planning
 status: accepted
-version: 1.0.0
+version: 1.1.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, PLAN-I1-DECISIONS-001, PLAN-I1-ACCEPTANCE-001]
+depends_on: [APR-038, APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, PLAN-I1-DECISIONS-001, PLAN-I1-ACCEPTANCE-001]
 last_reviewed: 2026-10-21
-approval: APR-037 design acceptance only; implementation remains unauthorized
+approval: APR-037 accepted design; APR-038 bounded implementation authority
 supersedes: null
 ---
 
-# چک‌لیست پذیرش طراحی I1 — OWNER-ACCEPTED DESIGN / NOT AUTHORIZED FOR IMPLEMENTATION
+# چک‌لیست پذیرش طراحی I1 — OWNER-ACCEPTED DESIGN / I1 EXECUTION UNDER APR-038
+
+Current implementation authority: [APR-038 actual Owner instruction](../00-governance/approved-baselines/APR-038-i1-implementation-authorization.md).
+See [delivered code and actual validation](I1_IMPLEMENTATION_STATUS.md) and
+[60-ID executable trace](I1_IMPLEMENTATION_TRACE.md). The accepted design content
+below remains normative; its earlier design-only/no-execution statements describe
+the APR-037 historical stage and are superseded only for bounded I1 execution.
+No I2 authority or Owner capability acceptance is inferred.
+
 
 Owner در [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)
 هر چهارده تصمیم طراحی I1-D01 تا I1-D14 را در commit محلی
@@ -66,13 +74,13 @@ aggregate integrity/recovery، اعتبارسنجی مستقل تقویم، مج
 ## وضعیت پذیرش و اقدام بعدی
 
 - [x] Owner طراحی فنی I1-D01–I1-D14 را با شروط فوق در APR-037 صریحاً پذیرفته است.
-- [ ] Owner در دستور جداگانه دامنهٔ محدود پیاده‌سازی را مجاز کرده است.
-- [ ] پس از آن، تطبیق gate/unlock طبق حاکمیت ثبت شده است؛ اکنون هیچ کنترلی تغییر نکرده.
+- [x] Separate bounded Owner implementation authority is recorded in APR-038.
+- [x] Canonical gate/local unlock reconciled strictly for APR-038 I1 scope.
 
-علامت پذیرش طراحی فقط ثبت دستور واقعی Owner در APR-037 است؛ دو مورد اجرا/gate
-فاقد تأییدند و بدون دستور واقعی جدید تغییر نمی‌کنند. تصمیم پذیرفته‌شده دوباره
-برای پذیرش پرسیده نمی‌شود. [پیش‌نویس مجوز آینده](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
-فقط handoff طراحی پذیرفته‌شده و همچنان PROPOSED — NOT AUTHORIZED FOR EXECUTION است.
-اقدام بعدی، دستور مستقل و محدود Owner برای پیاده‌سازی و تطبیق gate/unlock است؛
-شروع اجرا، UI، UAT یا production از پذیرش طراحی استنتاج نمی‌شود. I2 آماده اعلام
-نشده و شمار قابلیت‌های backend پذیرفته‌شده همچنان یازده است.
+APR-037 records actual Owner design acceptance; APR-038 is the subsequent explicit
+bounded implementation instruction and authority for the scoped gate/unlock update.
+No accepted design decision is reopened. The historical [handoff draft](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+remains PROPOSED, not the source of execution authority. See [actual delivery and
+verification](I1_IMPLEMENTATION_STATUS.md). The next boundary is separate Owner
+capability acceptance, with no I2, UI, factory UAT or production authority inferred.
+Eleven backend capabilities remain Owner accepted. No remote push is authorized.

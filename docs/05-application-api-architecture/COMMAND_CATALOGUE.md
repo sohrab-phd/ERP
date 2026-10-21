@@ -2,16 +2,30 @@
 id: APP-CMD-001
 title: Application Command Catalogue
 phase: 05-application-api-architecture
-status: approved
-version: 0.5.0
+status: in_review
+version: 0.6.0
 owners: [solution-architect, api-architect]
-depends_on: [SM-TRANS-001, SM-EVT-001, APR-006, APR-007]
-last_reviewed: 2026-10-10
-approval: APR-007
+depends_on: [APR-038, SM-TRANS-001, SM-EVT-001, APR-006, APR-007]
+last_reviewed: 2026-10-21
+approval: APR-007 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
 
 # Application Command Catalogue
+
+## Implemented I1 additions under APR-038
+
+| Command / version | Owner / authorized personal organizational role | Effect |
+| --- | --- | --- |
+| RegisterOperationalPurchaseOrder v1 | Procurement / ACT-PROC | Immutable original order and complete independent lines; no stock |
+| AddInboundCatalogueOption v1 | Procurement / ACT-PROC or ACT-WH | Separately durable immutable exact-label option; no original-order mutation |
+
+[Accepted exact contracts](../12-implementation-planning/I1_PURCHASE_ORDER_API_DESIGN.md)
+and [actual implementation/evidence](../12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
+apply. Current scope, trusted actor, original-payload binding and atomic outcome/audit
+remain mandatory. Existing completed-purchase/proforma contracts are unchanged.
+Older conceptual operations below are not evidence of implemented functionality.
+
 
 Proposed operations from
 [TRANSITION_TABLES.md](../03-state-machines-invariants/TRANSITION_TABLES.md).
