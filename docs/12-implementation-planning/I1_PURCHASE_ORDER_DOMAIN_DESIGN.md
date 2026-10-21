@@ -3,9 +3,9 @@ id: PLAN-I1-DOMAIN-001
 title: I1 operational purchase order domain and field design
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [chief-solution-architect, business-process-owner]
-depends_on: [APR-035, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001]
+depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -13,16 +13,13 @@ supersedes: null
 
 # I1 domain and data model — DRAFT / PROPOSED / NOT AUTHORIZED FOR IMPLEMENTATION
 
-Final review baseline is local `16115d7655fb2b635165aec03b84760082194b45`; remote
-status is unverified. The [focused reconciliation](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
-records corrections, conditional recommendations and the outstanding reference-
-equivalence decision; it does not record Owner design acceptance.
-[APR-034](../00-governance/approved-baselines/APR-034-i1-detailed-design.md)
-authorizes detailed I1 documentation only. FACT means actual Owner policy in
-[SRC-004](../00-governance/team-answers/FACTORY_PURCHASE_RECEIVING_2026-10-20.md)/
-[SRC-005](../00-governance/team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md).
-ARCH means existing approved architecture. Every concrete choice here is a
-PROPOSED technical decision requiring Owner acceptance, not a new approved ADR.
+Reconciliation baseline is local `a84e20e12c7cd0b301e329d0ed97f300029b9aba`;
+remote push is unverified. [SRC-006](../00-governance/team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md)
+now resolves R1 Option A as business policy. [APR-036](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
+authorizes documentation and acceptance preparation only. The [identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+controls raw-reference/comparison-key semantics. Other facts remain SRC-004/SRC-005;
+ARCH remains approved current invariants. Every technical choice, including DB
+key generation, remains PROPOSED and awaits Owner acceptance.
 
 The goal is pre-arrival operational order registration by personal ACT-PROC,
 original-specification lookup by ACT-PROC/ACT-WH, and shared reference add/select
@@ -73,7 +70,7 @@ Inventory port or cross-owner write is introduced.
 
 | Entity | Proposed identity and immutable facts | Consistency boundary |
 | --- | --- | --- |
-| OperationalPurchaseOrder | Trusted installation/factory scope; technical order UUID; exact seller reference; Jalali registration date; registered line count; original command binding and trusted creation metadata | One successful register transaction freezes header plus the complete ordered line array; no editable draft or later append operation |
+| OperationalPurchaseOrder | Trusted installation/factory scope; technical order UUID; preserved raw seller reference plus derived comparison key/profile; Jalali registration date; registered line count; original command binding and trusted creation metadata | One successful register transaction freezes header plus the complete ordered line array; no editable draft or later append operation |
 | OperationalPurchaseOrderLine | Server-generated line UUID; parent order; immutable ordinal derived from input array; optional business item number; selected reference identities and original ordered scalar attributes/count/W1 | Each array member is independent even if all business values are identical; ordinal is technical display context, not seller item number |
 | InboundCatalogueOption | Scoped option UUID; one of MATERIAL_TYPE, QUALITY_GRADE, COLOR; exact label; original command binding and trusted creator/time | Immutable add/select-only source; no rename/delete/merge/deactivate/reclassify command. Later lifecycle needs approved additive history rules |
 
@@ -94,39 +91,32 @@ and line IDs; no arrival/waybill/unit/receipt or mapping table is designed here.
 
 ## Factory-wide order identity
 
-FACT: seller PO reference is factory-wide unique regardless of supplier; preserve
-exact supplied text and never overwrite/merge on duplicate registration. ARCH:
-[ADR-0014](../00-governance/adrs/ADR-0014-local-identity-authorization.md) and current
-composition map organizational authority UUID to installation UUID for the single
-legal entity/principal site. PROPOSED I1 persistence retains both scope columns,
-requires authority_scope = installation_id, and enforces reference uniqueness on
-installation_id plus exact reference with deterministic C collation. No role,
-person, supplier, date or command key partitions that business number.
+OWNER APPROVED R1 Option A preserves the raw seller reference and ignores only
+boundary U+0020, ASCII A–Z case, corresponding Persian/Arabic-Indic/Latin digits,
+and Arabic/Persian Yeh/Kaf for PO identity. [The ordered finite specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+defines exact codepoints, validation, key/profile, DB authority and future changes.
+No other substitution/normalization/internal-space removal is authorized.
 
-The exact-comparison branch below is PROPOSED, pending the Owner's business
-equivalence decision R1 in the final review. It is not proof of semantic business
-deduplication. Comparison is exact Unicode scalar/UTF-8 text identity; no trimming, case folding,
-digit conversion, Unicode normalization or Persian/Arabic substitution. Source
-text is returned unchanged. Nonblank text with outer spaces remains exact text,
-not silently collapsed. Thus `PO-12`, ` PO-12`, case variants, Persian/Arabic digit
-or letter variants and canonically equivalent Unicode sequences can all occupy
-different rows. Source preservation does not decide whether these denote the same
-business order. The installation-wide namespace is resolved; this equality question
-is not. Exact lookup is unambiguous only among identical strings; it can miss a
-variant or return a separately registered variant of the same real order.
+Current installation=factory and authority=installation mapping remains the accepted
+basis. Proposed header stores original order_reference plus DB-generated stored
+order_reference_key and fixed profile PO-REF-R1-A-v1. Named uniqueness is installation
+plus comparison key; no supplier/person/role/date/profile partition. Locks, duplicate
+queries, source validation and reference lookup use the same key; reads return the
+original raw reference. R1 is OWNER RESOLVED; generated storage/function and other
+technical choices remain proposed, not full design acceptance.
 
-Recommendation: accept exact identity only if the Owner explicitly confirms these
-variants are distinct identifiers for I1. If variants mean the same order, retain
-the original reference and design a separate agreed comparison key used identically
-by UNIQUE, locks and lookup. Do not choose trim/NFC/case/digit/letter folding now.
-Until that decision, the proposed exact UNIQUE prevents byte-identical duplicates
-but cannot be claimed to fully enforce the confirmed business-identity rule.
+The raw field and complete original payload remain in command/owner binding:
+equivalent PO spellings do not make changed same-key command intentions identical.
+No comparison key/profile is user input or a thirteenth purchasing field. Raw length
+is validated before deriving; key must be nonempty and within the same caps. All-
+space or invalid text rejects rather than creating an empty identity. Catalogue
+labels retain independent exact identity; never reuse the R1 normalizer on them.
 
 Current completed-purchase/proforma UUIDs and reference strings remain separate
 records with their existing rules and routes. Equal strings do not link histories.
 No data conversion/backfill, new mandatory supplier field or mandatory PO retrofit
-to manual receiving is part of I1. A factory/authority topology change requires
-reconciliation before this single-factory mapping can be expanded.
+to manual receiving. Future topology/equivalence changes require approved versioned
+collision analysis and migration; v1 semantics and historical raw bindings are frozen.
 
 ## Exact twelve-field contract
 
@@ -138,7 +128,7 @@ selected business field, not an additional user-entered factory field.
 
 | Factory no. / requirement | Exact Persian field | Required | Proposed I1 field / location | Value meaning and validation |
 | --- | --- | --- | --- | --- |
-| 2 / REQ-INBOUND-F02 | شماره سفارش | YES | orderReference / header | Exact nonblank text, factory-wide unique |
+| 2 / REQ-INBOUND-F02 | شماره سفارش | YES | orderReference / header | Preserved raw nonblank text; factory-wide unique R1 comparison key |
 | 7 / REQ-INBOUND-F07 | شماره آیتم | NO | itemNumber / line | Optional exact nonblank business label; neither unique nor technical line key |
 | 8 / REQ-INBOUND-F08 | نوع کالا | YES | materialTypeOptionId / line | UUID selecting same-scope MATERIAL_TYPE option; no technical Inventory type inference |
 | 9 / REQ-INBOUND-F09 | عرض | YES | widthM / line | Exact decimal string, meters; proposed positivity/bounds below |
@@ -262,6 +252,8 @@ were considered as alternatives, not selected; see decision log. No validation
 code, leap-year fixture/data file or SQL predicate is implemented in this step.
 
 ## Catalogues, repeated lines and I2 extension
+
+R1 PO equivalence applies to no catalogue label, item number or RAL field.
 
 Catalogue kinds are a closed I1 technical set, while labels/options are extensible.
 Both roles can add/read/select each kind. Labels use exact comparison within one

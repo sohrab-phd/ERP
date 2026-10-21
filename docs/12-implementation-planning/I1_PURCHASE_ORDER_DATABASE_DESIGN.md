@@ -3,9 +3,9 @@ id: PLAN-I1-DATABASE-001
 title: Proposed I1 PostgreSQL schema concurrency and atomic transaction design
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [data-architect, chief-solution-architect]
-depends_on: [APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, ADR-0011, ADR-0013, ADR-0014]
+depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, ADR-0011, ADR-0013, ADR-0014]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -18,8 +18,9 @@ file, TypeScript contract, runtime grant or product gate is created. Refer to
 [domain/values](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md), [API/error semantics](I1_PURCHASE_ORDER_API_DESIGN.md),
 [security](I1_PURCHASE_ORDER_SECURITY_DESIGN.md) and [decision acceptance](I1_PURCHASE_ORDER_DECISIONS.md).
 PostgreSQL 18.6 and existing pg/Node/root-script pins remain unchanged.
-The [final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md) qualifies reference equality,
-quantity capacity, resource ceilings and completeness guarantees below.
+The [R1 specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md) now controls raw
+reference and derived identity; SRC-006 resolves its business rules. Quantity,
+resource and completeness proposals retain their independently reviewed conditions.
 
 ## Current persistence and proposed ownership
 
@@ -42,7 +43,7 @@ All three tables carry installation_id UUID and authority_scope UUID, NOT NULL,
 CHECK authority_scope = installation_id. This is the existing configured single-
 factory authority mapping, not a multi-tenant design. Owner SQL always predicates
 both trusted columns. Uniqueness of seller reference is on installation plus exact
-reference, deliberately not only an authority tuple that could accidentally split
+comparison key, deliberately not only an authority tuple that could accidentally split
 the factory, and never on supplier/creator/role/date. A topology change requires
 an approved migration/policy reconciliation, not a caller scope parameter.
 
@@ -84,18 +85,19 @@ seed values, mutable state, technical class mapping, soft-delete or update times
 | installation_id, authority_scope | UUID NOT NULL | Common scope |
 | order_id | UUID NOT NULL | i1_po_pk = PK(scope tuple,order_id) |
 | order_reference | text COLLATE C NOT NULL | Same exact128scalar/512byte text rule and blank/control predicate as API |
+| order_reference_key | text COLLATE C NOT NULL, GENERATED ALWAYS STORED | Derived only from raw reference by controlled po_reference_key_r1_v1; nonempty, <=128scalars/512bytes |
+| reference_key_profile | text NOT NULL, fixed default/CHECK | Exactly PO-REF-R1-A-v1; private provenance, never a uniqueness partition or caller input |
 | registration_jy, registration_jm, registration_jd | smallint NOT NULL | Explicit Jalali components; fixed supported profile/year/month/day/leap CHECKs below |
 | calendar_profile | text NOT NULL | Fixed UT-JALALI-1206-1498-v1; technical provenance, not another entered field |
 | line_count | integer NOT NULL | 1–128 from the admitted array; never received quantity |
 | binding and creation metadata | As above, NOT NULL | actor_role exactly ACT-PROC |
 
-i1_po_reference_uq UNIQUE(installation_id,order_reference) transactionally prevents
-byte-identical duplicates across the whole current factory, including different
-keys/people. It does not decide whether variants denote the same real order.
-This exact branch is conditional on the Owner equivalence decision, not a complete
-claim of semantic business-identity enforcement. If broader equivalence is approved,
-the original text stays immutable and an agreed comparison key must govern UNIQUE,
-locks and lookup together; no alternative key/normalizer is selected now.
+i1_po_reference_uq UNIQUE(installation_id,order_reference_key) transactionally
+prevents all equivalent references under Owner-approved R1-A–D, including distinct
+raw spellings/keys/people. Original raw order_reference stays immutable and is not
+itself the unique key. The [finite ordered transform](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+also governs app key locks, DB lookup and source validation. No supplier/profile
+partition or broader normalizer; catalogue labels remain exact and unaffected.
 i1_po_count_uq UNIQUE(scope
 tuple,order_id,line_count) supports the line's frozen declared count. No link/FK
 to completed_purchase, proforma, receipt, supplier master or Inventory. No progress,
@@ -164,7 +166,10 @@ Any profile extension requires reviewed additive validation evolution; historica
 date components and profile interpretation cannot be silently changed.
 
 Runtime grants for new tables are SELECT/INSERT only; no UPDATE, DELETE, TRUNCATE,
-ALTER or ownership. App roles retain no function/DDL privilege through this scope.
+ALTER or ownership. The sole extra pure-helper privilege is EXECUTE on controlled
+po_reference_key_r1_v1 as generation/lookup require; PUBLIC EXECUTE revoked, fixed
+pg_catalog search path, SECURITY INVOKER, IMMUTABLE STRICT PARALLEL SAFE. No function
+CREATE/ALTER/replacement, SECURITY DEFINER or business posting privilege is granted.
 Catalogue references and line/header literals therefore preserve original meanings.
 Maintenance/migration credentials are outside runtime and must not be used by APIs.
 
@@ -220,8 +225,14 @@ module write is introduced. Real-PG proof in A14/A23/A27 remains mandatory later
 
 ## Query indexes and limits
 
-Existing scoped PKs serve ID reads. i1_po_reference_uq serves the one exact seller-
-number lookup, with authority verified against the trusted factory mapping.
+Existing scoped PKs serve ID reads. i1_po_reference_uq serves normalized seller-
+number lookup, with authority verified against the trusted factory mapping. The
+STORED generated key cannot be supplied/overridden by an INSERT caller. Use explicit
+U+0020 btrim and finite translate mappings in a frozen v1 SQL helper; app derives
+the same key for locks, DB derives/validates it for persistence and lookup. INSERT
+RETURNING key/profile and lookup derivation are compared to the app result; drift
+fails technically with no accepted source. Details/options/version obligations are
+in the identity specification. No executable function or migration is created now.
 i1_line_position_uq serves full ordered line retrieval; typed option PK/FK indexes
 serve label joins. Add a catalogue index (installation_id,authority_scope,
 catalogue_kind,option_id) for bounded keyset pages. The label unique index serves
@@ -237,7 +248,7 @@ replay or handler savepoint. Identity's transactional current check locks accoun
 then session before owner business locks. Do not create nested public command calls.
 
 Owner resource names are explicit scoped strings with a new I1 namespace:
-order target UUID + factory reference for registration; option target UUID + factory
+order target UUID + factory R1 comparison key/profile for registration; option target UUID + factory
 kind/exact label for addition. Snapshot admitted input, precompute the entire set,
 map to existing-style hashtextextended signed bigint keys, deduplicate collisions
 and acquire by actual signed numeric key order. Do not sort only UUID strings or
@@ -262,11 +273,12 @@ testing same-account Identity serialization only.
 ## Four transaction cases
 
 1. **Register order:** validate closed fields, numeric/Jalali rules and complete
-   array; acquire owner resources; current check; target binding then reference
+   array and raw reference; derive R1 key without replacing bound payload; acquire
+   owner resources; current check; original target binding then normalized-key
    uniqueness; read scoped typed catalogue options; allocate/freeze line UUIDs and
    positions in memory; build and preflight the exact full read projection including
    those IDs, its HTTP data wrapper and escaping <=256KiB; only then insert
-   header+all lines; final current
+   header+all lines, verify DB-generated key/profile equals app derivation; final current
    check; return minimal accepted decision. Kernel records outcome/audit on the
    same opaque transaction and commits. Owner never commits or writes kernel tables.
 2. **Add option:** validate kind/label; acquire target/label resources; current check;
@@ -277,8 +289,9 @@ testing same-account Identity serialization only.
    the option remains a valid reusable reference; no header or child line survives.
    This is not a promise to roll back a previously accepted catalogue command.
    Resolve uncertain add with its original key before sending the dependent order.
-4. **Concurrent duplicate PO numbers:** different users/targets/keys serialize on
-   the factory reference; first committed order wins, second rejects GUARD_CONFLICT.
+4. **Concurrent duplicate PO numbers:** different users/targets/keys and equivalent
+   raw spellings serialize on the factory comparison key; first committed order
+   wins, second rejects GUARD_CONFLICT. An aborted predecessor permits a new winner.
    Final immediate UNIQUE enforcement remains authoritative even if a path misses
    the advisory lock. Neither losing transaction rewrites/merges the winner.
 
@@ -286,7 +299,7 @@ testing same-account Identity serialization only.
 
 Service prechecks and current guards produce normal durable business rejections.
 Explicit constraintRejections may map only known immediate 23505 names after the
-kernel recovers its handler savepoint: i1_po_reference_uq -> scoped recheck then
+kernel recovers its handler savepoint: i1_po_reference_uq -> scoped normalized-key winner recheck then
 GUARD_CONFLICT; i1_po_pk/i1_option_pk -> compare surviving immutable binding for
 DUP versus CONFLICT; i1_option_label_uq -> exact scoped DUP. Mapping rechecks current
 authority and scoped rows; if no expected surviving fact explains a violation,
@@ -329,7 +342,8 @@ After Owner design acceptance and bounded implementation/gate authorization:
 
 1. Reserve the next migration number after existing 0016 (currently expected 0017;
    verify again then), create catalogue, order, line, keys/checks/indexes and the
-   SELECT-only completeness guard in one transactional migration. No old checksum,
+   SELECT-only completeness guard plus frozen R1 helper/STORED key/profile in one
+   transactional migration. No old checksum,
    schema, record or business seed value changes.
 2. Extend controlled runtime/test-role setup for SELECT/INSERT on new sources,
    guard function execution as needed, and explicit owner boundary checks. No

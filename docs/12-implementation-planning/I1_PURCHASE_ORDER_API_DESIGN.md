@@ -3,9 +3,9 @@ id: PLAN-I1-API-001
 title: Proposed I1 purchase order and shared catalogue commands and queries
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [api-architect, chief-solution-architect, security-architect]
-depends_on: [APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-COMMAND-IDEMPOTENCY-001, ADR-0014]
+depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-COMMAND-IDEMPOTENCY-001, ADR-0014]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -19,8 +19,10 @@ registered routes. [Domain field rules](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md),
 [security matrix](I1_PURCHASE_ORDER_SECURITY_DESIGN.md) are normative **within this
 proposal only**. All I1-D decisions need Owner acceptance and separate implementation
 authorization. Existing completed-purchase/proforma/receipt v1 contracts stay unchanged.
-The [final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md) controls conditional identity,
-capacity and calendar recommendations; no Owner acceptance is implied.
+R1 Option A is now Owner-approved business policy per SRC-006. The
+[reference identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md) controls
+raw input, derived key, uniqueness/lookup and binding distinctions. Other technical
+capacity/calendar/catalogue recommendations remain proposed; no full design acceptance.
 
 ## Minimal operation surface
 
@@ -31,9 +33,9 @@ not new durable commands or callers of public command execution.
 
 | Operation | Proposed name / version | Target/source identity | Roles | HTTP proposal |
 | --- | --- | --- | --- | --- |
-| Register order and all lines | RegisterOperationalPurchaseOrder / 1 | target kind operational-purchase-order; target.id caller technical create UUID; business identity exact factory-wide orderReference | ACT-PROC only | POST /purchasing/operational-orders |
+| Register order and all lines | RegisterOperationalPurchaseOrder / 1 | target kind operational-purchase-order; target.id caller technical create UUID; business identity factory + derived R1 comparison key of raw orderReference | ACT-PROC only | POST /purchasing/operational-orders |
 | Add one reference option | AddInboundCatalogueOption / 1 | target kind inbound-catalogue-option; target.id caller technical option UUID; business identity factory + catalogue kind + exact label | ACT-PROC, ACT-WH | POST /purchasing/inbound-catalogues |
-| Original order by seller reference | GetOperationalPurchaseOrderByReference / v1 query | exact orderReference, scope derived from Identity | ACT-PROC, ACT-WH | POST /purchasing/operational-orders/lookup |
+| Original order by seller reference | GetOperationalPurchaseOrderByReference / v1 query | raw orderReference normalized under identical R1 rules; trusted scope | ACT-PROC, ACT-WH | POST /purchasing/operational-orders/lookup |
 | Original order by technical ID | GetOperationalPurchaseOrder / v1 query | validated order UUID in trusted scope | ACT-PROC, ACT-WH | GET /purchasing/operational-orders/{orderId} |
 | Reference selection / exact duplicate resolution | ListInboundCatalogueOptions / v1 query | catalogue kind, optional exact label and bounded UUID cursor | ACT-PROC, ACT-WH | POST /purchasing/inbound-catalogues/query |
 
@@ -112,7 +114,7 @@ Payload is a closed object:
 
 | Member | Required / shape | Validation |
 | --- | --- | --- |
-| orderReference | YES / text | Exact field 2 under text rule and factory-wide identity |
+| orderReference | YES / text | Preserved raw field2 under text rule; server derives nonempty R1 comparison key |
 | registrationDateJalali | YES / text | Field 17, domain's explicit Jalali date/profile; no default |
 | lines | YES / array of closed objects, 1–128 | Complete original ordered array; no append/merge deduplication |
 
@@ -124,18 +126,21 @@ trusted scope and match their expected kind. Any unknown or foreign option yield
 the same safe GUARD_STATE message, without disclosing foreign existence. No caller
 lineId/ordinal, typed Inventory classification, received quantity, W2/W3, supplier,
 physical code or actor is accepted. Material Type is a selected business option.
+Caller comparisonKey/orderReferenceKey/profile/normalizedReference fields are
+unknown names and fail closed admission. No client key or normalized replacement
+is passed to kernel binding. Store/return raw orderReference unchanged.
 
 After validation/current authority and all owner locks: first check target UUID
 binding, then reference uniqueness. Same target under a different key rejects
 GUARD_IDEMPOTENT_DUP for identical ordered facts or GUARD_CONFLICT for different
 facts. An unused target with an already-used factory reference rejects GUARD_CONFLICT
 regardless of matching fields. No overwrite, automatic merge or historical link.
-The final unique constraint remains authoritative for byte-identical references,
-with explicit constraint mapping. As recorded in the final review, this does not
-prevent two variants of one business identifier until the Owner resolves identity
-equivalence. The exact branch must not be implemented merely because this API is
-detailed; a broader agreed comparison would need consistent constraint/lock/read
-design while preserving source text and full input binding.
+The final unique constraint is authoritative on the derived R1 key in the factory,
+including approved equivalent raw spellings. Same-target owner binding still uses
+original raw facts: new key+same target+raw variant is GUARD_CONFLICT, identical
+original facts are DUP. New target with used comparison key is GUARD_CONFLICT.
+Same admitted idempotency key with changed raw spelling conflicts HTTP409 even
+if the business key is equal. Never normalize payload before envelope/owner binding.
 
 Accepted StableResult: fact_identity = orderId; event = OperationalPurchaseOrderRegistered;
 data = `{orderId, lineCount}`. No full order, audit identity, binding bytes or stock
@@ -183,15 +188,19 @@ definition of equivalent Persian/Arabic/space variants.
 
 ## Original-order queries and projection
 
-Reference lookup has closed body `{orderReference}` with exact same text validation;
+Reference lookup has closed body `{orderReference}` with the same raw text validation
+and derived R1 key as registration;
 it is a query, so no idempotency key or durable command outcome. ID GET validates
 the path UUID, rejects query-string/foreign scope overrides and does not search
 other factories. Authorize before existence lookup. Missing scoped and foreign
-identity return the same 404 `{error:"not-found"}`. The proposed unique constraint
-permits at most one byte-identical scoped reference. It does not resolve business
-ambiguity between spelling variants. No fuzzy fallback/choose-first lookup; exact
-miss stays not-found, and the pending Owner equivalence decision governs whether
-this is sufficient. Constraint corruption remains a technical failure.
+identity return the same404 `{error:"not-found"}`. The app and DB v1 key must agree;
+lookup predicates trusted scope and the unique generated key. Approved equivalent
+spellings retrieve the same order UUID and original stored raw reference; a
+non-equivalent spelling finds only its own registered identity or not-found.
+No fuzzy/cross-scope fallback or arbitrary first match. Comparison key/profile
+remain private metadata; the raw original is returned, not the submitted variant.
+Impossible multiple matches or app/DB key drift are technical failures, never a
+choose-first result. Unknown-COMMIT still requires original raw command identity.
 
 Both roles receive the same minimum business projection:
 

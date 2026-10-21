@@ -3,9 +3,9 @@ id: PLAN-I1-ACCEPTANCE-001
 title: Proposed I1 detailed acceptance cases and complete requirements scope trace
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [qa-architect, delivery-lead]
-depends_on: [APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, DOM-INBOUND-TRACE-001, DOM-INBOUND-POLICY-001]
+depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, DOM-INBOUND-TRACE-001, DOM-INBOUND-POLICY-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -19,9 +19,9 @@ All scenarios are synthetic test intent, not real factory records. The [domain](
 [API](I1_PURCHASE_ORDER_API_DESIGN.md), [DB/transactions](I1_PURCHASE_ORDER_DATABASE_DESIGN.md)
 and [security](I1_PURCHASE_ORDER_SECURITY_DESIGN.md) define expected proposed behavior.
 Owner must accept the design/limits and explicitly authorize implementation first.
-The [final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md) adds conditional reference
-equivalence, explicit downstream quantity boundaries and revised text/budget checks.
-No case may treat the unresolved exact-reference branch as approved business policy.
+R1 Option A is now Owner-approved in SRC-006. The [identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+controls registration/lookup and raw-binding obligations. R1-T01–T12 below extend
+A01–A28 without renumbering any factory requirement or claiming executed tests.
 
 ## Actual evidence reused as test-design sources
 
@@ -60,8 +60,8 @@ Required assertions name exact families and surviving facts, not merely “throw
 | Case | Scenario / setup | Observable future assertions | Layers |
 | --- | --- | --- | --- |
 | A01 | PROC registers pre-arrival full order, then minimal order with every optional omitted; use separately committed valid options | Header+all lines+one accepted outcome+original audit; lookup exact original twelve-field values; 7 mandatory/5 optional mappings; no received/progress/stock fields | U,PG,API |
-| A02 | Different target/key attempts same factory reference, including another PROC person and otherwise identical facts | One immutable original; new unused UUID gets durable GUARD_CONFLICT, no overwrite/merge/history link; same strings in completed evidence remain valid independently | PG,API,REG |
-| A03 | Two distinct authenticated PROC accounts concurrently register the same reference with different keys/targets at the real owner-lock barrier | Exactly one accepted PO and complete lines; loser exact GUARD_CONFLICT; both correct outcomes/audits; no scope split by supplier/role/person; unique constraint still protects when precheck path is bypassed in controlled test | PG,REC |
+| A02 | Different target/key attempts same R1 comparison key, including approved raw variants, including another PROC person and otherwise identical facts | One immutable original; new unused UUID gets durable GUARD_CONFLICT, no overwrite/merge/history link; same strings in completed evidence remain valid independently | PG,API,REG |
+| A03 | Two distinct authenticated PROC accounts concurrently register R1-equivalent raw references with different keys/targets at the real owner-lock barrier | Exactly one accepted PO and complete lines; loser exact GUARD_CONFLICT; both correct outcomes/audits; no scope split by supplier/role/person; unique constraint still protects when precheck path is bypassed in controlled test | PG,REC |
 | A04 | Several lines, two identical specs, duplicate or missing optional itemNumber | Original array order, distinct stable line UUIDs and ordinals, no coalescing, no invented item-number uniqueness; repeated reads/replay preserve IDs | U,PG,API |
 | A05 | Parameterize each missing required member, every optional omitted/provided null/blank, wrong type, wrong-kind/missing/foreign option, unknown nested property | Admitted scalar/requiredness failures GUARD_INVARIANT; invalid catalogue selection GUARD_STATE without foreign existence leakage; unknown names or structural-shape mismatch (e.g. lines not array, object for scalar) fail admission without consuming a key; no partial sources; exact Persian names/actors traceable | U,PG,API,SEC |
 | A06 | Exact width/length m and thickness mm, `1.200`, tiny supported fractions, 20 integer digits, 18 fraction digits and just-outside bounds | Exact lexeme roundtrip; positive proposed limits; reject zero/negative/exponent/grouped/numeric-JSON/19th fractional digit without conversion or rounding; DB direct invalid inserts also fail | U,PG,API |
@@ -71,10 +71,10 @@ Required assertions name exact families and surviving facts, not merely “throw
 | A10 | EACH catalogue kind × EACH current role adds and selects a missing legitimate value, including initially empty selection list | Six role/kind combinations work, no admin/other-person gate; trusted creator/role/time recorded; no PO/receipt/stock writes | PG,API,SEC |
 | A11 | PROC creates then WH selects, WH creates then PROC selects; immediately use created IDs in an allowed order | Reusable within scope, exact labels returned; optional color/grade absence valid and RAL independent; no creation approval or free-text bypass | PG,API,SEC |
 | A12 | Distinct people add same exact kind/label concurrently under different UUIDs/keys; repeat across different kinds/installations | One canonical same-scope option, loser durable GUARD_IDEMPOTENT_DUP; exact authorized query returns winner ID for use; other kind/scope independent; no accepted-reuse fiction or creator overwrite | PG,REC,SEC |
-| A13 | Case, outer-space, composed/decomposed, Arabic/Persian letters/digits, ZWNJ; quotes/backslashes/script text; explicit blank/control codepoints | Conditional exact catalogue branch only, no semantic dedup claim or silent merge; require Owner-approved PO equivalence matrix before asserting variant PO outcomes. Exact decoded raw/escaped JSON text has same identity; safe JSON/parameterized SQL, no log echo. API/DB explicit blank/Cc predicate parity including NBSP/FEFF, combining sequences/supplementary scalars; no btrim approximation | U,PG,API,SEC |
+| A13 | Case, outer-space, composed/decomposed, Arabic/Persian letters/digits, ZWNJ; quotes/backslashes/script text; explicit blank/control codepoints | Catalogue exact branch remains separate; PO R1-A–D positive/negative vectors are now approved policy, with no extra transformations. No catalogue normalization or semantic synonym dedup. Exact decoded raw/escaped JSON text has same identity; safe JSON/parameterized SQL, no log echo. API/DB explicit blank/Cc predicate parity including NBSP/FEFF, combining sequences/supplementary scalars; no btrim approximation | U,PG,API,SEC |
 | A14 | Persist an order then attempt catalogue/header/line UPDATE/DELETE/TRUNCATE and later line append; inspect typed option refs | Restricted role denies mutation, original labels/snapshots stable; append blocked by position/count/FK guards; identical business lines allowed; no invented catalogue lifecycle | PG,SEC |
 | A15 | Add arbitrary legitimate new business Material Type and register stock-free order with it | Existing fixed technical enum unchanged, no OTHER default/mapping column/stock eligibility; no Inventory/Production admission bypass; mapping remains I2 prerequisite | PG,API,REG |
-| A16 | WH looks up exact seller reference and permitted ID, including repeated lines and special reference characters | Complete original projection and stable IDs/positions, correct m/mm/m/Jalali semantics; no binding/key/creator/documentary/stock fields, no global order listing; scoped missing and foreign result alike | PG,API,SEC |
+| A16 | WH looks up raw seller reference, approved equivalent variants and permitted ID, including repeated lines and special reference characters | Complete original raw-reference projection and stable IDs/positions, same order UUID for approved variants, correct m/mm/m/Jalali semantics; no binding/key/creator/documentary/stock fields, no global order listing; scoped missing and foreign result alike | PG,API,SEC |
 | A17 | WH tries register, append/edit/update/cancel via I1 routes or injects PO mutation into catalogue add | DENY by role/admission/404/405 as specified; original PO unchanged. Existing WH manual receipt remains governed separately, not globally revoked by this test | API,SEC,REG |
 | A18 | Customers, SEC-only, unrelated roles, customer-bound PROC/WH, foreign factory IDs and injected scope/actor fields | Forbidden before existence; no catalogue modification/read escalation; same safe not-found for permitted scoped foreign/absent IDs; no private values/SQL in errors/logs | PG,API,SEC |
 | A19 | Forged/copied context; revoked role/session before admission, during key wait, before query disclosure; current-check expiry after business wait | Issued current personal capability required; no stale outcome/source disclosure. Use correct linearization: committed earlier revocation denies; held Identity locks may serialize later revocation after the operation | PG,API,SEC,REC |
@@ -94,6 +94,34 @@ at actual key/business locks and separate verified accounts; no sleep-based race
 claims. Worker/crash children are bounded and cleaned up under Windows. Restore
 only verified disposable DB fixtures; never reset production or run as DDL owner
 for normal behavioral assertions.
+
+## R1 Owner-approved identity obligations — future tests R1-T01–R1-T12
+
+All are PROPOSED test obligations, not executable test code or passing evidence.
+Use literal/codepoint-labelled golden inputs independent of a general normalization
+library. Real PG is required for generation, uniqueness, races, audit and recovery.
+
+| Case | Setup and required observable result | Layers |
+| --- | --- | --- |
+| R1-T01 | Independently specified golden vectors for EACH26ASCII uppercase mappings,20digit mappings and2Yeh/Kaf mappings; already canonical scalars unchanged. DB/app maps have exactly48source/48target scalars, no deletion and deterministic/idempotent output under different locales | U,PG |
+| R1-T02 | Leading/trailing one/many U+0020, ASCIIcase, Persian/Arabic-Indic digits, Arabic/Persian Yeh/Kaf separately and combined: ` PO-۱۲ `, `po-١٢`, `PO-12` share po-12; combined Yeh/Kaf/digit examples share key | U,PG,API |
+| R1-T03 | `PO-012`, `PO12`, `PO/12`, `PO_12` versus `PO-12`: leading zeros, removed hyphen and punctuation/separator differences remain distinct keys/orders/lookup misses unless separately registered | U,PG,API |
+| R1-T04 | Internal single/double U+0020, boundary NBSP U+00A0, narrow NBSP U+202F, ZWNJ U+200C, ZWJ U+200D and FEFF with a nonblank reference remain significant; tab/other Cc reject, never trim to an equivalent accepted key | U,PG,API |
+| R1-T05 | Unmapped U+0649 Alef Maksura, nonASCIIcase, composed/decomposed accents, fullwidth digits/letters, ligatures, hyphen/minus variants remain distinct; no NFC/NFKC or fuzzy transformations | U,PG,API |
+| R1-T06 | Register mixed raw reference with boundary spaces/digits/letters; both order queries return exact stored raw string, stable technicalUUID and specs. Literal/JSONescaped same scalars have equal decoded raw identity; key/profile not public input/output or extra factory field | U,PG,API |
+| R1-T07 | DB-generated STORED key equals app key for all positive/negative vectors; explicit generated-key override denied; malformed raw/empty key/profile reject, valid generated insert succeeds with restricted helperEXECUTE. RETURNING or lookup drift aborts technically without accepted source; DDL/helper replacement denied | PG,SEC |
+| R1-T08 | Distinct verified PROCpeople/keys/targets concurrently register equivalent raw spellings at normalized owner-lock barrier; one committed complete order/outcome/originalaudit, loser durableCONFLICT. UNIQUE protects controlled lock-bypass path. If first rolls back, second may become winner; no two sources | PG,REC |
+| R1-T09 | Same full original key/input replays accepted/rejected outcome; samekey+equivalent raw spelling change conflicts409. Newkey+same target+identical ownerfactsDUP; newkey+same target+rawvariantCONFLICT; newtarget+usedR1keyCONFLICT. Original stored raw and full binding never replaced | PG,API,REC |
+| R1-T10 | Lost confirmedCOMMIT response, connection loss/crash around both source and audit/outcome commit: recover original principal/scope/key/target/full raw input, not normalized spelling/newID/key or reference lookup. One complete source or safe original retry, no extra stock/financial/source effects | PG,REC,REG |
+| R1-T11 | Authorized equivalent lookup returns one original; non-equivalent lookup ownorder or generic404; forged key/profile/scope/actor fields denied; revoked/forged/customer/SEC/unrelated/foreign contexts cannot discover raw/key/order. Comparison normalization never broadens role authority | PG,API,SEC |
+| R1-T12 | Material Type/Quality/Color labels differing in R1-equivalent ways remain exact-only distinct options; both roles add/reuse under existing catalogue rules. Raw128scalar/512byte validation precedes normalization, so oversized input cannot become admissible by trimming. No PO/stock modification from catalogue creation | U,PG,API,SEC,REG |
+
+| Approved source obligation | Existing requirements linked, without rewriting them | Proposed cases |
+| --- | --- | --- |
+| SRC-006 R1-A/B/C/D finite equivalence | REQ-INBOUND-021/F02/S01 | R1-T01–T05,T08,T11 |
+| Raw preservation and comparison-key/UUID separation | REQ-INBOUND-001/F02/S01; existing envelope binding invariant | R1-T06,T07,T09,T10 |
+| Factory uniqueness, same-key versus business identity | REQ-INBOUND-014/021/023/S01/S12 | R1-T07–T11 |
+| Catalogue exclusion, no new field/stock authority | REQ-INBOUND-003/017/024/S08/S09/S10 | R1-T12,A05,A15,A25 |
 
 ## All original workflow requirements — scope trace (25)
 
@@ -161,7 +189,7 @@ discipline. These are **future coverage classifications**, not implementation st
 
 | Requirement | I1/I2 obligation | Proposed cases |
 | --- | --- | --- |
-| REQ-INBOUND-S01 | I1 factory-wide exact reference; many arrivals later I2 | A02,A03,A16,A20 |
+| REQ-INBOUND-S01 | I1 factory-wide R1 comparison identity with raw reference preserved; many arrivals later I2 | A02,A03,A16,A20 |
 | REQ-INBOUND-S02 | I1 m/mm/m ordered values; actual I2 | A05,A06 |
 | REQ-INBOUND-S03 | I1 Jalali business-date profile/roundtrip | A08,A09 |
 | REQ-INBOUND-S04 | I1 three reusable lists, original requiredness and RAL; actual I2 | A05,A10,A11 |
@@ -193,7 +221,7 @@ financial module effects and preserve current invoice evidence. New runtime
 permissions/DDL access must be tested with the actual restricted role, while owner
 credentials are confined to fixture migration/setup.
 
-Future acceptance requires all intended I1 behavior and applicable A01–A28 evidence,
+Future acceptance requires all intended I1 behavior and applicable A01–A28 and R1-T01–R1-T12 evidence,
 no relevant failures/skips, Windows real-PG transaction/race/crash proof, independent
 engineering/security review with required findings closed, current documentation,
 scope/metadata/link/diff checks and a coherent local commit for Owner acceptance.

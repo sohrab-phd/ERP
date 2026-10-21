@@ -3,7 +3,7 @@ id: PLAN-INBOUND-DECISIONS-001
 title: Purchase and receiving Step 2 policy and design register
 phase: 12-implementation-planning
 status: in_review
-version: 0.4.0
+version: 0.5.0
 owners: [business-process-owner, chief-solution-architect, security-architect]
 depends_on: [APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
 last_reviewed: 2026-10-21
@@ -13,8 +13,19 @@ supersedes: null
 
 # Policy and design register — resolved business portions and OPEN residuals
 
-Current [APR-035 final review](../00-governance/approved-baselines/APR-035-i1-final-design-review.md)
-qualifies the prior no-missing-I1-policy assessment: [R1](I1_PURCHASE_ORDER_FINAL_REVIEW.md#r1--factory-scope-resolved-identifier-equivalence-still-open)
+Current [SRC-006/APR-036](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
+resolve R1 Option A. [R1 technical design](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+replaces exact-only PO identity with preserved raw reference and a generated
+comparison key. R1 business rules/factory scope are resolved; generated enforcement
+and all other I1technical conditions still need Owner acceptance. [Checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
+and [future scope draft](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+are not acceptance or execution authority. No I2/OQ residual is closed.
+
+## Earlier final-review assessment (historical a84e20e)
+
+
+Earlier [APR-035 final review](../00-governance/approved-baselines/APR-035-i1-final-design-review.md)
+qualifies the prior no-missing-I1-policy assessment: [R1](I1_PURCHASE_ORDER_FINAL_REVIEW.md#r1--owner-approved-option-a)
 requires Owner decision on reference variants. B01 factory-wide namespace remains
 resolved; source preservation does not establish business equivalence. No silent
 normalizer or supplier partition. I1-D01–D14 have review dispositions, not acceptance.
@@ -120,8 +131,8 @@ blanket closure. No tolerance, invoice amount or settlement rule is introduced.
 
 Step 2 analysis is Owner accepted; push unconfirmed. Step 3 I1 detailed design is
 now explicitly authorized by APR-034 and documented as PROPOSED. APR-035 final review
-identifies R1 reference equivalence as a remaining narrow business decision before
-unconditional design acceptance. The broader I2 design cannot be finalized without its
+identified R1 as a narrow business decision, now resolved by SRC-006. Technical
+design acceptance remains pending; no remaining I1 business-policy blocker is identified. The broader I2 design cannot be finalized without its
 scoped residuals/reconciliation. I1 requires Owner review/acceptance of technical
 choices and separate bounded implementation authorization; implementation remains
 NOT AUTHORIZED. No new approved ADR, contract or gate is published.

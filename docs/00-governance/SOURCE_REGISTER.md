@@ -3,15 +3,26 @@ id: GOV-SOURCES-001
 title: Source Register
 phase: 00-governance
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [chief-solution-architect]
 depends_on: []
-last_reviewed: 2026-10-20
-approval: APR-002 historical structure; subsequent Owner source recorded under APR-033
+last_reviewed: 2026-10-21
+approval: APR-002 historical structure; subsequent Owner sources recorded under APR-033 and APR-036
 supersedes: null
 ---
 
 # Source Register
+
+## SRC-006 — Subsequent Owner R1 Option A approval
+
+- Recorded source: [Owner R1 decision](team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md),
+  actual subsequent Owner message after review of locala84e20e; no push assumed.
+- Authority: R1 PO-only equivalence/raw-preservation policy, not full I1technical
+  acceptance, catalogue equivalence, implementation or product gate change.
+- Scope: [APR-036](approved-baselines/APR-036-r1-design-acceptance-preparation.md)
+  authorizes documentation reconciliation, acceptance checklist and future scope
+  draft only. Original sources/factory fields/requirements remain unchanged.
+
 
 ## SRC-001 — Architecture and Detailed Design Report
 

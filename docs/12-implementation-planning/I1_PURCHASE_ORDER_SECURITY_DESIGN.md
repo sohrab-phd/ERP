@@ -3,9 +3,9 @@ id: PLAN-I1-SECURITY-001
 title: Proposed I1 operation authorization isolation and disclosure design
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [security-architect, chief-solution-architect]
-depends_on: [APR-035, APR-034, SRC-005, ADR-0014, SEC-RBAC-001, SEC-ISO-001, PLAN-I1-API-001]
+depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, SRC-005, ADR-0014, SEC-RBAC-001, SEC-ISO-001, PLAN-I1-API-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -18,8 +18,8 @@ and [policy amendment](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_
 This proposed translation into owner/object/transport checks changes no runtime
 policy. Use [API](I1_PURCHASE_ORDER_API_DESIGN.md), [transactions](I1_PURCHASE_ORDER_DATABASE_DESIGN.md)
 and [acceptance cases](I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md). The [final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
-records unresolved PO equivalence separately from trusted scope and conditional
-catalogue equality/resource recommendations. Named factory people
+now records R1 business resolution per SRC-006, separately from unapproved technical
+generation and catalogue equality/resource recommendations. Named factory people
 explain duties only; never compare names, display names or station labels.
 
 ## Effective operation-by-role matrix
@@ -139,10 +139,15 @@ Exact label equality intentionally does not merge case, whitespace, Arabic/Persi
 variants or Unicode normalization forms. This conservative proposal must be accepted
 explicitly; distinct terms remain distinct. Broader equivalence/aliases require
 later policy, not a hidden normalizer or a semantic deduplication claim.
-For PO references the comparison policy is an outstanding Owner business decision:
-byte equality alone cannot guarantee one row per real order when equivalent-looking
-variants are allowed. Same-scope duplicate disclosure stays authorized and minimal;
-do not broaden search across installations or leak creators while resolving it.
+R1-A–D PO comparison policy is Owner-resolved. The [finite key specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+derives server-side from preserved raw text; no caller comparison key/profile is
+accepted. A controlled STORED generated column prevents supplied-key forgery, with
+app/DB parity and least-privilege EXECUTE on a pure frozen helper, no DDL rights.
+Equivalent PO spellings share duplicate locks/UNIQUE/lookup but never rewrite full
+raw-payload binding. Same-key changed raw still conflicts; original-key uncertainty
+recovery uses original spelling. Catalogue labels remain exact-only and must not
+use the PO normalizer. Same-scope duplicate disclosure stays authorized/minimal;
+no broader search or comparison-key/creator/raw-input error echo.
 
 Order lines reference immutable same-scope options of the expected kind. Wrong-kind
 or foreign option IDs fail with the same safe state guard; no arbitrary free-text

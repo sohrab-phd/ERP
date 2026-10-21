@@ -3,7 +3,7 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: in_review
-version: 0.37.0
+version: 0.38.0
 owners: [chief-solution-architect]
 depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
 last_reviewed: 2026-10-21
@@ -13,10 +13,22 @@ supersedes: null
 
 # Open Questions Register
 
-## Current final I1 review (2026-10-21)
+## Current R1 resolution and remaining design acceptance
+
+[SRC-006](../team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md) resolves R1
+Option A explicitly; its earlier OPEN entries below are historical. Only boundary
+U+0020/ASCIIcase/three digit sets/specifiedYeh-Kaf equivalence is approved for POs.
+[Exact technical specification](../../12-implementation-planning/I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+preserves raw text and full binding, with proposed generated-key enforcement.
+No remaining I1 business-policy blocker is identified; technical choice/limit
+acceptance still belongs to Owner via the checklist. Catalogue equality and I2
+residuals/OQ-011/OQ-019 are not closed by this PO policy. No implementation authority.
+
+
+## Earlier final I1 review (historical a84e20e)
 
 [APR-035](../approved-baselines/APR-035-i1-final-design-review.md) authorizes only
-documentation review/corrections. [R1 in the final review](../../12-implementation-planning/I1_PURCHASE_ORDER_FINAL_REVIEW.md#r1--factory-scope-resolved-identifier-equivalence-still-open)
+documentation review/corrections. [R1 in the final review](../../12-implementation-planning/I1_PURCHASE_ORDER_FINAL_REVIEW.md#r1--owner-approved-option-a)
 is OPEN: do reference spelling/space/case/Persian-Arabic/Unicode variants denote
 distinct identifiers or the same PO? Factory-wide namespace remains Owner-resolved;
 exact DB uniqueness alone proves only byte-identical deduplication. Do not silently

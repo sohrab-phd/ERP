@@ -3,7 +3,7 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.21.0
+version: 0.22.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [GOV-GATES-001]
 last_reviewed: 2026-10-21
@@ -12,6 +12,15 @@ supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-036 — R1 Option A and documentation-only acceptance preparation
+
+[Actual Owner decision](approved-baselines/APR-036-r1-design-acceptance-preparation.md)
+records approved SRC-006 R1-A–D only. [Acceptance checklist](../12-implementation-planning/I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
+contains all14unaccepted technical choices. [Implementation draft](../12-implementation-planning/I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+is PROPOSED — NOT AUTHORIZED FOR EXECUTION. No formal full design acceptance,
+implementation, executable gate/unlock or remote push is recorded.
+
 
 ### APR-018 — Final pre-implementation baseline and first-slice authorization
 

@@ -3,7 +3,7 @@ id: PLAN-INBOUND-ROADMAP-001
 title: Purchase and receiving proposed incremental delivery and Definition of Done
 phase: 12-implementation-planning
 status: in_review
-version: 0.4.0
+version: 0.5.0
 owners: [delivery-lead, chief-solution-architect, business-process-owner]
 depends_on: [APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-10-21
@@ -13,7 +13,16 @@ supersedes: null
 
 # Delivery strategy — PROPOSED / NOT AUTHORIZED
 
-Current [focused final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md), authorized by
+Current [APR-036/SRC-006](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
+resolve R1 Option A; older OPEN-R1/readiness assessments below are historical.
+The [identity spec](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md), [Owner checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
+and [bounded future scope DRAFT](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+prepare formal design acceptance then separate implementation authorization.
+No policy question about approved R1 mappings remains; technical generation/limits/
+calendar/catalogue/DB choices are proposed and no gate/runtime work is authorized.
+
+
+Earlier [focused final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md), authorized by
 APR-035, records corrected proposals and fourteen review dispositions. R1 reference
 equivalence remains an Owner business decision before unconditional design acceptance;
 factory-wide scope is already resolved. Numeric/calendar/catalogue/resource limits
@@ -263,8 +272,8 @@ no runtime test execution for Markdown-only edits and approves no runtime behavi
 The accompanying technical-gap report records actual reviews/checks and limitations.
 
 Step 2 is accepted as analysis; remote push remains unconfirmed. APR-034 authorizes
-I1 detailed design, now in the linked proposed package. Final review identifies
-R1 reference equivalence before unconditional design acceptance; all selected
+I1 detailed design, now in the linked proposed package. R1 is now OWNER RESOLVED
+by SRC-006; all selected
 technical limits/equality/calendar/transaction choices require Owner acceptance.
 The next action is Owner decision/conditional design review, then
 separate bounded implementation authorization if desired. I2 still requires its

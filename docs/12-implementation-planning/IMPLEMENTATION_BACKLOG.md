@@ -3,7 +3,7 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.10.0
+version: 0.11.0
 owners: [chief-solution-architect]
 depends_on: [ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-10-21
@@ -13,7 +13,15 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current task: [APR-035](../00-governance/approved-baselines/APR-035-i1-final-design-review.md),
+Current task [APR-036](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md):
+R1 Option A is Owner-approved, recorded separately in SRC-006. [Reconciled identity](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md),
+[Owner design checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md) and
+[bounded implementation DRAFT](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+prepare acceptance only. Full design/implementation/gates remain unapproved; no push.
+Earlier OPEN-R1 statements below are historical. Eleven backend capabilities remain.
+
+
+Earlier task: [APR-035](../00-governance/approved-baselines/APR-035-i1-final-design-review.md),
 focused final documentation review/corrections only. [Final dispositions](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
 leave reference-equivalence R1 OPEN for Owner decision; factory scope is resolved.
 Numeric/UTF8/calendar/PG/resource recommendations are conditional, not accepted.

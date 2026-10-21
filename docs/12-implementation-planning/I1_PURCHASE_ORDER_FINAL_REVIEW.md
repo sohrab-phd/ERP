@@ -3,9 +3,9 @@ id: PLAN-I1-FINAL-REVIEW-001
 title: I1 focused final design review and conditional reconciliation
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [chief-solution-architect, data-architect, security-architect]
-depends_on: [APR-035, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, PLAN-I1-ACCEPTANCE-001, PLAN-I1-DECISIONS-001]
+depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, PLAN-I1-ACCEPTANCE-001, PLAN-I1-DECISIONS-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -25,6 +25,13 @@ Execution plan: read all six designs and source requirements; compare actual
 Procurement/Identity/Inventory/envelope/PG behavior; independently review architecture,
 security and DB integrity; correct all affected proposals/tests consistently;
 validate unchanged facts/coverage/metadata/links/diff; commit docs and stop.
+
+Current update: [SRC-006](../00-governance/team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md)
+explicitly APPROVES R1 Option A after review of a84e20e. The [finite raw/key design](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+now replaces exact-only PO identity. R1 is OWNER RESOLVED; no other technical
+choice or full design acceptance is implied. [APR-036](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
+authorizes documentation/acceptance preparation only. Earlier findings/checks below
+are historical; the final current conclusion supersedes their OPEN-R1 assessment.
 
 ## Evidence and preserved facts
 
@@ -60,7 +67,7 @@ The selected technical contents are in the [decision checklist](I1_PURCHASE_ORDE
 | Decision | Review disposition | Result / condition |
 | --- | --- | --- |
 | I1-D01 | RECOMMEND ACCEPTANCE AS PROPOSED | Separate Procurement-owned immutable operational facts; old documentary/receipt paths unchanged |
-| I1-D02 | OWNER BUSINESS DECISION REQUIRED | Current factory-to-installation mapping is valid; exact-text comparison cannot settle variant identity. R1 below blocks unconditional identity acceptance |
+| I1-D02 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | R1 Option A OWNER RESOLVED; raw+generated STORED key/profile, same normalized UNIQUE/locks/lookup; accept technical enforcement/parity/version design only |
 | I1-D03 | RECOMMEND ACCEPTANCE AS PROPOSED | Stable line UUID+ordinal/count preserves repeated/unnumbered lines |
 | I1-D04 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Corrected nonstock derived-total boundary; accept technical grammar/positive dimension/count and numeric capacities below |
 | I1-D05 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Accept finite1206–1498 profile, unsupported-date behavior and future complete293year proof; no enacted-future-calendar claim |
@@ -71,45 +78,28 @@ The selected technical contents are in the [decision checklist](I1_PURCHASE_ORDE
 | I1-D10 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Sound normalized frozenN closure; accept one SELECT-only deferred header integrity guard and prove real-PG failure/rollback cases |
 | I1-D11 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Actual signed owner-hash order, current Identity linearization, distinct-person race/timeout proof; no new stock locks |
 | I1-D12 | RECOMMEND ACCEPTANCE AS PROPOSED | Stable I1 references only; mapping, per-unit stock admission and all unresolved I2 policies stay separate |
-| I1-D13 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Revised A01–A28 cover identity gate, exact capacities, full response budget and deferred events; tests remain future obligations |
+| I1-D13 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | A01–A28 plus R1-T01–T12 cover approved identity, generated-key/parity/concurrency/raw binding and existing capacities; tests remain future obligations |
 | I1-D14 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Revised128scalar/512byte text; independent128line/256KiB/page budgets; Owner accepts business-facing ceilings, performance still unproved |
 
 No unresolved technical defect requires a new module/command or I2 design.
-Corrections are complete as proposals; R1 and the stated acceptance conditions
-prevent claiming unconditional implementation readiness.
+R1 business ambiguity is now resolved; technical acceptance conditions and a separate
+implementation instruction still prevent self-authorized runtime work.
 
-## R1 — factory scope resolved, identifier equivalence still open
+## R1 — Owner-approved Option A
 
-ADR-0014 configures one single-site authority as the installation UUID, and actual
-composition passes config.installationId for both Identity boundaries. Organization
-authority is an authorization scope, not a new physical factory identifier. Within
-this current topology installation-wide UNIQUE covers the entire factory. Supplier,
-role, person and command keys must never partition PO identity. Multiple authorities
-or deployments for one real factory would need explicit future topology reconciliation;
-the current design does not promise distributed uniqueness across cloned installations.
+The earlier OPEN state is superseded by SRC-006.
+R1 Option A is now OWNER APPROVED: preserve original raw reference; ignore only
+boundaryU0020,ASCIIA–Zcase,Latin/Persian/Arabic-Indic corresponding digits,and the
+specified Yeh/Kaf pairs. Unapproved punctuation/zeros/internalspace/ZW/Unicode
+variants remain significant. No business question about these rules remains.
 
-Source preservation and comparison are independent. Proposed C-collated exact
-UNIQUE and identical owner lock/lookup comparison prevent same-byte duplicates,
-including concurrent different-key/target/person attempts; they do not prove that
-`PO-12` versus ` PO-12`, case variants, `12` versus `۱۲`, `ی` versus `ي`, `ک`
-versus `ك`, or composed/decomposed Unicode represent different business orders.
-No approved rule decides which variants may be ignored. Exact lookup cannot return
-two equal strings, but can miss or select a separate variant of one real order.
-
-**Owner business question:** in seller PO references, are those variant forms
-distinct identifiers, or can any denote the same order? Recommended safe initial
-choice is exact identity only if that is operationally acceptable and explicitly
-confirmed. Otherwise identify the meaningful equivalent cases; technical design
-will retain the raw source and specify a separate comparison key consistently for
-UNIQUE/locks/lookup. Do not ask the factory to choose an algorithm or silently trim,
-normalize, substitute letters/digits, merge histories or introduce supplier keys.
-This does not reopen confirmed factory-wide uniqueness. It resolves how to enforce it.
-
-Queries still authorize before existence checks, scope all reads, return the same
-foreign/absent not-found and disclose only original order specifications. No fuzzy
-cross-scope disambiguation, creator/error leakage or expansion of documentary reads.
-Replay and unknown-COMMIT recovery retain original command identity regardless of
-any later comparison policy; business-number lookup is never outcome recovery.
+[The detailed identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+defines the ordered transform, proposed profile and STORED generated key/helper,
+validation, constraints, source-preserving reads, owner locks, outcome distinctions
+and future version/collision safety. Current installation=factory and authority=
+installation basis remains accepted; no supplier partition or cross-installation
+lookup. Catalogue exact-label rules are wholly separate. Technical generated-key
+mechanism and all other I1choices remain proposed for Owner design acceptance.
 
 ## Final proposed numeric representation and capacity
 
@@ -213,7 +203,7 @@ future acceptance duties. These are initial capacity recommendations with bounde
 failure behavior, not permanent business maxima or a substitute for real Windows
 PG load/transaction evidence. Owner may revise capacities before acceptance.
 
-## Findings, review record and readiness
+## Historical review evidence at a84e20e
 
 Required findings: F1 exact identity overclaim corrected and R1 remains OPEN;
 F2 missing derived-total handoff corrected; F3 unsupported resource rationale and
@@ -240,9 +230,27 @@ passes; final staged scope/diff checks and local network-blocked Graphify refres
 precede commit. No application/unit/PostgreSQL test was executed in this task.
 Static review is not implementation acceptance, factory UAT or deployment.
 
-Status: READY FOR CONDITIONAL OWNER DESIGN REVIEW; NOT READY FOR UNCONDITIONAL
-DESIGN ACCEPTANCE while R1 is unanswered. Owner can accept/revise the listed numeric,
-calendar, catalogue and resource conditions together with that decision. If it
-requires broader identity equivalence, corresponding technical correction/re-review
-must precede acceptance. I1 implementation requires a separate bounded instruction
-and applicable gate reconciliation. No I2 design readiness or new capability follows.
+## Current R1 reconciliation and acceptance readiness
+
+R1 is OWNER RESOLVED per SRC-006; its former OPEN status above is historical. The
+[Owner acceptance checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md) states
+all14choices, business-facing limits, remaining risks and unrecorded acceptance.
+No remaining I1 business-policy blocker is identified. The reviewed technical
+package is prepared for formal Owner design acceptance, not already accepted.
+[Bounded future authorization draft](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+is PROPOSED — NOT AUTHORIZED FOR EXECUTION. Independent reconciliation reviews:
+
+| Reviewer | Result / verified scope | Remaining findings |
+| --- | --- | --- |
+| i1_architecture | PASS; all six v0.3 designs, finite transform/raw binding,14decision checklist, bounded draft and governance/source consistency | No required finding; technical503 wording clarified |
+| i1_security | PASS; mapped/unmapped Unicode, key forgery, scoped reads/current grants, original intent/recovery and catalogue separation | No required finding |
+| i1_database_final | PASS; controlled STORED generation, helper privileges/versioning, normalized UNIQUE/locks/lookup/23505mapping, race/rollback test obligations | No required finding; runtime proof remains future work |
+
+Documentation checks PASS:22Markdown files only;815local links/anchors; required
+metadata/unique IDs/new dependencies;60stable requirement rows,28base and12R1future
+case families;14rows each in decision/disposition/Ownerchecklist. Twelve I1fields
+retain exact Persian names/actor with7mandatory5optional. Original four Step1docs,
+SRC-004/SRC-005,23field register,S01–S12amendment and48row coverage are unchanged.
+Working diff check passes; final staged/source-scope checks and local network-
+blocked Graphify refresh precede commit. No application/unit/PostgreSQL tests,
+implementation, gate activation, I2 readiness, push or new capability is claimed.

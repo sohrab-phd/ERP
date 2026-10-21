@@ -3,7 +3,7 @@ id: PHASE-12
 title: Implementation Planning
 phase: 12-implementation-planning
 status: approved
-version: 0.11.0
+version: 0.12.0
 owners: [chief-solution-architect, delivery-lead]
 depends_on: [PHASE-11, APR-013, APR-014, VAL-P12-HANDOFF-001, ASM-025]
 last_reviewed: 2026-10-21
@@ -13,7 +13,15 @@ supersedes: null
 
 # Phase 12 — Implementation Planning
 
-Current task: [APR-035](../00-governance/approved-baselines/APR-035-i1-final-design-review.md),
+Current task [APR-036](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md):
+R1 Option A is Owner-approved, recorded separately in SRC-006. [Reconciled identity](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md),
+[Owner design checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md) and
+[bounded implementation DRAFT](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+prepare acceptance only. Full design/implementation/gates remain unapproved; no push.
+Earlier OPEN-R1 statements below are historical. Eleven backend capabilities remain.
+
+
+Earlier task: [APR-035](../00-governance/approved-baselines/APR-035-i1-final-design-review.md),
 focused I1 design review only. [Final review and14dispositions](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
 record corrected numeric/text/resource/PG proposals, the finite calendar choice
 and OPEN R1 reference equivalence before unconditional acceptance. No Owner

@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.17.0
+version: 0.18.0
 owners: [chief-solution-architect]
 depends_on: []
 last_reviewed: 2026-10-21
@@ -12,6 +12,15 @@ supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## R1 resolution and proposed I1 acceptance package
+
+- [SRC-006 Owner-approved R1 Option A](00-governance/team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md)
+- [APR-036 documentation-only scope](00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
+- [Deterministic raw/reference-key design](12-implementation-planning/I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+- [Persian Owner design-acceptance checklist](12-implementation-planning/I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
+- [Bounded implementation-authorization DRAFT, not effective](12-implementation-planning/I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+
 
 ## Current purchase/receiving analysis (2026-10-21)
 

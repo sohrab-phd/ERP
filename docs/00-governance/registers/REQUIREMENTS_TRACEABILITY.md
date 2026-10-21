@@ -3,15 +3,26 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: in_review
-version: 0.13.0
+version: 0.14.0
 owners: [requirements-owner, qa-architect]
 depends_on: [SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
-last_reviewed: 2026-10-20
+last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Requirements Traceability Matrix
+
+## Subsequent R1 source trace
+
+[SRC-006](../team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md) records
+Owner-approved R1-A–D without rewriting SRC-004/SRC-005 or original25/23/S01–S12.
+[Identity specification](../../12-implementation-planning/I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
+and [R1-T01–T12 trace](../../12-implementation-planning/I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md#r1-owner-approved-identity-obligations--future-tests-r1-t01r1-t12)
+map each rule plus raw preservation/binding/scope/catalogue exclusion to existing
+REQ-INBOUND-001/014/017/021/023/024,F02,S01/S08/S09/S10/S12 and future test layers.
+The60primary IDs stay stable;28base+12R1case families are planned, not executed.
+
 
 ## Proposed I1 detailed acceptance trace (2026-10-20)
 

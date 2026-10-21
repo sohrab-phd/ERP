@@ -3,9 +3,9 @@ id: PLAN-I1-DECISIONS-001
 title: I1 detailed design decisions risks reviews and Owner acceptance checklist
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [chief-solution-architect, delivery-lead, security-architect]
-depends_on: [APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, PLAN-I1-ACCEPTANCE-001]
+depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, PLAN-I1-ACCEPTANCE-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -18,10 +18,12 @@ authorizes this documentation design, not technical acceptance or implementation
 The six-file package starts with the [domain model and source/companion map](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md).
 All proposed technical decisions below require Owner acceptance; no new APPROVED
 ADR, executable contract, permission, migration, test or product gate is published.
-The reviewed local design baseline is16115d7655fb2b635165aec03b84760082194b45;
-push is unverified. The subsequent [focused final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
-records recommendations/corrections, not formal Owner acceptance. Its narrow
-reference-equivalence question supersedes the earlier no-missing-policy conclusion.
+Current preparation baseline is local a84e20e12c7cd0b301e329d0ed97f300029b9aba,
+push unverified. SRC-006/APR-036 now resolve R1 Option A business equivalence only.
+[The finite identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md) supersedes
+the exact-only PO branch; [the Owner checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
+collects all14technical choices/conditions, none accepted yet. Catalogue exactness,
+other technical limits and implementation authority are not approved by R1.
 
 ## Evidence precedence and design boundary
 
@@ -55,7 +57,7 @@ accept or revise the whole set before a separate implementation authorization.
 | ID | Selected PROPOSED recommendation | Alternatives considered / trade-off | Acceptance boundary |
 | --- | --- | --- | --- |
 | I1-D01 | Procurement owns separate immutable operational header/lines and shared inbound references; add/register/read only | Rename documentary purchase or build a new master-data module: would conflate history or add unnecessary ownership/infrastructure | Preserve completed purchase/proforma/manual receipt; no amendments/cancellation/PO-history conversion |
-| I1-D02 | Current installation=factory and authority=installation mapping is source-backed; exact C-collated UNIQUE branch remains conditional | Preserving source does not define business equivalence. Byte variants can still denote one real PO; supplier partition remains disallowed | OWNER BUSINESS DECISION REQUIRED: confirm exact variants are distinct, or identify equivalent variants before a separate preserved-source comparison-key design. Factory-wide namespace stays resolved |
+| I1-D02 | R1 Option A OWNER RESOLVED; preserved raw reference + versioned DB-generated STORED comparison key/profile, factory UNIQUE/locks/lookup on that key | Only boundaryU0020/ASCIIcase/three digit sets/Yeh-Kaf; no other equivalence, supplier partition or catalogue reuse | Technical generation/parity/privileges/version transition still PROPOSED; full raw binding preserved, Owner design acceptance required, not a reopened business decision |
 | I1-D03 | One order freezes server line UUIDs + original array ordinal/count; identical/missing-item-number lines remain independent | Attribute/item-number keys merge valid lines; client-required line business number adds an unwanted field | IDs/ordinal are technical, never physical Internal System Code or another mandatory factory field |
 | I1-D04 | Exact lexeme strings; dimension20integer/18fraction positive, positive20digit whole W1/count; distinct nonstock BigInt derived totals | W1<10^20 aligns actual per-unit Kg/0005/0006; dimension/count limits are technical proposals, not physical evidence. Product40digits/sum43digits need not fit Kg | Never send derived totals to IPS/receipt/Balance/Ledger or iterate ordered count; future I2 owner capacity checks remain necessary. Owner accepts technical grammar/capacity/positivity without measurement tolerance |
 | I1-D05 | Explicit Jalali YYYY-MM-DD + stored Y/M/D, UT-JALALI-1206-1498-v1 frozen Calendar Center research profile | Range follows source coverage, not factory limits; future entries are calculated profile data, not proof of enacted future annual calendars. Borkowski/Intl are not demonstrably superior verified ERP approaches here | Owner accepts finite range or requests reviewed broader support; unsupported dates get tagged rejection, never clamp/default. Freeze/independently verify293flags and app/DB parity; reconcile any later authoritative conflict |
@@ -66,7 +68,7 @@ accept or revise the whole set before a separate implementation authorization.
 | I1-D10 | Three additive tables with typed scoped FKs, exact immediate unique guards, SELECT/INSERT grants, frozenN/boundeduniquepositions plus deferred header completeness guard | Insert-only grants/app checks alone allow append/incomplete aggregate; dynamic state/cyclic FK machinery adds complexity | One small SELECT-only integrity trigger function is proposed, not a stored command/posting kernel. Explicit design acceptance required; deferred COMMIT guard failure is technical/possibly uncertain, not mapped business rejection |
 | I1-D11 | Existing key→Identity→sorted actual owner-hash resource order; fresh READ COMMITTED; bounded queries in write-mode transaction compatible with Identity row locks | Sorting only IDs or sequential mixed locking can invert order; readonly RR with FOR UPDATE fails; nested pooled snapshot can deadlock | No stock/IPS locks or extra public command calls; distinct-user race tests and correct revocation linearization required |
 | I1-D12 | Stable owner order/line/catalogue identities and immutable ordered snapshot, with no I1 technical-class mapping/default or receiving state | Map every new type to OTHER or prebuild I2 schema would invent admission policy; mutable order to add receiving loses source evidence | Future supported mapping and authority before I2 stock; no B02–B09 answers or final I2 design; no foreign writer |
-| I1-D13 | 60-ID scope trace and A01–A28 concrete future acceptance cases; real PG races/rollback/crash and all relevant regression suites | Static parser tests/mock counters cannot prove transactions, no new coverage-percentage/test-count target | No test code/results now; runtime implementation acceptance requires actual Windows/PG proof and independent review |
+| I1-D13 | 60-ID scope trace, A01–A28 plus R1-T01–T12 future cases; real-PG generation/races/rollback/crash/regression | Static review is not runtime proof; R1 vectors cover all48mappings and significant variants | No test code/results now; Windows/PG evidence and independent review before capability acceptance |
 | I1-D14 | Revised new text128Unicode scalars/512UTF8bytes with frozen non-mutating predicate;1–128lines;256KiBrequest/fullHTTPprojection; old4KiB unchanged; catalogue50/100 | Equal scalar budget avoids128byte Persian disadvantage. Line cap bounds work independently of ordered count/IPS; legal per-field maxima can exceed aggregate projection capacity | Owner accepts these business-facing capacities; semantic projection preflight includes referenced labels/wrapper/escaping before insertion. No truncation or universal performance evidence claimed |
 
 For calendar alternatives, primary references inspected were the University of
@@ -85,7 +87,7 @@ support the relational/equality mechanisms, not a factory semantic decision.
 
 | Risk / state | Impact and mitigation / owner gate |
 | --- | --- |
-| PO reference equivalence — OWNER DECISION OPEN; catalogue equality — CONDITIONAL | Exact reference uniqueness is insufficient to prove semantic factory-wide identity if variants denote one PO. R1 must be answered before implementation; exact catalogue-only dedup also needs explicit acceptance. Source/factory scope stay preserved; no silent normalization/merge |
+| PO reference equivalence — OWNER RESOLVED; technical enforcement PROPOSED | SRC-006 fixes only R1-A–D. Controlled generated key/parity/raw binding/version safety still need technical acceptance. Catalogue labels retain independent exact-only proposal; no broader normalizer or silent merge |
 | Numeric/text/count/horizon limits — EXPLICIT PROPOSAL | A legitimate factory value might fall outside a proposed boundary. No such input conflict is established; Owner can revise limits before accepting design. Never claim these were investigated factory tolerances |
 | Calendar receipt and complete year vector — FUTURE IMPLEMENTATION OBLIGATION | Source was inspected and known examples cross-checked, not all293flags transcribed/executed. Freeze receipt/hash and independently verify profile/app/DB behavior before implementation acceptance; mismatches block that acceptance, never silently choose an oracle |
 | Deferred completeness guard — DESIGN ACCEPTANCE ITEM | Small DB integrity function needed despite application-owned transactions. Owner accepts mechanism; it must have fixed search path/invoker rights/no writes, restricted privileges and direct malformed-aggregate tests. No new stored business posting kernel |
@@ -95,12 +97,10 @@ support the relational/equality mechanisms, not a factory semantic decision.
 | I2 compatibility — OPEN LATER | Stable scoped order/line/catalogue keys permit additive references but do not solve physical identity, grain, provenance, B06, progress or mapping. Designing I1 does not make I2 ready |
 | Large body/result and Identity locks — TECHNICAL DESIGN | Dedicated parser and projection preflight, bounded line/list counts and correct current-check transaction mode; test real byte/lock/pool boundaries before acceptance |
 
-The final review identifies one narrow unresolved I1 business-identity decision,
-R1: whether listed reference variants are distinct identifiers or the same PO.
-This qualifies the earlier no-missing-policy assessment without reopening B01's
-resolved factory-wide namespace. Catalogue equivalence and business-facing numeric/
-text/line/calendar capacities also require acceptance of explicit proposed conditions.
-I2 residuals stay open at their dependent stage. No assumption of remote push.
+R1 Option A is now explicitly resolved by SRC-006. No remaining I1 business-policy
+blocker is identified in this bounded design; all technical implementations and
+business-facing numeric/text/line/calendar/catalogue capacities still require Owner
+acceptance. I2 residuals remain separate. Remote push is not assumed.
 
 ## Original Step3 review and validation record (historical16115d7)
 
@@ -138,12 +138,10 @@ not establish implementation, factory UAT or production acceptance.
 ## Final review dispositions and mandatory stop
 
 The [complete disposition table](I1_PURCHASE_ORDER_FINAL_REVIEW.md#decision-dispositions)
-assesses each I1-D01–D14 after corrections. The package is **READY FOR CONDITIONAL
-OWNER DESIGN REVIEW**, with R1 needing an explicit business decision before
-unconditional design acceptance/implementation. All technical decisions remain
-PROPOSED. If accepted, the next gate is a separate bounded I1
-implementation authorization and applicable product gate/unlock reconciliation.
-This design task supplies neither. No I2 detailed design, product code, executable
-SQL/contracts/permissions/tests, enum/IPS change, UI/deployment or push. The project
-remains at eleven accepted backend capabilities; I1 is not implemented or accepted
-as a delivered capability by Step 3.
+and [Persian Owner checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md) assess
+all14choices after R1 reconciliation. Status: READY FOR FORMAL OWNER DESIGN REVIEW
+AND ACCEPTANCE, with no design acceptance recorded. The [implementation scope draft](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+is PROPOSED — NOT AUTHORIZED FOR EXECUTION. Separate explicit implementation
+instruction and applicable gate reconciliation must precede any runtime work.
+No I2 design/readiness, SQL/code/tests/permissions/enum/IPS/gate change, UI/deployment
+or push. Eleven backend capabilities remain; I1 is not implemented or accepted.
