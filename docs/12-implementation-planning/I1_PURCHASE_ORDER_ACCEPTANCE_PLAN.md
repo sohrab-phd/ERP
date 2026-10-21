@@ -1,24 +1,32 @@
 ---
 id: PLAN-I1-ACCEPTANCE-001
-title: Proposed I1 detailed acceptance cases and complete requirements scope trace
+title: Accepted I1 detailed acceptance cases and complete requirements scope trace
 phase: 12-implementation-planning
-status: in_review
-version: 0.3.0
+status: accepted
+version: 1.0.0
 owners: [qa-architect, delivery-lead]
-depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, DOM-INBOUND-TRACE-001, DOM-INBOUND-POLICY-001]
+depends_on: [APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, DOM-INBOUND-TRACE-001, DOM-INBOUND-POLICY-001]
 last_reviewed: 2026-10-21
-approval: null
+approval: APR-037 design acceptance only; implementation remains unauthorized
 supersedes: null
 ---
 
-# I1 acceptance design — DRAFT / PROPOSED / NO TESTS IMPLEMENTED OR EXECUTED
+# I1 acceptance design — OWNER-ACCEPTED DESIGN / NOT AUTHORIZED FOR IMPLEMENTATION
+
+Formal Owner design acceptance:2026-10-21, [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md),
+reviewed content at9c0976e0519192358e8a097f7b26fe43f4b1df6e. The design below is
+accepted with its recorded conditions; no code/SQL/API/permission/test execution
+or product unlock is authorized. Future environment/parity/calendar/transaction/
+security/regression verification remains mandatory, not completed evidence.
+
 
 This is a future test specification, not test code or passing evidence. A01–A28
 are local acceptance-case labels, not a new global TEST catalogue or factory UAT.
 All scenarios are synthetic test intent, not real factory records. The [domain](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md),
 [API](I1_PURCHASE_ORDER_API_DESIGN.md), [DB/transactions](I1_PURCHASE_ORDER_DATABASE_DESIGN.md)
-and [security](I1_PURCHASE_ORDER_SECURITY_DESIGN.md) define expected proposed behavior.
-Owner must accept the design/limits and explicitly authorize implementation first.
+and [security](I1_PURCHASE_ORDER_SECURITY_DESIGN.md) define expected accepted behavior.
+APR-037 formally accepts this mandatory future test baseline; separate bounded
+implementation authorization is still required before code/tests are implemented.
 R1 Option A is now Owner-approved in SRC-006. The [identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
 controls registration/lookup and raw-binding obligations. R1-T01–T12 below extend
 A01–A28 without renumbering any factory requirement or claiming executed tests.
@@ -64,7 +72,7 @@ Required assertions name exact families and surviving facts, not merely “throw
 | A03 | Two distinct authenticated PROC accounts concurrently register R1-equivalent raw references with different keys/targets at the real owner-lock barrier | Exactly one accepted PO and complete lines; loser exact GUARD_CONFLICT; both correct outcomes/audits; no scope split by supplier/role/person; unique constraint still protects when precheck path is bypassed in controlled test | PG,REC |
 | A04 | Several lines, two identical specs, duplicate or missing optional itemNumber | Original array order, distinct stable line UUIDs and ordinals, no coalescing, no invented item-number uniqueness; repeated reads/replay preserve IDs | U,PG,API |
 | A05 | Parameterize each missing required member, every optional omitted/provided null/blank, wrong type, wrong-kind/missing/foreign option, unknown nested property | Admitted scalar/requiredness failures GUARD_INVARIANT; invalid catalogue selection GUARD_STATE without foreign existence leakage; unknown names or structural-shape mismatch (e.g. lines not array, object for scalar) fail admission without consuming a key; no partial sources; exact Persian names/actors traceable | U,PG,API,SEC |
-| A06 | Exact width/length m and thickness mm, `1.200`, tiny supported fractions, 20 integer digits, 18 fraction digits and just-outside bounds | Exact lexeme roundtrip; positive proposed limits; reject zero/negative/exponent/grouped/numeric-JSON/19th fractional digit without conversion or rounding; DB direct invalid inserts also fail | U,PG,API |
+| A06 | Exact width/length m and thickness mm, `1.200`, tiny supported fractions, 20 integer digits, 18 fraction digits and just-outside bounds | Exact lexeme roundtrip; positive accepted limits; reject zero/negative/exponent/grouped/numeric-JSON/19th fractional digit without conversion or rounding; DB direct invalid inserts also fail | U,PG,API |
 | A07 | W1 `2000`, count `5`, values beyond JS safe integer/PGbigint, max20digit operands and invalid fractions/zero/exponent; W1 `10000000000000000000` × count `10` | W1 stays per-unit; exact distinct derived-total BigInt, up to40digits per line/43 per128line sum, never cast into Kg/measuredKg/Ledger/Balance. Product>=10^20 remains nonstock evidence, no invented total-mass rejection; future I2 per-unit/group owner capacity checks remain separate. No allocation/loops proportional to ordered count; rejected bounds leave no source | U,PG,REG |
 | A08 | Jalali ordinary/month-end/Esfand cases, 1395-12-30 valid versus 1394-12-30 invalid, official 1403-12-30 valid and 1404-12-30 invalid; invalid months/day zero/overflow | Profile-driven validity; no Gregorian Date parser, server-today default or timezone shift; canonical Jalali string roundtrip and separate DB creation time | U,PG,API |
 | A09 | Independently reviewed Calendar Center research year-marker receipt for full1206–1498 profile, bounds and meaningful1205/1499dates | Verify all293flags/month boundaries, app/DB parity and frozen receipt/hash before acceptance; outside-profile tagged GUARD_INVARIANT is unsupported capacity, not a false-calendar claim. No clamp/today default/implicit expansion; future annual-source conflict requires reconciliation before affected use | U,PG,DOC |
@@ -97,7 +105,7 @@ for normal behavioral assertions.
 
 ## R1 Owner-approved identity obligations — future tests R1-T01–R1-T12
 
-All are PROPOSED test obligations, not executable test code or passing evidence.
+All are mandatory future test obligations, not executable test code or passing evidence.
 Use literal/codepoint-labelled golden inputs independent of a general normalization
 library. Real PG is required for generation, uniqueness, races, audit and recovery.
 
@@ -116,7 +124,7 @@ library. Real PG is required for generation, uniqueness, races, audit and recove
 | R1-T11 | Authorized equivalent lookup returns one original; non-equivalent lookup ownorder or generic404; forged key/profile/scope/actor fields denied; revoked/forged/customer/SEC/unrelated/foreign contexts cannot discover raw/key/order. Comparison normalization never broadens role authority | PG,API,SEC |
 | R1-T12 | Material Type/Quality/Color labels differing in R1-equivalent ways remain exact-only distinct options; both roles add/reuse under existing catalogue rules. Raw128scalar/512byte validation precedes normalization, so oversized input cannot become admissible by trimming. No PO/stock modification from catalogue creation | U,PG,API,SEC,REG |
 
-| Approved source obligation | Existing requirements linked, without rewriting them | Proposed cases |
+| Approved source obligation | Existing requirements linked, without rewriting them | Accepted cases |
 | --- | --- | --- |
 | SRC-006 R1-A/B/C/D finite equivalence | REQ-INBOUND-021/F02/S01 | R1-T01–T05,T08,T11 |
 | Raw preservation and comparison-key/UUID separation | REQ-INBOUND-001/F02/S01; existing envelope binding invariant | R1-T06,T07,T09,T10 |
@@ -129,7 +137,7 @@ FULL I1 means planned business outcome in this scope, PART means an I1 prerequis
 guard or subset only, I2 means not delivered by I1, GOV means exclusion/source
 discipline. These are **future coverage classifications**, not implementation status.
 
-| Requirement | I1/I2 scope and concrete obligation | Proposed cases |
+| Requirement | I1/I2 scope and concrete obligation | Accepted cases |
 | --- | --- | --- |
 | REQ-INBOUND-001 | FULL I1 operational pre-arrival registration/date | A01,A08,A09 |
 | REQ-INBOUND-002 | FULL I1 ordered distinct lines/specs/count/W1 | A01,A04–A07,A10,A11 |
@@ -159,7 +167,7 @@ discipline. These are **future coverage classifications**, not implementation st
 
 ## All original field requirements — scope trace (23)
 
-| Requirement | Field / I1 scope | Proposed cases |
+| Requirement | Field / I1 scope | Accepted cases |
 | --- | --- | --- |
 | REQ-INBOUND-F01 | شماره سیستم — I2, not line UUID | A25 exclusion |
 | REQ-INBOUND-F02 | شماره سفارش — I1 mandatory exact factory reference | A01–A03,A16 |
@@ -187,7 +195,7 @@ discipline. These are **future coverage classifications**, not implementation st
 
 ## All supplemental requirements — scope trace (12)
 
-| Requirement | I1/I2 obligation | Proposed cases |
+| Requirement | I1/I2 obligation | Accepted cases |
 | --- | --- | --- |
 | REQ-INBOUND-S01 | I1 factory-wide R1 comparison identity with raw reference preserved; many arrivals later I2 | A02,A03,A16,A20 |
 | REQ-INBOUND-S02 | I1 m/mm/m ordered values; actual I2 | A05,A06 |

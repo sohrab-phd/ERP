@@ -5,6 +5,17 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
+Current scope (2026-10-21): [APR-037 formally accepts I1 detailed design](docs/00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)
+with mandatory conditions. I1 is **not implemented**; the [bounded implementation
+handoff DRAFT](docs/12-implementation-planning/I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+is **PROPOSED — NOT AUTHORIZED FOR EXECUTION**. No product gate/unlock changes.
+Eleven backend capabilities are Owner accepted; no additional capability, factory UAT
+or production approval is implied. Reviewed local commit remote presence is unverified;
+no push is performed. Earlier delivery-stage descriptions below are historical;
+[CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls effective authority.
+
+## Earlier delivered foundation and backend capabilities
+
 The Project Owner explicitly authorized foundation-only SLICE-ENVELOPE on
 2026-10-04 from baseline `e80a04b15ddf93451cc79ccf81722f564912596d`, recorded in
 [APR-018](docs/00-governance/approved-baselines/APR-018-final-pre-implementation.md).

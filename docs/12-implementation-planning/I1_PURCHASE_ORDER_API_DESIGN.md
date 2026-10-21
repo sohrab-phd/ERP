@@ -1,28 +1,36 @@
 ---
 id: PLAN-I1-API-001
-title: Proposed I1 purchase order and shared catalogue commands and queries
+title: Accepted I1 purchase order and shared catalogue commands and queries
 phase: 12-implementation-planning
-status: in_review
-version: 0.3.0
+status: accepted
+version: 1.0.0
 owners: [api-architect, chief-solution-architect, security-architect]
-depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-COMMAND-IDEMPOTENCY-001, ADR-0014]
+depends_on: [APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-COMMAND-IDEMPOTENCY-001, ADR-0014]
 last_reviewed: 2026-10-21
-approval: null
+approval: APR-037 design acceptance only; implementation remains unauthorized
 supersedes: null
 ---
 
-# I1 contracts — DRAFT / PROPOSED / NOT AUTHORIZED FOR IMPLEMENTATION
+# I1 contracts — OWNER-ACCEPTED DESIGN / NOT AUTHORIZED FOR IMPLEMENTATION
+
+Formal Owner design acceptance:2026-10-21, [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md),
+reviewed content at9c0976e0519192358e8a097f7b26fe43f4b1df6e. The design below is
+accepted with its recorded conditions; no code/SQL/API/permission/test execution
+or product unlock is authorized. Future environment/parity/calendar/transaction/
+security/regression verification remains mandatory, not completed evidence.
+
 
 These are Markdown specifications, not published TypeScript/OpenAPI contracts or
 registered routes. [Domain field rules](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md),
 [database/transaction rules](I1_PURCHASE_ORDER_DATABASE_DESIGN.md) and
 [security matrix](I1_PURCHASE_ORDER_SECURITY_DESIGN.md) are normative **within this
-proposal only**. All I1-D decisions need Owner acceptance and separate implementation
-authorization. Existing completed-purchase/proforma/receipt v1 contracts stay unchanged.
+accepted design only**. All I1-D decisions are accepted under APR-037; separate
+implementation authorization is still required. Existing completed-purchase/proforma/receipt v1 contracts stay unchanged.
 R1 Option A is now Owner-approved business policy per SRC-006. The
 [reference identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md) controls
 raw input, derived key, uniqueness/lookup and binding distinctions. Other technical
-capacity/calendar/catalogue recommendations remain proposed; no full design acceptance.
+capacity/calendar/catalogue choices are accepted with conditions under APR-037;
+no executable API or runtime permission is published.
 
 ## Minimal operation surface
 
@@ -31,7 +39,7 @@ currently granted organizational role; no customer scope or temporary actor.
 All query specifications are v1 semantics; HTTP read endpoints are fixed v1 shapes,
 not new durable commands or callers of public command execution.
 
-| Operation | Proposed name / version | Target/source identity | Roles | HTTP proposal |
+| Operation | Accepted name / version | Target/source identity | Roles | HTTP design |
 | --- | --- | --- | --- | --- |
 | Register order and all lines | RegisterOperationalPurchaseOrder / 1 | target kind operational-purchase-order; target.id caller technical create UUID; business identity factory + derived R1 comparison key of raw orderReference | ACT-PROC only | POST /purchasing/operational-orders |
 | Add one reference option | AddInboundCatalogueOption / 1 | target kind inbound-catalogue-option; target.id caller technical option UUID; business identity factory + catalogue kind + exact label | ACT-PROC, ACT-WH | POST /purchasing/inbound-catalogues |
@@ -56,7 +64,7 @@ DB time and supplier information are not new payload fields.
 Only the named command/version/target pair can execute. Register both active v1
 contracts explicitly in the future owner registry and explicit Identity policies;
 all other I1 versions are unregistered. Unknown versions, target mismatch in the
-proposed admission policy, unknown envelope/property names, secrets,
+accepted admission policy, unknown envelope/property names, secrets,
 duplicate JSON names, invalid Unicode/encoding or over-limit input fail closed
 without consuming a business key. Known admitted fields with missing/invalid
 required values produce durable GUARD_INVARIANT rejection. No legacy contract is
@@ -67,7 +75,7 @@ do not claim every inactive version is rejected before key lookup or cannot repl
 
 Current [identity-http requestJson](../../apps/backend/src/transport/identity-http.ts)
 caps HTTP bodies at 4096 bytes; the [shared parser](../../packages/shared-kernel/src/envelope/canonical-json.ts)
-permits 256 KiB. PROPOSED new operational-order transport reader has explicit
+permits 256 KiB. ACCEPTED DESIGN new operational-order transport reader has explicit
 2–262144 byte Content-Length, application/json UTF-8, no transfer encoding,
 strict actual byte-length equality, 5-second body deadline and the shared bounded
 parser. Do not raise the existing Identity/documentary-route limits. Add-option and
@@ -83,7 +91,7 @@ no body; reject transfer encoding/nonzero Content-Length. Responses retain UTF-8
 JSON, no-store and nosniff through current respond. Exact references/labels belong
 in POST read bodies to avoid URL/access-log encoding of business values.
 
-Revised text limits (PROPOSED I1-D14): reference, item number, RAL and catalogue
+Revised text limits (ACCEPTED DESIGN I1-D14): reference, item number, RAL and catalogue
 label each1–128 Unicode scalar values AND at most512 UTF-8 bytes after JSON decoding.
 First require validUnicode; count code points, not JavaScript UTF-16 code units or
 grapheme clusters. Ordinary Persian letters generally use2bytes, so128such letters
@@ -106,7 +114,8 @@ including option labels, escaping, IDs and fixed metadata against262144UTF-8byte
 before any order/line insert. Semantic excess rejects durably GUARD_INVARIANT with
 fixed `I1_ORDER_PROJECTION_LIMIT` message tag, no raw value echo. A committed order
 must always be fully readable; never truncate, split the order or drop fields.
-The selected limits and resulting capacity restrictions need Owner acceptance.
+APR-037 accepts these initial limits; future proof of complete readable orders
+under the exact serialized budget remains mandatory before implementation acceptance.
 
 ## RegisterOperationalPurchaseOrder v1
 
@@ -163,14 +172,14 @@ new key: identical facts GUARD_IDEMPOTENT_DUP, changed facts GUARD_CONFLICT. New
 target but exact existing scoped kind+label: GUARD_IDEMPOTENT_DUP. Labels differing
 in case, Unicode form, Arabic/Persian letters, spaces or ZWNJ are not declared
 equivalent and are not silently merged. Equal text in different catalogues/scopes
-is independent. These exact-equivalence semantics are a proposed acceptance choice.
+is independent. These exact-label semantics are accepted under APR-037, including visual variants.
 
 Accepted StableResult: fact_identity = optionId; event = InboundCatalogueOptionAdded;
 data = `{optionId,catalogue}`. Creation records trusted issuer/subject/original
 actor role, request/key and DB time privately. Subsequent attempts never overwrite
 creator attribution. No seed business labels or defaults to technical enums.
 
-PROPOSED duplicate workflow follows existing durable-rejection semantics instead
+ACCEPTED DESIGN duplicate workflow follows existing durable-rejection semantics instead
 of adding accepted get-or-create: after a completed DUP, query the same scoped
 catalogue with exactLabel and use the one returned option ID. A rejected key stays
 rejected forever. An uncertain add must first resolve its original key; a lookup
@@ -183,8 +192,8 @@ order rollback is promised. An operator sees successful option creation separate
 from the failed order and may reuse it in a corrected new operation after the
 original outcome is known. Duplicate resolution returns the existing creator's
 option; the losing attempt does not take ownership. No business synonym deduplication
-is claimed: exact-label identity is a conditional recommendation, not an approved
-definition of equivalent Persian/Arabic/space variants.
+is claimed: exact-label identity is the accepted initial policy. Similar Persian/Arabic/space
+variants may remain distinct; R1 is not a catalogue-equivalence rule.
 
 ## Original-order queries and projection
 
@@ -239,7 +248,7 @@ can appear later. An exact query makes a just-added option immediately selectabl
 
 ## Error and recovery semantics
 
-| Condition | Proposed protocol result | Disclosure / effect |
+| Condition | Accepted protocol result | Disclosure / effect |
 | --- | --- | --- |
 | Missing/invalid session | HTTP 401 generic unauthenticated | No existence or business key disclosure |
 | Role/scope disallowed at transport | HTTP 403 generic forbidden | No owner read/write |

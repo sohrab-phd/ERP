@@ -3,9 +3,9 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.18.0
+version: 0.19.0
 owners: [chief-solution-architect]
-depends_on: []
+depends_on: [APR-037]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -13,7 +13,13 @@ supersedes: null
 
 # Architecture Documentation Index
 
-## R1 resolution and proposed I1 acceptance package
+## Owner-accepted I1 detailed design and inactive implementation handoff
+
+- [APR-037 formal Owner design acceptance with all mandatory conditions](00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)
+
+I1-D01–I1-D14 are accepted design; no implementation or product unlock is authorized.
+The eleven accepted backend capabilities and all future verification duties remain.
+
 
 - [SRC-006 Owner-approved R1 Option A](00-governance/team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md)
 - [APR-036 documentation-only scope](00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
@@ -25,14 +31,14 @@ supersedes: null
 ## Current purchase/receiving analysis (2026-10-21)
 
 - [Focused I1 final-review-only Owner instruction](00-governance/approved-baselines/APR-035-i1-final-design-review.md)
-- [I1 final dispositions, corrections, conditions and OPEN identity decision](12-implementation-planning/I1_PURCHASE_ORDER_FINAL_REVIEW.md)
+- [I1 final dispositions and accepted conditions; R1 resolved](12-implementation-planning/I1_PURCHASE_ORDER_FINAL_REVIEW.md)
 - [Step 3 I1 detailed-design-only Owner authority](00-governance/approved-baselines/APR-034-i1-detailed-design.md)
 - [I1 domain model and exact twelve-field design](12-implementation-planning/I1_PURCHASE_ORDER_DOMAIN_DESIGN.md)
-- [I1 proposed command/query/HTTP contracts](12-implementation-planning/I1_PURCHASE_ORDER_API_DESIGN.md)
-- [I1 proposed PostgreSQL, locks and transaction design](12-implementation-planning/I1_PURCHASE_ORDER_DATABASE_DESIGN.md)
+- [I1 accepted command/query/HTTP design, not executable contracts](12-implementation-planning/I1_PURCHASE_ORDER_API_DESIGN.md)
+- [I1 accepted PostgreSQL, locks and transaction design](12-implementation-planning/I1_PURCHASE_ORDER_DATABASE_DESIGN.md)
 - [I1 security matrix and narrow scoped reads](12-implementation-planning/I1_PURCHASE_ORDER_SECURITY_DESIGN.md)
 - [I1 acceptance cases and complete 60-ID scope trace](12-implementation-planning/I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md)
-- [I1 fourteen technical proposals, risks and review record](12-implementation-planning/I1_PURCHASE_ORDER_DECISIONS.md)
+- [I1 fourteen accepted design decisions, risks and review record](12-implementation-planning/I1_PURCHASE_ORDER_DECISIONS.md)
 - [Step 2 acceptance and focused I1 policy-only Owner authority](00-governance/approved-baselines/APR-033-i1-policy-clarification.md)
 - [Subsequent Owner clarification, separate from SRC-004](00-governance/team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md)
 - [Confirmed I1 policy amendment, 12 supplemental requirements and readiness](02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md)

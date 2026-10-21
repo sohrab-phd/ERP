@@ -3,15 +3,26 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: in_review
-version: 0.14.0
+version: 0.15.0
 owners: [requirements-owner, qa-architect]
-depends_on: [SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
+depends_on: [APR-037, SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
 ---
 
 # Requirements Traceability Matrix
+
+## Formal I1 design acceptance trace (2026-10-21)
+
+[APR-037 actual Owner acceptance](../approved-baselines/APR-037-i1-detailed-design-acceptance.md)
+accepts all14I1 decisions and the [future acceptance baseline](../../12-implementation-planning/I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md)
+with conditions. All60IDs remain unchanged:25workflow,23field,12supplemental;
+12purchasing fields remain7required/5optional with original actor attribution.
+A01–A28/R1-T01–T12 are mandatory future coverage, not executed tests. I1-deliverable
+and I2-dependent obligations remain distinct. Source004–006 and original field/rule/
+policy evidence are not rewritten. Design acceptance does not supply runtime,
+permission, migration, product unlock, I2 readiness or a twelfth backend capability.
 
 ## Subsequent R1 source trace
 
@@ -24,7 +35,7 @@ REQ-INBOUND-001/014/017/021/023/024,F02,S01/S08/S09/S10/S12 and future test laye
 The60primary IDs stay stable;28base+12R1case families are planned, not executed.
 
 
-## Proposed I1 detailed acceptance trace (2026-10-20)
+## Initial proposed I1 detailed acceptance trace (historical 2026-10-20)
 
 Under [APR-034](../approved-baselines/APR-034-i1-detailed-design.md), the
 [I1 detailed acceptance specification](../../12-implementation-planning/I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md)

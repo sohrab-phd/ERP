@@ -3,9 +3,9 @@ id: PLAN-INBOUND-DECISIONS-001
 title: Purchase and receiving Step 2 policy and design register
 phase: 12-implementation-planning
 status: in_review
-version: 0.5.0
+version: 0.6.0
 owners: [business-process-owner, chief-solution-architect, security-architect]
-depends_on: [APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
+depends_on: [APR-037, APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -13,13 +13,17 @@ supersedes: null
 
 # Policy and design register — resolved business portions and OPEN residuals
 
-Current [SRC-006/APR-036](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
-resolve R1 Option A. [R1 technical design](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
-replaces exact-only PO identity with preserved raw reference and a generated
-comparison key. R1 business rules/factory scope are resolved; generated enforcement
-and all other I1technical conditions still need Owner acceptance. [Checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
-and [future scope draft](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
-are not acceptance or execution authority. No I2/OQ residual is closed.
+Current [APR-037 Owner design acceptance](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)
+accepts all fourteen [I1 technical decisions](I1_PURCHASE_ORDER_DECISIONS.md) with
+explicit conditions. SRC-006 R1 Option A is CLOSED: preserved raw PO reference and
+finite generated comparison key for whole-installation uniqueness/locks/lookup.
+B01 PO/B07 specified I1/B08 core business policies stay resolved. I1 numeric/date/
+exact-catalogue/line/resource and PostgreSQL designs are now OWNER ACCEPTED DESIGN,
+not pending business questions or proof of implementation. The [checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
+records approval; the [handoff DRAFT](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+remains ineffective. Actual PG environment compatibility precedes future code;
+all executable verification remains outstanding under separate implementation authority.
+No I2/OQ residual is closed; no grant, contract, gate or source implementation changes.
 
 ## Earlier final-review assessment (historical a84e20e)
 
@@ -105,7 +109,14 @@ B07 receiving residuals, B08 I2 disclosure and B09 remain blockers only for affe
 I2 scope. B10 historical linking may be deferred; mixed-path physical identity B02
 must be resolved before affected new stock, not before stock-free I1.
 
-## Technical choices — DESIGN REQUIRED, not factory questions
+## Technical choices — I1 accepted baseline; I2 design remains open
+
+The D01–D10 identifiers below are the Step 2 technical work categories, distinct
+from I1-D01–I1-D14. Their original descriptions are retained for traceability:
+I1 portions are now specified/accepted in APR-037, while executable implementation
+and all affected I2 portions remain outstanding. Older statements that I1 precision,
+calendar or catalogue equality is unselected are historical, superseded only by
+that accepted I1 baseline; no I2 mapping or receiving policy is inferred.
 
 | ID | Design work after business reconciliation | Governed constraints / deliverable needed before implementation |
 | --- | --- | --- |

@@ -3,9 +3,9 @@ id: PLAN-INBOUND-ROADMAP-001
 title: Purchase and receiving proposed incremental delivery and Definition of Done
 phase: 12-implementation-planning
 status: in_review
-version: 0.5.0
+version: 0.6.0
 owners: [delivery-lead, chief-solution-architect, business-process-owner]
-depends_on: [APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-037, APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -13,14 +13,17 @@ supersedes: null
 
 # Delivery strategy — PROPOSED / NOT AUTHORIZED
 
-Current [APR-036/SRC-006](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
-resolve R1 Option A; older OPEN-R1/readiness assessments below are historical.
-The [identity spec](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md), [Owner checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
-and [bounded future scope DRAFT](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
-prepare formal design acceptance then separate implementation authorization.
-No policy question about approved R1 mappings remains; technical generation/limits/
-calendar/catalogue/DB choices are proposed and no gate/runtime work is authorized.
+Current [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)
+records formal Owner acceptance of all14I1 detailed-design decisions with explicit
+conditions. R1 Option A is CLOSED; numeric/Jalali/exact-catalogue/resource/integrity
+choices are accepted design. [Implementation handoff DRAFT](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+is ready for separate bounded Owner authorization, not activated. Implementation,
+actual-environment prerequisite and all future test/review obligations remain
+unfulfilled; no gate/unlock, runtime behavior or backend-capability change.
+Older design/readiness/pending-acceptance assessments immediately below are
+historical. APR-037 supersedes only their I1 design-approval wait, not I2 decisions.
 
+## Earlier design and policy assessments (historical)
 
 Earlier [focused final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md), authorized by
 APR-035, records corrected proposals and fourteen review dispositions. R1 reference
@@ -52,17 +55,18 @@ later scope decision. No completion percentage or new implemented capability is 
 
 ## Dependency-aware sequence and approval gates
 
-1. Use resolved I1 business policies without re-asking them. I1 registration,
-   lookup and both-role catalogue add/select have no demonstrated outstanding
-   business-policy blocker in that earlier assessment; final-review R1 now qualifies
-   reference equivalence. Keep technical representation/identity/class separation
-   as DESIGN REQUIRED. Resolve only I2 business residuals before their affected
-   design/stock scope; B10 linking can be explicitly deferred.
-2. Explicit Owner Step 3 authorization is now recorded in APR-034 for I1 only.
-   Its detailed contracts/data/transaction/lock/read and acceptance specifications
-   are proposed for Owner review; affected I2 decisions/contracts remain separate.
-3. Owner explicitly approves a bounded implementation scope and applicable product
-   gate/unlock. Step 2 acceptance alone will not grant implementation authority.
+1. Resolved I1 business policies and R1 are not reopened. All14technical choices
+   are now formally accepted under APR-037 with initial capacities and mandatory
+   verification. I2 B02–B09 residuals remain before their affected scope; historical
+   B10 linking stays deferred. No I1 stock effect is authorized.
+2. The accepted [detailed package](I1_PURCHASE_ORDER_DOMAIN_DESIGN.md) and its
+   60-ID future acceptance trace are the implementation baseline, not executed code.
+   Verify actual intended PostgreSQL support/permissions/schema before implementation
+   under a later bounded instruction; report any contradiction before changing design.
+3. Obtain separate explicit Owner implementation authorization, then reconcile the
+   applicable product gate/unlock within that authority. APR-037 changes neither.
+   Execute the bounded [handoff conditions](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+   only after that authorization; no design approval serves as an unlock.
 4. Deliver I1, then I2 as separate coherent backend increments with relevant tests,
    independent engineering/security review, closure of required findings and local
    documentation commits under [DEVELOPMENT_WORKFLOW.md](DEVELOPMENT_WORKFLOW.md).
@@ -88,6 +92,14 @@ No different employee or administrator approval is required. No stock or receive
 progress is created. Operational orders remain distinct from completed-purchase
 and sent-proforma evidence. WH catalogue capability is included in I1 even though
 its actual receiving-command use belongs to I2.
+
+Current I1 dependency disposition: Identity/envelope/atomic audit and Procurement
+ownership are reused. The exact design, including both-role catalogue additions,
+immutable independent lines, R1/generated key, finite Jalali/exact numeric/resource
+bounds and deferred integrity is accepted under APR-037. Separate implementation
+permission, actual PG compatibility verification and all mandatory future tests/
+reviews remain. The following earlier dependency assessment predates design acceptance;
+its DESIGN REQUIRED labels no longer describe the accepted I1 choices.
 
 Dependencies/gates: existing Identity, command envelope, atomic audit and Procurement
 owner. OWNER RESOLVED: B01 factory-wide PO uniqueness regardless of supplier,

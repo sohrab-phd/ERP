@@ -3,9 +3,9 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.11.0
+version: 0.12.0
 owners: [chief-solution-architect]
-depends_on: [ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
+depends_on: [APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -13,13 +13,20 @@ supersedes: null
 
 # Implementation capability backlog
 
-Current task [APR-036](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md):
-R1 Option A is Owner-approved, recorded separately in SRC-006. [Reconciled identity](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md),
-[Owner design checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md) and
-[bounded implementation DRAFT](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
-prepare acceptance only. Full design/implementation/gates remain unapproved; no push.
-Earlier OPEN-R1 statements below are historical. Eleven backend capabilities remain.
+Current task [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md):
+formal Owner acceptance of all14I1 detailed-design decisions with explicit conditions.
+R1 Option A CLOSED; exact values/Jalali/catalogues/identity/integrity/capacities are
+accepted design. [Implementation DRAFT](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+is ready for separate bounded Owner authorization; execution and gate/unlock remain
+NOT AUTHORIZED/UNCHANGED. No new backend capability or product tests are claimed;
+eleven accepted capabilities remain. Actual PG compatibility precedes future code,
+and mandatory real-PG/security/concurrency/recovery/regression proof remains future.
+No push; prior reviewed commit's remote presence is unverified.
 
+## Earlier task history
+
+APR-036 recorded R1 Option A and prepared the design-acceptance package only;
+its pending-design-approval state is superseded by APR-037, not its execution stop.
 
 Earlier task: [APR-035](../00-governance/approved-baselines/APR-035-i1-final-design-review.md),
 focused final documentation review/corrections only. [Final dispositions](I1_PURCHASE_ORDER_FINAL_REVIEW.md)

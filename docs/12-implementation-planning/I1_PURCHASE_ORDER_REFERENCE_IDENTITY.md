@@ -2,26 +2,33 @@
 id: PLAN-I1-REFERENCE-001
 title: R1 raw purchase reference and deterministic comparison key specification
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 1.0.0
 owners: [chief-solution-architect, data-architect, security-architect]
-depends_on: [APR-036, SRC-006, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001]
+depends_on: [APR-037, APR-036, SRC-006, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001]
 last_reviewed: 2026-10-21
-approval: null
+approval: APR-037 design acceptance only; implementation remains unauthorized
 supersedes: null
 ---
 
-# R1 identity design — PROPOSED / NOT AUTHORIZED FOR IMPLEMENTATION
+# R1 identity design — OWNER-ACCEPTED DESIGN / NOT AUTHORIZED FOR IMPLEMENTATION
+
+Formal Owner design acceptance:2026-10-21, [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md),
+reviewed content at9c0976e0519192358e8a097f7b26fe43f4b1df6e. The design below is
+accepted with its recorded conditions; no code/SQL/API/permission/test execution
+or product unlock is authorized. Future environment/parity/calendar/transaction/
+security/regression verification remains mandatory, not completed evidence.
 
 Business equivalence R1-A–D is OWNER APPROVED in
 [SRC-006](../00-governance/team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md).
-The precise representation, function/column names and enforcement choices below
-remain technical proposals. This is Markdown only, not executable SQL or source.
+The representation, function/column names and enforcement choices below are the
+Owner-accepted I1-D02 design under APR-037, subject to its mandatory environment
+and parity verification conditions. This is Markdown only, not executable SQL or source.
 It replaces the previous exact-only PO branch; catalogue labels are unaffected.
 
 ## Ordered deterministic transformation
 
-Proposed profile identifier: `PO-REF-R1-A-v1`. Input is the decoded raw field2
+Accepted profile identifier: `PO-REF-R1-A-v1`. Input is the decoded raw field2
 `orderReference`, not a numeric value, command target, supplier reference or label.
 Apply the same finite operations for registration, lookup and owner key locking:
 
@@ -61,10 +68,10 @@ order queries and included unchanged in owner/full-envelope binding. Comparison
 key/profile are internal technical metadata, not additional entered factory fields
 or public query parameters. No previous documentary record is reinterpreted.
 
-## Proposed authoritative PostgreSQL generation
+## Accepted authoritative PostgreSQL generation
 
-Select a STORED generated `order_reference_key` text COLLATE C NOT NULL column,
-derived only from raw `order_reference` by proposed versioned function
+The accepted design uses a STORED generated `order_reference_key` text COLLATE C NOT NULL column,
+derived only from raw `order_reference` by accepted versioned function
 `procurement.po_reference_key_r1_v1`. `reference_key_profile` is fixed to the above
 profile with a NOT NULL CHECK; it cannot partition uniqueness. The named immediate
 `i1_po_reference_uq` is UNIQUE(installation_id,order_reference_key), not supplier,
@@ -89,9 +96,10 @@ and rolls back source/outcome/audit; never commits an accepted drifted order.
 The key also has explicit nonempty/scalar/byte CHECKs. Invalid raw text fails its
 own CHECKs; generated normalization is not a replacement for input validation.
 
-Migration owner creates/freezes the v1 function; PUBLIC EXECUTE is revoked and only
-the restricted ERP runtime/test role receives EXECUTE as needed for generation and
-query normalization, plus existing proposed table SELECT/INSERT. No DDL/UPDATE/
+Under later bounded implementation authorization, the migration owner creates/
+freezes the v1 function; PUBLIC EXECUTE is revoked and only the restricted ERP
+runtime/test role receives EXECUTE as needed for generation and query normalization,
+plus SELECT/INSERT on the new sources as specified by the accepted design. No DDL/UPDATE/
 DELETE/function replacement authority or SECURITY DEFINER. Actual shared DB role
 limits still require owner SQL/import checks; new grants do not prove no foreign writes.
 
@@ -107,10 +115,25 @@ is sound but adds an unnecessary caller-written column; app-only precheck/normal
 cannot prevent drift/forgery or concurrent duplicates. An inline generated expression
 avoids a function privilege but duplicates a long mapping across lookup and schema.
 The versioned small function keeps one DB meaning for generation/lookup, with explicit
-privilege/version obligations. Do not assume a new function is already implemented
-or approved merely because existing migration0012 uses integrity functions.
+privilege/version obligations. APR-037 accepts this design; existing migration0012
+is an integrity-function precedent, not authorization to implement this helper.
+No helper or generated column has been created by this documentation task.
 Primary mechanisms: [PG18 generation](https://www.postgresql.org/docs/18/ddl-generated-columns.html)
 and [explicit trim/translate](https://www.postgresql.org/docs/18/functions-string.html).
+
+## Mandatory environment verification before future implementation
+
+I1-D02 acceptance is conditional on verifying the actual intended/supported
+PostgreSQL environment before later authorized implementation begins. Confirm the
+actual server version, UTF8/C behavior, STORED generation with the selected SQL
+helper, IMMUTABLE/STRICT/PARALLEL SAFE/SECURITY INVOKER properties, fixed schema/
+search-path conventions and necessary EXECUTE versus denied DDL/replacement rights.
+The [database prerequisite](I1_PURCHASE_ORDER_DATABASE_DESIGN.md#mandatory-d02-environment-prerequisite)
+records the same gate. Repository tooling expects PostgreSQL18.6; a static pin is
+not verification of an intended or deployed server. No live database inspection,
+function creation or compatibility probe is executed or claimed here. If later
+verification finds an incompatibility, report and reconcile it before coding or
+migration rather than silently changing the accepted mechanism.
 
 ## Locks, outcome binding and failures
 
@@ -121,7 +144,7 @@ unique persistence decides even if an advisory lock is omitted. Recheck current
 authority after waits; post-wait READ COMMITTED sees the committed winner. If the
 first transaction aborts, a waiting attempt may validly become the first registrant.
 
-| Scenario | Proposed result |
+| Scenario | Accepted result |
 | --- | --- |
 | First valid unused target/key/reference identity | Accepted header+all lines+outcome+audit; raw reference retained |
 | New command key and new target, same normalized reference | Durable GUARD_CONFLICT/HTTP422; no merge/overwrite; original raw unchanged |

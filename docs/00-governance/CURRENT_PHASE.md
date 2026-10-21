@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.55.0
+version: 0.56.0
 owners: [chief-solution-architect]
-depends_on: [GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -13,16 +13,27 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner instruction [APR-036](approved-baselines/APR-036-r1-design-acceptance-preparation.md)
-records [SRC-006 R1 Option A](team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md)
-as OWNER APPROVED business policy only. R1 is RESOLVED. Raw reference is preserved;
-finite approved comparison key governs PO uniqueness/locks/lookup, not catalogues.
-[Owner design checklist](../12-implementation-planning/I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
-and [bounded implementation DRAFT](../12-implementation-planning/I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
-are prepared for review, not accepted/activated. All14technical choices and their
-capacity/calendar/catalogue/DB conditions await Owner acceptance and a separate
-implementation instruction/gate reconciliation. No implementation, executable SQL/
-API/tests/permissions, I2, gate/unlock or push; eleven capabilities remain.
+Current Owner instruction [APR-037](approved-baselines/APR-037-i1-detailed-design-acceptance.md),
+2026-10-21, formally ACCEPTS I1-D01–I1-D14 as detailed design, subject to all explicit
+conditions. Reviewed local baseline is `9c0976e0519192358e8a097f7b26fe43f4b1df6e`;
+remote presence is unverified, not assumed. R1 Option A remains CLOSED/OWNER RESOLVED.
+The [accepted checklist](../12-implementation-planning/I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
+records this actual human decision. The [bounded implementation DRAFT](../12-implementation-planning/I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+is PROPOSED — NOT AUTHORIZED FOR EXECUTION. The current task permits acceptance
+recording, documentation reconciliation, static reviews/checks and local documentation
+commit only. STOP after handoff; no implementation instruction or product unlock.
+Actual intended PostgreSQL compatibility is a prerequisite before future implementation;
+real PostgreSQL/calendar/numeric/security/concurrency/recovery/regression evidence is
+required during separately authorized implementation, not supplied by design approval.
+No source/test code, executable SQL/API/permissions, Inventory/IPS/enum, gate/unlock,
+I2 design/implementation, UI, deployment or push. Eleven accepted capabilities remain.
+
+## R1 acceptance preparation (historical 9c0976e)
+
+[APR-036](approved-baselines/APR-036-r1-design-acceptance-preparation.md) resolved
+SRC-006 R1 Option A business policy and authorized the reconciled acceptance package,
+without then accepting all fourteen technical choices or authorizing implementation.
+Its design-approval wait is superseded by APR-037; its execution restrictions remain.
 
 ## Earlier final-review scope (historical a84e20e)
 

@@ -2,18 +2,28 @@
 id: PLAN-I1-FINAL-REVIEW-001
 title: I1 focused final design review and conditional reconciliation
 phase: 12-implementation-planning
-status: in_review
-version: 0.2.0
+status: accepted
+version: 1.0.0
 owners: [chief-solution-architect, data-architect, security-architect]
-depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, PLAN-I1-ACCEPTANCE-001, PLAN-I1-DECISIONS-001]
+depends_on: [APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, PLAN-I1-DATABASE-001, PLAN-I1-SECURITY-001, PLAN-I1-ACCEPTANCE-001, PLAN-I1-DECISIONS-001]
 last_reviewed: 2026-10-21
-approval: null
+approval: APR-037 design acceptance only; implementation remains unauthorized
 supersedes: null
 ---
 
-# Focused final I1 review — DRAFT / PROPOSED / NOT AUTHORIZED FOR IMPLEMENTATION
+# Focused final I1 review — OWNER-ACCEPTED DESIGN / NOT AUTHORIZED FOR IMPLEMENTATION
 
-The actual Owner requests verification/corrections of design commit
+Current [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)
+records the actual Owner's formal acceptance of all I1-D01–I1-D14 in reviewed local
+commit `9c0976e0519192358e8a097f7b26fe43f4b1df6e`, with the exact conditions below.
+Remote push remains unverified. This is accepted detailed design, not delivered
+runtime behavior, implementation authority or gate activation. Eleven accepted
+backend capabilities remain. Future environment/calendar/app-DB/real-PG proof is
+mandatory and has not been executed by this documentation task.
+
+## Earlier review authority (historical16115d7/a84e20e)
+
+The earlier actual Owner instruction requested verification/corrections of design commit
 `16115d7655fb2b635165aec03b84760082194b45`, not formal design acceptance.
 [APR-035](../00-governance/approved-baselines/APR-035-i1-final-design-review.md)
 records that documentation-only authority. Remote push is unverified and none is
@@ -26,12 +36,13 @@ Procurement/Identity/Inventory/envelope/PG behavior; independently review archit
 security and DB integrity; correct all affected proposals/tests consistently;
 validate unchanged facts/coverage/metadata/links/diff; commit docs and stop.
 
-Current update: [SRC-006](../00-governance/team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md)
+Subsequent preparation at9c0976e: [SRC-006](../00-governance/team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md)
 explicitly APPROVES R1 Option A after review of a84e20e. The [finite raw/key design](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
 now replaces exact-only PO identity. R1 is OWNER RESOLVED; no other technical
 choice or full design acceptance is implied. [APR-036](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
-authorizes documentation/acceptance preparation only. Earlier findings/checks below
-are historical; the final current conclusion supersedes their OPEN-R1 assessment.
+authorized documentation/acceptance preparation only. Those earlier approval and
+OPEN-R1 assessments are historical; APR-037 and the current conclusion below now
+record actual design acceptance without implementation authority.
 
 ## Evidence and preserved facts
 
@@ -61,29 +72,32 @@ This is static source review, not fresh execution of any product/PG test.
 
 ## Decision dispositions
 
-Dispositions recommend what the Owner may accept; none records acceptance.
-The selected technical contents are in the [decision checklist](I1_PURCHASE_ORDER_DECISIONS.md).
+APR-037 records actual Owner acceptance. The five plain ACCEPTED decisions are
+I1-D01/D03/D08/D09/D12; the other nine are ACCEPTED WITH CONDITIONS. The accepted
+technical contents are in the [decision checklist](I1_PURCHASE_ORDER_DECISIONS.md).
+All statuses here apply to design only; future executable evidence remains required.
 
-| Decision | Review disposition | Result / condition |
+| Decision | Owner design status | Result / continuing condition |
 | --- | --- | --- |
-| I1-D01 | RECOMMEND ACCEPTANCE AS PROPOSED | Separate Procurement-owned immutable operational facts; old documentary/receipt paths unchanged |
-| I1-D02 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | R1 Option A OWNER RESOLVED; raw+generated STORED key/profile, same normalized UNIQUE/locks/lookup; accept technical enforcement/parity/version design only |
-| I1-D03 | RECOMMEND ACCEPTANCE AS PROPOSED | Stable line UUID+ordinal/count preserves repeated/unnumbered lines |
-| I1-D04 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Corrected nonstock derived-total boundary; accept technical grammar/positive dimension/count and numeric capacities below |
-| I1-D05 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Accept finite1206–1498 profile, unsupported-date behavior and future complete293year proof; no enacted-future-calendar claim |
-| I1-D06 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Exact-only catalogue duplicates preserve terms but leave variants; Owner explicitly accepts this bounded semantics or supplies equivalence cases |
-| I1-D07 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Separate durable creation remains reusable/possibly unused after later failure; no automatic cleanup or third-party gate |
-| I1-D08 | RECOMMEND ACCEPTANCE AS PROPOSED | Two commands/three queries sufficient; corrected validation/projection details apply, no new command/module |
-| I1-D09 | RECOMMEND ACCEPTANCE AS PROPOSED | Existing full binding, current replay authority, outcome/audit and original-key recovery retained |
-| I1-D10 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Sound normalized frozenN closure; accept one SELECT-only deferred header integrity guard and prove real-PG failure/rollback cases |
-| I1-D11 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Actual signed owner-hash order, current Identity linearization, distinct-person race/timeout proof; no new stock locks |
-| I1-D12 | RECOMMEND ACCEPTANCE AS PROPOSED | Stable I1 references only; mapping, per-unit stock admission and all unresolved I2 policies stay separate |
-| I1-D13 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | A01–A28 plus R1-T01–T12 cover approved identity, generated-key/parity/concurrency/raw binding and existing capacities; tests remain future obligations |
-| I1-D14 | RECOMMEND ACCEPTANCE WITH DOCUMENTED CONDITIONS | Revised128scalar/512byte text; independent128line/256KiB/page budgets; Owner accepts business-facing ceilings, performance still unproved |
+| I1-D01 | ACCEPTED | Separate Procurement-owned immutable operational facts; old documentary/receipt paths unchanged |
+| I1-D02 | ACCEPTED WITH CONDITIONS | R1 Option A OWNER RESOLVED; raw+generated STORED key/profile, same normalized UNIQUE/locks/lookup; actual intended PG environment verified before future implementation, parity/privileges/version proof later |
+| I1-D03 | ACCEPTED | Stable line UUID+ordinal/count preserves repeated/unnumbered lines |
+| I1-D04 | ACCEPTED WITH CONDITIONS | Nonstock derived-total boundary, positive dimension/count grammar and numeric capacities below accepted; exact arithmetic/no count-proportional work and future I2 owner admission must be proved |
+| I1-D05 | ACCEPTED WITH CONDITIONS | Finite1206–1498 profile and unsupported-date behavior accepted; future complete293year/app-DB/roundtrip proof remains required; no enacted-future-calendar claim |
+| I1-D06 | ACCEPTED WITH CONDITIONS | Exact-only catalogue semantics accepted, including possible visual variants; both-role authority/history/isolation/concurrency proof remains required; R1 never normalizes labels |
+| I1-D07 | ACCEPTED WITH CONDITIONS | Separate durable creation remains reusable/possibly unused after later failure; no automatic cleanup or third-party gate; separate authority/binding/replay/recovery/audit must be proved |
+| I1-D08 | ACCEPTED | Two commands/three queries and reviewed validation/projection/error/version design; no executable publication or new module |
+| I1-D09 | ACCEPTED | Existing full raw binding, current replay authority, outcome/audit and original-key recovery retained; changed same-key raw still conflicts |
+| I1-D10 | ACCEPTED WITH CONDITIONS | Normalized frozenN closure and one SELECT-only deferred header integrity guard accepted; prove real-PG constraints/append/savepoint/COMMIT-failure/rollback/races without weakened guarantees |
+| I1-D11 | ACCEPTED WITH CONDITIONS | Actual signed owner-hash order/current Identity linearization; distinct-person races, wait revocation, failures/timeouts/deadlocks/replay/uncertain-COMMIT/audit proof; no new stock locks |
+| I1-D12 | ACCEPTED | Stable I1 references only; mapping, per-unit stock admission and all unresolved I2 policies stay separate |
+| I1-D13 | ACCEPTED WITH CONDITIONS | All60IDs retain I1/I2 scope; A01–A28/R1-T01–T12 and real-PG/security/concurrency/recovery/eleven-capability regression proof are future obligations; justify/review any updates |
+| I1-D14 | ACCEPTED WITH CONDITIONS | Accepted128scalar/512byte text, independent128line/256KiB/page budgets; prove every committed order fully readable and deterministic capacity rejection before business-source persistence; no truncation/silent split |
 
 No unresolved technical defect requires a new module/command or I2 design.
-R1 business ambiguity is now resolved; technical acceptance conditions and a separate
-implementation instruction still prevent self-authorized runtime work.
+R1 business ambiguity is resolved and technical design acceptance is recorded.
+Its continuing verification conditions and the absent separate implementation
+instruction/gate reconciliation prevent self-authorized runtime work.
 
 ## R1 — Owner-approved Option A
 
@@ -94,20 +108,21 @@ specified Yeh/Kaf pairs. Unapproved punctuation/zeros/internalspace/ZW/Unicode
 variants remain significant. No business question about these rules remains.
 
 [The detailed identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
-defines the ordered transform, proposed profile and STORED generated key/helper,
+defines the accepted ordered transform, profile and STORED generated key/helper,
 validation, constraints, source-preserving reads, owner locks, outcome distinctions
 and future version/collision safety. Current installation=factory and authority=
 installation basis remains accepted; no supplier partition or cross-installation
-lookup. Catalogue exact-label rules are wholly separate. Technical generated-key
-mechanism and all other I1choices remain proposed for Owner design acceptance.
+lookup. Catalogue exact-label rules are wholly separate. APR-037 accepts the
+generated-key mechanism with intended-environment/parity/privilege/version proof
+conditions; it does not authorize creating a function, column or migration now.
 
-## Final proposed numeric representation and capacity
+## Accepted numeric representation and capacity
 
-| Value | Proposed representation and bound | Evidence / practical consequence |
+| Value | Accepted representation and initial bound | Evidence / practical consequence |
 | --- | --- | --- |
-| Width m / thickness mm / optional length m | Exact lexeme text: integer part0or1–20digits without leading zeros, optional dot+1–18digits, positive and<10^20, <=39ASCIIcharacters | Bounded lossless representation, not proven factory dimension range/precision; Owner accepts. No unit conversion, rounding or tolerance |
+| Width m / thickness mm / optional length m | Exact lexeme text: integer part0or1–20digits without leading zeros, optional dot+1–18digits, positive and<10^20, <=39ASCIIcharacters | Accepted bounded lossless representation, not proven factory dimension range/precision. No unit conversion, rounding or tolerance |
 | W1 kg | Positive ASCII integer string1..10^20−1 | Fits existing Kg/receipt per-unit numeric capacity. This alone does not approve W1 provenance/stock admission |
-| Ordered physical-unit count | Positive ASCII integer string1..10^20−1 | Existing descriptive-count capacity is a technical precedent only; positivity and maximum remain proposed PO limits |
+| Ordered physical-unit count | Positive ASCII integer string1..10^20−1 | Accepted initial technical positivity/capacity boundary, not a measured factory maximum; historical descriptive-count semantics remain separate |
 | Derived line/order totals | Separate Procurement BigInt type; line product<=40digits, sum of128lines<=43digits; not a public I1 field | Never Kg, Ledger/Balance/effect or receipt measuredKg. No count-proportional enumeration/allocation. Larger combined mass is not automatically invalid |
 
 Actual Kg is BigInt scaled by10^18 with scaled magnitude<10^38. Actual PostgreSQL
@@ -122,7 +137,7 @@ Only bounded operands reach BigInt; JSON output stays strings. Future I2 validat
 each actual Unit/effect and group arithmetic through Inventory owners, never posts
 the entire order product. No arbitrary smaller physical operating limit is invented.
 
-## Calendar recommendation and accept/revise choice
+## Accepted calendar profile and future verification
 
 Retain explicit Jalali ASCII YYYY-MM-DD and direct Y/M/D plus profile storage,
 separate from DB timestamptz. Profile1206–1498 follows the published range of the
@@ -138,24 +153,26 @@ This covers current registration and many historical dates, but actual earliest
 factory records are unknown. Outside-range otherwise meaningful dates receive
 GUARD_INVARIANT with fixed message tag I1_DATE_OUTSIDE_PROFILE and supported range;
 they are unsupported, not asserted non-Jalali dates. No default/clamp/timezone shift.
-Owner choice: accept the finite I1 horizon, or request validated wider coverage
-before implementation. No unapproved chronology/future-date restriction.
+The Owner accepted this finite I1 horizon through APR-037. Any later extension
+requires separate reviewed validation evolution. No chronology/future-date
+restriction or already-completed293year verification is inferred.
 
 Alternatives considered: [Borkowski's published algorithm](https://www.astro.uni.torun.pl/~kb/Papers/EMP/PersianC-EMP.htm)
 has a broader calculated horizon and model assumptions; [Jalaali maintainers](https://github.com/jalaali/jalaali-js)
 document a later divergence from Intl. Neither the full algorithm nor ICU/Intl is
 already an accepted ERP Jalali validator. Substituting one does not prove civil
 correctness or app/DB parity; dependencies/new validation would need review. The
-small finite reviewed profile is preferable for bounded I1, conditional on range
-acceptance and future full source-vector proof. If later authoritative annual data
+small finite reviewed profile is accepted for bounded I1, with future full
+source-vector proof mandatory. If later authoritative annual data
 conflicts, reconcile before affected use without rewriting historical date meaning.
 
 ## Catalogue and transaction conclusion
 
 Retain exact immutable labels per installation/kind, UUID selection and same-scope
 typed FKs. This prevents exact duplicates, not synonyms/visually equivalent terms.
-Owner acceptance must explicitly include this limitation, or identify equivalence
-cases for reconciliation. Preserve raw values; do not normalize/merge/delete.
+The Owner explicitly accepted this limitation through APR-037. Preserve raw
+values; do not normalize/merge/delete. Broader catalogue equivalence remains a
+separate future policy change, not an unresolved choice for this accepted I1 scope.
 Both current personal PROC/WH grants can add/read/select all3kinds with unchanged
 scope/current checks/trusted creator and atomic audit. No name checks/admin gate.
 
@@ -188,9 +205,9 @@ actual adapter; original-key recovery, not a false durable rejection. Real-PG
 tests are mandatory later. Existing key→Identity→sorted actual owner hashes→source
 ordering and current revocation linearization remain; no Inventory locks/writes.
 
-| Proposed ceiling | Independent rationale / Owner-visible consequence |
+| Accepted initial ceiling | Independent rationale / Owner-visible consequence |
 | --- | --- |
-| New text128Unicode scalars AND512UTF8bytes | Replaces128byte-only draft;128ordinary Persian letters can fit instead of roughly64. Supplementary characters count once, combining marks/ZWNJ separately; not a visual-character guarantee. No real longest-label examples supplied, so Owner capacity acceptance required |
+| New text128Unicode scalars AND512UTF8bytes | Replaces128byte-only draft;128ordinary Persian letters can fit instead of roughly64. Supplementary characters count once, combining marks/ZWNJ separately; not a visual-character guarantee. Capacity accepted as an initial technical boundary, not evidence of actual longest factory labels |
 | 1–128lines | Bounded source inserts/at most384typed option references and full order reads; no work proportional to ordered count. Independent workload cap, not IPS128effects, physical units or measured factory maximum.129lines reject; no automatic split |
 | Request262144bytes,5s reader,16active | Reuse kernel byte ceiling/current transport concurrency; at most4MiB raw order bodies in16readers, plus additional bounded parser/binding/response buffers. Not total process-memory/performance proof; old4096byte routes unchanged |
 | Full authorized HTTP projection262144bytes | Measure exact serialized data wrapper, labels, IDs, escaping and fixed metadata before insert. Large referenced labels can exceed this with an otherwise valid request; tagged semantic rejection, no truncation. Every committed order remains fully readable |
@@ -199,9 +216,10 @@ ordering and current revocation linearization remain; no Inventory locks/writes.
 Text validation uses the API's frozen explicit blank/Cc codepoint predicate, not
 locale btrim approximations. Counts are decoded scalars plus UTF8 bytes; raw JSON
 escapes still count toward transport. App/DB parity and PG index-key capacity are
-future acceptance duties. These are initial capacity recommendations with bounded
+future implementation-acceptance duties. These are accepted initial capacities with bounded
 failure behavior, not permanent business maxima or a substitute for real Windows
-PG load/transaction evidence. Owner may revise capacities before acceptance.
+PG load/transaction evidence. Report any necessary deviation for separate review;
+do not silently revise an accepted capacity.
 
 ## Historical review evidence at a84e20e
 
@@ -230,7 +248,7 @@ passes; final staged scope/diff checks and local network-blocked Graphify refres
 precede commit. No application/unit/PostgreSQL test was executed in this task.
 Static review is not implementation acceptance, factory UAT or deployment.
 
-## Current R1 reconciliation and acceptance readiness
+## Historical R1 reconciliation review at9c0976e
 
 R1 is OWNER RESOLVED per SRC-006; its former OPEN status above is historical. The
 [Owner acceptance checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md) states
@@ -254,3 +272,24 @@ SRC-004/SRC-005,23field register,S01–S12amendment and48row coverage are unchan
 Working diff check passes; final staged/source-scope checks and local network-
 blocked Graphify refresh precede commit. No application/unit/PostgreSQL tests,
 implementation, gate activation, I2 readiness, push or new capability is claimed.
+
+## Current design acceptance and mandatory handoff
+
+[APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md)
+records actual Owner acceptance of all14decisions at9c0976e. The
+[Owner checklist](I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md) records the
+accepted design and unchecked implementation/gate authority. R1 stays OWNER
+RESOLVED; no remaining I1 business-policy blocker is identified. Every continuing
+condition remains mandatory, including actual intended PG/UTF8/C/STORED/helper/
+privilege/schema verification before future implementation and real-PG integrity,
+calendar293flags/app-DB parity, numeric/capacity, trusted authority, atomic audit,
+recovery and eleven-capability regression proof before implementation acceptance.
+Repository version expectations alone do not verify the actual environment.
+
+The [bounded handoff](I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+remains PROPOSED — NOT AUTHORIZED FOR EXECUTION. A separate explicit bounded Owner
+instruction and applicable gate/unlock reconciliation are still required; this
+record activates neither and performs none of those future executable checks.
+No I2 design/readiness, runtime/test code, executable migration/contract/permission,
+Inventory/IPS change, remote push, UAT/production approval or twelfth capability
+follows from design acceptance. Stop after documentation recording and validation.

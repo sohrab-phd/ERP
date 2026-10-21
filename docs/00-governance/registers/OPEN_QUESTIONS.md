@@ -3,9 +3,9 @@ id: GOV-QUESTIONS-001
 title: Open Questions Register
 phase: 00-governance
 status: in_review
-version: 0.38.0
+version: 0.39.0
 owners: [chief-solution-architect]
-depends_on: [ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
+depends_on: [APR-037, ASM-REPORT-001, ASM-014, ASM-016, ASM-025, APR-005, APR-014, CHK-0013]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -13,17 +13,19 @@ supersedes: null
 
 # Open Questions Register
 
-## Current R1 resolution and remaining design acceptance
+## Current I1 design acceptance and remaining I2 questions
 
-[SRC-006](../team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md) resolves R1
-Option A explicitly; its earlier OPEN entries below are historical. Only boundary
-U+0020/ASCIIcase/three digit sets/specifiedYeh-Kaf equivalence is approved for POs.
-[Exact technical specification](../../12-implementation-planning/I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
-preserves raw text and full binding, with proposed generated-key enforcement.
-No remaining I1 business-policy blocker is identified; technical choice/limit
-acceptance still belongs to Owner via the checklist. Catalogue equality and I2
-residuals/OQ-011/OQ-019 are not closed by this PO policy. No implementation authority.
-
+[APR-037](../approved-baselines/APR-037-i1-detailed-design-acceptance.md) formally
+accepts I1-D01–I1-D14 with conditions; SRC-006 R1 Option A stays CLOSED. Only
+boundary U+0020/ASCIIcase/three digit sets/specified Yeh-Kaf equivalence applies
+to PO identity. Catalogue identity is separately accepted exact-label-only;
+visual duplicates are permitted within that initial design, never normalized by R1.
+No I1 business-policy/design-acceptance blocker remains. Separate implementation
+authority and actual intended PG compatibility verification are still required;
+future executable calendar/identity/integrity/security/recovery evidence is not done.
+I2 B02–B09 residuals, technical stock mapping, OQ-011/OQ-019 remain at their existing
+OPEN/treating scope. No blanket OQ closure, implementation, grant or gate change.
+Older pending-I1-design and OPEN-R1 statements below remain historical.
 
 ## Earlier final I1 review (historical a84e20e)
 

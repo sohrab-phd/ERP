@@ -1,30 +1,37 @@
 ---
 id: PLAN-I1-SECURITY-001
-title: Proposed I1 operation authorization isolation and disclosure design
+title: Accepted I1 operation authorization isolation and disclosure design
 phase: 12-implementation-planning
-status: in_review
-version: 0.3.0
+status: accepted
+version: 1.0.0
 owners: [security-architect, chief-solution-architect]
-depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, SRC-005, ADR-0014, SEC-RBAC-001, SEC-ISO-001, PLAN-I1-API-001]
+depends_on: [APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, SRC-005, ADR-0014, SEC-RBAC-001, SEC-ISO-001, PLAN-I1-API-001]
 last_reviewed: 2026-10-21
-approval: null
+approval: APR-037 design acceptance only; implementation remains unauthorized
 supersedes: null
 ---
 
-# I1 security design — DRAFT / PROPOSED / NOT AUTHORIZED FOR IMPLEMENTATION
+# I1 security design — OWNER-ACCEPTED DESIGN / NOT AUTHORIZED FOR IMPLEMENTATION
+
+Formal Owner design acceptance:2026-10-21, [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md),
+reviewed content at9c0976e0519192358e8a097f7b26fe43f4b1df6e. The design below is
+accepted with its recorded conditions; no code/SQL/API/permission/test execution
+or product unlock is authorized. Future environment/parity/calendar/transaction/
+security/regression verification remains mandatory, not completed evidence.
+
 
 Business authority is confirmed by [SRC-005](../00-governance/team-answers/OWNER_I1_POLICY_CLARIFICATION_2026-10-20.md)
 and [policy amendment](../02-domain-business-architecture/PURCHASE_RECEIVING_I1_POLICY_AMENDMENT.md).
-This proposed translation into owner/object/transport checks changes no runtime
+This accepted translation into owner/object/transport checks changes no runtime
 policy. Use [API](I1_PURCHASE_ORDER_API_DESIGN.md), [transactions](I1_PURCHASE_ORDER_DATABASE_DESIGN.md)
 and [acceptance cases](I1_PURCHASE_ORDER_ACCEPTANCE_PLAN.md). The [final review](I1_PURCHASE_ORDER_FINAL_REVIEW.md)
-now records R1 business resolution per SRC-006, separately from unapproved technical
-generation and catalogue equality/resource recommendations. Named factory people
+now records R1 resolution and APR-037 formal design acceptance, separately from
+unimplemented generation/permission/resource behavior and future proof obligations. Named factory people
 explain duties only; never compare names, display names or station labels.
 
 ## Effective operation-by-role matrix
 
-ALLOW means approved business responsibility translated into a **proposed future
+ALLOW means approved business responsibility translated into an **accepted future
 I1 policy**, not an implemented endpoint or current grant change. Each allow also
 requires current personal organizational authority for the trusted factory.
 
@@ -136,8 +143,8 @@ accidental exact duplicate rows under concurrent authorized requests. Current
 attribution/audit records each attempt without rewriting original creation facts.
 
 Exact label equality intentionally does not merge case, whitespace, Arabic/Persian
-variants or Unicode normalization forms. This conservative proposal must be accepted
-explicitly; distinct terms remain distinct. Broader equivalence/aliases require
+variants or Unicode normalization forms. APR-037 explicitly accepts this initial
+exact-label policy, including visually similar distinct entries. Broader equivalence/aliases require
 later policy, not a hidden normalizer or a semantic deduplication claim.
 R1-A–D PO comparison policy is Owner-resolved. The [finite key specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
 derives server-side from preserved raw text; no caller comparison key/profile is
@@ -158,7 +165,7 @@ mapping meaning/authority must be reconciled separately before I2 Inventory admi
 
 ## Concrete threat and negative-proof obligations
 
-| Threat / changed surface | Proposed control and future evidence |
+| Threat / changed surface | Accepted control and future evidence |
 | --- | --- |
 | Cross-organization object references or scope injection | Trusted context only, both scope predicates, typed scoped FKs, same absent/foreign outcome; A18/A26 |
 | WH edits an order through lookup or catalogue add | Closed distinct operations, immutable header/lines and DB append guard; A14/A17 |

@@ -3,9 +3,9 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.22.0
+version: 0.23.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [GOV-GATES-001]
+depends_on: [APR-037, GOV-GATES-001]
 last_reviewed: 2026-10-21
 approval: null
 supersedes: null
@@ -13,7 +13,24 @@ supersedes: null
 
 # Approval and Checkpoint Register
 
-## APR-036 — R1 Option A and documentation-only acceptance preparation
+## APR-037 — Formal Owner I1 detailed-design acceptance, no implementation authority
+
+[Actual Owner acceptance](approved-baselines/APR-037-i1-detailed-design-acceptance.md),
+2026-10-21, accepts reviewed local `9c0976e0519192358e8a097f7b26fe43f4b1df6e`:
+I1-D01–I1-D14, with every explicit numeric/calendar/catalogue/resource/PostgreSQL/
+security/recovery and future-verification condition. R1 Option A is CLOSED; raw
+reference and exact finite generated-key identity are accepted design. No new
+business facts are attributed retroactively to SRC-004/SRC-005/SRC-006.
+The [acceptance checklist](../12-implementation-planning/I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)
+now records actual design approval; the [implementation DRAFT](../12-implementation-planning/I1_PURCHASE_ORDER_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+remains PROPOSED — NOT AUTHORIZED FOR EXECUTION. Actual intended PostgreSQL
+compatibility must be verified before future implementation, and all implementation
+proof/tests/reviews remain mandatory. No code, SQL, executable contract/permission,
+gate/unlock, I2 or push. Eleven accepted backend capabilities remain.
+Remote presence of the reviewed commit is unverified after a failed read-only
+transport check; no pushed/unpushed claim is inferred.
+
+## APR-036 — R1 Option A and documentation-only acceptance preparation (historical)
 
 [Actual Owner decision](approved-baselines/APR-036-r1-design-acceptance-preparation.md)
 records approved SRC-006 R1-A–D only. [Acceptance checklist](../12-implementation-planning/I1_PURCHASE_ORDER_OWNER_ACCEPTANCE_CHECKLIST.md)

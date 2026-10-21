@@ -1,17 +1,23 @@
 ---
 id: PLAN-I1-DATABASE-001
-title: Proposed I1 PostgreSQL schema concurrency and atomic transaction design
+title: Accepted I1 PostgreSQL schema concurrency and atomic transaction design
 phase: 12-implementation-planning
-status: in_review
-version: 0.3.0
+status: accepted
+version: 1.0.0
 owners: [data-architect, chief-solution-architect]
-depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, ADR-0011, ADR-0013, ADR-0014]
+depends_on: [APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, PLAN-I1-DOMAIN-001, PLAN-I1-API-001, ADR-0011, ADR-0013, ADR-0014]
 last_reviewed: 2026-10-21
-approval: null
+approval: APR-037 design acceptance only; implementation remains unauthorized
 supersedes: null
 ---
 
-# I1 PostgreSQL and transactions — DRAFT / PROPOSED / NOT AUTHORIZED
+# I1 PostgreSQL and transactions — OWNER-ACCEPTED DESIGN / NOT AUTHORIZED FOR IMPLEMENTATION
+
+Formal Owner design acceptance:2026-10-21, [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md),
+reviewed content at9c0976e0519192358e8a097f7b26fe43f4b1df6e. The design below is
+accepted with its recorded conditions; no code/SQL/API/permission/test execution
+or product unlock is authorized. Future environment/parity/calendar/transaction/
+security/regression verification remains mandatory, not completed evidence.
 
 This is a relational/constraint specification, not an executable migration. No SQL
 file, TypeScript contract, runtime grant or product gate is created. Refer to
@@ -20,9 +26,10 @@ file, TypeScript contract, runtime grant or product gate is created. Refer to
 PostgreSQL 18.6 and existing pg/Node/root-script pins remain unchanged.
 The [R1 specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md) now controls raw
 reference and derived identity; SRC-006 resolves its business rules. Quantity,
-resource and completeness proposals retain their independently reviewed conditions.
+resource and completeness decisions are accepted subject to their recorded
+verification conditions; acceptance does not establish executable behavior.
 
-## Current persistence and proposed ownership
+## Current persistence and accepted ownership
 
 Inspected [0015 purchasing evidence](../../database/migrations/0015_purchasing_evidence.sql),
 [PostgresPurchaseStore](../../apps/backend/src/infrastructure/postgresql/purchase-store.ts),
@@ -36,6 +43,27 @@ sources are insert/select-only for the restricted role, independent of Inventory
 New sources belong to Procurement, with the same owner adapter/opaque transaction
 pattern. Shared runtime DB credentials do not replace module SQL/import ownership;
 future [boundary checks](../../tools/build/check-boundaries.mjs) must cover new tables.
+
+## Mandatory D02 environment prerequisite
+
+Before future I1 implementation begins under a separate bounded Owner instruction,
+verify the actual intended/supported PostgreSQL version and environment against
+the accepted design. Confirm UTF8 encoding/C equality, generated ALWAYS STORED
+support for the selected immutable SQL helper, its IMMUTABLE/STRICT/PARALLEL SAFE/
+SECURITY INVOKER properties and fixed schema/search-path semantics. Verify migration
+ownership and the restricted runtime/test role's required EXECUTE/SELECT/INSERT
+rights with no CREATE/ALTER/replacement or unauthorized foreign-owner privileges.
+Use the authorized isolated compatibility check and catalogue/privilege inspection
+to establish this evidence; do not infer it from mechanism documentation alone.
+
+[Repository test-role setup](../../tools/db/reset-test.mjs) expects
+server_version_num180006 (PostgreSQL18.6), but that static requirement proves
+neither the connected server nor the actual intended/deployed installation.
+This prerequisite remains outstanding: no live DB probe, SQL/helper creation or
+deployment verification is performed by this documentation-only task. An observed
+incompatibility must be reported and reconciled before code/migration work; no
+silent substitution of the accepted generated-key mechanism. Later implementation
+acceptance additionally requires the full real-PG parity/integrity/recovery proof.
 
 ## Common scope, identity and trusted metadata
 
@@ -60,11 +88,11 @@ are stored unchanged, not CITEXT, CHAR(n), locale-normalized values or hashes us
 as sole equality truth. Hashes are lock-routing aids only. All unique/FK constraints
 below are named; ordinary unique constraints are immediate/nondeferrable.
 
-## Proposed tables and constraints
+## Accepted tables and constraints
 
 ### procurement.inbound_catalogue_option
 
-| Column(s) | Proposed type/nullability | Integrity rule |
+| Column(s) | Accepted type/nullability | Integrity rule |
 | --- | --- | --- |
 | installation_id, authority_scope | UUID NOT NULL | Common trusted single-factory scope |
 | option_id | UUID NOT NULL | i1_option_pk = PK(scope tuple, option_id) |
@@ -80,7 +108,7 @@ seed values, mutable state, technical class mapping, soft-delete or update times
 
 ### procurement.operational_purchase_order
 
-| Column(s) | Proposed type/nullability | Integrity rule |
+| Column(s) | Accepted type/nullability | Integrity rule |
 | --- | --- | --- |
 | installation_id, authority_scope | UUID NOT NULL | Common scope |
 | order_id | UUID NOT NULL | i1_po_pk = PK(scope tuple,order_id) |
@@ -105,7 +133,7 @@ open/closed/amended status or inferred stock total.
 
 ### procurement.operational_purchase_order_line
 
-| Column(s) | Proposed type/nullability | Integrity rule |
+| Column(s) | Accepted type/nullability | Integrity rule |
 | --- | --- | --- |
 | installation_id, authority_scope, order_id | UUID NOT NULL | Parent scope/id; no foreign organization |
 | line_id | UUID NOT NULL | i1_line_pk = PK(scope tuple,line_id), independently generated for every array member |
@@ -141,7 +169,7 @@ trailing zeros, so output never relies on driver numeric formatting.
 
 Existing0005numeric stock CHECKs and Kg enforce magnitude<10^20/scale<=18;0006
 whole receipt kg<10^20. New W1 fits each existing per-unit capacity, not a new
-provenance/admission rule. Count20digits and dimension20/18 are separately proposed
+provenance/admission rule. Count20digits and dimension20/18 are separately accepted
 representation ceilings. Derived line product may have40digits, order sum43digits:
 keep them in a distinct Procurement BigInt/derived-total representation, never
 these stock columns, Kg, measuredKg or an IPS effect. Never iterate/create Units
@@ -152,20 +180,22 @@ New text CHECKs use UTF8 database encoding, char_length between1and128 and
 octet_length<=512, plus the API's exact explicit codepoint predicates for Cc/blank.
 char_length counts Unicode scalars here, not UTF16 code units/graphemes. PostgreSQL
 cannot store U+0000; do not construct chr(0). Neither btrim nor locale regex classes
-are a substitute for the frozen predicate. Selected source text is never trimmed
-or normalized. The final migration must prove app/DB parity for NBSP, FEFF, ZWNJ,
+are a substitute for the frozen predicate. Stored raw source text is never trimmed
+or normalized; only the separate R1 working comparison key applies its approved
+finite transformations. The final migration must prove app/DB parity for NBSP, FEFF, ZWNJ,
 combining marks, supplementary scalars and decoded JSON escapes. Bounded512byte
 labels/references keep ordinary UTF8 btree keys small without hash-only equality;
 verify actual index limits under the pinned PostgreSQL build in future acceptance.
 
 Jalali CHECKs enforce the domain's finite profile, year 1206–1498, month 1–12 and
-day <=31/30/29-or-30. The Esfand leap predicate is the same frozen, independently
-verified official year set as the application validator. It is an inline constraint,
+day <=31/30/29-or-30. The Esfand leap predicate uses the same frozen official year
+set as the application validator; independent verification remains a mandatory
+future implementation-acceptance obligation. It is an inline constraint,
 not a DATE cast or current-time/network function. No leap data/code is added now.
 Any profile extension requires reviewed additive validation evolution; historical
 date components and profile interpretation cannot be silently changed.
 
-Runtime grants for new tables are SELECT/INSERT only; no UPDATE, DELETE, TRUNCATE,
+The accepted runtime privilege design grants new-table SELECT/INSERT only; no UPDATE, DELETE, TRUNCATE,
 ALTER or ownership. The sole extra pure-helper privilege is EXECUTE on controlled
 po_reference_key_r1_v1 as generation/lookup require; PUBLIC EXECUTE revoked, fixed
 pg_catalog search path, SECURITY INVOKER, IMMUTABLE STRICT PARALLEL SAFE. No function
@@ -174,7 +204,7 @@ Catalogue references and line/header literals therefore preserve original meanin
 Maintenance/migration credentials are outside runtime and must not be used by APIs.
 
 Insert-only access alone does not freeze a multi-line aggregate: someone could
-append another line later. Proposed closure: immutable parent line_count, each
+append another line later. Accepted closure: immutable parent line_count, each
 line's parent-count FK, bounded unique positions, and i1_po_complete_ck, a deferred
 constraint trigger on header insertion requiring exactly line_count child rows at
 transaction end. All positions 1..N must then be occupied; a later append must
@@ -182,8 +212,8 @@ either duplicate a position or violate the bound/FK. No authorized delete/update
 can create a hole. This closes both initial partial-header and later-append cases.
 
 The trigger needs one small invoker-rights, fixed-search-path, SELECT-only integrity
-function under Procurement. It is **PROPOSED I1-D10**, requiring explicit design
-acceptance; it is not a stored command/posting kernel or new orchestration writer.
+function under Procurement. It is **ACCEPTED DESIGN I1-D10** under APR-037, subject
+to real-PG invariant/failure verification; it is not a stored command/posting kernel or new orchestration writer.
 The application continues to own the business transaction. An alternative of only
 application validation/privileges lacks this DB-level append/completeness guard.
 [PostgreSQL constraint triggers](https://www.postgresql.org/docs/18/sql-createtrigger.html)
@@ -218,9 +248,10 @@ simple future I2 line references without extra integrity machinery; (c) deferred
 cyclic seal/array-key designs replace one count check with more keys/state. Retain
 the small guard for the normalized model. Existing
 [0012 integrity migration](../../database/migrations/0012_production_sources.sql)
-is an integrity-trigger/deferred-FK precedent, not automatic approval of this new
-mechanism. Migration owner creates it; runtime only invokes approved integrity
-behavior. No stored posting kernel, trigger-based transaction owner or foreign
+is an integrity-trigger/deferred-FK precedent. APR-037 now accepts this mechanism's
+design; neither that acceptance nor the precedent authorizes its execution.
+After separate implementation authorization, the migration owner creates the guard
+and runtime only invokes its integrity behavior. No stored posting kernel, trigger-based transaction owner or foreign
 module write is introduced. Real-PG proof in A14/A23/A27 remains mandatory later.
 
 ## Query indexes and limits
@@ -336,9 +367,10 @@ without committed lines, no catalogue rename can race. Catalogue pagination is
 bounded independent snapshots, not a promised globally frozen list. No nested
 connection/pool acquisition while retaining another snapshot is required.
 
-## Additive implementation sequence — proposed only
+## Accepted additive sequence — execution remains unauthorized
 
-After Owner design acceptance and bounded implementation/gate authorization:
+Only after separate bounded Owner implementation authorization and applicable
+gate/unlock reconciliation (design acceptance is already recorded):
 
 1. Reserve the next migration number after existing 0016 (currently expected 0017;
    verify again then), create catalogue, order, line, keys/checks/indexes and the

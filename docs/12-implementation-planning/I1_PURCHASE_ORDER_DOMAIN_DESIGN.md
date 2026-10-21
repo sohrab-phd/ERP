@@ -2,24 +2,30 @@
 id: PLAN-I1-DOMAIN-001
 title: I1 operational purchase order domain and field design
 phase: 12-implementation-planning
-status: in_review
-version: 0.3.0
+status: accepted
+version: 1.0.0
 owners: [chief-solution-architect, business-process-owner]
-depends_on: [APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001]
+depends_on: [APR-037, APR-036, SRC-006, PLAN-I1-REFERENCE-001, APR-035, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001]
 last_reviewed: 2026-10-21
-approval: null
+approval: APR-037 design acceptance only; implementation remains unauthorized
 supersedes: null
 ---
 
-# I1 domain and data model — DRAFT / PROPOSED / NOT AUTHORIZED FOR IMPLEMENTATION
+# I1 domain and data model — OWNER-ACCEPTED DESIGN / NOT AUTHORIZED FOR IMPLEMENTATION
 
-Reconciliation baseline is local `a84e20e12c7cd0b301e329d0ed97f300029b9aba`;
-remote push is unverified. [SRC-006](../00-governance/team-answers/OWNER_R1_ORDER_REFERENCE_DECISION_2026-10-21.md)
-now resolves R1 Option A as business policy. [APR-036](../00-governance/approved-baselines/APR-036-r1-design-acceptance-preparation.md)
-authorizes documentation and acceptance preparation only. The [identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md)
-controls raw-reference/comparison-key semantics. Other facts remain SRC-004/SRC-005;
-ARCH remains approved current invariants. Every technical choice, including DB
-key generation, remains PROPOSED and awaits Owner acceptance.
+Formal Owner design acceptance:2026-10-21, [APR-037](../00-governance/approved-baselines/APR-037-i1-detailed-design-acceptance.md),
+reviewed content at9c0976e0519192358e8a097f7b26fe43f4b1df6e. The design below is
+accepted with its recorded conditions; no code/SQL/API/permission/test execution
+or product unlock is authorized. Future environment/parity/calendar/transaction/
+security/regression verification remains mandatory, not completed evidence.
+
+
+SRC-004/SRC-005 supply factory requirements; SRC-006 resolves R1 Option A.
+APR-037 accepts all14technical decisions and initial capacities with conditions.
+The [identity specification](I1_PURCHASE_ORDER_REFERENCE_IDENTITY.md) controls exact
+raw/key semantics. This recording changes acceptance status, not the reviewed
+payloads/versions/values/permissions or original field attribution. No material
+contradiction was identified before recording acceptance. No implementation follows.
 
 The goal is pre-arrival operational order registration by personal ACT-PROC,
 original-specification lookup by ACT-PROC/ACT-WH, and shared reference add/select
@@ -62,13 +68,13 @@ as code evidence, with new policy in the [amendment](../02-domain-business-archi
 
 ## Owner boundaries and entities
 
-Procurement is the sole write owner of the three proposed entities below. It
+Procurement is the sole write owner of the three accepted entities below. It
 already owns purchase and receiving business evidence. No new master-data module,
 supplier master, service, ORM or dependency is justified. Shared-kernel owns
 outcomes/audit, Identity owns grants/sessions, Inventory/IPS owns stock. No I1
 Inventory port or cross-owner write is introduced.
 
-| Entity | Proposed identity and immutable facts | Consistency boundary |
+| Entity | Accepted identity and immutable facts | Consistency boundary |
 | --- | --- | --- |
 | OperationalPurchaseOrder | Trusted installation/factory scope; technical order UUID; preserved raw seller reference plus derived comparison key/profile; Jalali registration date; registered line count; original command binding and trusted creation metadata | One successful register transaction freezes header plus the complete ordered line array; no editable draft or later append operation |
 | OperationalPurchaseOrderLine | Server-generated line UUID; parent order; immutable ordinal derived from input array; optional business item number; selected reference identities and original ordered scalar attributes/count/W1 | Each array member is independent even if all business values are identical; ordinal is technical display context, not seller item number |
@@ -98,12 +104,12 @@ defines exact codepoints, validation, key/profile, DB authority and future chang
 No other substitution/normalization/internal-space removal is authorized.
 
 Current installation=factory and authority=installation mapping remains the accepted
-basis. Proposed header stores original order_reference plus DB-generated stored
+basis. Accepted header stores original order_reference plus DB-generated stored
 order_reference_key and fixed profile PO-REF-R1-A-v1. Named uniqueness is installation
 plus comparison key; no supplier/person/role/date/profile partition. Locks, duplicate
 queries, source validation and reference lookup use the same key; reads return the
-original raw reference. R1 is OWNER RESOLVED; generated storage/function and other
-technical choices remain proposed, not full design acceptance.
+original raw reference. R1 is OWNER RESOLVED; generated storage/function and all14technical choices are
+Owner-accepted design under APR-037, subject to future verification and no execution.
 
 The raw field and complete original payload remain in command/owner binding:
 equivalent PO spellings do not make changed same-key command intentions identical.
@@ -121,47 +127,47 @@ collision analysis and migration; v1 semantics and historical raw bindings are f
 ## Exact twelve-field contract
 
 All rows are entered by Ms. Masoumi's purchasing responsibility, implemented through
-personal ACT-PROC. Technical names are proposed transport/storage translations.
+personal ACT-PROC. Technical names are accepted transport/storage translations.
 The original [23-field register](../02-domain-business-architecture/PURCHASE_RECEIVING_FIELD_REGISTER.md)
 is unchanged. Seven fields mandatory, five optional. Catalogue IDs represent the
 selected business field, not an additional user-entered factory field.
 
-| Factory no. / requirement | Exact Persian field | Required | Proposed I1 field / location | Value meaning and validation |
+| Factory no. / requirement | Exact Persian field | Required | Accepted I1 field / location | Value meaning and validation |
 | --- | --- | --- | --- | --- |
 | 2 / REQ-INBOUND-F02 | شماره سفارش | YES | orderReference / header | Preserved raw nonblank text; factory-wide unique R1 comparison key |
 | 7 / REQ-INBOUND-F07 | شماره آیتم | NO | itemNumber / line | Optional exact nonblank business label; neither unique nor technical line key |
 | 8 / REQ-INBOUND-F08 | نوع کالا | YES | materialTypeOptionId / line | UUID selecting same-scope MATERIAL_TYPE option; no technical Inventory type inference |
-| 9 / REQ-INBOUND-F09 | عرض | YES | widthM / line | Exact decimal string, meters; proposed positivity/bounds below |
+| 9 / REQ-INBOUND-F09 | عرض | YES | widthM / line | Exact decimal string, meters; accepted positivity/bounds below |
 | 10 / REQ-INBOUND-F10 | ضخامت | YES | thicknessMm / line | Exact decimal string, millimeters; no conversion from width units |
 | 11 / REQ-INBOUND-F11 | رنگ | NO | colorOptionId / line | Optional same-scope COLOR UUID; no text fallback |
 | 12 / REQ-INBOUND-F12 | شماره رئال رنگ | NO | ralColorNumber / line | Optional exact nonblank text; no invented RAL pattern or dependency on Color |
 | 13 / REQ-INBOUND-F13 | طول | NO | lengthM / line | Optional exact decimal string, meters |
 | 14 / REQ-INBOUND-F14 | کیفیت | NO | qualityGradeOptionId / line | Optional same-scope QUALITY_GRADE UUID; no QC approval meaning |
 | 15 / REQ-INBOUND-F15 | وزن | YES | unitWeightKg / line | Exact positive whole-kg string, weight of ONE physical unit, W1 |
-| 16 / REQ-INBOUND-F16 | تعداد | YES | orderedUnitCount / line | Physical-unit integer count; proposed positive count, not descriptive receipt count |
+| 16 / REQ-INBOUND-F16 | تعداد | YES | orderedUnitCount / line | Physical-unit integer count; accepted positive count, not descriptive receipt count |
 | 17 / REQ-INBOUND-F17 | تاریخ ثبت سفارش | YES | registrationDateJalali / header | Explicit Jalali YYYY-MM-DD string; not a server-generated date |
 
 Optional omission becomes SQL NULL for that optional column; output omits that
 member. Explicit JSON null, blank provided text and wrong type are invalid, not
 silently equivalent to omission. Registered known fields with invalid values fail
 semantic validation; unknown fields fail envelope admission. The registration line
-array is required technical structure and must contain 1–128 members (PROPOSED
+array is required technical structure and must contain 1–128 members (ACCEPTED DESIGN
 resource bound, not ordered-unit or Inventory-effect limit).
 
-## Numeric proposal — exact lexemes, no floating point or rounding
+## Accepted numeric design — exact lexemes, no floating point or rounding
 
-I1-D04 proposes text-backed exact decimal/integer domain values. Preserve accepted
+I1-D04 specifies text-backed exact decimal/integer domain values. Preserve accepted
 numeric lexemes (including meaningful source trailing zeros) in dedicated typed
 columns; DB checks validate them through guarded exact numeric comparisons. There
 is no NUMERIC(p,s) coercion, floating-point column or JavaScript Number quantity.
 [PostgreSQL numeric documentation](https://www.postgresql.org/docs/18/datatype-numeric.html)
 explains why declared scale can round whereas unscaled numeric comparisons do not.
 
-| Values | Proposed accepted syntax / technical bound | Domain rule / arithmetic |
+| Values | Accepted syntax / technical bound | Domain rule / arithmetic |
 | --- | --- | --- |
 | widthM, thicknessMm, lengthM if present | ASCII integer part `0` or 1–20 digits without leading zero, optional dot plus 1–18 digits; at most 39 characters | Strictly positive, magnitude <10^20; preserve input string; no exponent, sign, grouping separator or implicit unit conversion |
 | unitWeightKg | ASCII 1–20 digits, first digit 1–9 | Confirmed positive whole W1, <10^20 kg; BigInt for exact arithmetic |
-| orderedUnitCount | Same positive integer-string syntax | PROPOSED strictly positive count, <10^20 units; not PostgreSQL bigint capacity and not old receipt's nonnegative descriptive Count |
+| orderedUnitCount | Same positive integer-string syntax | ACCEPTED DESIGN strictly positive count, <10^20 units; not PostgreSQL bigint capacity and not old receipt's nonnegative descriptive Count |
 | derived orderedLineWeightKg | Not an input field or persisted stock source | Exact Procurement-only BigInt product, at most 40 digits; a distinct derived-total type, never Inventory Kg. I1 public minimum projection omits it |
 
 Examples are synthetic validation cases: width `1.200` round-trips unchanged;
@@ -169,19 +175,19 @@ thickness `0.35` means mm, not meters; weight `2000` and count `5` imply derived
 line total `10000` but W1 remains `2000`. A 19th decimal fraction digit is rejected,
 never rounded. String `NaN`, Infinity, negative/zero dimension/count, leading zeros,
 numeric JSON quantities and fractional W1 reject. The 20/18 digit capacities,
-positive dimensions/count and text grammar are **PROPOSED technical restrictions**,
-not factory-confirmed measurement precision. Owner must accept them or identify
-an actual excluded input before implementation; no new tolerance is assumed.
+positive dimensions/count and text grammar are **ACCEPTED DESIGN technical restrictions**,
+not factory-confirmed physical maxima or measurement tolerances. APR-037 accepts
+these initial admission limits; later extensions require reviewed change, not rounding.
 
 Capacity evidence is narrower than physical plausibility. Existing
 [Kg](../../apps/backend/src/modules/inventory/quantity.ts) scales integers by10^18
 and bounds the scaled magnitude below10^38; [0005](../../database/migrations/0005_inventory_posting.sql)
 uses unconstrained numeric with explicit magnitude<10^20 and scale<=18 guards.
 [0006](../../database/migrations/0006_goods_receipt.sql) admits positive whole receipt
-kg<10^20 and nonnegative descriptive count<10^20. Thus the proposed W1 fits one
+kg<10^20 and nonnegative descriptive count<10^20. Thus the accepted W1 fits one
 current Unit's numeric capacity; it does not resolve receiving provenance or admit
 stock. Positive ordered count and dimension20/18 remain new bounded representation
-proposals, not proven operating limits or factory precision.
+accepted design choices, not proven operating limits or factory precision.
 
 Never cast a derived product/sum into Kg, receipt measuredKg, Ledger or Balance.
 For example, individually valid W1 `10000000000000000000` and count `10` have a
@@ -203,11 +209,11 @@ Integer operations use BigInt and JSON emits strings; no coercion through Number
 parseFloat, PG int8 or declared NUMERIC(p,s). Bounded20/18 operands make arithmetic
 cost fixed per input line, not dependent on the magnitude's represented unit count.
 
-## Jalali proposal — explicit civil date and a frozen validation profile
+## Accepted Jalali design — explicit civil date and a frozen validation profile
 
-I1-D05 proposes ASCII `YYYY-MM-DD`, calendar always Jalali, supported years
-1206–1498 inclusive. This finite technical horizon needs Owner acceptance; no
-factory historical/future date limit was supplied. Do not infer a date-in-future,
+I1-D05 specifies ASCII `YYYY-MM-DD`, calendar always Jalali, supported years
+1206–1498 inclusive. APR-037 accepts this initial technical coverage, not a
+factory historical/future operating-date limit. Do not infer a date-in-future,
 order-before-today or chronology business rule.
 
 The endpoints follow the published table's coverage, not factory age or a chosen
@@ -216,8 +222,8 @@ factory's earliest required purchase date has not been established. A meaningful
 1205/1499 date is unsupported, not declared an impossible Jalali date. Return a
 safe durable GUARD_INVARIANT with stable `I1_DATE_OUTSIDE_PROFILE` indication and
 the supported range; preserve entered input, never clamp or substitute today.
-The Owner may accept this finite I1 capacity or require a reviewed wider profile
-before design acceptance. No automatic calendar-range extension is proposed.
+The Owner accepted this finite initial capacity; any wider profile requires
+separate reviewed calendar design. No automatic extension is authorized.
 
 Store Jalali year/month/day as small integers plus fixed technical profile
 `UT-JALALI-1206-1498-v1`. Return the exact canonical Jalali date string and
@@ -226,7 +232,7 @@ parse the business date with JavaScript Date, PostgreSQL DATE, timezone conversi
 Gregorian purchase evidence parser or server-today default. No Gregorian storage
 or conversion is necessary for this contract; F18 arrival calendar stays unresolved.
 
-Proposed validator: a small pure local function checks syntax/range, months 1–6
+Accepted validator: a small pure local function checks syntax/range, months 1–6
 days 1–31, months 7–11 days 1–30, and Esfand 1–29 plus day 30 only in the frozen
 official leap-year set. Use the University of Tehran Calendar Center's
 [published 1206–1498 common/leap table](https://calendar.ut.ac.ir/documents/2139738/7092644/Kabise%2BShamsi%2B1206-1498.pdf/fbc45bf4-df46-c298-381c-2bff2c57f0e0?t=1719740029743)
