@@ -3,9 +3,9 @@ id: PLAN-I2-AUTH-DRAFT-001
 title: Bounded I2 backend implementation authorization draft
 phase: 12-implementation-planning
 status: proposed
-version: 0.1.0
+version: 0.2.0
 owners: [project-sponsor, delivery-lead]
-depends_on: [APR-040, APR-039, SRC-007, PLAN-I2-DESIGN-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-041, APR-040, APR-039, SRC-007, PLAN-I2-DESIGN-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-10-24
 approval: null
 supersedes: null
@@ -13,10 +13,12 @@ supersedes: null
 
 # PROPOSED — NOT AUTHORIZED FOR EXECUTION
 
-This is a draft for a FUTURE explicit Owner instruction after review of the
-[focused I2 design](I2_IMPLEMENTATION_DESIGN.md). APR-040 authorizes documentation
-only; neither this draft, source007 nor I1 acceptance unlocks implementation.
-No checkboxes/approval/ADR/gate are activated by preparing it.
+This is a draft for a FUTURE separate explicit Owner implementation instruction.
+[APR-041](../00-governance/approved-baselines/APR-041-i2-focused-design-acceptance.md)
+records bounded architecture acceptance and OPEN I2-CAP-01/02; it does not approve
+all capacities or unlock execution. [Focused design](I2_IMPLEMENTATION_DESIGN.md)
+removes the unsupported256-unit/document cap. No checkboxes, API, permission or
+product gate/unlock are activated by this document.
 
 ## Proposed future bounded authority
 
@@ -58,9 +60,11 @@ accepted capabilities and original I1 facts.
 
 ## Preconditions of a real authorization
 
-1. Owner approves the proposed I2 command/schema/security/transaction design and
-   its business-facing initial bounds, identifier comparison, finite receiving
-   calendar, new W1/Sheet/genealogy source contracts and code guard mechanism.
+1. Record explicit acceptance/revision of ONLY the two open I2 admission proposals:
+   I2-CAP-01 (new128scalar/512byte receiving text) and I2-CAP-02 (receiving Jalali
+   profile1206–1498). APR-041 already records the selected architecture, exact
+   identifiers, W1/Sheet/genealogy sources, authority and code guard; do not repeat
+   general design approval. Obtain separate bounded implementation authority.
 2. Verify the actual catalogue/profile bindings using already known factory
    categories. R-MAT is conditional: report a specific ambiguous/unsupported real
    option before that material's stock admission, or explicitly bound that branch.
@@ -84,6 +88,9 @@ No production reset/backfill or deployment is implied by test authorization.
   migration/runtime roles: fresh/additive/checksum/restart migration, strict FKs,
   code/doc races across old/new paths, direct SQL guard/privileges, completeness,
   atomic multi-PO/IPS chunks, line-progress conflicts, rollback and audit failures.
+  No independent256unit/document ceiling. Include257+units that fit existing
+  envelope budgets, <=128effects/call, full-set prelocks and late-chunk rollback
+  of the entire arrival in ONE original transaction/COMMIT.
 - Genuine unknown-COMMIT/crash recovery with original bound intent, same-key
   accepted/rejected replay and changed payload/preconditions conflict; current
   grant revocation while waiting and before disclosure, forged/foreign contexts.

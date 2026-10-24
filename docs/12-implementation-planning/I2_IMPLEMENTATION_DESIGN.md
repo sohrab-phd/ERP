@@ -2,22 +2,25 @@
 id: PLAN-I2-DESIGN-001
 title: Bounded I2 multi-PO multi-unit receiving implementation design and acceptance
 phase: 12-implementation-planning
-status: draft
-version: 0.1.0
+status: in_review
+version: 0.2.0
 owners: [chief-solution-architect, data-architect, security-architect, delivery-lead]
-depends_on: [APR-040, APR-039, SRC-007, SRC-004, SRC-005, SRC-006, IMPL-I1-001, IMPL-I1-TRACE-001, DOM-INBOUND-FIELDS-001, PLAN-INBOUND-DECISIONS-001, ADR-0016]
+depends_on: [APR-041, APR-040, APR-039, SRC-007, SRC-004, SRC-005, SRC-006, IMPL-I1-001, IMPL-I1-TRACE-001, DOM-INBOUND-FIELDS-001, PLAN-INBOUND-DECISIONS-001, ADR-0016]
 last_reviewed: 2026-10-24
 approval: null
 supersedes: null
 ---
 
-# I2 focused design — PROPOSED / NOT AUTHORIZED FOR IMPLEMENTATION
+# I2 focused design — conditionally accepted architecture / NO IMPLEMENTATION AUTHORITY
 
-This is one cohesive implementation/test specification under [APR-040](../00-governance/approved-baselines/APR-040-i2-business-decisions-design-scope.md),
-not another gap analysis. [SRC-007](../00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
-settles the ten business answers; technical choices/capacities here await Owner
-design acceptance and separate execution authority. Twelve capabilities remain
-accepted. No runtime/migration/test implementation or product gate change is made.
+[APR-041](../00-governance/approved-baselines/APR-041-i2-focused-design-acceptance.md)
+records the Owner's focused design acceptance instruction against local
+`b33c7b7a4e5acb3862f5da7c1ab56371279a529a`, the narrow correction below, and
+OPEN I2-CAP-01/02. The selected architecture is accepted at the instruction's
+bounded scope; **unconditional capacity/design sign-off is not recorded**.
+[SRC-007](../00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
+business answers remain resolved. Twelve capabilities remain accepted; no runtime,
+migration, test implementation, product gate/unlock change or push is authorized.
 
 ## 1. Existing seams and exact proposed reconciliation
 
@@ -72,13 +75,13 @@ as an implemented workflow by this bounded design.
 
 ### Business identities and comparison
 
-PROPOSED technical namespace: factory=installation, independent exact-text
+Selected technical namespace (APR-041): factory=installation, independent exact-text
 uniqueness for system code, waybill and external receipt. Preserve raw text; use
 C/byte-stable equality. No trimming, case folding, digit/Yeh/Kaf mapping, fuzzy
 matching or silent Unicode normalization. PO lookup alone retains approved R1.
 Same spelling in different identifier kinds is allowed; technical UUID/key remain
-separate. These comparison/capacity choices require design acceptance, not a new
-round asking whether the three business identifiers are unique.
+separate. These exact comparison namespaces are selected by APR-041; the separate text
+capacity remains OPEN I2-CAP-01, not a repeated business uniqueness question.
 
 ## 3. Exact field/provenance contract
 
@@ -101,8 +104,11 @@ verification/acceptance metadata and source references are not extra factory fie
 | F22 وزن خالص باسکول مقصد | NO | arrival.destinationNetKg / W3 | Raw exact decimal kg for same full consignment; absence valid; no device/ticket prerequisite |
 | F23 نام راننده | NO | arrival.driverName | Preserve supplied optional text; not excluded from authorized PROC view |
 
-Technical field choices PROPOSED: identifiers/ordinary text use I1's128Unicode
-scalar/512UTF8byte validation, raw preservation and blank/Cc rejection; legacy
+OPEN I2-CAP-01: the proposed128Unicode-scalar/512UTF8-byte limit for NEW receiving
+identifiers/ordinary text is not automatically approved by its I1 use. A legitimate
+129-scalar product/document value could otherwise be rejected. Owner must accept
+this initial I2 bound or provide a required larger capacity; never truncate. Raw
+preservation and blank/Cc validation remain specified; legacy
 v1 retains its128UTF8byte input limit, with no truncation or wider v1 payload.
 W2/W3 use plain unsigned ASCII decimal strings `[0-9]+([.][0-9]+)?`, including
 source leading/trailing zeros, maximum the shared envelope's65536byte string
@@ -263,8 +269,8 @@ insertion tests must prove these links, not merely application happy paths.
    DDL. Trigger writes only Procurement identity evidence, never Inventory stock.
    Source/claim deferred checks prevent missing/fake/orphaned claims and require
    a legacy claim's source to reach normal POSTED before COMMIT. This narrow
-   database-owned guard is a proposed dependency reconciliation, not an approved
-   expansion to database business orchestration.
+   database-owned guard is the narrowly accepted dependency reconciliation, not
+   general database business orchestration or implementation authority.
 4. Protect legacy code/source fields from UPDATE while preserving existing valid
    state/stock-ID transitions; immutable new rows/claims cannot change code. Add
    a scoped composite source-code FK from legacy material_lot to goods_receipt,
@@ -375,8 +381,8 @@ Unit UUID. Preserve legacy SHEET CHECK/index/API unchanged. Actual code inspecti
 finds productCode used by legacy receipt intake/origin/genealogy display, not a
 required Production/Sales input. Test downstream supported Sheet handling; never
 manufacture productCode from productNumber/system code/UUID or add a seventh
-mandatory receiving field. This is an explicit new-path dependency design requiring
-Owner acceptance, not permission to weaken the old Sheet path.
+mandatory receiving field. This new-path dependency design is selected within
+APR-041, not permission to weaken the old Sheet path.
 
 Inventory origin read ports return a discriminated LEGACY_MEASURED_RECEIPT or
 WH_ACCEPTED_RECEIVING_UNIT fact. New provenance has acceptedUnitWeightKg/weightBasis,
@@ -386,8 +392,8 @@ new origin disclosure and does not return new PO/driver/whole-arrival cargo fiel
 to SEC/SALES merely because old genealogy is readable. Detailed I2 provenance is
 through authorized Procurement order/arrival projections. Extend typed intake/edge
 meaning for per-unit accepted W1, preserving old origin/edge output for old data.
-New-source text validation must admit the proposed128scalar/512byte code without
-truncation; legacy genealogy text guards/output stay unchanged. No shared-arrival
+New-source text validation must admit the final Owner-resolved I2-CAP-01 code
+capacity without truncation; legacy genealogy text guards/output stay unchanged. No shared-arrival
 root enumerates co-travelling units; no document association is
 a material-parent edge. New Unit→Lot→accepted source links remain reconstructible
 from immutable owner facts and independently usable by later production lineage.
@@ -396,11 +402,18 @@ from immutable owner facts and independently usable by later production lineage.
 
 Reuse envelope limits256KiB raw/canonical/result, depth32,10000entries,64KiB/string;
 new receiving reader uses the existing bounded5s/16active pattern, no old route
-limit widening. PROPOSED initial max256explicit accepted units and at most one
-waybill/receipt per unit (up to256distinct documents of each kind) per atomic
-arrival. This is a technical design capacity for acceptance, NOT a factory maximum;
-128IPS effects is a call limit, not the arrival size. No split of one physical
-arrival into separately committed copies to bypass capacities.
+limit widening. REMOVE the unsupported independent256-unit/256-document arrival
+caps. Each unit selects one actual waybill and receipt; each supplied document
+must be used, so document counts are bounded by the explicitly supplied units,
+not an invented factory maximum. The existing serialized-body/entry budgets still
+bound admitted requests; this is NOT unlimited-size arrival support.128IPS effects
+is a CALL limit only: prelock all actual IDs and process every <=128-effect chunk
+inside the SAME original transaction, with complete-array integrity and one COMMIT.
+A valid257+unit arrival that fits the envelope must not be rejected merely by count.
+Never split a physical arrival into separately committed copies to bypass capacity.
+If real receiving requires an arrival beyond the existing envelope, report that
+exact transport incompatibility before implementation; no business workaround or
+limit expansion is authorized by this documentation.
 
 Read pages default50/max100 and<=256KiB serialized response. The assembling query
 stops before byte overflow with a stable cursor; no data truncation. Before source
@@ -409,8 +422,18 @@ unit/line projection for both WH/PROC shapes: a committed record must always be
 retrievable at least one complete item/page. Declared max counts do not guarantee
 all maximum-size strings fit one body. Deterministic size/unsupported-calendar
 errors occur before irreversible source persistence; no silent rounding/truncation.
-Jalali1206–1498 reuse is an explicit proposed receiving technical coverage profile,
-not an extension of Owner approval of I1 dates to all historical arrival years.
+OPEN I2-CAP-02: Jalali1206–1498 is the validated method's proposed receiving
+coverage, NOT automatic inheritance of the I1 purchase-date approval. A meaningful
+outside-profile arrival date would be unsupported. Owner must accept this initial
+receiving coverage or identify a required outside-profile year; extending the
+calendar method would then need verified accuracy. No clamping, current-date
+substitution, timezone shift or unsupported extrapolation is allowed.
+
+Only these two business-facing admission proposals remain for narrow acceptance;
+SRC-007 facts, exact W1/weight grain and the selected architecture are not reopened.
+Existing envelope and complete-item response budgets are explicit operational
+boundaries, not asserted factory maxima; verify representative real receiving fits
+before future implementation acceptance. No arbitrary256 cap remains.
 
 Exclude amendments/cancellation/closure, append-after-confirmation, historical
 backfill, nonaccepted custody workflow, posted correction/return, devices/ticket
@@ -442,12 +465,12 @@ twelve-capability regressions. Fault seams never replace the DB behavior asserte
 | I2-A13 | Both roles create/reuse all3catalogues; exact label history retained; known category resolves, unsupported exact type no OTHER/stock; I2 Sheet productNumber opaque/nonunique independent from legacy productCode | U,P,R; S04–10; F08,F11,F14,F19 |
 | I2-A14 | PROC sees ALL original/actual fields incl driver only after COMMIT; WH full arrival; other PO/units/UNLINKED/private binding not disclosed; no new per-person PO ACL | P,H;015–017,023; F01–23; S12 |
 | I2-A15 | Foreign installation/authority, customer, SEC/unrelated, copied/forged actor/context and caller-approvedActor fields denied; wait-time revocation and revoked accepted/rejected replay denied | P,H;023–024; S07–08,S12 |
-| I2-A16 | Persist exact uncommitted sources before first IPS effect; 129/256units post via chunks in one transaction; source mismatch/later chunk/origin/constraint/audit/outcome failure leaves zero new stock/source/claims/progress | P;014,024; sole IPS |
+| I2-A16 | Persist exact uncommitted sources before first IPS effect; 129/256 and valid257+units within envelope budgets post via chunks in one transaction; source mismatch/later chunk/origin/constraint/audit/outcome failure leaves zero new stock/source/claims/progress | P;014,024; sole IPS |
 | I2-A17 | Same original key replays once; changed raw input/array/order/progress/target conflicts; genuine dropped COMMIT reply and actual Windows crash checkpoints recover using original identity | P;014,021,024 |
 | I2-A18 | Concurrent multi-PO arrivals with reversed line/code sets, hash collisions, lock timeout/deadlock and last-slot/excess race; no deadlock from later IPS chunks; technical failures not cached as business outcomes | P;004,006–007,014,024 |
 | I2-A19 | Deferred completeness and exact persisted-source admission; direct missing/forged/wrong-kg/source/category/location/effect stock links fail; wrong scoped FKs, late append, savepoint/deferred COMMIT failure and immutable/least-privilege enforcement | P;009,012–014,024 |
 | I2-A20 | Exact origin/W1/UUID/source-to-Ledger predicate and collation-independent legacy-code mirror; new production/residual genealogy; old origin unchanged; same-truck siblings/foreign branch never ancestry/disclosure | P,R;011–012,014,018,024 |
-| I2-A21 | Pagination/256KiB/actual-count/text limits, retrievability preflight, no ordered-count expansion or post-before-size-check, sanitized errors/logs | U,P,H;015–017,023–024 |
+| I2-A21 | Pagination/256KiB/existing-entry limits, final Owner-resolved text/date bounds, retrievability preflight, no ordered-count expansion or post-before-size-check, sanitized errors/logs | U,P,H;015–017,023–024 |
 | I2-A22 | Existing I1, legacy no-PO/no-ticket receipt incl SHEET, Inventory/reservations/Sales/shipment/production/genealogy/invoice regressions; only new duplicate admissions intentionally changed | P,R;003,024–025 |
 
 Compact coverage interpretation (no new factory IDs): all REQ-INBOUND-001–025 are
@@ -463,17 +486,19 @@ remains the source identity map; this is a future executable plan, not test resu
 ## 10. Approval/readiness and focused review
 
 All ten business answers are recorded as OWNER RESOLVED at their supplied scope.
-No separate approval role is needed for changed W1 or exceptional goods. No new
-unconditional business-policy blocker is demonstrated for ordinary supported
-receiving. R-MAT is only a conditional real-option compatibility check, not a
+No separate approval role is needed for changed W1 or exceptional goods. No
+unresolved workflow-policy blocker is demonstrated for ordinary supported receiving;
+the two narrow admission-capacity approvals are separately OPEN. R-MAT is only a
+conditional real-option compatibility check, not a
 request to reconfirm known categories or approve a new classification process.
 Historical-code/source agreement is a data verification prerequisite at migration/
 rollout, not an unanswered factory policy. No invented incomplete-draft workflow.
 
-Owner design acceptance is required for this specific command/schema/admission,
-cross-path claim guard, exact identifiers, new W1/Sheet/genealogy contracts,
-capacities and receiving calendar profile. Then separate bounded execution authority
-and applicable gate reconciliation are required; use the [authorization DRAFT](I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md).
+APR-041 records the selected command/schema/admission, cross-path claim guard,
+exact identifier namespaces and new W1/Sheet/genealogy architecture. Only I2-CAP-01
+and I2-CAP-02 need narrow Owner acceptance/revision before unconditional design
+sign-off. Separate bounded execution authority and applicable gate reconciliation
+are always required; use the [authorization DRAFT](I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md).
 Focused independent reviews of this proposal against actual code:
 
 | Review / finding | Disposition |
@@ -482,10 +507,30 @@ Focused independent reviews of this proposal against actual code:
 | Database, I2-DB-01 MEDIUM required | CLOSED: exact source/origin/Unit/Lot/Ledger predicate, W1/effect/category/location matching and direct-forgery tests now explicit; legacy exact-code collation guard clarified |
 | Security | Static PASS; selected-order all-field disclosure, sibling filtering, current grants, private original binding, restricted code helper and genealogy boundaries reviewed; no required finding |
 
-All required documentation findings are closed. This is design quality review,
-not Owner design approval, implementation acceptance or runtime proof. No application
+The preceding reviews concern the b33 design, not runtime proof. The subsequent
+focused review found I2-LIMIT-01 (unsupported256 cap), corrected in section8;
+I2-CAP-01/02 remain openly unaccepted admission conditions under APR-041.
+No implementation acceptance or unconditional capacity approval is implied. No application
 or PostgreSQL tests were run. Future A01–A22 still require execution under later
-authority. Current documentation checks PASS:15Markdown files,1174local targets,
+authority. Historical b33 documentation checks PASS:15Markdown files,1174local targets,
 130metadata dependencies,9local fragments; all11receiving fields/6required/5optional,
 original60IDs and original23historical source/register/migration files preserved.
 Working/staged diff and final documentation-only scope are checked before commit.
+
+### Focused acceptance reconciliation — 2026-10-24
+
+Architecture reviewer confirmed actual IPS `post` checks128 per call and the store
+can prelock all resource IDs: no kernel increase or multiple COMMITs are required.
+Unordered/excess manual acceptance, shared multi-PO identity, cross-path claims,
+whole-consignment W2/W3, selected-order complete PROC fields and no OTHER fallback
+remain consistent. Future PostgreSQL must prove257+within-budget receiving, later-
+chunk rollback, code/doc races, deferred completeness, source/stock links, current
+grants and unknown-COMMIT recovery. Static review is not executed proof.
+
+Final focused architecture and security/governance reviews: PASS, no required
+remaining documentation defect; stale proposed-dependency wording corrected.
+I2-CAP-01/02 are explicit Owner admission decisions, not closed technical findings.
+Documentation checks:10Markdown files,1069local targets,107metadata dependencies,
+6local fragments;11receiving fields/6mandatory/5optional,22future I2 case families,
+60original requirement IDs and24historical source/register/migration files preserved.
+`git diff --check` passes. No application or PostgreSQL tests executed.

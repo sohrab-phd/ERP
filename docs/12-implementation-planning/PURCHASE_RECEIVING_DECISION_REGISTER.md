@@ -3,9 +3,9 @@ id: PLAN-INBOUND-DECISIONS-001
 title: Purchase and receiving Step 2 policy and design register
 phase: 12-implementation-planning
 status: in_review
-version: 0.9.0
+version: 0.10.0
 owners: [business-process-owner, chief-solution-architect, security-architect]
-depends_on: [APR-040, APR-039, APR-038, APR-037, APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
+depends_on: [APR-041, APR-040, APR-039, APR-038, APR-037, APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
 last_reviewed: 2026-10-24
 approval: null
 supersedes: null
@@ -13,42 +13,48 @@ supersedes: null
 
 # Policy and design register — resolved business portions and OPEN residuals
 
-Current [APR-040](../00-governance/approved-baselines/APR-040-i2-business-decisions-design-scope.md)
-records [SRC-007 answers](../00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
-to all ten I2 questions. The business portions are answered; do not repeat them.
-[One focused I2 design/test package](I2_IMPLEMENTATION_DESIGN.md) covers shared
-multi-PO arrivals/documents, accepted physical units, code protection across old/new
-paths, actual/original provenance, sole IPS, progress and full authorized PROC reads.
-[Execution DRAFT](I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md) remains PROPOSED — NOT
-AUTHORIZED FOR EXECUTION. Current scope is documentation only; no code/SQL/test/
-permission/gate/unlock change or push. Twelve accepted capabilities remain.
+Current [APR-041 bounded design acceptance](../00-governance/approved-baselines/APR-041-i2-focused-design-acceptance.md) records the Owner's
+focused review instruction against local b33c7b7. Selected I2 architecture is
+accepted within its mandatory boundaries; unconditional capacity sign-off is NOT
+recorded. Unsupported256-unit/document arrival caps are removed. Only OPEN
+I2-CAP-01 (new128scalar/512byte receiving text) and I2-CAP-02 (Jalali receiving
+coverage1206–1498) need narrow Owner acceptance/revision; I1 bounds do not transfer
+automatically. All ten SRC-007 business answers remain resolved.
 
-R-MAT is only a conditional compatibility check for a specific real ambiguous/
-unsupported catalogue option; known factory categories are not re-questioned and
-ordinary supported receiving is not blocked. Historical code/source checks are
-future data verification, not an unanswered uniqueness policy.
-Technical design/capacities await Owner acceptance and separate implementation authority.
+[Updated design/test package](I2_IMPLEMENTATION_DESIGN.md) retains multi-PO shared
+arrivals, manual unordered/excess acceptance, cross-path code uniqueness, per-unit
+W1 and shared W2/W3, full secure PROC reads and sole IPS. Prelock the whole actual
+set; <=128effect calls share ONE transaction, no arbitrary256cap and no split
+commits. Existing envelope/resource budgets still apply; future PostgreSQL tests
+must prove257+within-budget units and total late-chunk rollback.
+
+[Execution DRAFT](I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md) remains PROPOSED — NOT
+AUTHORIZED FOR EXECUTION. Separate implementation authority is required; no runtime,
+SQL/test code, gate/unlock change or push. Twelve accepted capabilities remain.
+R-MAT is conditional only for a specific real unsupported/ambiguous type, not a
+new global policy approval. Historical data consistency is future verification.
 
 ## Current business disposition — SRC-007; implementation still unauthorized
 
 | Decision | Owner-resolved portion | Remaining design/input boundary |
 | --- | --- | --- |
-| B02 OWNER RESOLVED | WH manually labels each physical unit; codes unique, history stated unique; no ERP-generated business code | Exact factory identity and shared claim/legacy rollout checks are proposed technical mechanisms, not new issuance questions |
+| B02 OWNER RESOLVED | WH manually labels each physical unit; codes unique, history stated unique; no ERP-generated business code | Exact factory identity/shared claim selected by APR-041; actual legacy rollout checks remain future verification |
 | B03 OWNER RESOLVED | Product number is per-unit preserved opaque/nonunique, separate from all other identities | New origin avoids legacy-only Sheet productCode conflation |
-| B01 non-PO OWNER RESOLVED | Waybill and external warehouse receipt unique separate references, receipt not ERP-generated | Exact comparison/constraints proposed; R1 remains PO-only |
+| B01 non-PO OWNER RESOLVED | Waybill and external warehouse receipt unique separate references, receipt not ERP-generated | Exact independent comparison/constraints selected by APR-041; R1 remains PO-only |
 | B04 OWNER RESOLVED | Shared truck/waybill may contain many POs; receipt cannot span arrivals; PO may span arrivals | Scoped shared header/doc/unit graph and atomicity designed, no duplicate per-PO consignment |
 | B05 OWNER RESOLVED | WH personally approves changed accepted W1; no PROC additional approval | Original/actual W1 and honest WH-declared provenance; no old measured-origin rewrite |
 | B06 OWNER RESOLVED | WH final MANUAL mismatch/excess/unordered acceptance | Explicit bound action, progress concurrency and nullable real line linkage; never PO edits or automatic acceptance |
-| B07 receiving OWNER RESOLVED | Jalali arrival date, exact document precision kg W2/W3, mandatory/optional preserved | Proposed receiving profile/grammar/resource bounds are technical choices awaiting design acceptance |
+| B07 receiving OWNER RESOLVED | Jalali arrival date, exact document precision kg W2/W3, mandatory/optional preserved | Jalali is settled; only I2-CAP-02 coverage and I2-CAP-01 text capacity remain open, not weight grain/precision |
 | B08 receiving OWNER RESOLVED | Current org PROC sees ALL relevant original/actual business fields including driver after committed stock | Selected-order projection excludes sibling cargo; no new SEC/customer grants or invented per-order assignee ACL |
 | B09 completion OWNER RESOLVED | WH verifies/corrects ACTUAL data; mandatory values valid at confirmation, optional absence no blocker | No incomplete-mandatory draft required. Custody/after-post procedures not expressly supplied stay deferred operating details, not ordinary complete-receipt blockers |
 | D10 business OWNER RESOLVED | Business type identifies actual category; no separate classification workflow/role | R-MAT: verify actual option bindings to known categories; only a specific ambiguous/unsupported real name needs resolution for that branch, never automatic OTHER or extra business approval |
 
 B10 historical linking/backfill remains excluded/deferred. OQ-011/OQ-019 residuals
 are not blanket closed. [I2 focused design](I2_IMPLEMENTATION_DESIGN.md) replaces
-unselected I2 technical options only as a PROPOSAL, not an approved API/DDL or runtime.
+unselected I2 technical options with the APR-041 bounded architecture baseline;
+no executable API/DDL/runtime or unconditional capacity acceptance is implied.
 
-## Earlier scope/status (historical; current task is APR-040 design only)
+## Earlier scope/status — APR-040 design-only instruction (historical)
 
 
 [APR-039 formal Owner acceptance](../00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)

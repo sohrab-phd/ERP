@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.59.0
+version: 0.60.0
 owners: [chief-solution-architect]
-depends_on: [APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-24
 approval: null
 supersedes: null
@@ -13,23 +13,23 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner instruction: [APR-040](approved-baselines/APR-040-i2-business-decisions-design-scope.md),
-2026-10-24, records [SRC-007 business answers](team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
-and authorizes a bounded code-informed I2 design plus implementation-authorization
-draft. All ten answered business portions are OWNER RESOLVED; no I1 redesign or
-repeated Step1/2 analysis. [I2 design/test package](../12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md)
-and [execution draft](../12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
-remain PROPOSED, requiring Owner design acceptance and separate execution authority.
+Current Owner instruction: [APR-041](approved-baselines/APR-041-i2-focused-design-acceptance.md),
+2026-10-24, records focused I2 architecture acceptance subject to the instruction's
+capacity-conflict check. Remove unsupported256-unit/document caps; IPS<=128/call
+works in chunks in ONE original transaction. New receiving text128scalar/512byte
+and receiving calendar1206–1498 are OPEN I2-CAP-01/02, not silently accepted through
+I1 precedent. Unconditional capacity/design sign-off awaits those narrow choices;
+all ten SRC-007 business answers and the selected architecture remain settled.
 
-Twelve backend capabilities remain Owner accepted; I2 is not implemented/accepted.
-No runtime/test code, executable migrations/contracts/permissions or product gate/
-unlock changes. Existing APR-038 I1 controls do not authorize I2. No push. Only
-a specific actual ambiguous/unsupported type (conditional R-MAT) may need a narrow
-answer for that branch; known categories are not re-questioned. No invented approval
-workflow or mandatory-data draft. Stop after focused
-reviews, documentation checks and optional coherent local documentation commit.
+[Updated design](../12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md) and
+[implementation DRAFT](../12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+are documentation, NOT execution authority. Separate Owner implementation instruction
+and then applicable gate reconciliation are required. No actual gate/unlock edit.
+Twelve backend capabilities remain accepted; no I2 code, migrations, tests, executable
+contracts/permissions, UI/UAT/deployment or push. Stop after focused review,
+documentation validation and optional local commit. No new general study or I1 redesign.
 
-## Earlier scope/status (historical; current task is APR-040 design only)
+## Earlier scope/status — APR-040 design-only instruction (historical)
 
 
 Current Owner instruction: [APR-039](approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)

@@ -5,16 +5,16 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-Current scope (2026-10-24): [APR-040](docs/00-governance/approved-baselines/APR-040-i2-business-decisions-design-scope.md)
-records [new Owner I2 answers](docs/00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
-and authorizes [one focused proposed I2 design/test package](docs/12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md)
-plus an [implementation-authorization DRAFT](docs/12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md).
-No runtime/migration/test/permission or gate/unlock change, I2 execution or push.
-I1 remains Owner accepted under APR-039 at `e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4`;
-**twelve backend capabilities are accepted**. Earlier questionnaire is historical,
-not unanswered; only an actual ambiguous/unsupported type may need a branch-specific answer.
-No UI/UAT/deployment acceptance is implied. Earlier descriptions below are historical;
-[CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls effective authority.
+Current scope (2026-10-24): [APR-041](docs/00-governance/approved-baselines/APR-041-i2-focused-design-acceptance.md)
+records bounded Owner I2 architecture acceptance and OPEN I2-CAP-01/02 (new receiving
+text/calendar coverage). Unsupported256-unit/document caps are removed; IPS chunks
+remain one atomic arrival. [Design](docs/12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md)
+and [implementation DRAFT](docs/12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+confer no execution authority. No code, migration, tests, gate/unlock edit or push.
+**Twelve backend capabilities remain accepted.** I2 is not implemented/accepted;
+no UI, factory UAT or deployment acceptance. Unconditional capacity sign-off and
+separate bounded implementation authority are still required. Earlier descriptions
+below are historical; [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls scope.
 
 ## Earlier delivered foundation and backend capabilities
 

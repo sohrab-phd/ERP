@@ -3,15 +3,26 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.26.0
+version: 0.27.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+depends_on: [APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-10-24
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-041 — Focused I2 architecture acceptance; open capacity conditions
+
+[Actual Owner instruction and bounded disposition](approved-baselines/APR-041-i2-focused-design-acceptance.md)
+against local b33c7b7 selects the shared multi-PO/physical-unit/sole-IPS architecture
+and confirms SRC-007. The focused check removes the arbitrary256-unit/document
+cap, preserving <=128effects/call in one transaction. OPEN I2-CAP-01/02 require
+narrow acceptance/revision of new receiving text and finite receiving-calendar
+coverage. Unconditional capacity acceptance is NOT fabricated. This is not runtime
+implementation authority or backend acceptance. No gate/unlock change or push;
+twelve accepted capabilities remain. Future real PostgreSQL/security proof is required.
 
 ## APR-040 — I2 Owner answers and focused design-only scope
 

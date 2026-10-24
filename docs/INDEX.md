@@ -3,15 +3,25 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.22.0
+version: 0.23.0
 owners: [chief-solution-architect]
-depends_on: [APR-040, APR-039, APR-038, APR-037]
+depends_on: [APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-10-24
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## Current I2 focused acceptance and narrow open limits (2026-10-24)
+
+- [APR-041 selected architecture and open I2-CAP-01/02](00-governance/approved-baselines/APR-041-i2-focused-design-acceptance.md)
+- [Reconciled design: no arbitrary256-unit cap; one atomic arrival](12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md)
+- [Updated implementation DRAFT — NOT AUTHORIZED FOR EXECUTION](12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+
+Unconditional text/calendar capacity sign-off is not recorded. No runtime/gate
+change or push; twelve accepted capabilities remain. Earlier proposed statuses
+below describe the pre-APR-041 baseline, not new implementation authority.
 
 ## Current I2 Owner answers and bounded proposed design (2026-10-24)
 

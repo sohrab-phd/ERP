@@ -3,9 +3,9 @@ id: PLAN-INBOUND-ROADMAP-001
 title: Purchase and receiving proposed incremental delivery and Definition of Done
 phase: 12-implementation-planning
 status: in_review
-version: 0.9.0
+version: 0.10.0
 owners: [delivery-lead, chief-solution-architect, business-process-owner]
-depends_on: [APR-040, APR-039, APR-038, APR-037, APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-041, APR-040, APR-039, APR-038, APR-037, APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-10-24
 approval: null
 supersedes: null
@@ -13,23 +13,28 @@ supersedes: null
 
 # Delivery strategy — PROPOSED / NOT AUTHORIZED
 
-Current [APR-040](../00-governance/approved-baselines/APR-040-i2-business-decisions-design-scope.md)
-records [SRC-007 answers](../00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
-to all ten I2 questions. The business portions are answered; do not repeat them.
-[One focused I2 design/test package](I2_IMPLEMENTATION_DESIGN.md) covers shared
-multi-PO arrivals/documents, accepted physical units, code protection across old/new
-paths, actual/original provenance, sole IPS, progress and full authorized PROC reads.
+Current [APR-041 bounded design acceptance](../00-governance/approved-baselines/APR-041-i2-focused-design-acceptance.md) records the Owner's
+focused review instruction against local b33c7b7. Selected I2 architecture is
+accepted within its mandatory boundaries; unconditional capacity sign-off is NOT
+recorded. Unsupported256-unit/document arrival caps are removed. Only OPEN
+I2-CAP-01 (new128scalar/512byte receiving text) and I2-CAP-02 (Jalali receiving
+coverage1206–1498) need narrow Owner acceptance/revision; I1 bounds do not transfer
+automatically. All ten SRC-007 business answers remain resolved.
+
+[Updated design/test package](I2_IMPLEMENTATION_DESIGN.md) retains multi-PO shared
+arrivals, manual unordered/excess acceptance, cross-path code uniqueness, per-unit
+W1 and shared W2/W3, full secure PROC reads and sole IPS. Prelock the whole actual
+set; <=128effect calls share ONE transaction, no arbitrary256cap and no split
+commits. Existing envelope/resource budgets still apply; future PostgreSQL tests
+must prove257+within-budget units and total late-chunk rollback.
+
 [Execution DRAFT](I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md) remains PROPOSED — NOT
-AUTHORIZED FOR EXECUTION. Current scope is documentation only; no code/SQL/test/
-permission/gate/unlock change or push. Twelve accepted capabilities remain.
+AUTHORIZED FOR EXECUTION. Separate implementation authority is required; no runtime,
+SQL/test code, gate/unlock change or push. Twelve accepted capabilities remain.
+R-MAT is conditional only for a specific real unsupported/ambiguous type, not a
+new global policy approval. Historical data consistency is future verification.
 
-R-MAT is only a conditional compatibility check for a specific real ambiguous/
-unsupported catalogue option; known factory categories are not re-questioned and
-ordinary supported receiving is not blocked. Historical code/source checks are
-future data verification, not an unanswered uniqueness policy.
-Technical design/capacities await Owner acceptance and separate implementation authority.
-
-## Earlier scope/status (historical; current task is APR-040 design only)
+## Earlier scope/status — APR-040 design-only instruction (historical)
 
 
 [APR-039 formal Owner acceptance](../00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
