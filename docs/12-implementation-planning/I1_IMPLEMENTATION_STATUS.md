@@ -3,10 +3,10 @@ id: IMPL-I1-001
 title: I1 operational purchase orders catalogues and warehouse lookup implementation evidence
 phase: 12-implementation-planning
 status: accepted
-version: 0.2.0
+version: 0.3.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
-depends_on: [APR-039, APR-038, APR-037, PLAN-I1-ACCEPTANCE-001, PLAN-I1-REFERENCE-001, PLAN-I1-CALENDAR-RECEIPT-001]
-last_reviewed: 2026-10-21
+depends_on: [APR-040, APR-039, APR-038, APR-037, PLAN-I1-ACCEPTANCE-001, PLAN-I1-REFERENCE-001, PLAN-I1-CALENDAR-RECEIPT-001]
+last_reviewed: 2026-10-24
 approval: APR-039 formal Owner I1 backend acceptance
 supersedes: null
 ---
@@ -229,6 +229,7 @@ PO amendment/cancel/backfill, catalogue rename/delete/merge, UI, QC, devices,
 settlement/corrections, factory UAT or deployment. No blanket OQ-011/OQ-019 closure.
 
 Formal I1 acceptance is now recorded in APR-039 after evidence verification. The
-next authorized task is only the [I2 business decision sheet](I2_BUSINESS_DECISIONS_FA.md).
-No I2 implementation, detailed design, gate/unlock change or remote push. The
+subsequent [SRC-007 answers](../00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
+now feed [bounded I2 design](I2_IMPLEMENTATION_DESIGN.md) under APR-040, not repeated
+I1 review. No I2 implementation, gate/unlock change or remote push. The
 executed results above remain historical implementation evidence, not rerun tests.

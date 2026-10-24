@@ -5,16 +5,16 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-Current scope (2026-10-21): [APR-039 formally records Owner acceptance of I1](docs/00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
-at implementation commit `e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4`, after the
-required focused read-only evidence check. **Twelve backend capabilities are Owner
-accepted.** [Actual I1 tests/review](docs/12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
-and [60-ID code/test trace](docs/12-implementation-planning/I1_IMPLEMENTATION_TRACE.md)
-remain the evidence; the suite was not rerun for this acceptance documentation.
-The next authorized task is only the [short Persian I2 business decision sheet](docs/12-implementation-planning/I2_BUSINESS_DECISIONS_FA.md).
-I2 is not implemented or authorized for coding/design execution; no gate/unlock
-change, UI, factory UAT, production deployment or push. Earlier descriptions below
-are historical; [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls authority.
+Current scope (2026-10-24): [APR-040](docs/00-governance/approved-baselines/APR-040-i2-business-decisions-design-scope.md)
+records [new Owner I2 answers](docs/00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
+and authorizes [one focused proposed I2 design/test package](docs/12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md)
+plus an [implementation-authorization DRAFT](docs/12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md).
+No runtime/migration/test/permission or gate/unlock change, I2 execution or push.
+I1 remains Owner accepted under APR-039 at `e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4`;
+**twelve backend capabilities are accepted**. Earlier questionnaire is historical,
+not unanswered; only an actual ambiguous/unsupported type may need a branch-specific answer.
+No UI/UAT/deployment acceptance is implied. Earlier descriptions below are historical;
+[CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls effective authority.
 
 ## Earlier delivered foundation and backend capabilities
 

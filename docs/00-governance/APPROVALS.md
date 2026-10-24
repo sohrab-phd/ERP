@@ -3,15 +3,27 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.25.0
+version: 0.26.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-039, APR-038, APR-037, GOV-GATES-001]
-last_reviewed: 2026-10-21
+depends_on: [APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+last_reviewed: 2026-10-24
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-040 — I2 Owner answers and focused design-only scope
+
+[Actual Owner instruction](approved-baselines/APR-040-i2-business-decisions-design-scope.md),
+2026-10-24, records all ten [SRC-007 answers](team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md).
+Business policy is authoritative; [I2 technical design](../12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md)
+and [implementation authorization DRAFT](../12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+remain PROPOSED / NOT AUTHORIZED FOR EXECUTION. No I1 review cycle or runtime/gate
+change. I1 remains accepted under APR-039; twelve accepted capabilities remain.
+Focused static architecture/database/security review closes required documentation
+findings; no application/PostgreSQL tests are run or implementation claimed.
+
 
 ## APR-039 — Formal I1 backend acceptance and direct I2 business clarification
 

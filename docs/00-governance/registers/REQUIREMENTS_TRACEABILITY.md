@@ -3,15 +3,26 @@ id: GOV-TRACE-001
 title: Requirements Traceability Matrix
 phase: 00-governance
 status: in_review
-version: 0.17.0
+version: 0.18.0
 owners: [requirements-owner, qa-architect]
-depends_on: [APR-039, APR-038, APR-037, SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
-last_reviewed: 2026-10-21
+depends_on: [APR-040, APR-039, APR-038, APR-037, SRC-001, SRC-002, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-MVP-RULES-001, SM-INV-001, APR-005]
+last_reviewed: 2026-10-24
 approval: null
 supersedes: null
 ---
 
 # Requirements Traceability Matrix
+
+## Subsequent I2 Owner decisions and future executable trace
+
+[SRC-007](../team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md) answers all ten
+receiving business questions without rewriting original25workflow/23field/S01–S12
+identities or older sources. [Focused I2 acceptance design](../../12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md#9-future-executable-acceptance--not-run)
+maps I2-A01–A22 to these requirements, all11receiving fields, I1 comparison facts
+and retained catalogue/security obligations. These are future tests, NOT executed
+evidence. [APR-040](../approved-baselines/APR-040-i2-business-decisions-design-scope.md)
+authorizes documentation/design only; twelve capabilities remain accepted.
+
 
 ## Formal I1 backend acceptance and scoped I2 clarification
 

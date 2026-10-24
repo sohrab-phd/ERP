@@ -3,15 +3,28 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.21.0
+version: 0.22.0
 owners: [chief-solution-architect]
-depends_on: [APR-039, APR-038, APR-037]
-last_reviewed: 2026-10-21
+depends_on: [APR-040, APR-039, APR-038, APR-037]
+last_reviewed: 2026-10-24
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## Current I2 Owner answers and bounded proposed design (2026-10-24)
+
+- [SRC-007 authoritative subsequent Owner answers](00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
+- [APR-040 documentation/design-only task authority](00-governance/approved-baselines/APR-040-i2-business-decisions-design-scope.md)
+- [One cohesive I2 implementation design and future acceptance plan](12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md)
+- [Bounded implementation-authorization DRAFT — not executable](12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
+
+The [earlier Persian questionnaire](12-implementation-planning/I2_BUSINESS_DECISIONS_FA.md)
+is historical/answered. No repeated I1 design or new gap-analysis cycle. Technical
+mechanisms remain proposed; I2 runtime is absent and unauthorized, twelve capabilities
+remain Owner accepted. Original source/field/requirement identities are preserved.
+
 
 ## I1 formally accepted; current I2 task is business clarification only
 

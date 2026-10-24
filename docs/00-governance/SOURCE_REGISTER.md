@@ -3,15 +3,28 @@ id: GOV-SOURCES-001
 title: Source Register
 phase: 00-governance
 status: in_review
-version: 0.4.0
+version: 0.5.0
 owners: [chief-solution-architect]
-depends_on: []
-last_reviewed: 2026-10-21
+depends_on: [APR-040, ]
+last_reviewed: 2026-10-24
 approval: APR-002 historical structure; subsequent Owner sources recorded under APR-033 and APR-036
 supersedes: null
 ---
 
 # Source Register
+
+## SRC-007 — Subsequent Owner I2 receiving decisions (2026-10-24)
+
+[Actual Owner answers](team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
+resolve manual unique physical codes, per-unit product number, unique external
+waybill/receipt references, multi-PO shared consignments, WH final changed-W1/
+exception acceptance, Jalali receiving and exact kg W2/W3, full PROC business-field
+visibility and stage-correct completion, without a classification approval workflow.
+Original SRC-004–006 and original23fields/25rules/S01–S12 are unchanged. The finite
+actual material-name/category list is not fabricated. [APR-040](approved-baselines/APR-040-i2-business-decisions-design-scope.md)
+authorizes source/decision reconciliation and bounded technical design/draft only,
+not runtime, SQL, tests, gate changes, I2 acceptance or push.
+
 
 ## SRC-006 — Subsequent Owner R1 Option A approval
 

@@ -3,15 +3,34 @@ id: PLAN-INBOUND-ROADMAP-001
 title: Purchase and receiving proposed incremental delivery and Definition of Done
 phase: 12-implementation-planning
 status: in_review
-version: 0.8.0
+version: 0.9.0
 owners: [delivery-lead, chief-solution-architect, business-process-owner]
-depends_on: [APR-039, APR-038, APR-037, APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
-last_reviewed: 2026-10-21
+depends_on: [APR-040, APR-039, APR-038, APR-037, APR-032, APR-033, SRC-005, DOM-INBOUND-POLICY-001, PLAN-INBOUND-GAP-001, PLAN-INBOUND-ARCH-001, PLAN-INBOUND-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
+last_reviewed: 2026-10-24
 approval: null
 supersedes: null
 ---
 
 # Delivery strategy — PROPOSED / NOT AUTHORIZED
+
+Current [APR-040](../00-governance/approved-baselines/APR-040-i2-business-decisions-design-scope.md)
+records [SRC-007 answers](../00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md)
+to all ten I2 questions. The business portions are answered; do not repeat them.
+[One focused I2 design/test package](I2_IMPLEMENTATION_DESIGN.md) covers shared
+multi-PO arrivals/documents, accepted physical units, code protection across old/new
+paths, actual/original provenance, sole IPS, progress and full authorized PROC reads.
+[Execution DRAFT](I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md) remains PROPOSED — NOT
+AUTHORIZED FOR EXECUTION. Current scope is documentation only; no code/SQL/test/
+permission/gate/unlock change or push. Twelve accepted capabilities remain.
+
+R-MAT is only a conditional compatibility check for a specific real ambiguous/
+unsupported catalogue option; known factory categories are not re-questioned and
+ordinary supported receiving is not blocked. Historical code/source checks are
+future data verification, not an unanswered uniqueness policy.
+Technical design/capacities await Owner acceptance and separate implementation authority.
+
+## Earlier scope/status (historical; current task is APR-040 design only)
+
 
 [APR-039 formal Owner acceptance](../00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
 accepts I1 implementation e3462fcfc4eaebbedb0d3a323bda7e0ae72d59c4 after the focused

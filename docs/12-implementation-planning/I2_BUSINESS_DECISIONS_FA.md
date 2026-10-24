@@ -2,16 +2,25 @@
 id: PLAN-I2-BUSINESS-001
 title: I2 concise factory business decision sheet in Persian
 phase: 12-implementation-planning
-status: draft
-version: 0.1.0
+status: recorded
+version: 0.2.0
 owners: [business-process-owner, delivery-lead]
-depends_on: [APR-039, PLAN-INBOUND-DECISIONS-001, DOM-INBOUND-REQ-001, DOM-INBOUND-FIELDS-001, DOM-INBOUND-POLICY-001, IMPL-I1-001]
-last_reviewed: 2026-10-21
-approval: null
+depends_on: [APR-040, APR-039, PLAN-INBOUND-DECISIONS-001, DOM-INBOUND-REQ-001, DOM-INBOUND-FIELDS-001, DOM-INBOUND-POLICY-001, IMPL-I1-001]
+last_reviewed: 2026-10-24
+approval: SRC-007 actual Owner answers; historical recommendations were not approved as a bundle
 supersedes: null
 ---
 
-# برگه تصمیم‌های باز کارخانه برای I2
+# برگه تاریخی پرسش‌های I2 — پاسخ‌ها در SRC-007 ثبت شده‌اند
+
+**ANSWERED / HISTORICAL QUESTIONNAIRE.** All ten business questions received actual
+Owner answers on2026-10-24 in [SRC-007](../00-governance/team-answers/OWNER_I2_RECEIVING_DECISIONS_2026-10-24.md).
+Use the [current decision dispositions](PURCHASE_RECEIVING_DECISION_REGISTER.md)
+and [proposed focused design](I2_IMPLEMENTATION_DESIGN.md). Earlier OPEN wording
+and preferred options below preserve the original questionnaire, not current
+unanswered questions or approved alternatives. I2 execution remains unauthorized.
+
+## Historical questions and recommendations (before SRC-007)
 
 **OPEN — پیشنهادها تصمیم مصوب نیستند؛ پیاده‌سازی I2 مجاز نیست.**
 پذیرش I1 در [APR-039](../00-governance/approved-baselines/APR-039-i1-backend-acceptance-i2-clarification.md)
