@@ -80,8 +80,14 @@ void test('live trace reconstructs partial input, WIP, final, reusable Residual 
       assert.ok(!has(back, 'UNIT', first.residualId));
       assert.equal(back.nodes.filter((n) => n.kind === 'RECEIPT').length, 1);
       assert.equal(back.nodes.filter((n) => n.kind === 'LOT').length, 1);
+      const originalCode = (
+        await db.owner.query<{ internal_code: string }>(
+          'SELECT internal_code FROM inventory.material_lot WHERE unit_id=$1',
+          [p.source],
+        )
+      ).rows[0]!.internal_code;
       assert.deepEqual(back.nodes.find((n) => n.id === p.source)?.intake, {
-        internalCode: 'FACTORY-INTERNAL',
+        internalCode: originalCode,
         type: 'COIL',
         count: '2',
         measuredKg: '110',

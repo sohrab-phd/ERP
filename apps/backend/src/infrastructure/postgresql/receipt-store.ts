@@ -13,10 +13,17 @@ const columns = `receipt_id AS id,binding,state,internal_code AS "internalCode",
 /** Receipt owner only; Inventory is called through its public port on the same transaction. */
 export class PostgresReceiptStore implements ReceiptStore {
   async lock(ctx: ReceiptContext, id: string) {
-    await transactionClient(ctx.transaction).query(
-      'SELECT pg_advisory_xact_lock(hashtextextended($1,0))',
-      [JSON.stringify(['goods-receipt', ...scope(ctx), id])],
+    const resources = [
+      JSON.stringify(['goods-receipt', ...scope(ctx), id]),
+      `procurement-physical-code/${ctx.actor.installationId}/${ctx.request.payload.internalCode as string}`,
+    ];
+    const client = transactionClient(ctx.transaction);
+    const result = await client.query<{ key: string }>(
+      'SELECT DISTINCT hashtextextended(value,0) AS key FROM unnest($1::text[]) input(value) ORDER BY key',
+      [resources],
     );
+    for (const r of result.rows)
+      await client.query('SELECT pg_advisory_xact_lock($1::bigint)', [r.key]);
   }
   async find(ctx: ReceiptContext, id: string): Promise<ReceiptRecord | undefined> {
     const row = (

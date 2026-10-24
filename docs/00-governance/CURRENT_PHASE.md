@@ -3,31 +3,23 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.60.0
+version: 0.61.0
 owners: [chief-solution-architect]
-depends_on: [APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-10-24
+depends_on: [APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
 
-Current Owner instruction: [APR-041](approved-baselines/APR-041-i2-focused-design-acceptance.md),
-2026-10-24, records focused I2 architecture acceptance subject to the instruction's
-capacity-conflict check. Remove unsupported256-unit/document caps; IPS<=128/call
-works in chunks in ONE original transaction. New receiving text128scalar/512byte
-and receiving calendar1206–1498 are OPEN I2-CAP-01/02, not silently accepted through
-I1 precedent. Unconditional capacity/design sign-off awaits those narrow choices;
-all ten SRC-007 business answers and the selected architecture remain settled.
-
-[Updated design](../12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md) and
-[implementation DRAFT](../12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
-are documentation, NOT execution authority. Separate Owner implementation instruction
-and then applicable gate reconciliation are required. No actual gate/unlock edit.
-Twelve backend capabilities remain accepted; no I2 code, migrations, tests, executable
-contracts/permissions, UI/UAT/deployment or push. Stop after focused review,
-documentation validation and optional local commit. No new general study or I1 redesign.
+Current Owner authority [APR-042](approved-baselines/APR-042-i2-implementation-authorization.md)
+accepts I2-CAP-01/02, fully accepts the focused I2 design and explicitly authorizes
+immediate bounded implementation, additive migration and real tests/reviews.
+No additional design/readiness round. IPS remains sole stock writer, all chunks
+one transaction; no256arrival cap. Preserve all twelve accepted capabilities.
+I2 is not yet Owner backend accepted. Gate/local unlock reference this actual
+instruction only. No push, UI/UAT/deployment, corrections or unrelated increment.
 
 ## Earlier scope/status — APR-040 design-only instruction (historical)
 

@@ -105,20 +105,24 @@ void test('manual factory intake creates one atomic received/posted origin and e
   });
 });
 
-void test('Internal Code is descriptive and can be reused for distinct receipt identities', async () => {
+void test('I2 code protection rejects a new standalone receipt reusing a physical-unit code while preserving original replay', async () => {
   await withDatabase(async (db) => {
     const people = await operators(db),
       actor = await people.actor(),
       h = receiptHarness(db, people.identity);
     const first = receiptCommand(),
       second = receiptCommand({ payload: { ...first.payload, count: '0', measuredKg: '3' } });
-    completed(await h.run(first, actor), 'accepted');
-    completed(await h.run(second, actor), 'accepted');
-    assert.equal((await bundleCounts(db)).movements, 2);
+    const accepted = completed(await h.run(first, actor), 'accepted');
+    completed(await h.run(second, actor), 'rejected', 'GUARD_CONFLICT');
+    const replay = completed(await h.run(first, actor), 'accepted');
+    assert.equal(replay.replayed, true);
+    assert.deepEqual(replay.result, accepted.result);
+    assert.equal((await bundleCounts(db)).receipts, 1);
+    assert.equal((await bundleCounts(db)).movements, 1);
     const qty = await db.owner.query<{ kg: string }>(
       'SELECT sum(on_hand_delta)::text AS kg FROM inventory.ledger',
     );
-    assert.equal(qty.rows[0]?.kg, '14');
+    assert.equal(qty.rows[0]?.kg, '11');
   });
 });
 
@@ -402,6 +406,7 @@ void test('standalone Sheet preserves unique product/material identity without a
       ...input,
       target: { ...input.target, id: randomUUID() },
       idempotency_key: randomUUID(),
+      payload: { ...input.payload, internalCode: 'distinct-sheet-' + randomUUID() },
     };
     completed(await h.run(duplicate, actor), 'rejected', 'GUARD_CONFLICT');
     const absent = receiptCommand();
@@ -439,6 +444,7 @@ void test('concurrent different receipt IDs cannot reuse one standalone Sheet pr
       ...first,
       target: { ...first.target, id: randomUUID() },
       idempotency_key: randomUUID(),
+      payload: { ...first.payload, internalCode: 'distinct-sheet-' + randomUUID() },
     };
     const results = await concurrentlyAtOwnerLock(
       gate,

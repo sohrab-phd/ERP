@@ -76,7 +76,7 @@ export function receiptCommand(overrides: Partial<CommandRequest> = {}): Command
     command: 'PostGoodsReceipt',
     target: { kind: 'goods-receipt', id: randomUUID() },
     payload: {
-      internalCode: 'FACTORY-INTERNAL',
+      internalCode: 'FACTORY-INTERNAL-' + randomUUID(),
       count: '2',
       measuredKg: '11',
       type: 'COIL',

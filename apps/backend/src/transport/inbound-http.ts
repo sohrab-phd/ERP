@@ -24,7 +24,9 @@ export interface InboundHttpPorts {
 const responseBudget = 262144;
 
 /** Dedicated order reader: legacy purchasing/Identity body limits remain unchanged. */
-async function orderJson(request: IncomingMessage): Promise<Record<string, unknown>> {
+export async function inboundRequestJson(
+  request: IncomingMessage,
+): Promise<Record<string, unknown>> {
   const suppliedLength = request.headers['content-length'];
   const length = Number(suppliedLength);
   if (
@@ -150,7 +152,7 @@ export function createInboundHandler(ports: InboundHttpPorts) {
         else boundedReply(response, 200, { data });
       } else {
         if (request.destroyed || request.aborted) throw new IdentityError('invalid');
-        const input = register ? await orderJson(request) : await requestJson(request);
+        const input = register ? await inboundRequestJson(request) : await requestJson(request);
         if (register || add) {
           if (
             input.command !==

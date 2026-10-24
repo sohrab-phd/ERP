@@ -3,15 +3,31 @@ id: APP-CMD-001
 title: Application Command Catalogue
 phase: 05-application-api-architecture
 status: in_review
-version: 0.6.0
+version: 0.7.0
 owners: [solution-architect, api-architect]
-depends_on: [APR-038, SM-TRANS-001, SM-EVT-001, APR-006, APR-007]
-last_reviewed: 2026-10-21
+depends_on: [APR-042, APR-038, SM-TRANS-001, SM-EVT-001, APR-006, APR-007]
+last_reviewed: 2026-10-25
 approval: APR-007 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
 
 # Application Command Catalogue
+
+## Implemented I2 addition — APR-042
+
+| Command/version | Owner / current organizational personal role | Atomic effect |
+| --- | --- | --- |
+| ConfirmPurchaseReceiving v1 | Procurement / ACT-WH | Complete shared arrival/documents/actual units and manual approvals; Inventory typed origins and sole IPS stock; durable outcome/audit ONE transaction |
+
+Target is inbound-arrival UUID; POST /purchasing/receiving/confirm. Full closed
+payload/preconditions are [implemented contracts](../../apps/backend/src/modules/procurement/receiving-contracts.ts)
+and [service admission](../../apps/backend/src/modules/procurement/receiving-service.ts).
+Expected line progress binds intent; manual changed-W1/mismatch/excess/unordered
+acceptance never modifies originals. <=128effects is per IPS invocation, not per
+arrival; every chunk shares one COMMIT. No automatic256unit limit or second writer.
+[Actual evidence and limits](../12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
+and [trace](../12-implementation-planning/I2_IMPLEMENTATION_TRACE.md) apply.
+
 
 ## Implemented I1 additions under APR-038
 

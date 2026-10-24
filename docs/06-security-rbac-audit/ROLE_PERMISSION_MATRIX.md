@@ -3,15 +3,35 @@ id: SEC-RBAC-001
 title: Role Permission and Scope Matrix
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.6.0
+version: 0.7.0
 owners: [security-architect, business-control-owner]
-depends_on: [APR-038, DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
-last_reviewed: 2026-10-21
+depends_on: [APR-042, APR-038, DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
+last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # Role Permission and Scope Matrix
+
+## Implemented I2 receiving authority — APR-042 / SRC-007
+
+| Operation | ACT-PROC | ACT-WH | ACT-SEC / ACT-CUST / unrelated |
+| --- | --- | --- | --- |
+| ConfirmPurchaseReceiving (including explicit changed W1/mismatch/excess/unordered) | Deny | Allow | Deny |
+| GetReceivingArrival (whole physical arrival) | Deny | Allow | Deny |
+| GetPurchaseOrderReceiving (all relevant order fields, driver included) | Allow | Allow | Deny |
+| Modify original I1 PO via receiving/catalogue authority | No operation | No operation | No operation |
+
+Every allow requires actual trusted individually authenticated current organizational
+grants within installation=authority. No hardcoded employee names, automatic extras,
+second approver, or privilege inherited from catalogue creation. Scope filtering
+occurs before Inventory enrichment; shared truck is not authority over sibling
+orders/cargo. Read freshness is checked after releasing the coherent snapshot;
+write current authority is rechecked after waits and before final acceptance.
+[Actual authorization and negative-test evidence](../12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
+apply. Existing accepted I1 catalogue operations still allow both PROC and WH;
+existing documentary, customer genealogy and standalone stock policies stay distinct.
+
 
 ## Implemented I1 operation policy — APR-038
 
@@ -26,7 +46,8 @@ All allows require individually authenticated current organizational personal gr
 installation=authority scope, no customer binding or temporary actor, current checks
 through waits and replay disclosure. [Executable policy/test evidence](../12-implementation-planning/I1_IMPLEMENTATION_STATUS.md)
 preserves separate receiving and completed-purchase/proforma policies. Catalogue
-addition never authorizes unexpected-goods acceptance (B06 remains OPEN).
+addition never authorizes unexpected-goods acceptance by itself; SRC-007 resolves
+B06 to explicit current ACT-WH receiving acceptance under the separate I2 command.
 
 
 APR-008 retains historical structure approval. Current live OQ/source

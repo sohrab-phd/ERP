@@ -3,15 +3,34 @@ id: REPO-DEP-001
 title: Dependency and Import Rules
 phase: 09-repository-documentation
 status: approved
-version: 0.3.0
+version: 0.4.0
 owners: [solution-architect]
-depends_on: [APP-MOD-001, REPO-LAY-001, DATA-TX-001, APR-010, APR-011]
-last_reviewed: 2026-09-07
-approval: APR-011
+depends_on: [APR-042, APP-MOD-001, REPO-LAY-001, DATA-TX-001, APR-010, APR-011]
+last_reviewed: 2026-10-25
+approval: APR-011 historical rules; APR-042 bounded I2 owner-port reconciliation
 supersedes: null
 ---
 
 # Dependency and Import Rules
+
+## Current bounded receiving dependency — APR-042
+
+[Owner-authorized I2 implementation](../00-governance/approved-baselines/APR-042-i2-implementation-authorization.md)
+uses existing Procurement, Inventory, Identity/envelope and Genealogy public ports.
+Composition injects Procurement immutable source reads into the Inventory intake
+owner and Inventory identity/typed-origin reads into authorized projections. No
+cross-module private import, stock writer or nested command is introduced.
+
+The [static boundary checker](../../tools/build/check-boundaries.mjs) restricts
+new receiving source SQL to its Procurement adapter and new origin SQL to its
+Inventory adapter; the only legacy receipt SQL exception is a SELECT-only code
+conflict check in the Procurement receiving adapter. Existing Ledger/Balance/Unit
+write ownership checks remain intact. Restricted source-claim trigger and read-only
+Inventory stock-link predicate follow the accepted I2 design in additive0018.
+
+Historical pre-implementation/OQ statements below are not the effective work gate;
+[CURRENT_PHASE](../00-governance/CURRENT_PHASE.md) and APR-042 control authority.
+This update grants no broader framework/module/dependency or later-slice authority.
 
 Allowed later import direction. This does not choose TypeScript path
 aliases, a bundler, or a package manager (OQ-018).

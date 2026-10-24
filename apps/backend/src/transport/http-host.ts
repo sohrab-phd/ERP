@@ -11,6 +11,7 @@ export interface HealthOptions {
   reservation?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
   sales?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
   receipt?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
+  receiving?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
   inbound?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
   purchase?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
   invoiceEvidence?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
@@ -32,6 +33,13 @@ export function createHttpHost(options: HealthOptions): Server {
           request.url?.startsWith('/purchasing/inbound-catalogues'))
       ) {
         void options.inbound(request, response).catch(() => {
+          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+          else response.destroy();
+        });
+        return;
+      }
+      if (options.receiving && request.url?.startsWith('/purchasing/receiving/')) {
+        void options.receiving(request, response).catch(() => {
           if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
           else response.destroy();
         });

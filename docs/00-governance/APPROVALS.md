@@ -3,15 +3,27 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.27.0
+version: 0.28.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
-last_reviewed: 2026-10-24
+depends_on: [APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-042 — Final I2 design and immediate bounded implementation authority
+
+[Actual final Owner instruction](approved-baselines/APR-042-i2-implementation-authorization.md)
+closes I2-CAP-01/02 explicitly, formally accepts the focused I2 design and separately
+authorizes immediate runtime/migration/test implementation. No renewed policy or
+readiness phase. The canonical gate/ignored local unlock follow this exact I2 scope;
+IPS remains sole writer, all chunks one transaction, no256arrival cap. The
+[implementation evidence](../12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
+and [original60-ID trace](../12-implementation-planning/I2_IMPLEMENTATION_TRACE.md)
+distinguish executed verification from planned tests. Twelve backend capabilities
+remain Owner accepted; I2 requires separate later acceptance. No push/UI/UAT/deployment.
 
 ## APR-041 — Focused I2 architecture acceptance; open capacity conditions
 

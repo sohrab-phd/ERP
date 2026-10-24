@@ -3,15 +3,33 @@ id: DOM-OWN-001
 title: Module Capability and Data-Ownership Matrix
 phase: 02-domain-business-architecture
 status: in_review
-version: 0.5.0
+version: 0.6.0
 owners: [chief-solution-architect, data-architect]
-depends_on: [APR-038, GOV-DATA-DICT-001, DOM-CAP-BC-001]
-last_reviewed: 2026-10-21
+depends_on: [APR-042, APR-038, GOV-DATA-DICT-001, DOM-CAP-BC-001]
+last_reviewed: 2026-10-25
 approval: APR-004 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
 
 # Module Capability and Data-Ownership Matrix
+
+## Implemented I2 receiving ownership — APR-042
+
+| Source / projection | Exclusive writer / published read boundary |
+| --- | --- |
+| inbound_arrival / inbound_waybill / inbound_warehouse_receipt / inbound_received_unit | Procurement; immutable receiving sources and scoped order/arrival projections |
+| inbound_physical_code_claim | Restricted Procurement-owned source trigger only; no runtime direct INSERT/UPDATE/DELETE, no stock write |
+| inbound_unit_origin | Inventory; verifies persisted Procurement sources through composition-injected owner port and publishes typed source/identity reads |
+| Inventory Unit / Ledger / Balance | Existing IPS owner ONLY; receiving never writes these tables, all <=128effect calls share original transaction |
+| Receiving progress / genealogy | Read projections of committed immutable sources and Ledger/origins; no editable second stock/progress ledger |
+
+[Actual implementation/evidence](../12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
+preserves immutable I1 originals, standalone intake/replay and all twelve accepted
+capabilities. Procurement code-conflict checking has a narrow SELECT-only legacy
+receipt read; Inventory source-to-stock predicate is published read-only integrity,
+not database business orchestration. No module imports another module's private
+store or stock internals. Current implementation authority is APR-042; historical
+pre-implementation restrictions below do not override it.
 
 ## Current bounded I1 ownership — APR-038
 

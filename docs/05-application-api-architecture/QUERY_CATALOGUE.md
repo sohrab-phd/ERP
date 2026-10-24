@@ -3,15 +3,31 @@ id: APP-QRY-001
 title: Application Query Catalogue
 phase: 05-application-api-architecture
 status: in_review
-version: 0.4.0
+version: 0.5.0
 owners: [solution-architect, api-architect]
-depends_on: [APR-038, APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
-last_reviewed: 2026-10-21
+depends_on: [APR-042, APR-038, APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
+last_reviewed: 2026-10-25
 approval: APR-007 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
 
 # Application Query Catalogue
+
+## Implemented I2 source-backed queries — APR-042
+
+| Query/version / POST route | Current organizational roles | Projection |
+| --- | --- | --- |
+| GetReceivingArrival v1 / purchasing/receiving/arrivals/query | ACT-WH | Complete relevant shared header and independent accepted-unit/document/source/Inventory links across bounded pages |
+| GetPurchaseOrderReceiving v1 / purchasing/receiving/orders/query | ACT-PROC or ACT-WH | orderId; LINES or RECEIVED_UNITS; original and actual fields, exact remaining/excess, all related receipt fields including driver, no sibling-order units |
+
+Optional afterId/limit, default50/max100; response<=256KiB. Mandatory full item
+retrievability is checked before source insertion; pages never truncate business
+fields. Repeatable snapshot is bracketed by fresh personal grant checks outside it.
+No SEC/customer/unrelated role grant, private bindings or sibling-cargo enumeration.
+Shared W2/W3 remain labelled consignment evidence, not PO/unit weight allocation.
+[Implemented contracts and test evidence](../12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
+apply; original I1/documentary purchase query projections stay unchanged.
+
 
 ## Implemented I1 original-source queries under APR-038
 

@@ -3,36 +3,32 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.16.0
+version: 0.17.0
 owners: [chief-solution-architect]
-depends_on: [APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
-last_reviewed: 2026-10-24
+depends_on: [APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
+last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
 
-Current [APR-041 bounded design acceptance](../00-governance/approved-baselines/APR-041-i2-focused-design-acceptance.md) records the Owner's
-focused review instruction against local b33c7b7. Selected I2 architecture is
-accepted within its mandatory boundaries; unconditional capacity sign-off is NOT
-recorded. Unsupported256-unit/document arrival caps are removed. Only OPEN
-I2-CAP-01 (new128scalar/512byte receiving text) and I2-CAP-02 (Jalali receiving
-coverage1206–1498) need narrow Owner acceptance/revision; I1 bounds do not transfer
-automatically. All ten SRC-007 business answers remain resolved.
+Current [APR-042](../00-governance/approved-baselines/APR-042-i2-implementation-authorization.md)
+explicitly accepts I2-CAP-01/02 and the complete focused design, and authorizes
+immediate bounded runtime/migration/test implementation. No new Owner decision
+round or general architecture study. All ten SRC-007 answers remain resolved;
+new receiving text128scalars/512bytes and arrival Jalali1206–1498 are accepted
+initial technical limits. No independent256-unit/document cap. Sole IPS<=128effects/
+invocation participates in one complete original receiving transaction.
 
-[Updated design/test package](I2_IMPLEMENTATION_DESIGN.md) retains multi-PO shared
-arrivals, manual unordered/excess acceptance, cross-path code uniqueness, per-unit
-W1 and shared W2/W3, full secure PROC reads and sole IPS. Prelock the whole actual
-set; <=128effect calls share ONE transaction, no arbitrary256cap and no split
-commits. Existing envelope/resource budgets still apply; future PostgreSQL tests
-must prove257+within-budget units and total late-chunk rollback.
-
-[Execution DRAFT](I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md) remains PROPOSED — NOT
-AUTHORIZED FOR EXECUTION. Separate implementation authority is required; no runtime,
-SQL/test code, gate/unlock change or push. Twelve accepted capabilities remain.
-R-MAT is conditional only for a specific real unsupported/ambiguous type, not a
-new global policy approval. Historical data consistency is future verification.
+[Implemented behavior and actual verification](I2_IMPLEMENTATION_STATUS.md) and
+[60-ID executable trace](I2_IMPLEMENTATION_TRACE.md) are the current evidence.
+I1/legacy/no-PO/manual receiving remain compatible except intentional new duplicate
+code admission protection. Twelve capabilities remain Owner accepted; I2 is not
+Owner backend accepted yet. No UI/UAT/deployment, corrections, next increment or push.
+Conditional R-MAT requires only a specific actually unsupported/ambiguous option;
+no unknown category is silently mapped to OTHER. Deployment historical checks do
+not authorize backfill or identity rewriting.
 
 ## Earlier scope/status — APR-040 design-only instruction (historical)
 

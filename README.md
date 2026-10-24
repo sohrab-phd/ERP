@@ -5,16 +5,13 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-Current scope (2026-10-24): [APR-041](docs/00-governance/approved-baselines/APR-041-i2-focused-design-acceptance.md)
-records bounded Owner I2 architecture acceptance and OPEN I2-CAP-01/02 (new receiving
-text/calendar coverage). Unsupported256-unit/document caps are removed; IPS chunks
-remain one atomic arrival. [Design](docs/12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md)
-and [implementation DRAFT](docs/12-implementation-planning/I2_IMPLEMENTATION_AUTHORIZATION_DRAFT.md)
-confer no execution authority. No code, migration, tests, gate/unlock edit or push.
-**Twelve backend capabilities remain accepted.** I2 is not implemented/accepted;
-no UI, factory UAT or deployment acceptance. Unconditional capacity sign-off and
-separate bounded implementation authority are still required. Earlier descriptions
-below are historical; [CURRENT_PHASE.md](docs/00-governance/CURRENT_PHASE.md) controls scope.
+Current scope (2026-10-25): [APR-042](docs/00-governance/approved-baselines/APR-042-i2-implementation-authorization.md)
+closes CAP-01/02, accepts the I2 design and explicitly authorizes bounded I2
+implementation and real tests. See [implemented I2 behavior and verification](docs/12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
+and [original60-ID trace](docs/12-implementation-planning/I2_IMPLEMENTATION_TRACE.md).
+**Twelve backend capabilities remain Owner accepted**; I2 requires separate Owner
+backend acceptance. No push, browser UI, factory UAT or deployment. Earlier text
+below is historical; [CURRENT_PHASE](docs/00-governance/CURRENT_PHASE.md) controls scope.
 
 ## Earlier delivered foundation and backend capabilities
 

@@ -39,6 +39,8 @@ for (const file of files) {
           'receipt-store.ts',
           'purchase-store.ts',
           'inbound-store.ts',
+          'receiving-store.ts',
+          'inventory-receiving-store.ts',
           'invoice-evidence-store.ts',
           'sales-store.ts',
           'inventory-reservation-store.ts',
@@ -138,9 +140,30 @@ for (const file of files) {
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
       /\bprocurement\.goods_receipt\b/i.test(node.text) &&
       file.startsWith(resolve('apps/backend/src') + sep) &&
-      file !== resolve('apps/backend/src/infrastructure/postgresql/receipt-store.ts')
+      file !== resolve('apps/backend/src/infrastructure/postgresql/receipt-store.ts') &&
+      !(
+        file === resolve('apps/backend/src/infrastructure/postgresql/receiving-store.ts') &&
+        /\bSELECT\b/i.test(node.text) &&
+        !/\b(INSERT|UPDATE|DELETE|TRUNCATE|ALTER|DROP|CREATE|GRANT|REVOKE)\b/i.test(node.text)
+      )
     )
       issues.push(relative(root, file) + ': receipt SQL outside persistence owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\bprocurement\.inbound_(arrival|waybill|warehouse_receipt|received_unit|physical_code_claim)\b/i.test(
+        node.text,
+      ) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/receiving-store.ts')
+    )
+      issues.push(relative(root, file) + ': receiving source SQL outside Procurement owner');
+    if (
+      (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
+      /\binventory\.inbound_unit_origin\b/i.test(node.text) &&
+      file.startsWith(resolve('apps/backend/src') + sep) &&
+      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-receiving-store.ts')
+    )
+      issues.push(relative(root, file) + ': receiving origin SQL outside Inventory owner');
     if (
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
       /\bsales\.(customer|sales_order|fulfillment_assessment|make_reference)\b/i.test(node.text) &&

@@ -3,22 +3,22 @@ id: PLAN-I2-AUTH-DRAFT-001
 title: Bounded I2 backend implementation authorization draft
 phase: 12-implementation-planning
 status: proposed
-version: 0.2.0
+version: 0.3.0
 owners: [project-sponsor, delivery-lead]
-depends_on: [APR-041, APR-040, APR-039, SRC-007, PLAN-I2-DESIGN-001, PLAN-DEV-WORKFLOW-001]
-last_reviewed: 2026-10-24
+depends_on: [APR-042, APR-041, APR-040, APR-039, SRC-007, PLAN-I2-DESIGN-001, PLAN-DEV-WORKFLOW-001]
+last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # PROPOSED — NOT AUTHORIZED FOR EXECUTION
 
-This is a draft for a FUTURE separate explicit Owner implementation instruction.
-[APR-041](../00-governance/approved-baselines/APR-041-i2-focused-design-acceptance.md)
-records bounded architecture acceptance and OPEN I2-CAP-01/02; it does not approve
-all capacities or unlock execution. [Focused design](I2_IMPLEMENTATION_DESIGN.md)
-removes the unsupported256-unit/document cap. No checkboxes, API, permission or
-product gate/unlock are activated by this document.
+Historical handoff draft: actual [APR-042](../00-governance/approved-baselines/APR-042-i2-implementation-authorization.md)
+now accepts both capacity conditions and the focused design and separately authorizes
+implementation. This draft itself remains PROPOSED — NOT AUTHORIZED FOR EXECUTION;
+it is not the gate authority. Earlier preconditions below describe preparation
+before the actual Owner instruction and do not reopen settled decisions. See
+[actual delivery/status](I2_IMPLEMENTATION_STATUS.md) and [trace](I2_IMPLEMENTATION_TRACE.md).
 
 ## Proposed future bounded authority
 
@@ -58,7 +58,7 @@ accepted capabilities and original I1 facts.
   implementation/requirement evidence. No new framework/dependency without a
   demonstrated separately reviewed need.
 
-## Preconditions of a real authorization
+## Historical preconditions — satisfied by actual APR-042 authority
 
 1. Record explicit acceptance/revision of ONLY the two open I2 admission proposals:
    I2-CAP-01 (new128scalar/512byte receiving text) and I2-CAP-02 (receiving Jalali

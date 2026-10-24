@@ -3,15 +3,26 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.23.0
+version: 0.24.0
 owners: [chief-solution-architect]
-depends_on: [APR-041, APR-040, APR-039, APR-038, APR-037]
-last_reviewed: 2026-10-24
+depends_on: [APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
+last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## Current I2 implementation authority and delivery evidence (2026-10-25)
+
+- [APR-042 final design/capacity acceptance and immediate implementation authority](00-governance/approved-baselines/APR-042-i2-implementation-authorization.md)
+- [Implemented I2 behavior, actual checks and reviews](12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
+- [Original60requirements and22I2families to executable code/test trace](12-implementation-planning/I2_IMPLEMENTATION_TRACE.md)
+- [Owner-accepted focused design](12-implementation-planning/I2_IMPLEMENTATION_DESIGN.md)
+
+CAP-01/02 are closed. Twelve capabilities remain Owner accepted; I2 delivery
+requires separate Owner backend acceptance. No push, UI, factory UAT or deployment.
+Earlier conditional/proposed statuses below are historical preparation only.
 
 ## Current I2 focused acceptance and narrow open limits (2026-10-24)
 

@@ -62,6 +62,14 @@ import { createInboundHandler } from './transport/inbound-http.js';
 import { InvoiceEvidenceService, type InvoiceEvidenceContext } from './modules/finance/index.js';
 import { PostgresInvoiceEvidenceStore } from './infrastructure/postgresql/invoice-evidence-store.js';
 import { createInvoiceEvidenceHandler } from './transport/invoice-evidence-http.js';
+import { ReceivingService, type ReceivingQueryName } from './modules/procurement/index.js';
+import {
+  InventoryInboundReceivingService,
+  resolveInboundMaterialType,
+} from './modules/inventory/index.js';
+import { PostgresReceivingStore } from './infrastructure/postgresql/receiving-store.js';
+import { PostgresInventoryInboundReceivingStore } from './infrastructure/postgresql/inventory-receiving-store.js';
+import { createReceivingHandler } from './transport/receiving-http.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -241,7 +249,7 @@ export function compose(config: Readonly<Config>) {
                     : ctx.actor.actorRole === 'ACT-WH' && org(ctx.actor)) &&
                   identity.isCurrent(ctx.actor, ctx.transaction),
               )
-            : ctx.request.command === 'PostGoodsReceipt'
+            : ['PostGoodsReceipt', 'ConfirmPurchaseReceiving'].includes(ctx.request.command)
               ? canPost(ctx)
               : ['GetInventoryUnit', 'GetLot'].includes(ctx.request.command)
                 ? canRead(ctx)
@@ -253,6 +261,8 @@ export function compose(config: Readonly<Config>) {
         return inventoryShipping.validateEffect(ctx, effect, unit);
       if (ctx.request.command === 'ActivateReservation')
         return reservations.validateEffect(ctx, effect, unit);
+      if (ctx.request.command === 'ConfirmPurchaseReceiving')
+        return receivingInventory.validateEffect(ctx, effect, unit);
       const input = parseReceiptInput(ctx.request.payload);
       return Promise.resolve(
         ctx.request.command === 'PostGoodsReceipt' &&
@@ -277,6 +287,31 @@ export function compose(config: Readonly<Config>) {
         ? canRead(ctx)
         : Promise.resolve(false),
   });
+  const receivingReadAdmissions = new WeakMap<TransactionContext, ExecutionContext>();
+  const receivingStore = new PostgresReceivingStore();
+  const receivingOriginStore = new PostgresInventoryInboundReceivingStore();
+  const receivingInventory: InventoryInboundReceivingService = new InventoryInboundReceivingService(
+    receivingOriginStore,
+    inventoryStore,
+    inventory,
+    { source: (ctx, id) => receiving.source(ctx, id) },
+    { canReceive: (ctx, id, sources) => receiving.admitted(ctx, id, sources) },
+  );
+  const receiving: ReceivingService = new ReceivingService(
+    receivingStore,
+    new PostgresInboundStore(),
+    {
+      receiveMany: (ctx, id, sources) => receivingInventory.receiveMany(ctx, id, sources),
+      identities: (ctx, ids) => receivingOriginStore.identities(ctx, ids),
+    },
+    {
+      current: async (ctx) =>
+        ctx.request.command === 'ConfirmPurchaseReceiving'
+          ? inboundCurrent(ctx)
+          : receivingReadAdmissions.get(ctx.transaction) === ctx.actor,
+      materialType: resolveInboundMaterialType,
+    },
+  );
   const receiptInventory = new InventoryReceiptService(
     new PostgresInventoryReceiptStore(),
     inventory,
@@ -560,6 +595,7 @@ export function compose(config: Readonly<Config>) {
   const ports: ExecutionPorts = {
     registry: new CommandRegistry([
       receipts.contract(),
+      receiving.contract(),
       ...purchases.contracts(),
       ...inbound.contracts(),
       ...invoiceEvidence.contracts(),
@@ -572,6 +608,25 @@ export function compose(config: Readonly<Config>) {
     outcomes: new PostgresOutcomes(),
     audits: new PostgresAudit(),
     authorization: new IdentityAuthorization(identity, [
+      {
+        command: 'ConfirmPurchaseReceiving',
+        version: 1,
+        roles: ['ACT-WH'],
+        canTarget: (actor, request) =>
+          Promise.resolve(
+            org(actor) &&
+              actor.installationId === config.installationId &&
+              actor.authorityScopeId === config.installationId &&
+              request.target.kind === 'inbound-arrival' &&
+              validUuid(request.target.id),
+          ),
+        canDisclose: (actor) =>
+          Promise.resolve(
+            org(actor) &&
+              actor.installationId === config.installationId &&
+              actor.authorityScopeId === config.installationId,
+          ),
+      },
       ...purchasePolicies,
       ...inboundPolicies,
       ...invoiceEvidencePolicies,
@@ -631,6 +686,60 @@ export function compose(config: Readonly<Config>) {
     } finally {
       await tx.release();
     }
+  };
+  const receivingQuery = async (
+    kind: ReceivingQueryName,
+    input: Record<string, unknown>,
+    actor: ExecutionContext,
+  ) => {
+    const readCurrent = () =>
+      org(actor) &&
+      ['ACT-WH', 'ACT-PROC'].includes(actor.actorRole) &&
+      actor.installationId === config.installationId &&
+      actor.authorityScopeId === config.installationId &&
+      identity.isCurrent(actor);
+    if (!(await readCurrent()))
+      throw new BusinessRejection({
+        family: 'GUARD_ACTOR',
+        message: 'Receiving read access denied',
+      });
+    const tx = await transactions.begin('read-snapshot');
+    let data;
+    receivingReadAdmissions.set(tx.context, actor);
+    try {
+      data = await Promise.race([
+        receiving.query(
+          {
+            actor,
+            transaction: tx.context,
+            request: {
+              command: kind,
+              contract_version: 1,
+              idempotency_key: randomUUID(),
+              target: { kind: 'query', id: randomUUID() },
+              payload: {},
+              preconditions: {},
+            },
+          },
+          kind,
+          input,
+        ),
+        tx.aborted,
+      ]);
+      await tx.commit();
+    } catch (e) {
+      await tx.rollback();
+      throw e;
+    } finally {
+      receivingReadAdmissions.delete(tx.context);
+      await tx.release();
+    }
+    if (!(await readCurrent()))
+      throw new BusinessRejection({
+        family: 'GUARD_ACTOR',
+        message: 'Receiving read access denied',
+      });
+    return data;
   };
   const invoiceEvidenceQuery = async (id: string, actor: ExecutionContext) => {
     const tx = await transactions.begin();
@@ -883,7 +992,12 @@ export function compose(config: Readonly<Config>) {
   const genealogy = new GenealogyProjection({
     inventory: {
       unit: (ctx, id) => inventoryStore.traceUnit(ctx, id),
-      origins: (ctx, kind, id) => new PostgresInventoryReceiptStore().traceSources(ctx, kind, id),
+      origins: async (ctx, kind, id) => [
+        ...(kind === 'RECEIVING_UNIT'
+          ? []
+          : await new PostgresInventoryReceiptStore().traceSources(ctx, kind, id)),
+        ...(kind === 'RECEIPT' ? [] : await receivingOriginStore.traceSources(ctx, kind, id)),
+      ],
     },
     production: { facts: (ctx, kind, id) => productionStore.traceSources(ctx, kind, id) },
     shipping: { sources: (ctx, kind, id) => shippingStore.traceSources(ctx, kind, id) },
@@ -937,6 +1051,7 @@ export function compose(config: Readonly<Config>) {
     genealogy: createGenealogyHandler({ identity, query: genealogyQuery }),
     receipt: createReceiptHandler({ identity, command, query }),
     purchase: createPurchaseHandler({ identity, command, query: purchaseQuery }),
+    receiving: createReceivingHandler({ identity, command, query: receivingQuery }),
     inbound: createInboundHandler({ identity, command, query: inboundQuery }),
     invoiceEvidence: createInvoiceEvidenceHandler({
       identity,
@@ -959,6 +1074,8 @@ export function compose(config: Readonly<Config>) {
     purchases,
     inbound,
     inboundQuery,
+    receiving,
+    receivingQuery,
     invoiceEvidence,
     invoiceEvidenceQuery,
     purchaseQuery,

@@ -5,3 +5,4 @@ export * from './receipt.js';
 export * from './reservation.js';
 export * from './shipping.js';
 export * from './production.js';
+export * from './inbound-receiving.js';

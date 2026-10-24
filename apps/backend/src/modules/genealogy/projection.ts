@@ -10,7 +10,8 @@ import type {
   GenealogyProductionFact,
   GenealogyProductionReference,
   GenealogyQuery,
-  GenealogyReceiptOrigin,
+  GenealogyInboundOrigin,
+  GenealogyIntakeOrigin,
   GenealogyReference,
   GenealogyShippingEntry,
   GenealogyShippingReference,
@@ -199,9 +200,15 @@ function shippingMatches(
     )
   );
 }
-function validateOrigin(value: GenealogyReceiptOrigin): void {
+function isInbound(value: GenealogyIntakeOrigin): value is GenealogyInboundOrigin {
+  return 'originKind' in value && value.originKind === 'WH_ACCEPTED_RECEIVING_UNIT';
+}
+function originId(value: GenealogyIntakeOrigin): string {
+  return isInbound(value) ? value.receivedUnitId : value.receiptId;
+}
+function validateOrigin(value: GenealogyIntakeOrigin): void {
   for (const id of [
-    value.receiptId,
+    originId(value),
     value.lotId,
     value.unitId,
     value.materialId,
@@ -209,17 +216,30 @@ function validateOrigin(value: GenealogyReceiptOrigin): void {
     value.locationId,
   ])
     identity(id);
-  kg(value.measuredKg);
-  text(value.internalCode);
-  if (value.productCode !== undefined) text(value.productCode);
+  if (isInbound(value)) {
+    kg(value.acceptedUnitWeightKg);
+    if (
+      typeof value.internalCode !== 'string' ||
+      !value.internalCode.trim() ||
+      !validUnicode(value.internalCode) ||
+      /[\u0000-\u001f\u007f-\u009f]/u.test(value.internalCode) ||
+      [...value.internalCode].length > 128 ||
+      Buffer.byteLength(value.internalCode, 'utf8') > 512
+    )
+      reject('Invalid genealogy receiving source text');
+  } else {
+    kg(value.measuredKg);
+    text(value.internalCode);
+    if (value.productCode !== undefined) text(value.productCode);
+    if (
+      typeof value.count !== 'string' ||
+      value.count.length > 20 ||
+      /^(?:0|[1-9][0-9]*)$/u.exec(value.count)?.[0] !== value.count
+    )
+      reject('Invalid genealogy intake count');
+  }
   if (!['COIL', 'SHEET', 'ANGLE', 'BEAM', 'OTHER'].includes(value.type))
     reject('Invalid genealogy intake type');
-  if (
-    typeof value.count !== 'string' ||
-    value.count.length > 20 ||
-    /^(?:0|[1-9][0-9]*)$/u.exec(value.count)?.[0] !== value.count
-  )
-    reject('Invalid genealogy intake count');
 }
 
 /** A bounded reconstruction from immutable material links; association references never propagate. */
@@ -306,44 +326,61 @@ export class GenealogyProjection {
         sources = await shipments('UNIT', id);
       return facts.length > 0 || shippingMatches(sources, 'UNIT', id);
     };
-    const origins = async (ref: 'UNIT' | 'LOT' | 'RECEIPT', id: string) => {
+    const origins = async (ref: 'UNIT' | 'LOT' | 'RECEIPT' | 'RECEIVING_UNIT', id: string) => {
       const rows = await call(() => this.ports.inventory.origins(context, ref, id));
       bounded(rows.length <= limits.rows);
       rows.forEach(validateOrigin);
       return rows.filter((o) =>
-        ref === 'UNIT' ? o.unitId === id : ref === 'LOT' ? o.lotId === id : o.receiptId === id,
+        ref === 'UNIT'
+          ? o.unitId === id
+          : ref === 'LOT'
+            ? o.lotId === id
+            : ref === 'RECEIVING_UNIT'
+              ? isInbound(o) && o.receivedUnitId === id
+              : !isInbound(o) && o.receiptId === id,
       );
     };
-    const originEdges = (o: GenealogyReceiptOrigin, ref: GenealogyReference, depth: number) => {
-      const intake = {
-        internalCode: o.internalCode,
-        type: o.type,
-        count: o.count,
-        measuredKg: o.measuredKg,
-        ...(o.productCode === undefined ? {} : { productCode: o.productCode }),
-      };
+    const originEdges = (o: GenealogyIntakeOrigin, ref: GenealogyReference, depth: number) => {
+      const inbound = isInbound(o);
+      const intake: NonNullable<GenealogyNode['intake']> = inbound
+        ? {
+            originKind: 'WH_ACCEPTED_RECEIVING_UNIT',
+            internalCode: o.internalCode,
+            type: o.type,
+            acceptedUnitWeightKg: o.acceptedUnitWeightKg,
+            weightBasis: 'WH_ACCEPTED_DECLARED_UNIT_WEIGHT',
+          }
+        : {
+            internalCode: o.internalCode,
+            type: o.type,
+            count: o.count,
+            measuredKg: o.measuredKg,
+            ...(o.productCode === undefined ? {} : { productCode: o.productCode }),
+          };
+      const sourceKind = inbound ? 'RECEIVING_UNIT' : 'RECEIPT';
+      const id = originId(o);
       for (const [from, to] of [
-        [key('RECEIPT', o.receiptId), key('LOT', o.lotId)],
+        [key(sourceKind, id), key('LOT', o.lotId)],
         [key('LOT', o.lotId), key('UNIT', o.unitId)],
       ])
         publish(
           {
-            key: `ORIGIN:${o.receiptId}:${from}:${to}`,
+            key: `ORIGIN:${id}:${from}:${to}`,
             from: from!,
             to: to!,
             kind: 'ORIGIN',
-            kg: o.measuredKg,
-            kgMeaning: 'RECEIPT_TOTAL',
+            kg: inbound ? o.acceptedUnitWeightKg : o.measuredKg,
+            kgMeaning: inbound ? 'ACCEPTED_UNIT_WEIGHT' : 'RECEIPT_TOTAL',
           },
           ref,
           depth,
         );
-      for (const [kind, id] of [
-        ['RECEIPT', o.receiptId],
+      for (const [kind, nodeId] of [
+        [sourceKind, id],
         ['LOT', o.lotId],
         ['UNIT', o.unitId],
       ] as const)
-        if (nodes.has(key(kind, id))) node(kind, id, { intake });
+        if (nodes.has(key(kind, nodeId))) node(kind, nodeId, { intake });
     };
     const productionEdges = (m: Material, ref: GenealogyReference, depth: number) => {
       const f = m.fact;
@@ -439,8 +476,8 @@ export class GenealogyProjection {
     };
     let known = false;
     if (root.kind === 'UNIT') known = await related(root.id);
-    else if (root.kind === 'LOT' || root.kind === 'RECEIPT') {
-      const selected: GenealogyReceiptOrigin[] = [];
+    else if (root.kind === 'LOT' || root.kind === 'RECEIPT' || root.kind === 'RECEIVING_UNIT') {
+      const selected: GenealogyIntakeOrigin[] = [];
       for (const o of await origins(root.kind, root.id))
         if (await related(o.unitId)) selected.push(o);
       known = selected.length > 0;
@@ -487,7 +524,7 @@ export class GenealogyProjection {
         for (const f of await production('UNIT', ref.id)) productionEdges(f, ref, depth);
         shippingEdges(await shipments('UNIT', ref.id), ref, depth);
         for (const o of await origins('UNIT', ref.id)) originEdges(o, ref, depth);
-      } else if (ref.kind === 'LOT' || ref.kind === 'RECEIPT') {
+      } else if (ref.kind === 'LOT' || ref.kind === 'RECEIPT' || ref.kind === 'RECEIVING_UNIT') {
         for (const o of await origins(ref.kind, ref.id))
           if (await related(o.unitId)) originEdges(o, ref, depth);
       } else if (ref.kind === 'PACKAGE' || ref.kind === 'SHIPMENT')

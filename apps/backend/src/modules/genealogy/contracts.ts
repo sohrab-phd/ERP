@@ -11,6 +11,7 @@ export const genealogyRootKinds = [
   'ORDER',
   'BATCH',
   'SALES_ORDER',
+  'RECEIVING_UNIT',
 ] as const;
 export type GenealogyRootKind = (typeof genealogyRootKinds)[number];
 export interface GenealogyReference {
@@ -43,6 +44,20 @@ export interface GenealogyReceiptOrigin {
   readonly locationId: string;
   readonly productCode?: string;
 }
+/** No arrival/PO/driver links: a shared consignment never becomes ancestry. */
+export interface GenealogyInboundOrigin {
+  readonly originKind: 'WH_ACCEPTED_RECEIVING_UNIT';
+  readonly receivedUnitId: string;
+  readonly lotId: string;
+  readonly unitId: string;
+  readonly materialId: string;
+  readonly effectId: string;
+  readonly internalCode: string;
+  readonly acceptedUnitWeightKg: string;
+  readonly type: string;
+  readonly locationId: string;
+}
+export type GenealogyIntakeOrigin = GenealogyReceiptOrigin | GenealogyInboundOrigin;
 export interface GenealogyProductionFact {
   readonly id: string;
   readonly kind:
@@ -93,9 +108,9 @@ export interface GenealogySourcePorts {
     unit(context: GenealogyContext, id: string): Promise<GenealogyUnit | undefined>;
     origins(
       context: GenealogyContext,
-      reference: 'UNIT' | 'LOT' | 'RECEIPT',
+      reference: 'UNIT' | 'LOT' | 'RECEIPT' | 'RECEIVING_UNIT',
       id: string,
-    ): Promise<readonly GenealogyReceiptOrigin[]>;
+    ): Promise<readonly GenealogyIntakeOrigin[]>;
   };
   readonly production: {
     facts(
@@ -131,13 +146,24 @@ export interface GenealogyNode {
   readonly state?: string;
   readonly materialKind?: string;
   readonly lotId?: string;
-  readonly intake?: {
-    readonly internalCode: string;
-    readonly type: string;
-    readonly count: string;
-    readonly measuredKg: string;
-    readonly productCode?: string;
-  };
+  readonly intake?:
+    | {
+        readonly internalCode: string;
+        readonly type: string;
+        readonly count: string;
+        readonly measuredKg: string;
+        readonly productCode?: string;
+      }
+    | {
+        readonly originKind: 'WH_ACCEPTED_RECEIVING_UNIT';
+        readonly internalCode: string;
+        readonly type: string;
+        readonly acceptedUnitWeightKg: string;
+        readonly weightBasis: 'WH_ACCEPTED_DECLARED_UNIT_WEIGHT';
+        readonly count?: never;
+        readonly measuredKg?: never;
+        readonly productCode?: never;
+      };
   readonly dispatchedAt?: string;
   readonly events: readonly GenealogyEvent[];
   /** Association seeds are references, never inferred material ancestry. */
@@ -151,7 +177,12 @@ export interface GenealogyEdge extends GenealogyAssociations {
   readonly kg: string;
   /** Output kg is the complete result, not the contribution of each parent. */
   readonly kgMeaning:
-    'RECEIPT_TOTAL' | 'RESULT_TOTAL' | 'SCRAP_TOTAL' | 'PACKAGE_CONTENT' | 'DISPATCH_CONTENT';
+    | 'RECEIPT_TOTAL'
+    | 'ACCEPTED_UNIT_WEIGHT'
+    | 'RESULT_TOTAL'
+    | 'SCRAP_TOTAL'
+    | 'PACKAGE_CONTENT'
+    | 'DISPATCH_CONTENT';
   readonly reservationId?: string;
   readonly itemId?: string;
   readonly unitId?: string;

@@ -125,13 +125,20 @@ export async function withDatabase<T>(body: (fixture: DatabaseFixture) => Promis
     );
     await owner.query(`GRANT USAGE ON SCHEMA procurement TO ${quotedRole}`);
     await owner.query(
+      `GRANT SELECT,INSERT ON procurement.inbound_arrival,procurement.inbound_waybill,procurement.inbound_warehouse_receipt,procurement.inbound_received_unit,inventory.inbound_unit_origin TO ${quotedRole}`,
+    );
+    await owner.query(`GRANT SELECT ON procurement.inbound_physical_code_claim TO ${quotedRole}`);
+    await owner.query(
+      `GRANT EXECUTE ON FUNCTION procurement.i2_immutable(),procurement.i2_legacy_identity_guard(),procurement.i2_arrival_complete(),procurement.i2_claim_complete(),inventory.i2_legacy_code_exact(),inventory.i2_origin_complete(),inventory.i2_receiving_stock_matches(uuid,uuid,uuid) TO ${quotedRole}`,
+    );
+    await owner.query(
       `GRANT SELECT,INSERT ON procurement.inbound_catalogue_option,procurement.operational_purchase_order,procurement.operational_purchase_order_line TO ${quotedRole}`,
     );
     await owner.query(
       `GRANT EXECUTE ON FUNCTION procurement.po_reference_key_r1_v1(text),procurement.i1_order_complete() TO ${quotedRole}`,
     );
     await owner.query(
-      'TRUNCATE procurement.operational_purchase_order_line,procurement.operational_purchase_order,procurement.inbound_catalogue_option',
+      'TRUNCATE inventory.inbound_unit_origin,procurement.inbound_physical_code_claim,procurement.inbound_received_unit,procurement.inbound_waybill,procurement.inbound_warehouse_receipt,procurement.inbound_arrival,procurement.operational_purchase_order_line,procurement.operational_purchase_order,procurement.inbound_catalogue_option',
     );
 
     await owner.query(
@@ -148,7 +155,7 @@ export async function withDatabase<T>(body: (fixture: DatabaseFixture) => Promis
       'TRUNCATE finance.invoice_evidence,sales.make_reference,sales.sales_order,sales.fulfillment_assessment,sales.customer',
     );
     await owner.query(
-      'TRUNCATE inventory.production_origin,inventory.production_issue,production.source_fact,inventory.reservation_request,inventory.material_lot,procurement.goods_receipt,inventory.ledger,inventory.balance,inventory.reservation,inventory.unit',
+      'TRUNCATE inventory.inbound_unit_origin,procurement.inbound_physical_code_claim,procurement.inbound_received_unit,procurement.inbound_waybill,procurement.inbound_warehouse_receipt,procurement.inbound_arrival,inventory.production_origin,inventory.production_issue,production.source_fact,inventory.reservation_request,inventory.material_lot,procurement.goods_receipt,inventory.ledger,inventory.balance,inventory.reservation,inventory.unit',
     );
     await owner.query(
       'TRUNCATE identity.security_event,identity.session,identity.role_grant,identity.account',

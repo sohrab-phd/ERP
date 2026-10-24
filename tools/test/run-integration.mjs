@@ -18,6 +18,8 @@ const files = [
   'inbound-http',
   'inbound-recovery',
   'inbound-additional',
+  'receiving',
+  'receiving-integrity',
   'purchase-http',
   'invoice-evidence',
   'invoice-evidence-http',

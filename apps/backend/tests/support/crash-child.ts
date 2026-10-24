@@ -8,7 +8,8 @@ import type { DatabaseFixture } from './database-fixture.js';
 import type { CommandRequest, TransactionPort } from '@navard/shared-kernel';
 
 /** Local disposable-test proxy: forwards traffic but drops a confirmed COMMIT reply. */
-export async function lostCommitProxy(targetUrl: string) {
+export async function lostCommitProxy(targetUrl: string, options: { armed?: boolean } = {}) {
+  let armed = options.armed ?? true;
   const target = new URL(targetUrl);
   if (target.hostname !== '127.0.0.1' && target.hostname !== 'localhost')
     throw new Error('Proxy requires local test server');
@@ -44,6 +45,7 @@ export async function lostCommitProxy(targetUrl: string) {
         const size = incoming.readInt32BE(1) + 1;
         if (incoming.length < size) break;
         if (
+          armed &&
           incoming[0] === 81 &&
           incoming
             .subarray(5, size - 1)
@@ -86,6 +88,9 @@ export async function lostCommitProxy(targetUrl: string) {
   return {
     url: url.toString(),
     commitConfirmed: () => confirmed,
+    arm: () => {
+      armed = true;
+    },
     close: () =>
       new Promise<void>((resolve, reject) => {
         for (const socket of sockets) socket.destroy();

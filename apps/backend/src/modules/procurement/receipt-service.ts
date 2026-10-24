@@ -108,6 +108,15 @@ export class ReceiptService {
         inputNames.map((name) => [name, { type: 'scalar' as const }]),
       ),
       preconditionsShape: {},
+      constraintRejections: {
+        i2_code_claim_pk: async (request, actor, transaction) => {
+          await this.requirePosting(snapshot({ request, actor, transaction }));
+          return {
+            family: 'GUARD_CONFLICT',
+            message: 'Physical unit system code already recorded',
+          };
+        },
+      },
       execute: (request, actor, transaction) => this.post(request, actor, transaction),
     };
   }
