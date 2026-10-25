@@ -3,9 +3,9 @@ id: PLAN-INBOUND-DECISIONS-001
 title: Purchase and receiving Step 2 policy and design register
 phase: 12-implementation-planning
 status: in_review
-version: 0.11.0
+version: 0.12.0
 owners: [business-process-owner, chief-solution-architect, security-architect]
-depends_on: [APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
+depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, APR-032, APR-033, APR-034, SRC-004, SRC-005, DOM-INBOUND-POLICY-001, DOM-INBOUND-RECON-001, PLAN-INBOUND-GAP-001, PLAN-I1-DECISIONS-001]
 last_reviewed: 2026-10-25
 approval: null
 supersedes: null
@@ -13,24 +13,25 @@ supersedes: null
 
 # Policy and design register — resolved business portions and OPEN residuals
 
-Current [APR-042](../00-governance/approved-baselines/APR-042-i2-implementation-authorization.md)
-explicitly accepts I2-CAP-01/02 and the complete focused design, and authorizes
-immediate bounded runtime/migration/test implementation. No new Owner decision
-round or general architecture study. All ten SRC-007 answers remain resolved;
-new receiving text128scalars/512bytes and arrival Jalali1206–1498 are accepted
-initial technical limits. No independent256-unit/document cap. Sole IPS<=128effects/
-invocation participates in one complete original receiving transaction.
+Current [APR-043](../00-governance/approved-baselines/APR-043-i2-backend-acceptance.md)
+formally accepts I2 implementation b585fd795fb0276bc936af254c6d56fd7e3bcbe8 after
+focused evidence verification. I1/I2 are accepted; thirteen backend capabilities
+remain accepted. [Delivered behavior/results](I2_IMPLEMENTATION_STATUS.md) and
+[60-ID executable trace](I2_IMPLEMENTATION_TRACE.md) distinguish retained I1,
+implemented I2, executed cross-stage evidence and governed exclusions.
 
-[Implemented behavior and actual verification](I2_IMPLEMENTATION_STATUS.md) and
-[60-ID executable trace](I2_IMPLEMENTATION_TRACE.md) are the current evidence.
-I1/legacy/no-PO/manual receiving remain compatible except intentional new duplicate
-code admission protection. Twelve capabilities remain Owner accepted; I2 is not
-Owner backend accepted yet. No UI/UAT/deployment, corrections, next increment or push.
-Conditional R-MAT requires only a specific actually unsupported/ambiguous option;
-no unknown category is silently mapped to OTHER. Deployment historical checks do
-not authorize backfill or identity rewriting.
+All ten SRC-007 business answers and APR-042 capacity/transaction conditions remain
+unchanged. I1/legacy receiving compatibility includes the intentional new duplicate
+code guard; unknown technical material types are rejected, never mapped to OTHER.
+Rollout historical/catalogue checks do not authorize backfill or data rewriting.
 
-## Current business disposition — SRC-007; implementation still unauthorized
+Only acceptance documentation is authorized now. The next appropriate activity is
+one consolidated end-to-end purchase-to-receiving backend requirements audit using
+accepted I1/I2 and executed evidence; identify it only, do not execute it here.
+No new design/gap-analysis cycle, runtime increment, gate/unlock, push, UI/UAT,
+production deployment, corrections, Finance, QC or device integration authority.
+
+## SRC-007 business disposition — retained decisions; original design-stage notes
 
 | Decision | Owner-resolved portion | Remaining design/input boundary |
 | --- | --- | --- |

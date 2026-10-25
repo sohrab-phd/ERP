@@ -5,12 +5,14 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-Current scope (2026-10-25): [APR-042](docs/00-governance/approved-baselines/APR-042-i2-implementation-authorization.md)
-closes CAP-01/02, accepts the I2 design and explicitly authorizes bounded I2
-implementation and real tests. See [implemented I2 behavior and verification](docs/12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
+Current scope (2026-10-25): [APR-043](docs/00-governance/approved-baselines/APR-043-i2-backend-acceptance.md)
+records formal Owner acceptance of I2 implementation b585fd795fb0276bc936af254c6d56fd7e3bcbe8
+after focused evidence verification. See [accepted I2 behavior and verification](docs/12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
 and [original60-ID trace](docs/12-implementation-planning/I2_IMPLEMENTATION_TRACE.md).
-**Twelve backend capabilities remain Owner accepted**; I2 requires separate Owner
-backend acceptance. No push, browser UI, factory UAT or deployment. Earlier text
+**Thirteen backend capabilities are Owner accepted.** Current task is acceptance
+documentation only. Next activity is one consolidated purchase-to-receiving backend
+requirements audit, identified but not executed or authorized here. No new runtime,
+gate/unlock change, push, browser UI, factory UAT or deployment. Earlier text
 below is historical; [CURRENT_PHASE](docs/00-governance/CURRENT_PHASE.md) controls scope.
 
 ## Earlier delivered foundation and backend capabilities

@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.61.0
+version: 0.62.0
 owners: [chief-solution-architect]
-depends_on: [APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-25
 approval: null
 supersedes: null
@@ -13,13 +13,21 @@ supersedes: null
 
 # Current Phase Authorization
 
-Current Owner authority [APR-042](approved-baselines/APR-042-i2-implementation-authorization.md)
-accepts I2-CAP-01/02, fully accepts the focused I2 design and explicitly authorizes
-immediate bounded implementation, additive migration and real tests/reviews.
-No additional design/readiness round. IPS remains sole stock writer, all chunks
-one transaction; no256arrival cap. Preserve all twelve accepted capabilities.
-I2 is not yet Owner backend accepted. Gate/local unlock reference this actual
-instruction only. No push, UI/UAT/deployment, corrections or unrelated increment.
+Current Owner instruction [APR-043](approved-baselines/APR-043-i2-backend-acceptance.md)
+formally accepts I2 implementation b585fd795fb0276bc936af254c6d56fd7e3bcbe8 after
+focused evidence consistency verification. **Thirteen Owner-accepted backend
+capabilities.** No required material discrepancy was found; historical198unit/
+349real PostgreSQL results were verified from retained logs, not rerun here.
+
+Effective task scope is acceptance/governance/status/traceability documentation
+and a local documentation commit only. No runtime/test/SQL/security/gate/unlock
+changes, historical rewrites, new increment or remote push. APR-042 remains the
+historical I2 implementation authority; its executable controls are not changed
+or treated as new work authorization by this acceptance task. UI, factory UAT,
+production deployment, corrections, Finance, QC and device integration stay excluded.
+The next appropriate activity is one consolidated end-to-end backend requirements
+audit of purchase-to-receiving against accepted I1/I2 and executed evidence;
+identify it only, do not execute it or begin another design/gap-analysis cycle.
 
 ## Earlier scope/status — APR-040 design-only instruction (historical)
 

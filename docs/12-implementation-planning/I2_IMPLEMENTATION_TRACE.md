@@ -2,12 +2,12 @@
 id: IMPL-I2-TRACE-001
 title: I2 original sixty requirements and twenty-two acceptance family executable trace
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 1.0.0
 owners: [qa-architect, delivery-lead]
-depends_on: [APR-042, SRC-007, IMPL-I2-001, IMPL-I1-TRACE-001, DOM-INBOUND-TRACE-001, PLAN-I2-DESIGN-001]
+depends_on: [APR-043, APR-042, SRC-007, IMPL-I2-001, IMPL-I1-TRACE-001, DOM-INBOUND-TRACE-001, PLAN-I2-DESIGN-001]
 last_reviewed: 2026-10-25
-approval: APR-042 implementation authority; Owner backend acceptance pending
+approval: APR-043 Owner backend acceptance; original I1/I2/exclusion classifications retained
 supersedes: null
 ---
 
@@ -19,7 +19,14 @@ new I2 registration/catalogue logic. GOVERNED EXCLUSION is not a claim that devi
 functionality exists. All other rows describe the bounded backend behavior; actual
 pass/fail and independent review status follows the implementation report.
 Original business evidence/requiredness/entry actor is not replaced by verification
-actor. No browser workflow, UAT, production deployment or Owner backend acceptance.
+actor. [APR-043](../00-governance/approved-baselines/APR-043-i2-backend-acceptance.md)
+records Owner backend acceptance of b585fd795fb0276bc936af254c6d56fd7e3bcbe8 after
+focused evidence verification. No browser workflow, UAT or production deployment
+is asserted. All sixty row IDs/classifications remain unchanged: I1-retained rows
+identify the accepted original capability and its regression; I2 rows identify
+actual receiving behavior; combined families provide executed cross-stage backend
+evidence. REQ-INBOUND-025 remains a governed device/ticket exclusion. Purchasing
+visibility here is an authorized backend projection, not delivered browser UI.
 
 Executable anchors: [service/parser/query](../../apps/backend/src/modules/procurement/receiving-service.ts),
 [Procurement persistence](../../apps/backend/src/infrastructure/postgresql/receiving-store.ts),

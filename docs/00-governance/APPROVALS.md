@@ -3,15 +3,29 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.28.0
+version: 0.29.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-043 — Formal Owner I2 backend acceptance
+
+[Actual Owner acceptance](approved-baselines/APR-043-i2-backend-acceptance.md),
+2026-10-25, accepts implementation b585fd795fb0276bc936af254c6d56fd7e3bcbe8 after
+focused commit/code/assertion/log/review/trace consistency checks.198unit and349real
+PostgreSQL tests passed in the retained delivery evidence; no fresh suite rerun.
+Three receiving operations, additive0018, shared multi-PO/partial receiving,
+manual exceptions, exact weights, code protection, sole-IPS atomicity and scoped
+complete reads are accepted. **Thirteen Owner-accepted backend capabilities.**
+No material discrepancy found. Only acceptance documentation is authorized now;
+no new runtime, gate/unlock, push, UI/UAT/deployment or next-increment authority.
+Next appropriate activity: one consolidated backend requirements audit, not executed
+or authorized by this instruction. Earlier records retain their historical scope.
 
 ## APR-042 — Final I2 design and immediate bounded implementation authority
 

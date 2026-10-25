@@ -3,15 +3,27 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.24.0
+version: 0.25.0
 owners: [chief-solution-architect]
-depends_on: [APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
+depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## Current I2 backend acceptance and stop boundary (2026-10-25)
+
+- [APR-043 formal Owner I2 backend acceptance and focused verification](00-governance/approved-baselines/APR-043-i2-backend-acceptance.md)
+- [Accepted implementation behavior and executed evidence](12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
+- [Sixty unchanged requirement IDs, I1/I2/exclusions and22executed families](12-implementation-planning/I2_IMPLEMENTATION_TRACE.md)
+
+Thirteen backend capabilities are Owner accepted. Current instruction permits
+acceptance documentation only; no runtime, gate/unlock or push. Next activity is
+one consolidated purchase-to-receiving backend requirements audit, identified only,
+not executed or authorized here. No UI/UAT/production acceptance is inferred.
+Earlier current/proposed headings below are historical navigation snapshots.
 
 ## Current I2 implementation authority and delivery evidence (2026-10-25)
 

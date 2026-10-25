@@ -2,23 +2,31 @@
 id: IMPL-I2-001
 title: I2 purchase-linked multi-arrival receiving implementation and verification
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: accepted
+version: 1.0.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
-depends_on: [APR-042, APR-041, APR-040, APR-039, SRC-007, PLAN-I2-DESIGN-001, IMPL-I2-TRACE-001]
+depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, SRC-007, PLAN-I2-DESIGN-001, IMPL-I2-TRACE-001]
 last_reviewed: 2026-10-25
-approval: APR-042 bounded implementation authority only; Owner backend acceptance pending
+approval: APR-043 formal Owner I2 backend acceptance after focused evidence consistency check
 supersedes: null
 ---
 
-# I2 implemented receiving backend — Owner acceptance pending
+# I2 implemented receiving backend — Owner accepted
+
+[APR-043](../00-governance/approved-baselines/APR-043-i2-backend-acceptance.md)
+records actual Owner backend acceptance on2026-10-25 of implementation
+`b585fd795fb0276bc936af254c6d56fd7e3bcbe8` after focused verification of code,
+assertions, retained logs/hashes and review closure. Thirteen capabilities are
+Owner accepted. No runtime changes, full-suite rerun or new implementation audit
+were needed for acceptance; UI/UAT/deployment remain separate.
 
 Authority: [APR-042](../00-governance/approved-baselines/APR-042-i2-implementation-authorization.md)
 closes I2-CAP-01/02, formally accepts the focused design and separately authorizes
 implementation. Baseline251f471a135e88084645c3a573f240a6f5770406; no remote push
 is assumed. The canonical gate and ignored local unlock reference APR-042 only.
-Twelve capabilities remain Owner accepted. This delivery is not a thirteenth
-Owner acceptance, browser UI, factory UAT or production deployment.
+The original delivery below was submitted with twelve Owner-accepted capabilities;
+APR-043 now records the separate thirteenth backend acceptance. Historical executed
+results remain unchanged; acceptance is not browser UI, factory UAT or deployment.
 
 ## Delivered factory behavior
 
@@ -136,7 +144,7 @@ transactions or self-deadlock on a held pool connection.
 
 Final canonical integration verification PASSED on2026-10-25. Engineering
 verification and required independent review are complete; separate Owner backend
-acceptance is pending. Earlier focused runs are not substituted for this result.
+acceptance is now recorded in APR-043. Earlier focused runs are not substituted for this result.
 See [sixty-ID and22-family code/test trace](I2_IMPLEMENTATION_TRACE.md).
 
 Windows commands use the pinned Node24.21.0/npm11.19.0 directory on PATH. Database
@@ -224,10 +232,13 @@ material origin; Sales demand/fulfilment; reservations; Shipment/dispatch; route
 Production/mass balance; source-backed Genealogy; completed-purchase/sent-proforma
 evidence; issued-invoice evidence; and I1 operational orders/shared catalogues/WH
 lookup. I2 adds actual purchase-linked receiving and authorized committed progress;
-its separate Owner backend acceptance is pending, not fabricated by this report.
+its separate Owner backend acceptance is now recorded in APR-043 after the focused
+evidence condition was satisfied. No whole-product or rollout acceptance is inferred.
 
-The next action is Owner review of this tested local I2 delivery and Owner-managed
-push. No further increment is started or implicitly authorized. Broader visibility/
+The next appropriate activity is one consolidated end-to-end backend requirements
+audit of the purchase-to-receiving workflow, using accepted I1/I2 and existing
+executed evidence. That audit is identified only, not executed or authorized by
+this acceptance task. No further increment or remote push is started. Broader visibility/
 reporting/browser workflows, approved corrections/restoration, deferred weighbridge
 device integration, monetary Finance policies, factory UAT and production cutover
 remain separately governed backlog areas; this receiving backend does not complete
