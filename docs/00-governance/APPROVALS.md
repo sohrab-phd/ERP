@@ -3,15 +3,25 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.29.0
+version: 0.30.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+depends_on: [APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-044 — Bounded P1 Persian purchasing browser implementation
+
+[Actual Owner directive](approved-baselines/APR-044-p1-purchasing-ui-authorization.md),
+2026-10-25, authorizes P1 only from clean c302a20: secure browser sessions,
+Persian/RTL purchasing, shared catalogues, immutable I1 readback and scoped I2
+reads, minimal transport/assets, tests/docs/review/local commit. It authorizes
+minimal matching gate/unlock recording, not receiving-write, schema/policy changes,
+P2, push, deployment or human acceptance. Separate fresh-context review and Owner
+acceptance remain required after delivery.
 
 ## APR-043 — Formal Owner I2 backend acceptance
 

@@ -16,6 +16,7 @@ const files = [
   'inbound',
   'inbound-integrity',
   'inbound-http',
+  'browser-http',
   'inbound-recovery',
   'inbound-additional',
   'receiving',

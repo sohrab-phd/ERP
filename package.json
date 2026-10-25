@@ -16,7 +16,7 @@
     "preflight": "node tools/build/preflight.mjs",
     "clean": "node tools/build/clean.mjs",
     "typecheck": "tsc -b --pretty false",
-    "build": "tsc -b --pretty false",
+    "build": "tsc -b --pretty false && node tools/build/operator-assets.mjs",
     "lint": "eslint apps packages tools eslint.config.mjs --max-warnings 0",
     "boundaries": "node tools/build/check-boundaries.mjs",
     "format:check": "prettier --check apps packages tools package.json tsconfig.base.json tsconfig.json eslint.config.mjs .prettierrc.json .github/workflows/verify.yml",

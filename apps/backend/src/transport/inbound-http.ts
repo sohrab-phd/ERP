@@ -10,6 +10,7 @@ import { IdentityError, type IdentityService } from '../modules/identity/index.j
 import type { InboundQueryName } from '../modules/procurement/index.js';
 import { requestJson, sessionToken } from './identity-http.js';
 import { respond } from './http-errors.js';
+import { browserRequest } from './browser-session.js';
 
 export interface InboundHttpPorts {
   identity: IdentityService;
@@ -107,7 +108,8 @@ export function createInboundHandler(ports: InboundHttpPorts) {
     }
     active++;
     try {
-      if (request.headers.origin !== undefined) throw new IdentityError('forbidden');
+      if (request.headers.origin !== undefined && !browserRequest(request))
+        throw new IdentityError('forbidden');
       const route = request.url ?? '';
       const register = route === '/purchasing/operational-orders';
       const add = route === '/purchasing/inbound-catalogues';

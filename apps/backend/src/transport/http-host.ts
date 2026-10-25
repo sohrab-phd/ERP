@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import type { Server, IncomingMessage, ServerResponse } from 'node:http';
 import { respond } from './http-errors.js';
 export interface HealthOptions {
+  browser?: (request: IncomingMessage, response: ServerResponse) => Promise<boolean>;
   ping: () => Promise<void>;
   probeTimeoutMs?: number;
   identity?: (request: IncomingMessage, response: ServerResponse) => Promise<void>;
@@ -20,132 +21,139 @@ export function createHttpHost(options: HealthOptions): Server {
   const server = createServer(
     { maxHeaderSize: 8192, headersTimeout: 5000, requestTimeout: 10000, keepAliveTimeout: 5000 },
     (request, response) => {
-      if (options.invoiceEvidence && request.url?.startsWith('/finance/')) {
-        void options.invoiceEvidence(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (
-        options.inbound &&
-        (request.url?.startsWith('/purchasing/operational-orders') ||
-          request.url?.startsWith('/purchasing/inbound-catalogues'))
-      ) {
-        void options.inbound(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (options.receiving && request.url?.startsWith('/purchasing/receiving/')) {
-        void options.receiving(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (options.purchase && request.url?.startsWith('/purchasing/')) {
-        void options.purchase(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (options.genealogy && request.url?.startsWith('/genealogy/')) {
-        void options.genealogy(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (options.production && request.url?.startsWith('/production/')) {
-        void options.production(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (options.shipping && request.url?.startsWith('/shipping/')) {
-        void options.shipping(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (options.reservation && request.url?.startsWith('/reservations/')) {
-        void options.reservation(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (options.sales && request.url?.startsWith('/sales/')) {
-        void options.sales(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (
-        options.receipt &&
-        (request.url?.startsWith('/receipts/') || request.url?.startsWith('/inventory/'))
-      ) {
-        void options.receipt(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (options.identity && request.url?.startsWith('/identity/')) {
-        void options.identity(request, response).catch(() => {
-          if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
-          else response.destroy();
-        });
-        return;
-      }
-      if (
-        request.headers['transfer-encoding'] ||
-        Number(request.headers['content-length'] ?? 0) !== 0
-      ) {
-        respond(response, 400, { error: 'body-not-allowed' });
-        request.resume();
-        return;
-      }
-      if (request.url !== '/health/live' && request.url !== '/health/ready') {
-        respond(response, 404, { error: 'not-found' });
-        return;
-      }
-      if (request.method !== 'GET') {
-        response.setHeader('allow', 'GET');
-        respond(response, 405, { error: 'method-not-allowed' });
-        return;
-      }
-      if (request.url === '/health/live') {
-        respond(response, 200, { status: 'live' });
-        return;
-      }
-      let timer: ReturnType<typeof setTimeout>;
-      const deadline = new Promise<never>((_, reject) => {
-        timer = setTimeout(() => {
-          reject(new Error('probe-timeout'));
-        }, options.probeTimeoutMs ?? 2000);
-        timer.unref();
+      void dispatch(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
       });
-      void Promise.race([options.ping(), deadline])
-        .then(
-          () => {
-            respond(response, 200, { status: 'ready' });
-          },
-          () => {
-            respond(response, 503, { status: 'unavailable' });
-          },
-        )
-        .finally(() => {
-          clearTimeout(timer);
-        });
     },
   );
+  async function dispatch(request: IncomingMessage, response: ServerResponse) {
+    if (options.browser && (await options.browser(request, response))) return;
+    if (options.invoiceEvidence && request.url?.startsWith('/finance/')) {
+      void options.invoiceEvidence(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (
+      options.inbound &&
+      (request.url?.startsWith('/purchasing/operational-orders') ||
+        request.url?.startsWith('/purchasing/inbound-catalogues'))
+    ) {
+      void options.inbound(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (options.receiving && request.url?.startsWith('/purchasing/receiving/')) {
+      void options.receiving(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (options.purchase && request.url?.startsWith('/purchasing/')) {
+      void options.purchase(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (options.genealogy && request.url?.startsWith('/genealogy/')) {
+      void options.genealogy(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (options.production && request.url?.startsWith('/production/')) {
+      void options.production(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (options.shipping && request.url?.startsWith('/shipping/')) {
+      void options.shipping(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (options.reservation && request.url?.startsWith('/reservations/')) {
+      void options.reservation(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (options.sales && request.url?.startsWith('/sales/')) {
+      void options.sales(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (
+      options.receipt &&
+      (request.url?.startsWith('/receipts/') || request.url?.startsWith('/inventory/'))
+    ) {
+      void options.receipt(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (options.identity && request.url?.startsWith('/identity/')) {
+      void options.identity(request, response).catch(() => {
+        if (!response.headersSent) respond(response, 503, { error: 'unavailable' });
+        else response.destroy();
+      });
+      return;
+    }
+    if (
+      request.headers['transfer-encoding'] ||
+      Number(request.headers['content-length'] ?? 0) !== 0
+    ) {
+      respond(response, 400, { error: 'body-not-allowed' });
+      request.resume();
+      return;
+    }
+    if (request.url !== '/health/live' && request.url !== '/health/ready') {
+      respond(response, 404, { error: 'not-found' });
+      return;
+    }
+    if (request.method !== 'GET') {
+      response.setHeader('allow', 'GET');
+      respond(response, 405, { error: 'method-not-allowed' });
+      return;
+    }
+    if (request.url === '/health/live') {
+      respond(response, 200, { status: 'live' });
+      return;
+    }
+    let timer: ReturnType<typeof setTimeout>;
+    const deadline = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => {
+        reject(new Error('probe-timeout'));
+      }, options.probeTimeoutMs ?? 2000);
+      timer.unref();
+    });
+    void Promise.race([options.ping(), deadline])
+      .then(
+        () => {
+          respond(response, 200, { status: 'ready' });
+        },
+        () => {
+          respond(response, 503, { status: 'unavailable' });
+        },
+      )
+      .finally(() => {
+        clearTimeout(timer);
+      });
+  }
   server.on('clientError', (_error, socket) => {
     socket.end('HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\n');
   });

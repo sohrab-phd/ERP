@@ -3,15 +3,27 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.62.0
+version: 0.63.0
 owners: [chief-solution-architect]
-depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-25
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
+
+Current authority: [APR-044](approved-baselines/APR-044-p1-purchasing-ui-authorization.md)
+records the actual Owner P1 implementation directive issued 2026-10-25. Only the
+Persian purchasing UI, secure same-origin browser integration, I1 register/read,
+shared catalogues and order-scoped I2 reads plus tests/docs/review/local commit
+are authorized. See [bounded plan/status](../12-implementation-planning/P1_IMPLEMENTATION_STATUS.md).
+No receiving-write UI, schema/policy change, P2, push, deployment or production
+acceptance. Stop after local P1 delivery for separate independent review and Owner
+acceptance. Thirteen backend capabilities remain Owner accepted. The APR-043
+task restriction below is historical and superseded only by this bounded grant.
+
+## Prior APR-043 acceptance scope (historical)
 
 Current Owner instruction [APR-043](approved-baselines/APR-043-i2-backend-acceptance.md)
 formally accepts I2 implementation b585fd795fb0276bc936af254c6d56fd7e3bcbe8 after

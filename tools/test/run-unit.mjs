@@ -6,6 +6,8 @@ const files = [
   'packages/shared-kernel/dist/tests/unit/execute.test.js',
   'packages/shared-kernel/dist/tests/unit/admission.test.js',
   'apps/backend/dist/tests/unit/config.test.js',
+  'apps/backend/dist/tests/unit/browser-intent.test.js',
+  'apps/backend/dist/tests/unit/browser-display.test.js',
   'apps/backend/dist/tests/unit/http-host.test.js',
   'apps/backend/dist/tests/unit/logger.test.js',
   'apps/backend/dist/tests/unit/identity.test.js',

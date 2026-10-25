@@ -70,6 +70,7 @@ import {
 import { PostgresReceivingStore } from './infrastructure/postgresql/receiving-store.js';
 import { PostgresInventoryInboundReceivingStore } from './infrastructure/postgresql/inventory-receiving-store.js';
 import { createReceivingHandler } from './transport/receiving-http.js';
+import { createBrowserHandler } from './transport/browser-http.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -1044,15 +1045,26 @@ export function compose(config: Readonly<Config>) {
       });
     return result;
   };
+  const identityHandler = createIdentityHandler(identity);
+  const inboundHandler = createInboundHandler({ identity, command, query: inboundQuery });
+  const receivingHandler = createReceivingHandler({ identity, command, query: receivingQuery });
   const server = createHttpHost({
+    ...(config.browser
+      ? {
+          browser: createBrowserHandler(
+            { ...config.browser, installationId: config.installationId },
+            { identity: identityHandler, inbound: inboundHandler, receiving: receivingHandler },
+          ),
+        }
+      : {}),
     ping: () => pingDatabase(pool),
-    identity: createIdentityHandler(identity),
+    identity: identityHandler,
     production: createProductionHandler({ identity, command, query: productionQuery }),
     genealogy: createGenealogyHandler({ identity, query: genealogyQuery }),
     receipt: createReceiptHandler({ identity, command, query }),
     purchase: createPurchaseHandler({ identity, command, query: purchaseQuery }),
-    receiving: createReceivingHandler({ identity, command, query: receivingQuery }),
-    inbound: createInboundHandler({ identity, command, query: inboundQuery }),
+    receiving: receivingHandler,
+    inbound: inboundHandler,
     invoiceEvidence: createInvoiceEvidenceHandler({
       identity,
       command,

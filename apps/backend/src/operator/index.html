@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>خرید عملیاتی | نوردکاران</title>
+    <link rel="stylesheet" href="/operator/styles.css" />
+    <script type="module" src="/operator/app.js"></script>
+  </head>
+  <body>
+    <header>
+      <div>
+        <p class="eyebrow">نوردکاران · ERP–MES</p>
+        <h1>خرید عملیاتی</h1>
+      </div>
+      <p id="identity">در حال بررسی نشست…</p>
+      <button id="logout" hidden type="button">خروج امن</button>
+    </header>
+    <main>
+      <p id="message" role="status" aria-live="polite" tabindex="-1"></p>
+      <button id="retry-session" type="button" hidden>بررسی دوبارهٔ ارتباط و نشست</button>
+      <section id="login-panel" hidden aria-labelledby="login-title">
+        <h2 id="login-title">ورود به حساب شخصی</h2>
+        <p>در رایانهٔ مشترک، پس از پایان کار خروج امن را بزنید.</p>
+        <form id="login-form" method="post">
+          <fieldset id="login-fields">
+            <legend>مشخصات ورود</legend>
+            <label
+              >نام کاربری<input
+                id="username"
+                name="username"
+                dir="ltr"
+                autocomplete="username"
+                required
+                maxlength="64"
+            /></label>
+            <label
+              >گذرواژه<input
+                id="password"
+                name="password"
+                type="password"
+                dir="ltr"
+                autocomplete="current-password"
+                required
+            /></label>
+            <button type="submit">ورود</button>
+          </fieldset>
+        </form>
+      </section>
+      <div id="workspace" hidden>
+        <nav aria-label="عملیات خرید">
+          <label>نقش فعال<select id="role"></select></label
+          ><button type="button" id="show-register">ثبت سفارش</button
+          ><button type="button" id="show-lookup">بازیابی سفارش</button
+          ><button type="button" id="show-catalogues">کاتالوگ‌های مشترک</button>
+        </nav>
+        <section id="recovery" hidden aria-labelledby="recovery-title">
+          <h2 id="recovery-title">پیگیری عملیات قبلی</h2>
+          <p id="recovery-note"></p>
+          <p id="recovery-reference" class="exact"></p>
+          <button id="recover" type="button">پیگیری با همان درخواست</button
+          ><button id="discard" type="button" class="secondary">بستن پیگیری…</button>
+          <div id="discard-confirm" hidden>
+            <p>
+              بستن پیگیری، عملیات ثبت‌شده را لغو نمی‌کند. ابتدا با شماره یا شناسهٔ سفارش نتیجه را
+              بررسی کنید. ثبت دوباره با شمارهٔ تازه ممکن است سفارش دیگری بسازد.
+            </p>
+            <button id="confirm-discard" type="button">پیگیری را می‌بندم</button
+            ><button id="cancel-discard" type="button">بازگشت</button>
+          </div>
+        </section>
+        <section id="register-panel" hidden aria-labelledby="register-title">
+          <h2 id="register-title">ثبت اصل سفارش خرید</h2>
+          <p>
+            پس از ثبت، اصل سفارش ثابت می‌ماند. مشخصات را پیش از تأیید بررسی کنید. فیلدهای «اختیاری»
+            را می‌توانید خالی بگذارید.
+          </p>
+          <form id="order-form" method="post">
+            <fieldset id="order-fields">
+              <legend>اطلاعات سفارش</legend>
+              <div class="grid">
+                <label
+                  >شماره سفارش<input
+                    name="orderReference"
+                    id="order-reference"
+                    required
+                    maxlength="256"
+                    dir="auto" /></label
+                ><label
+                  >تاریخ ثبت سفارش (جلالی)<input
+                    name="registrationDateJalali"
+                    id="order-date"
+                    required
+                    dir="ltr"
+                    placeholder="1403-12-30"
+                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                    aria-describedby="date-help"
+                /></label>
+              </div>
+              <p id="date-help">
+                قالب YYYY-MM-DD با رقم لاتین؛ دامنهٔ تقویم پذیرفته‌شده ۱۲۰۶ تا ۱۴۹۸. تاریخ به میلادی
+                تبدیل نمی‌شود.
+              </p>
+              <p>
+                ابعاد با رقم لاتین و ممیز نقطه؛ وزن هر واحد و تعداد، عدد صحیح مثبت. مقادیر عیناً ثبت
+                می‌شوند.
+              </p>
+              <div id="lines"></div>
+              <button id="add-line" type="button" class="secondary">افزودن خط سفارش</button
+              ><button id="register" type="submit">بررسی و ثبت سفارش</button>
+            </fieldset>
+            <div id="order-confirm" hidden>
+              <p>مشخصات همین فرم ثبت خواهد شد و پس از ثبت قابل ویرایش نیست.</p>
+              <button id="confirm-order" type="button">تأیید نهایی ثبت</button
+              ><button id="cancel-order" type="button">بازگشت به فرم</button>
+            </div>
+          </form>
+        </section>
+        <section id="catalogue-panel" hidden aria-labelledby="catalogue-title">
+          <h2 id="catalogue-title">کاتالوگ‌های مشترک</h2>
+          <p>
+            افزودن گزینه مستقل از ثبت سفارش است و با شکست سفارش حذف نمی‌شود. عنوان‌ها دقیق هستند؛
+            هیچ طبقه‌بندی موجودی از عنوان جدید ساخته نمی‌شود.
+          </p>
+          <form id="catalogue-form" method="post">
+            <fieldset id="catalogue-fields">
+              <legend>انتخاب و افزودن</legend>
+              <label
+                >کاتالوگ<select id="catalogue-kind">
+                  <option value="MATERIAL_TYPE">نوع کالا</option>
+                  <option value="QUALITY_GRADE">کیفیت</option>
+                  <option value="COLOR">رنگ</option>
+                </select></label
+              ><label
+                >عنوان دقیق گزینهٔ جدید<input
+                  id="catalogue-label"
+                  required
+                  maxlength="256"
+                  dir="auto" /></label
+              ><button type="submit">افزودن گزینه</button>
+            </fieldset>
+          </form>
+          <button id="refresh-catalogues" type="button">تازه‌سازی گزینه‌ها</button>
+          <div id="catalogue-options"></div>
+        </section>
+        <section id="lookup-panel" aria-labelledby="lookup-title">
+          <h2 id="lookup-title">بازیابی اصل سفارش و دریافت‌ها</h2>
+          <form id="lookup-form" method="post">
+            <label
+              >روش بازیابی<select id="lookup-kind">
+                <option value="reference">شماره سفارش</option>
+                <option value="id">شناسهٔ سفارش</option>
+              </select></label
+            ><label
+              >شماره یا شناسهٔ سفارش<input
+                id="lookup-value"
+                required
+                dir="auto"
+                maxlength="256" /></label
+            ><button type="submit">بازیابی</button>
+          </form>
+          <div id="order-result"></div>
+          <section id="receiving" hidden aria-labelledby="receiving-title">
+            <h3 id="receiving-title">پیشرفت و مغایرت دریافت</h3>
+            <p>
+              وزن‌های گزارش مبدأ و باسکول مقصد مربوط به کل محموله‌اند؛ مجموع سفارش یا وزن هر واحد
+              نیستند و بین خطوط تقسیم نمی‌شوند.
+            </p>
+            <div class="actions">
+              <label
+                >نمای دریافت<select id="receiving-view">
+                  <option value="LINES">خطوط و ماندهٔ سفارش</option>
+                  <option value="RECEIVED_UNITS">واحدهای دریافت‌شده و مغایرت‌ها</option>
+                </select></label
+              ><button id="refresh-receiving" type="button">تازه‌سازی دریافت‌ها</button>
+            </div>
+            <p id="receiving-status" role="status"></p>
+            <div id="receiving-result"></div>
+            <button id="more-receiving" hidden type="button">صفحهٔ بعد دریافت‌ها</button>
+          </section>
+        </section>
+      </div>
+    </main>
+    <footer>
+      ثبت و مشاهدهٔ خرید · مشاهدهٔ دریافت · اطلاعات نمایش‌داده‌شده پس از بازیابی از سرور
+    </footer>
+  </body>
+</html>

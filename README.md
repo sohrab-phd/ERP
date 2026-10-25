@@ -130,6 +130,39 @@ Full document index:
 
 ---
 
+## P1 Persian purchasing browser workflow
+
+P1 is implemented for review under [APR-044](docs/00-governance/approved-baselines/APR-044-p1-purchasing-ui-authorization.md).
+See [operation, security, exact executed evidence and acceptance checklist](docs/12-implementation-planning/P1_IMPLEMENTATION_STATUS.md).
+Native Persian/RTL UI supports personal login/logout, Procurement order registration,
+shared catalogue add/select for Procurement/Warehouse, canonical original-order
+lookup and both order-scoped receiving views. Receiving confirmation has no browser
+route. No framework, dependency, schema or business-policy change is required.
+
+Use the pinned Windows runtime and existing development PostgreSQL/account/grant
+setup above. Keep DATABASE_URL on the development runtime database; the disposable
+browser fixture is a separate test-only entry point. In ignored `.env.local`, add
+`BROWSER_ORIGIN=http://127.0.0.1:3000` and `BROWSER_SESSION_SECRET` containing a
+cryptographically random 32-byte base64url secret. For example, capture the secret
+without printing it, then write it directly to the ignored environment file:
+
+```powershell
+$p1Secret = node -p "require('node:crypto').randomBytes(32).toString('base64url')"
+Add-Content -LiteralPath .env.local -Value "BROWSER_ORIGIN=http://127.0.0.1:3000"
+Add-Content -LiteralPath .env.local -Value "BROWSER_SESSION_SECRET=$p1Secret"
+Remove-Variable p1Secret
+npm.cmd run build
+node --env-file=.env.local apps/backend/dist/src/main.js
+```
+
+Add each configuration key once; PORT must match the configured origin. Open
+`http://127.0.0.1:3000/` in a local browser. Use existing personal accounts with
+current organizational ACT-PROC/ACT-WH grants; startup seeds no users. Keep the
+same secret across restarts so encrypted same-account pending-intent recovery works.
+Browser mode is disabled when both browser settings are absent. Production config
+requires an HTTPS origin and existing loopback/TLS-terminator policy; deployment,
+certificate/proxy setup and factory acceptance are separately authorized work.
+
 ## 1. Historical design-phase overview (before APR-018)
 
 | This repository **is** | This repository **is not** |

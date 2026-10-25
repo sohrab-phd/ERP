@@ -40,3 +40,36 @@ void test('production Identity host binds loopback behind TLS termination', () =
   for (const HOST of ['127.0.0.1', '::1'])
     assert.equal(loadConfig({ ...env, NODE_ENV: 'production', HOST }).host, HOST);
 });
+void test('P1 explicit browser origin and secret fail closed; HTTP only for local nonproduction', () => {
+  const secret = Buffer.alloc(32, 1).toString('base64url');
+  assert.equal(
+    loadConfig({ ...env, BROWSER_ORIGIN: 'http://127.0.0.1:3000', BROWSER_SESSION_SECRET: secret })
+      .browser?.origin,
+    'http://127.0.0.1:3000',
+  );
+  assert.equal(
+    loadConfig({
+      ...env,
+      NODE_ENV: 'production',
+      BROWSER_ORIGIN: 'https://erp.example',
+      BROWSER_SESSION_SECRET: secret,
+    }).browser?.origin,
+    'https://erp.example',
+  );
+  for (const change of [
+    { BROWSER_ORIGIN: 'http://erp.example', BROWSER_SESSION_SECRET: secret },
+    { BROWSER_ORIGIN: 'http://127.0.0.1:3000', BROWSER_SESSION_SECRET: 'short' },
+    { BROWSER_ORIGIN: 'https://erp.example/', BROWSER_SESSION_SECRET: secret },
+    { BROWSER_ORIGIN: 'https://erp.example/path', BROWSER_SESSION_SECRET: secret },
+    { BROWSER_ORIGIN: 'https://user:pass@erp.example', BROWSER_SESSION_SECRET: secret },
+    { BROWSER_ORIGIN: 'https://erp.example' },
+    { BROWSER_SESSION_SECRET: secret },
+    { BROWSER_ORIGIN: 'https://erp.example', BROWSER_SESSION_SECRET: secret + '\n' },
+    {
+      NODE_ENV: 'production',
+      BROWSER_ORIGIN: 'http://127.0.0.1:3000',
+      BROWSER_SESSION_SECRET: secret,
+    },
+  ])
+    assert.throws(() => loadConfig({ ...env, ...change }));
+});

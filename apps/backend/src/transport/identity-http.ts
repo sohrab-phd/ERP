@@ -3,6 +3,13 @@ import { createHash } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
 import { parseBoundedJson } from '@navard/shared-kernel';
 import { IdentityError, type IdentityService, type HumanRole } from '../modules/identity/index.js';
+import {
+  browserRequest,
+  browserToken,
+  browserLogin,
+  browserLogout,
+  browserSession,
+} from './browser-session.js';
 
 export { token as sessionToken, body as requestJson };
 
@@ -15,6 +22,11 @@ function reply(response: ServerResponse, status: number, value: unknown) {
   response.end(JSON.stringify(value));
 }
 function token(request: IncomingMessage): string {
+  if (browserRequest(request)) {
+    const credential = browserToken(request);
+    if (!credential) throw new IdentityError('unauthenticated');
+    return credential;
+  }
   const count = request.rawHeaders.filter(
     (_, i) => i % 2 === 0 && request.rawHeaders[i]?.toLowerCase() === 'authorization',
   ).length;
@@ -85,7 +97,7 @@ function text(value: unknown): string {
   if (typeof value !== 'string') throw new IdentityError('invalid');
   return value;
 }
-/** No cookie authentication, caller-supplied role claims, or arbitrary business routes. */
+/** Cookies only on explicitly admitted P1 requests; legacy bearer contract remains unchanged. */
 export function createIdentityHandler(
   identity: IdentityService,
   clock: () => number = () => performance.now(),
@@ -112,7 +124,7 @@ export function createIdentityHandler(
     }
     active++;
     try {
-      if (request.headers.origin) throw new IdentityError('forbidden');
+      if (request.headers.origin && !browserRequest(request)) throw new IdentityError('forbidden');
       const route = request.url;
       const routes = [
         '/identity/login',
@@ -143,7 +155,7 @@ export function createIdentityHandler(
           Number(request.headers['content-length'] ?? 0) !== 0
         )
           throw new IdentityError('invalid');
-        reply(response, 200, await identity.session(token(request)));
+        reply(response, 200, browserSession(request, await identity.session(token(request))));
         return;
       }
       // Authenticate framing/header before any expensive credential operation.
@@ -162,7 +174,11 @@ export function createIdentityHandler(
         try {
           const result = await identity.login(username, password);
           failures.delete(key);
-          reply(response, 200, result);
+          reply(
+            response,
+            200,
+            browserLogin(request, response, result) ? { expiresAt: result.expiresAt } : result,
+          );
         } catch (error) {
           if (error instanceof IdentityError && error.kind === 'unauthenticated') {
             failed++;
@@ -178,6 +194,7 @@ export function createIdentityHandler(
       if (route === '/identity/logout') {
         fields(value, []);
         await identity.logout(credential);
+        browserLogout(request, response);
       } else if (route === '/identity/accounts') {
         fields(value, ['username', 'personId', 'password']);
         reply(

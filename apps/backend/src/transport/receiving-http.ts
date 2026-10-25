@@ -9,6 +9,7 @@ import type { ReceivingQueryName } from '../modules/procurement/index.js';
 import { inboundRequestJson } from './inbound-http.js';
 import { sessionToken } from './identity-http.js';
 import { respond } from './http-errors.js';
+import { browserRequest } from './browser-session.js';
 export function createReceivingHandler(ports: {
   identity: IdentityService;
   command(input: string, actor: ExecutionContext): Promise<ExecutionResult>;
@@ -28,7 +29,8 @@ export function createReceivingHandler(ports: {
     }
     active++;
     try {
-      if (request.headers.origin !== undefined) throw new IdentityError('forbidden');
+      if (request.headers.origin !== undefined && !browserRequest(request))
+        throw new IdentityError('forbidden');
       const confirm = request.url === '/purchasing/receiving/confirm';
       const arrival = request.url === '/purchasing/receiving/arrivals/query';
       const order = request.url === '/purchasing/receiving/orders/query';
