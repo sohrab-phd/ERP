@@ -356,6 +356,7 @@ live registers and current reconciled contracts control later answers/decisions.
   - [Phase 12 handoff](11-architecture-validation/PHASE12_HANDOFF.md)
   - [APR-013 Checkpoint Procedure](11-architecture-validation/CHECKPOINT_APR-013.md)
 - [12 — Implementation Planning](12-implementation-planning/README.md)
+  - [ERP current state and next-step assessment — 2026-10-25](12-implementation-planning/ERP_CURRENT_STATE_AND_NEXT_STEP.md)
   - [Implementation readiness checklist](12-implementation-planning/IMPLEMENTATION_READINESS.md)
   - [Professional capability development workflow](12-implementation-planning/DEVELOPMENT_WORKFLOW.md)
   - [SLICE-ENVELOPE implementation and executed acceptance](12-implementation-planning/SLICE_ENVELOPE_IMPLEMENTATION_REPORT.md)
