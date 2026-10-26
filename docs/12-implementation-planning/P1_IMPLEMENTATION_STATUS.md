@@ -3,7 +3,7 @@ id: IMPL-P1-001
 title: P1 Persian operational purchasing UI implementation and evidence
 phase: 12-implementation-planning
 status: in_review
-version: 1.0.1
+version: 1.0.2
 owners: [delivery-lead, chief-solution-architect, security-architect]
 depends_on: [APR-044, APR-039, APR-043, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-10-26
@@ -18,6 +18,9 @@ complete for review handoff; no Owner acceptance, deployment or remote push.
 Independent audit of `bf8902a3e6375e09884c1b57a11477cf3fb4e6d0` returned FAIL
 for R-01/R-02. The bounded remediation below supersedes the original delivery's
 engineering closure claims; separate remediation re-review remains required.
+The subsequent independent verification closed R-02 but retained R-01 as RV-01
+and RV-02. Their follow-up below is implemented for another focused review;
+none of these implementation records constitutes Owner acceptance.
 
 ## Bounded execution plan and Definition of Done
 
@@ -148,7 +151,119 @@ not served. These controls follow the assessed [OWASP CSRF](https://cheatsheetse
 and [session](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
 guidance, without a certification or production-TLS claim.
 
-## R-01/R-02 bounded remediation — 2026-10-26
+## RV-01/RV-02 R-01 follow-up — 2026-10-26
+
+Authority: actual Owner **CODEX DIRECTIVE — P1 R-01 FOLLOW-UP REMEDIATION** in
+this chat, limited to RV-01/RV-02, regressions/evidence/docs and one new local
+commit. Starting clean `main` was `e5b6e4141d00f82ef12752f27b24951ae739b563`,
+parent `bf8902a3e6375e09884c1b57a11477cf3fb4e6d0`. APR-044 remains governing
+implementation authority; no new baseline, acceptance, gate or P2 authorization.
+Only app.ts, operator-lifecycle.test.ts and this status change. The prior review
+`artifacts/tests/p1-independent-remediation-review-2026-10-26.md` remains unchanged,
+including FAIL, SHA256
+`6170C856354233EEC99B19990FCB091270F7AAABE5EA85FE601BA3DEF9E7DEF9`.
+
+RV-01: after awaited decryption, restoration now checks local expiry along with
+epoch/actor validity before adopting plaintext. Expiry uses the existing lock and
+Stale path. The complete changed-grant revalidate caller consequently leaves self,
+pending/key and business DOM cleared and workspace hidden, even with expiry timers
+delayed. Ciphertext is untouched; a later valid original-account login can restore
+the original complete envelope and replay its unchanged identity/payload.
+
+RV-02: session bootstrap pairs request-start wall/monotonic observations with the
+authenticated server expiresAt. A local absoluteUntilMonotonic takes the earliest
+such bound; subsequent observations can only shorten it. Both expiry check and
+timer scheduling include it, in addition to idle and absolute wall checks. The
+nonsensitive bound survives local lock, grant refresh and ambiguous session/cookie
+replacement. Ordinary APIs/input/idle renewal cannot extend it. A guarded successful
+explicit login alone discards the old cap; the new authenticated session response
+establishes its own. Existing epoch checks also guard the outer session/login
+continuations before adopting/resetting a cap. HttpOnly tokens remain inaccessible
+to JavaScript; no username/role-derived session identity is invented.
+
+Guarantees apply to the document's first observed wall/monotonic relationship;
+later rollback/response latency cannot extend that established cap. An already
+offset wall clock before the first observation cannot reveal exact server remaining
+time from expiresAt alone. performance.now is not a universally trusted clock
+across OS sleep, document/process restart or every browser suspension. Retained
+wall/idle checks, resume guards and authoritative server expiry remain relevant;
+no time-sync service, durable timing state or new Identity policy is introduced.
+
+Two committed regressions extend the existing actual-app VM DOM/time suite:
+
+- RV-01 runs complete changed-grant revalidate, holds real decryption's continuation,
+  advances wall/monotonic past idle with timers suppressed, asserts rejected stale
+  adoption/cleared roots+DOM/no dispatch/unchanged ciphertext, then uses the actual
+  login submit handler to recover and replay the identical original envelope.
+- RV-02 renews authenticated idle every20minutes to7h40, rolls wall time back1hour,
+  exercises grant refresh and out-of-order replies, and crosses original8h with
+  timers enabled. It asserts locked/cleared state, retained ciphertext and no
+  post-expiry fabricated server success. A genuine new login gets a new cap;
+  delivery of an obsolete response completed before expiry cannot mutate it.
+
+Actual Windows execution with pinned Node24.21.0/npm11.19.0:
+
+| Command | Result / local artifacts/tests evidence |
+| --- | --- |
+| `npm.cmd run build` | PASS; p1-rv-followup-build.log |
+| `npm.cmd run test:unit` |212/212 PASS,0 failed/skipped; p1-rv-followup-unit.log |
+| `node --test apps/backend/dist/tests/unit/operator-lifecycle.test.js` |9/9 PASS (overlaps212); p1-rv-followup-all-lifecycle.log |
+| `node --test --test-name-pattern="RV-0[12]" apps/backend/dist/tests/unit/operator-lifecycle.test.js` |2/2 PASS (overlaps9/212); p1-rv-followup-green.log |
+| Same two-case command with test-only P1_OPERATOR_APP_SOURCE pointing to safely extracted/transpiled e5b6e414 source | Expected0pass/2fail at actual identified behaviors, exit1; p1-rv-followup-red.log; override removed |
+| `node --env-file=.env.local --test --test-concurrency=1 apps/backend/dist/tests/unit/browser-intent.test.js apps/backend/dist/tests/unit/browser-display.test.js apps/backend/dist/tests/unit/config.test.js apps/backend/dist/tests/integration/browser-http.test.js` |16/16 PASS:8real-PG+8unit/config overlap; p1-rv-followup-focused.log |
+| `npm.cmd run preflight`, `npm.cmd run format:check`, `npm.cmd run lint`, `npm.cmd run boundaries`, `npm.cmd run typecheck` | All PASS; p1-rv-followup-{preflight,format-check,lint,boundaries,typecheck}.log |
+| Documentation/link check and `git diff --check` | PASS before local commit |
+
+The genuine baseline source was obtained using git show, transpiled with pinned
+TypeScript into ignored p1-rv-followup-original-app.ts/.js, never checked out over
+tracked work. RV-01 red is missing expected expired-caller rejection; RV-02 red is
+retained self after8h, not a missing-new-helper failure. All previous seven cases
+still pass. The distinct automated successful scope is212unit+8PG; overlapping
+9/2/16 runs are not added together. No full357PG rerun: backend services, transport,
+contracts/schema/policies remain unchanged.
+
+Read-only actual environment preflight preceded resets and was repeated after
+interruption: loopback55438, acknowledged navard_i1_test, separate dev DB, distinct
+restricted runtime/DDL roles and PG18.6. Focused PG cases preserve current grants,
+revocation/expiry, CSRF/origin/cookie behavior, exact data, catalogue races,
+order isolation and one accepted effect after lost COMMIT response.
+
+Real native in-app browser reused the unchanged --controlled-clock fixture with
+the real backend/PG. It confirmed canonical readback, both receiving views' retained
+timestamps,25lines/24units, one header/no unrelated markers; double-confirm and
+post-COMMIT response loss, controlled idle clearing while ciphertext survives,
+Warehouse decryption/retry denial, and original-account login recovery of target
+25d8c427-d226-4f21-b679-1b6058a76051. Counts stayed3orders/27lines/26received.
+Exact RV-01 crypto scheduling/RV-02 eight-hour rollback are deterministic component
+tests, not native-browser sleep/elapsed-time claims. The browser fixture advances
+client wall time/due timers only, not performance.now or server policy. Task
+interruption closed the initial fixture; environment was reverified and remaining
+browser checks completed on a restarted disposable fixture. Browser/backend/PG
+were stopped afterwards. Receipt: p1-rv-followup-browser-receipt.md.
+
+| Final local evidence under artifacts/tests | SHA256 |
+| --- | --- |
+| p1-rv-followup-unit.log |84063655EA8642A8E984D43EA6AE11782784403C286FA9A53FD014027170606D |
+| p1-rv-followup-focused.log |CD5EE8593C0AE5071D46F4B5B852FE8A855BE01F23EA14AF61EA643E1DE4B638 |
+| p1-rv-followup-red.log |D641BC54AB01860861FDBB21921C5EA109FA80A84942F8676C350DCDAC659A0B |
+| p1-rv-followup-green.log |99209911C7C62978FF64303F9444241430E9F5CE18CCAACB2727D8465088EC37 |
+| p1-rv-followup-all-lifecycle.log |5344E036116E5E925E1C936EB871EB12CBA8F6D6549C3B4011B89DCCA445963E |
+| p1-rv-followup-browser-receipt.md |EFC438658704867F341327212686B529B3416CC30C18FC608581BF0882BAFAF3 |
+| p1-rv-followup-lock.png |3154BD3078D127D9ADF042082145210DC5DDC11778BE05D5AD0E95B29206365A |
+| p1-rv-followup-recovery.json |C830B982EE9E8EE29104B3A58F6D43D0ACB756968563900EAE5541FADDE0BC99 |
+| p1-rv-followup-pagination.json |3C67895404138CE53689A8D67CE3DA6E81CCF2D33D3E3901729B495285266E9A |
+
+Evidence is ignored/local, not pushed or promised on another workstation. Historical
+audit/review artifacts retain their FAIL findings. Self-review and a scoped read-only
+engineering/security reviewer found no required new defect; its in-memory tests
+independently passed9current/failed2baseline, with additional lifecycle probes.
+This is scoped correction review, not the final independent acceptance audit.
+RV-01/RV-02 are implemented/verified for handoff; R-02 rendering/closure is untouched,
+O-01 remains deferred, and P1 remains in_review. The new local commit/hash and parent
+are supplied in the delivery report/final response, then stop for fresh-context
+independent RV verification and explicit Owner decision. No push/deployment/P2.
+
+## Prior R-01/R-02 bounded remediation — 2026-10-26 (historical)
 
 Actual authority: the Owner's **CODEX DIRECTIVE — P1 BOUNDED REMEDIATION**, issued
 in this chat on 2026-10-26. Baseline clean `main`, full commit

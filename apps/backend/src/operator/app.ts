@@ -65,6 +65,9 @@ let busy = false,
 const idleMs = 30 * 60 * 1000;
 let idleUntil = 0,
   idleUntilMonotonic = 0,
+  // Keep this nonsensitive bound through locks/grant refreshes. Only a successful
+  // login proves a new session; an ambiguous replacement may safely lock early.
+  absoluteUntilMonotonic = Infinity,
   expiryTimer: ReturnType<typeof setTimeout> | undefined;
 let prepared: unknown;
 let loggingOut = false;
@@ -143,6 +146,7 @@ function checkLocalExpiry(): boolean {
     self &&
     (Date.now() >= idleUntil ||
       performance.now() >= idleUntilMonotonic ||
+      performance.now() >= absoluteUntilMonotonic ||
       Date.now() >= Date.parse(self.expiresAt))
   ) {
     lock('نشست پایان یافته است. برای ادامه و پیگیری عملیات با همان حساب وارد شوید.');
@@ -162,6 +166,7 @@ function armExpiry() {
       Math.min(
         idleUntil - Date.now(),
         idleUntilMonotonic - performance.now(),
+        absoluteUntilMonotonic - performance.now(),
         Date.parse(self.expiresAt) - Date.now(),
       ),
     ),
@@ -322,7 +327,7 @@ async function restorePending() {
   try {
     if (!actor?.browser.recoveryKey) throw new Error('No current purchasing grant');
     const intent = await openIntent(saved, actor.browser.recoveryKey);
-    if (generation !== epoch || actor !== self) throw new Stale();
+    if (generation !== epoch || actor !== self || checkLocalExpiry()) throw new Stale();
     if (intent.accountId !== actor.accountId || intent.personId !== actor.personId)
       throw new Error('Different actor');
     pending = intent;
@@ -332,7 +337,19 @@ async function restorePending() {
   }
 }
 async function session() {
+  const generation = epoch;
+  const observedWall = Date.now(),
+    observedMonotonic = performance.now();
   const value = await api<Self>('/identity/session');
+  if (generation !== epoch) throw new Stale();
+  // Freeze the first observed absolute limit, allowing later observations only
+  // to shorten it. Request-start clocks avoid extending it by response latency
+  // or by a wall-clock rollback while the request was in flight.
+  absoluteUntilMonotonic = Math.min(
+    absoluteUntilMonotonic,
+    observedMonotonic + Math.max(0, Date.parse(value.expiresAt) - observedWall),
+  );
+  if (checkLocalExpiry()) throw new Stale();
   const confirmedUntil = idleUntil,
     confirmedMonotonic = idleUntilMonotonic;
   const changed =
@@ -343,7 +360,10 @@ async function session() {
       JSON.stringify(self.grants) !== JSON.stringify(value.grants));
   // An unchanged refresh must not replace an actor while its intent is being encrypted,
   // or restore a stale ciphertext over a command that just reached a terminal outcome.
-  if (self && !changed) return;
+  if (self && !changed) {
+    armExpiry();
+    return;
+  }
   if (changed) {
     lock('نشست یا مجوز تغییر کرده است.');
   }
@@ -886,7 +906,10 @@ on('login-form', 'submit', async () => {
   button.disabled = true;
   message('در حال ورود…');
   try {
+    const generation = epoch;
     await api('/identity/login', { username: input('username'), password: input('password') });
+    if (generation !== epoch) throw new Stale();
+    absoluteUntilMonotonic = Infinity;
     sessionChanges.postMessage('changed');
     el<HTMLInputElement>('password').value = '';
     epoch++;

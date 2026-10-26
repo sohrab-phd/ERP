@@ -234,6 +234,16 @@ async function harness() {
       }
       return event;
     },
+    async login() {
+      // Exercise the registered production login handler, including its epoch and
+      // deadline reset, rather than assigning session state from the adapter.
+      const form = element('login-form');
+      const button = form.querySelector('button')!;
+      for (const listener of form.listeners.get('submit') ?? []) listener(new Interaction(form));
+      for (let attempt = 0; button.disabled && attempt < 250; attempt++)
+        await new Promise((resolve) => setTimeout(resolve, 1));
+      assert.equal(button.disabled, false, 'login handler must settle');
+    },
   };
 }
 
@@ -386,6 +396,146 @@ void test('R-01 in-flight late replies, server denial, absolute expiry and backw
   const rollback = await harness();
   await rollback.advance(idle, true, -1000);
   assert.equal(rollback.run('self'), undefined, 'monotonic deadline survives backward wall time');
+});
+
+void test('RV-01 full changed-grant revalidation rejects delayed expired decryption and preserves original recovery', async () => {
+  const h = await harness();
+  h.state.dropCommand = true;
+  const body = intent.commandBody(
+    'RegisterOperationalPurchaseOrder',
+    'operational-purchase-order',
+    {
+      orderReference: 'private delayed recovery',
+      registrationDateJalali: '1403-12-30',
+      lines: [],
+    },
+  );
+  await assert.rejects(
+    h.run<Promise<void>>(`startCommand('/purchasing/operational-orders', ${JSON.stringify(body)})`),
+  );
+  const ciphertext = h.storage.get(intent.pendingSlot)!;
+  h.state.actor.grants.push({ actorRole: 'ACT-WH' });
+  // Keep real decryption, but control when its continuation may return to the app.
+  h.run(`const originalOpen = openIntent; let releaseOpen;
+    openIntent = async (...args) => {
+      const result = await originalOpen(...args);
+      await new Promise(resolve => { releaseOpen = resolve });
+      return result;
+    }`);
+  const revalidating = h.run<Promise<void>>('revalidate()');
+  for (let attempt = 0; !h.run('typeof releaseOpen === "function"') && attempt < 250; attempt++)
+    await new Promise((resolve) => setTimeout(resolve, 1));
+  assert.equal(h.run('typeof releaseOpen'), 'function', 'changed grants must reach recovery');
+  const beforeRelease = h.requests.length;
+  await h.advance(idle + 1, false);
+  h.run('releaseOpen()');
+  await assert.rejects(revalidating, 'the complete production caller must reject expired recovery');
+  assert.equal(h.run('checking'), false);
+  for (const root of ['self', 'pending', 'prepared', 'currentOrder'])
+    assert.equal(h.run(root), undefined, root);
+  assert.equal(h.element('workspace').hidden, true);
+  for (const id of ['order-result', 'receiving-result', 'recovery-reference'])
+    assert.equal(h.element(id).textContent, '');
+  assert.equal(h.requests.length, beforeRelease, 'expired continuation dispatches no new command');
+  assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+
+  h.run('openIntent = originalOpen');
+  h.state.actor.browser.csrf = 'new-login-A';
+  h.state.actor.expiresAt = new Date(
+    h.run<number>('Date.now()') + 8 * 60 * 60 * 1000,
+  ).toISOString();
+  await h.login();
+  assert.equal(h.run('self.browser.csrf'), 'new-login-A');
+  assert.equal(h.run('pending.body'), body);
+  assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+  h.state.dropCommand = false;
+  await h.run<Promise<void>>('dispatchPending()');
+  const submissions = h.requests.filter((request) => request.path.endsWith('/operational-orders'));
+  assert.equal(submissions.length, 2);
+  assert.deepEqual(submissions[0]!.body, submissions[1]!.body);
+  assert.equal(h.storage.has(intent.pendingSlot), false);
+});
+
+void test('RV-02 absolute monotonic cap survives rollback, grants and concurrent renewal; genuine login resets it', async () => {
+  const h = await harness();
+  h.state.dropCommand = true;
+  const body = intent.commandBody(
+    'RegisterOperationalPurchaseOrder',
+    'operational-purchase-order',
+    {
+      orderReference: 'private absolute recovery',
+      registrationDateJalali: '1403-12-30',
+      lines: [],
+    },
+  );
+  await assert.rejects(
+    h.run<Promise<void>>(`startCommand('/purchasing/operational-orders', ${JSON.stringify(body)})`),
+  );
+  const ciphertext = h.storage.get(intent.pendingSlot)!;
+  // Every success is before the original eight-hour server absolute deadline.
+  for (let i = 0; i < 23; i++) {
+    await h.advance(20 * 60 * 1000);
+    await h.run<Promise<void>>('loadCatalogue("COLOR")');
+  }
+  h.element('order-result').textContent = 'private absolute original';
+  h.element('receiving-result').textContent = 'private absolute receiving';
+  await h.advance(0, false, -60 * 60 * 1000);
+  h.state.actor.grants.push({ actorRole: 'ACT-WH' });
+  await h.run<Promise<void>>('revalidate()');
+  let releaseOlder!: (value: Response) => void;
+  h.state.hold = new Promise<Response>((resolve) => {
+    releaseOlder = resolve;
+  });
+  const older = h.run<Promise<void>>('session()');
+  await h.advance(1000);
+  let releaseNewer!: (value: Response) => void;
+  h.state.hold = new Promise<Response>((resolve) => {
+    releaseNewer = resolve;
+  });
+  const newer = h.run<Promise<void>>('session()');
+  releaseNewer(Response.json(h.state.actor));
+  await newer;
+  releaseOlder(Response.json(h.state.actor));
+  await older;
+  h.element('order-result').textContent = 'private absolute original';
+  h.element('receiving-result').textContent = 'private absolute receiving';
+  let releaseObsolete!: (value: Response) => void;
+  h.state.hold = new Promise<Response>((resolve) => {
+    releaseObsolete = resolve;
+  });
+  const obsoleteSession = JSON.parse(JSON.stringify(h.state.actor)) as typeof h.state.actor;
+  // The server's successful response exists before expiry; only delivery is late.
+  const obsoleteResponse = Response.json(obsoleteSession);
+  const obsoleteReading = h.run<Promise<void>>('session()');
+  const beforeExpiry = h.requests.length;
+  await h.advance(20 * 60 * 1000 - 1000 + 1);
+  assert.equal(h.run('!!self'), false, 'rollback must not postpone the original eight-hour cap');
+  assert.equal(h.run('pending'), undefined);
+  assert.equal(h.run('!!self?.browser.recoveryKey'), false);
+  assert.equal(h.element('workspace').hidden, true);
+  for (const id of ['order-result', 'receiving-result', 'recovery-reference'])
+    assert.equal(h.element(id).textContent, '');
+  assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+  assert.equal(h.requests.length, beforeExpiry, 'no server success is fabricated after expiry');
+
+  h.state.hold = undefined;
+  await h.advance(0, false, 60 * 60 * 1000); // Align the new-session clock pair again.
+  h.state.actor.browser.csrf = 'new-login-after-absolute';
+  h.state.actor.expiresAt = new Date(
+    h.run<number>('Date.now()') + 8 * 60 * 60 * 1000,
+  ).toISOString();
+  await h.login();
+  assert.equal(h.run('self.browser.csrf'), 'new-login-after-absolute');
+  assert.equal(h.run('pending.body'), body);
+  assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+  const newCap = h.run<number>('absoluteUntilMonotonic');
+  assert.ok(newCap > 8 * 60 * 60 * 1000, 'genuine new login must discard the obsolete cap');
+  releaseObsolete(obsoleteResponse);
+  await assert.rejects(obsoleteReading, 'old-session response cannot mutate the new session');
+  assert.equal(h.run('absoluteUntilMonotonic'), newCap);
+  await h.advance(1000);
+  assert.equal(h.run('!!self'), true);
+  assert.equal(h.run('checkLocalExpiry()'), false);
 });
 
 for (const view of ['LINES', 'RECEIVED_UNITS']) {
