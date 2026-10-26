@@ -3,14 +3,32 @@ id: PLAN-ERP-CURRENT-ASSESSMENT-001
 title: ERP current state and next development recommendation
 phase: 12-implementation-planning
 status: in_review
-version: 1.0.0
+version: 1.0.1
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
-last_reviewed: 2026-10-25
+depends_on: [APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
+last_reviewed: 2026-10-26
 approval: null
 ---
 
 # ارزیابی وضعیت واقعی ERP و پیشنهاد گام بعد
+
+## وضعیت جاری پس از پذیرش P1 — 2026-10-26
+
+[APR-045](../00-governance/approved-baselines/APR-045-p1-owner-acceptance.md) تصمیم واقعی Owner را ثبت
+می‌کند: **P1 در commit `22b5389af4d88cff38afdac1bebad68badd06f9c` برای دامنهٔ
+مهندسی و عملکردی مصوب پذیرفته شد.** [وضعیت P1](P1_IMPLEMENTATION_STATUS.md) شاهد
+بسته‌شدن RV-01/RV-02، حفظ R-02 و محدودیت‌ها را مشخص می‌کند. ۱۳ قابلیت بک‌اند
+پذیرفته‌شده تغییر شمارش ندارند؛ P1 یک تحویل رابط/اتصال عملیاتی است، نه ماژول
+بک‌اند چهاردهم یا درصد پیشرفت کل ERP. پذیرش UAT کارخانه و بهره‌برداری صادر نشده است.
+
+**گام پیشنهادی بعد: P2، رابط ثبت/تأیید دریافت انبار بر قراردادهای موجود I2 و
+نیازهای اصلی کارخانه؛ P2 = NOT AUTHORIZED.** مجوز جداگانهٔ صریح Owner لازم است.
+مجوز پیاده‌سازی P1 و unlock محلی بسته‌اند؛ کار فعلی فقط ثبت پذیرش و commit محلی
+مستندات است. push، استقرار/TLS تولیدی، receiving-write و هیچ increment بعدی مجاز نیست.
+
+بخش‌های ارزیابی زیر snapshot تاریخی2026-10-25 در baseline ممیزی‌شده540ce05 هستند؛
+توصیف «نبود UI» و توصیهٔ P1 در آن‌ها وضعیت آن زمان است، نه مجوز یا وضعیت جاری.
+این یادداشت حداقلی جای آن سابقه و تصمیم‌های پذیرفته‌شدهٔ I1/I2 را بازنویسی نمی‌کند.
 
 ## Part 1 — خلاصه مدیریتی
 

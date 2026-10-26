@@ -2,25 +2,46 @@
 id: IMPL-P1-001
 title: P1 Persian operational purchasing UI implementation and evidence
 phase: 12-implementation-planning
-status: in_review
-version: 1.0.2
+status: accepted
+version: 1.1.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
-depends_on: [APR-044, APR-039, APR-043, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-045, APR-044, APR-039, APR-043, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-10-26
-approval: null
+approval: APR-045 actual Owner formal P1 acceptance
 ---
 
 # P1 implementation status
 
-Authority: [actual P1 directive](../00-governance/approved-baselines/APR-044-p1-purchasing-ui-authorization.md).
-Baseline clean main c302a20a582be48e9203f88a32df9d31aa3ecbcf. Implementation
-complete for review handoff; no Owner acceptance, deployment or remote push.
-Independent audit of `bf8902a3e6375e09884c1b57a11477cf3fb4e6d0` returned FAIL
-for R-01/R-02. The bounded remediation below supersedes the original delivery's
-engineering closure claims; separate remediation re-review remains required.
-The subsequent independent verification closed R-02 but retained R-01 as RV-01
-and RV-02. Their follow-up below is implemented for another focused review;
-none of these implementation records constitutes Owner acceptance.
+**P1 — ACCEPTED FOR ITS APPROVED ENGINEERING AND FUNCTIONAL SCOPE.**
+
+Actual Owner decision issued2026-10-26 is recorded in
+[APR-045](../00-governance/approved-baselines/APR-045-p1-owner-acceptance.md). Exact accepted implementation:
+`22b5389af4d88cff38afdac1bebad68badd06f9c`. Original authority remains
+[APR-044](../00-governance/approved-baselines/APR-044-p1-purchasing-ui-authorization.md).
+
+Final independent review `artifacts/tests/p1-final-closure-review-2026-10-26.md`
+concludes PASS WITH NON-BLOCKING OBSERVATIONS — P1 READY FOR OWNER ACCEPTANCE;
+RV-01/RV-02 CLOSED — VERIFIED, earlier receiving R-02 closed without regression,
+no outstanding BLOCKER/REQUIRED finding. Its SHA256 is
+`C0449B1064B1B38609DAD7BB9A721501979D90DCEA460958CA60815C6AE055BA`.
+The subsequent Owner directive formally accepts that reviewed scope. Review-time
+212unit includes9lifecycle;16focused includes8PG+8overlapping cases. These are
+inspected retained results, not new acceptance-task executions or additive totals.
+Ignored evidence is local, not committed/remotely guaranteed; APR-045 preserves
+key review provenance and accepted functionality in tracked documentation.
+
+O-01 remains deferred/nonblocking, not a P2 prerequisite. N-01 is historical line-
+count wording only (25added/2removed,27changed); no correction/audit is required.
+P1 implementation gate/local unlock are closed; **P2 NOT AUTHORIZED**. Factory
+UAT, production deployment/exposure/TLS, receiving-write and later increments are
+not accepted. Thirteen backend capabilities retain their accepted scopes; P1 is
+frontend/operational integration, not a fourteenth backend module or ERP percentage.
+
+## Historical delivery and remediation evidence
+
+The plans, delivery-time review/acceptance-pending statements and FAIL/correction
+history below are historical records. The current Owner decision above supersedes
+only their acceptance/authority status; no audit history is rewritten as PASS.
 
 ## Bounded execution plan and Definition of Done
 

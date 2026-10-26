@@ -3,17 +3,29 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.25.0
+version: 0.26.0
 owners: [chief-solution-architect]
-depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
-last_reviewed: 2026-10-25
+depends_on: [APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
+last_reviewed: 2026-10-26
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
 
-## Current I2 backend acceptance and stop boundary (2026-10-25)
+## Current P1 Owner acceptance and P2 stop boundary (2026-10-26)
+
+- [APR-045 actual Owner acceptance of exact P1 implementation](00-governance/approved-baselines/APR-045-p1-owner-acceptance.md)
+- [Accepted P1 behavior, original authority and review/evidence provenance](12-implementation-planning/P1_IMPLEMENTATION_STATUS.md)
+- [Current state addendum and proposed P2 receiving UI](12-implementation-planning/ERP_CURRENT_STATE_AND_NEXT_STEP.md)
+
+P1 ACCEPTED; thirteen backend capabilities retain prior acceptance. Implementation
+gate/local unlock are closed. **P2 NOT AUTHORIZED**. Only acceptance documentation/
+governance validation and a local commit are authorized now; no runtime change,
+push, deployment/TLS, external exposure or factory UAT. Earlier current/proposed
+headings below are historical navigation snapshots.
+
+## Prior I2 backend acceptance and stop boundary (2026-10-25)
 
 - [APR-043 formal Owner I2 backend acceptance and focused verification](00-governance/approved-baselines/APR-043-i2-backend-acceptance.md)
 - [Accepted implementation behavior and executed evidence](12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)

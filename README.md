@@ -5,15 +5,17 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-Current scope (2026-10-25): [APR-043](docs/00-governance/approved-baselines/APR-043-i2-backend-acceptance.md)
-records formal Owner acceptance of I2 implementation b585fd795fb0276bc936af254c6d56fd7e3bcbe8
-after focused evidence verification. See [accepted I2 behavior and verification](docs/12-implementation-planning/I2_IMPLEMENTATION_STATUS.md)
-and [original60-ID trace](docs/12-implementation-planning/I2_IMPLEMENTATION_TRACE.md).
-**Thirteen backend capabilities are Owner accepted.** Current task is acceptance
-documentation only. Next activity is one consolidated purchase-to-receiving backend
-requirements audit, identified but not executed or authorized here. No new runtime,
-gate/unlock change, push, browser UI, factory UAT or deployment. Earlier text
-below is historical; [CURRENT_PHASE](docs/00-governance/CURRENT_PHASE.md) controls scope.
+Current scope (2026-10-26): [APR-045](docs/00-governance/approved-baselines/APR-045-p1-owner-acceptance.md)
+records actual Owner acceptance of P1 implementation
+`22b5389af4d88cff38afdac1bebad68badd06f9c` for its approved engineering and
+functional scope. See [accepted P1 behavior/evidence](docs/12-implementation-planning/P1_IMPLEMENTATION_STATUS.md).
+Thirteen backend capabilities remain accepted; P1 adds the accepted Persian
+purchasing browser workflow, not another backend module or ERP completion percentage.
+Current task is acceptance documentation/governance closure and local commit only.
+Implementation gate/local unlock are closed. **P2 NOT AUTHORIZED**; receiving
+confirmation UI requires a separate Owner directive. No push, production/TLS,
+external exposure or factory UAT approval. Earlier current-stage text below is
+historical; [CURRENT_PHASE](docs/00-governance/CURRENT_PHASE.md) controls scope.
 
 ## Earlier delivered foundation and backend capabilities
 
@@ -132,7 +134,8 @@ Full document index:
 
 ## P1 Persian purchasing browser workflow
 
-P1 is implemented for review under [APR-044](docs/00-governance/approved-baselines/APR-044-p1-purchasing-ui-authorization.md).
+P1 is Owner-accepted at `22b5389af4d88cff38afdac1bebad68badd06f9c` under
+[APR-045](docs/00-governance/approved-baselines/APR-045-p1-owner-acceptance.md); original implementation authority is APR-044.
 See [operation, security, exact executed evidence and acceptance checklist](docs/12-implementation-planning/P1_IMPLEMENTATION_STATUS.md).
 Native Persian/RTL UI supports personal login/logout, Procurement order registration,
 shared catalogue add/select for Procurement/Warehouse, canonical original-order

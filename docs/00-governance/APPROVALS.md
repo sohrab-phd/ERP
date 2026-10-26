@@ -3,15 +3,27 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.30.0
+version: 0.31.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
-last_reviewed: 2026-10-25
+depends_on: [APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+last_reviewed: 2026-10-26
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-045 — Formal Owner P1 acceptance
+
+[Actual Owner decision](approved-baselines/APR-045-p1-owner-acceptance.md), 2026-10-26,
+accepts P1 at exact implementation `22b5389af4d88cff38afdac1bebad68badd06f9c`
+for its approved engineering/functional scope. Final independent review PASS WITH
+NON-BLOCKING OBSERVATIONS closes RV-01/RV-02; receiving R-02 remains closed. O-01
+and N-01 are nonblocking. P1 is a UI/integration increment alongside thirteen
+accepted backend capabilities. Implementation gate/local unlock are closed;
+**P2 NOT AUTHORIZED**. No factory UAT, production/TLS/deployment or push approval.
+Only acceptance documentation/governance validation and a local commit are now
+authorized; original APR-044 and historical FAIL/remediation evidence are retained.
 
 ## APR-044 — Bounded P1 Persian purchasing browser implementation
 

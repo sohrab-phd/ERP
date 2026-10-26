@@ -3,15 +3,33 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.63.0
+version: 0.64.0
 owners: [chief-solution-architect]
-depends_on: [APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-26
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
+
+Current authority: [APR-045](approved-baselines/APR-045-p1-owner-acceptance.md) records the
+actual Owner decision issued2026-10-26: **P1 ACCEPTED FOR ITS APPROVED ENGINEERING
+AND FUNCTIONAL SCOPE**, exact implementation `22b5389af4d88cff38afdac1bebad68badd06f9c`.
+The final independent review closes RV-01/RV-02 and retains receiving R-02 closure;
+no BLOCKER/REQUIRED item remains. O-01/N-01 remain nonblocking.
+
+Current execution scope is governance/documentation closure, static validation and
+one local acceptance commit only. P1 implementation authority is closed in the
+canonical gate and ignored local unlock. **P2 = NOT AUTHORIZED**: receiving
+confirmation UI is the proposed next increment over accepted I2, requiring a
+separate explicit Owner directive. No runtime/test/schema/business-policy change,
+new engineering audit, push, deployment, external exposure, TLS production setup
+or factory UAT is authorized. Thirteen backend capabilities remain accepted;
+P1 is an accepted frontend/operational integration increment, not another backend
+module or a percentage of the whole ERP. See [P1 status](../12-implementation-planning/P1_IMPLEMENTATION_STATUS.md).
+
+## Prior APR-044 implementation/remediation scope (historical)
 
 Current authority: [APR-044](approved-baselines/APR-044-p1-purchasing-ui-authorization.md)
 records the actual Owner P1 implementation directive issued 2026-10-25. Only the
