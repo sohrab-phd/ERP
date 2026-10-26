@@ -16,6 +16,8 @@ class Element {
   value = '';
   name = '';
   required = false;
+  id = '';
+  checked = false;
   dataset: Record<string, string> = {};
   attributes = new Map<string, string>();
   listeners = new Map<string, ((event: Interaction) => void)[]>();
@@ -134,6 +136,7 @@ async function harness() {
     status: 200,
     dropCommand: false,
     hold: undefined as undefined | Promise<Response>,
+    original: { ...order, lines: [] as Record<string, unknown>[] },
   };
   const context = createContext({
     ...intent,
@@ -175,6 +178,7 @@ async function harness() {
     },
     AbortController,
     crypto,
+    TextEncoder,
     fetch: async (path: string, options: { body?: string }) => {
       requests.push({ path, body: options.body ? JSON.parse(options.body) : undefined });
       if (state.hold) return state.hold;
@@ -183,15 +187,28 @@ async function harness() {
       if (path.endsWith('/inbound-catalogues/query')) return Response.json({ data: { items: [] } });
       if (path.endsWith('/receiving/orders/query'))
         return Response.json({ data: pages.shift() ?? { items: [] } });
-      if (path.endsWith('/operational-orders')) {
+      if (path.endsWith('/operational-orders') || path.endsWith('/receiving/confirm')) {
         if (state.dropCommand) throw new Error('controlled response loss');
         return Response.json({ status: 'completed', result: { outcome: 'accepted' } });
       }
-      return Response.json({ data: order });
+      if (path.endsWith('/receiving/arrivals/query'))
+        return Response.json({ data: { arrival: { arrivalId: 'canonical' }, items: [] } });
+      return Response.json({ data: state.original });
     },
   });
   // Only static module linkage and auto-start are supplied by the test adapter.
   // All application functions and event registrations remain the actual code.
+  const editorSource = await readFile(
+    new URL('../../src/operator/receiving.js', import.meta.url),
+    'utf8',
+  );
+  new Script(
+    'globalThis.createReceiving = (() => {' +
+      editorSource
+        .replace(/^import[^\n]+\n/gmu, '')
+        .replace('export function createReceiving', 'function createReceiving') +
+      '\n;return createReceiving;})();',
+  ).runInContext(context);
   const source = await readFile(
     process.env.P1_OPERATOR_APP_SOURCE ?? new URL('../../src/operator/app.js', import.meta.url),
     'utf8',
@@ -246,6 +263,196 @@ async function harness() {
     },
   };
 }
+
+async function receivingEditorHarness() {
+  const h = await harness();
+  h.run('lock("switch")');
+  h.state.actor = person('warehouse', 'ACT-WH');
+  Object.assign(h.state.actor.browser, {
+    receivingLocation: { id: order.orderId, label: 'محل آزمون' },
+  });
+  await h.run<Promise<void>>('session()');
+  const material = '22222222-2222-4222-8222-222222222222',
+    lineId = '33333333-3333-4333-8333-333333333333';
+  h.state.original = {
+    ...order,
+    lines: [
+      {
+        lineId,
+        position: 1,
+        materialType: { optionId: material, label: 'COIL' },
+        widthM: '99999999999999999999.123456789012345678',
+        thicknessMm: '0.35',
+        unitWeightKg: '99999999999999999999',
+        orderedUnitCount: '5',
+      },
+    ],
+  };
+  h.run(
+    `catalogues.get('MATERIAL_TYPE').set('${material}',{optionId:'${material}',catalogue:'MATERIAL_TYPE',label:'COIL'});navigate('receiving-panel')`,
+  );
+  const root = h.element('receiving-panel');
+  const control = (prefix: string) =>
+    root.querySelectorAll('input,select').find((c) => c.id.startsWith(prefix))!;
+  // Native selects choose their first option; this minimal DOM adapter does not.
+  for (const prefix of [
+    'state-colorOptionId',
+    'state-qualityGradeOptionId',
+    'state-ralColorNumber',
+    'state-lengthM',
+  ])
+    control(prefix).value = 'NOT_RECORDED';
+  control('association-').value = 'ORDER_LINE';
+  const emit = (element: Element, event: string) => {
+    for (const listener of element.listeners.get(event) ?? []) listener(new Interaction(element));
+  };
+  const settle = async () => {
+    for (let i = 0; i < 30; i++) await new Promise((resolve) => setTimeout(resolve, 1));
+  };
+  control('receive-lookup').value = order.orderReference;
+  h.pages.push({
+    items: [{ ...h.state.original.lines[0], acceptedUnitCount: '0', remainingUnitCount: '5' }],
+    snapshotAt: 'page-one',
+  });
+  emit(root.querySelectorAll('form')[0]!, 'submit');
+  await settle();
+  control('unit-order').value = order.orderId;
+  emit(control('unit-order'), 'change');
+  control('unit-line').value = lineId;
+  emit(control('unit-line'), 'change');
+  const button = (text: string) =>
+    root.querySelectorAll('button').find((b) => b.textContent === text)!;
+  emit(button('مشخصات همین واحد مطابق اصل بررسی شد؛ درج مقادیر'), 'click');
+  control('system-').value = 'private-P2-system';
+  control('product-').value = 'distinct-product';
+  control('waybill-').value = 'private-waybill';
+  control('receipt-').value = 'receipt-business-reference';
+  control('receive-arrivalDateJalali').value = '1403-12-30';
+  control('receive-originNetKg').value = '09007199254740993.12500';
+  control('accept-confirmed').checked = true;
+  const prepare = () => emit(root.querySelectorAll('form')[1]!, 'submit');
+  return { ...h, root, control, button, emit, settle, prepare };
+}
+
+void test('P2 complete receiving review freezes exact intent; repeated clicks, local lock and same-actor replay preserve it', async () => {
+  const h = await receivingEditorHarness();
+  const physicalUnit = h.root
+    .querySelectorAll('fieldset')
+    .find((field) => field.children[0]?.textContent.startsWith('واحد فیزیکی'))!;
+  assert.match(
+    physicalUnit.textContent,
+    /page-one/u,
+    'selected original/progress retains its own query-page timestamp',
+  );
+  h.prepare();
+  const actor = h.state.actor;
+  assert.equal(h.button('تأیید نهایی دریافت و ثبت موجودی').disabled, false);
+  h.control('system-').value = 'changed-after-review';
+  h.state.dropCommand = true;
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  await h.settle();
+  const submissions = () => h.requests.filter((r) => r.path.endsWith('/receiving/confirm'));
+  assert.equal(submissions().length, 1);
+  const encrypted = h.storage.get(intent.pendingSlot)!;
+  assert.ok(encrypted && !encrypted.includes('private-waybill'));
+  const pending = await intent.openIntent(encrypted, actor.browser.recoveryKey);
+  const command = JSON.parse(pending.body) as {
+    payload: {
+      units: Record<string, unknown>[];
+      originNetKg: string;
+      arrivalDateJalali: string;
+      destinationNetKg?: string;
+    };
+    preconditions: { lineProgress: unknown[] };
+  };
+  assert.equal(command.payload.units[0]!.internalSystemCode, 'private-P2-system');
+  assert.equal(command.payload.originNetKg, '09007199254740993.12500');
+  assert.equal(command.payload.arrivalDateJalali, '1403-12-30');
+  assert.equal(Object.hasOwn(command.payload, 'destinationNetKg'), false);
+  const actual = command.payload.units[0]!.actual as Record<string, unknown>;
+  assert.equal(actual.widthM, '99999999999999999999.123456789012345678');
+  assert.equal(actual.unitWeightKg, '99999999999999999999');
+  assert.equal(Object.hasOwn(actual, 'colorOptionId'), false);
+  assert.equal(command.preconditions.lineProgress.length, 1);
+  await h.advance(idle);
+  assert.equal(h.element('receiving-panel').textContent, '');
+  assert.equal(h.run('self'), undefined);
+  assert.equal(h.run('pending'), undefined);
+  assert.equal(h.storage.get(intent.pendingSlot), encrypted);
+  h.state.actor = person('other', 'ACT-WH');
+  await h.run<Promise<void>>('session()');
+  await h.run<Promise<void>>('dispatchPending()');
+  assert.equal(submissions().length, 1);
+  assert.equal(h.run('lockedPending'), true);
+  h.run('lock("original")');
+  h.state.actor = actor;
+  await h.run<Promise<void>>('session()');
+  assert.equal(h.run('pending.body'), pending.body);
+  h.state.dropCommand = false;
+  await h.run<Promise<void>>('dispatchPending()');
+  assert.equal(submissions().length, 2);
+  assert.deepEqual(submissions()[0]!.body, submissions()[1]!.body);
+  assert.equal(h.storage.has(intent.pendingSlot), false);
+});
+
+void test('P2 explicit absent actual values survive review and definitive rejection releases only the frozen review', async () => {
+  const h = await receivingEditorHarness();
+  h.emit(h.button('افزودن واحد فیزیکی'), 'click');
+  h.emit(h.button('افزودن واحد فیزیکی'), 'click');
+  const second = h.root
+    .querySelectorAll('fieldset')
+    .find((field) => field.children[0]?.textContent === 'واحد فیزیکی 2')!;
+  h.emit(
+    second
+      .querySelectorAll('button')
+      .find((button) => button.textContent === 'حذف این واحد پیش از تأیید')!,
+    'click',
+  );
+  h.emit(h.button('افزودن واحد فیزیکی'), 'click');
+  const physical = h.root
+    .querySelectorAll('fieldset')
+    .filter((field) => field.children[0]?.textContent.startsWith('واحد فیزیکی'));
+  assert.deepEqual(
+    physical.map((field) => field.children[0]!.textContent),
+    ['واحد فیزیکی 1', 'واحد فیزیکی 2', 'واحد فیزیکی 3'],
+  );
+  for (const added of physical.slice(1))
+    h.emit(
+      added
+        .querySelectorAll('button')
+        .find((button) => button.textContent === 'حذف این واحد پیش از تأیید')!,
+      'click',
+    );
+  h.control('state-colorOptionId').value = 'ABSENT';
+  h.prepare();
+  h.state.status = 422;
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  await h.settle();
+  const sent = h.requests.find((r) => r.path.endsWith('/receiving/confirm'))!.body as {
+    payload: { units: { actual: Record<string, unknown> }[] };
+  };
+  assert.equal(sent.payload.units[0]!.actual.colorOptionId, null);
+  assert.equal(h.run('pending'), undefined);
+  assert.equal(h.storage.has(intent.pendingSlot), false);
+  assert.equal(h.control('system-').value, 'private-P2-system');
+  h.state.status = 200;
+  h.prepare();
+  assert.equal(h.button('تأیید نهایی دریافت و ثبت موجودی').disabled, false);
+});
+
+void test('P2 missing installation placement cannot open an entry form; PROC navigation cannot open receiving editor', async () => {
+  const h = await harness();
+  h.run('navigate("receiving-panel")');
+  assert.equal(h.element('receiving-panel').hidden, true);
+  assert.equal(h.element('show-receive').hidden, true);
+  h.run('lock("switch")');
+  h.state.actor = person('warehouse', 'ACT-WH');
+  await h.run<Promise<void>>('session()');
+  h.run('navigate("receiving-panel")');
+  assert.match(h.element('receiving-panel').textContent, /پیکربندی نشده/u);
+  assert.equal(h.element('receiving-panel').querySelectorAll('form').length, 0);
+});
 
 void test('R-01 foreground idle lock clears sensitive roots/DOM but preserves actor-bound encrypted immutable recovery', async () => {
   const h = await harness();

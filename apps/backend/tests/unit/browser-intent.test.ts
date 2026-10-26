@@ -12,6 +12,31 @@ import {
   type Intent,
 } from '../../src/operator/intent.js';
 
+void test('P2 receiving recovery accepts only its exact Warehouse intent and retains envelope bytes', async () => {
+  const secret = randomBytes(32).toString('base64url');
+  const intent: Intent = {
+    accountId: 'warehouse-personal-account',
+    personId: 'warehouse-person',
+    role: 'ACT-WH',
+    path: '/purchasing/receiving/confirm',
+    body: commandBody('ConfirmPurchaseReceiving', 'inbound-arrival', {
+      originNetKg: '06000.12500',
+      units: [],
+    }),
+  };
+  const saved = await sealIntent(intent, secret);
+  assert.deepEqual(await openIntent(saved, secret), intent);
+  await assert.rejects(
+    openIntent(await sealIntent({ ...intent, role: 'ACT-PROC' }, secret), secret),
+  );
+  await assert.rejects(
+    openIntent(
+      await sealIntent({ ...intent, path: '/purchasing/receiving/arbitrary' }, secret),
+      secret,
+    ),
+  );
+});
+
 void test('P1 exact line values and optional absence survive command creation without numeric/date conversion', () => {
   const values = {
     materialTypeOptionId: '11111111-1111-4111-8111-111111111111',

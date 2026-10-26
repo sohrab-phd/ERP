@@ -7,6 +7,7 @@ import {
   type Intent,
 } from './intent.js';
 import { textValue } from './display.js';
+import { createReceiving } from './receiving.js';
 
 type Role = 'ACT-PROC' | 'ACT-WH';
 type Kind = 'MATERIAL_TYPE' | 'QUALITY_GRADE' | 'COLOR';
@@ -16,7 +17,11 @@ interface Self {
   username: string;
   expiresAt: string;
   grants: { actorRole: Role }[];
-  browser: { csrf: string; recoveryKey?: string };
+  browser: {
+    csrf: string;
+    recoveryKey?: string;
+    receivingLocation?: { id: string; label: string };
+  };
 }
 interface Option {
   optionId: string;
@@ -82,6 +87,7 @@ sessionChanges.onmessage = () => {
 let orderRead = 0,
   receivingRead = 0;
 const arrivals = new Set<string>();
+let receivingEditor: ReturnType<typeof createReceiving> | undefined;
 class Stale extends Error {}
 class RecoveryStorageError extends Error {}
 class ApiError extends Error {
@@ -106,6 +112,7 @@ function clearBusiness() {
   receivingRead++;
   el('order-result').replaceChildren();
   el('receiving-result').replaceChildren();
+  el('arrival-result').replaceChildren();
   show('receiving', false);
   currentOrder = undefined;
   receivingCursor = undefined;
@@ -122,6 +129,9 @@ function lock(text: string) {
   prepared = undefined;
   busy = false;
   clearBusiness();
+  receivingEditor?.clear();
+  receivingEditor = undefined;
+  el('receiving-panel').replaceChildren();
   el<HTMLFormElement>('order-form').reset();
   el('lines').replaceChildren();
   for (const cache of catalogues.values()) cache.clear();
@@ -129,6 +139,7 @@ function lock(text: string) {
   el('catalogue-options').replaceChildren();
   el<HTMLFormElement>('catalogue-form').reset();
   el<HTMLFormElement>('lookup-form').reset();
+  el<HTMLFormElement>('arrival-lookup-form').reset();
   el('recovery-reference').textContent = '';
   el('receiving-status').textContent = '';
   show('workspace', false);
@@ -296,18 +307,21 @@ function updateControls() {
   el<HTMLButtonElement>('recover').disabled = busy || !pending || !permissions().has(pending.role);
   el<HTMLButtonElement>('role').disabled = busy || prepared !== undefined;
   show('show-register', permissions().has('ACT-PROC') && role === 'ACT-PROC');
+  show('show-receive', permissions().has('ACT-WH') && role === 'ACT-WH');
+  show('arrival-lookup-form', permissions().has('ACT-WH') && role === 'ACT-WH');
+  receivingEditor?.setBlocked(blocked || role !== 'ACT-WH');
   show('recovery', !!pending || lockedPending);
   el('recovery-note').textContent = lockedPending
     ? 'یک پیگیری رمز‌شده در این تب وجود دارد که این حساب اجازهٔ بازکردن آن را ندارد. با حساب اصلی وارد شوید یا پس از بررسی نتیجه، پیگیری را صریحاً ببندید. می‌توانید برای کار مستقل تب تازه باز کنید.'
-    : 'نتیجهٔ عملیات تا دریافت پاسخ قطعی نامعلوم است. اطلاعات آن ثابت مانده است. پیگیری، همان درخواست را تکرار می‌کند و سفارش تازه‌ای نمی‌سازد.';
+    : 'نتیجهٔ عملیات تا دریافت پاسخ قطعی نامعلوم است. اطلاعات ثابت مانده است. پیگیری همان درخواست را تکرار می‌کند و سفارش یا اثر موجودی تازه‌ای نمی‌سازد.';
   const command = pending
     ? (JSON.parse(pending.body) as {
         target: { id: string };
-        payload: { orderReference?: string; label?: string };
+        payload: { orderReference?: string; label?: string; waybills?: { reference: string }[] };
       })
     : undefined;
   el('recovery-reference').textContent = command
-    ? `${command.payload.orderReference ?? command.payload.label ?? ''} · ${command.target.id}`
+    ? `${command.payload.orderReference ?? command.payload.label ?? command.payload.waybills?.[0]?.reference ?? ''} · ${command.target.id}`
     : '';
 }
 async function restorePending() {
@@ -416,8 +430,36 @@ function navigate(panel: string, userNavigation = false) {
     show('order-confirm', false);
     updateControls();
   }
-  for (const id of ['register-panel', 'lookup-panel', 'catalogue-panel']) show(id, id === panel);
+  for (const id of [
+    'register-panel',
+    'lookup-panel',
+    'catalogue-panel',
+    'receiving-panel',
+    'arrival-panel',
+  ])
+    show(id, id === panel);
   if (panel === 'register-panel' && role !== 'ACT-PROC') show(panel, false);
+  if (panel === 'receiving-panel') {
+    if (role !== 'ACT-WH' || !permissions().has('ACT-WH')) {
+      show(panel, false);
+      return;
+    }
+    receivingEditor ??= createReceiving({
+      root: el('receiving-panel'),
+      ...(self?.browser.receivingLocation ? { location: self.browser.receivingLocation } : {}),
+      api: <T>(path: string, body?: object) => api<T>(path, body, 'ACT-WH'),
+      catalogues: () => [...catalogues.values()].flatMap((cache) => [...cache.values()]),
+      submit: (body) => startCommand('/purchasing/receiving/confirm', body),
+      render: details,
+      message: (text) => message(text),
+      failure: (error) =>
+        action(() =>
+          Promise.reject(error instanceof Error ? error : new Error('Request failed')),
+        )(),
+    });
+    receivingEditor.show();
+    updateControls();
+  }
 }
 const fieldDefinitions = [
   ['itemNumber', 'شماره آیتم (اختیاری)', 'text'],
@@ -432,6 +474,7 @@ const fieldDefinitions = [
   ['orderedUnitCount', 'تعداد واحد سفارش', 'integer'],
 ] as const;
 function refreshSelects() {
+  receivingEditor?.refreshCatalogues();
   document.querySelectorAll<HTMLSelectElement>('select[data-catalogue]').forEach((select) => {
     const selected = select.value;
     const kind = select.dataset.catalogue as Kind;
@@ -551,6 +594,7 @@ function renderCatalogues() {
   refreshSelects();
 }
 const labels: Record<string, string> = {
+  snapshotAt: 'زمان صفحهٔ بازیابی',
   orderId: 'شناسهٔ سفارش',
   orderReference: 'شماره سفارش',
   registrationDateJalali: 'تاریخ ثبت سفارش (جلالی)',
@@ -558,6 +602,9 @@ const labels: Record<string, string> = {
   position: 'ردیف اصلی',
   itemNumber: 'شماره آیتم',
   materialType: 'نوع کالا',
+  materialTypeOptionId: 'نوع کالای واقعی',
+  colorOptionId: 'رنگ واقعی',
+  qualityGradeOptionId: 'کیفیت واقعی',
   widthM: 'عرض (متر)',
   thicknessMm: 'ضخامت (میلی‌متر)',
   color: 'رنگ',
@@ -798,6 +845,89 @@ async function loadReceiving(more: boolean) {
     }
   }
 }
+async function readArrival(arrivalId: string) {
+  const generation = epoch;
+  const read = ++receivingRead;
+  const root = el('arrival-result');
+  root.replaceChildren();
+  navigate('arrival-panel');
+  message('در حال بازیابی دریافت قطعی و شناسه‌های اثر موجودی…');
+  let cursor: string | undefined,
+    pageNumber = 0,
+    count = 0;
+  const linkedOrders = new Set<string>();
+  do {
+    const result = await api<{ data: Page & { arrival: Record<string, unknown> } }>(
+      '/purchasing/receiving/arrivals/query',
+      { arrivalId, limit: 20, ...(cursor ? { afterId: cursor } : {}) },
+      'ACT-WH',
+    );
+    if (generation !== epoch || read !== receivingRead) throw new Stale();
+    if (pageNumber === 0)
+      root.append(
+        node('h3', 'اطلاعات مشترک کل محموله — W2/W3 بین واحدها تقسیم نمی‌شوند'),
+        details(result.data.arrival),
+      );
+    const section = node('section');
+    section.append(
+      node(
+        'h3',
+        `واحدهای قطعی · صفحهٔ ${++pageNumber} · زمان این صفحه: ${result.data.snapshotAt ?? 'از سرور ارائه نشده است'}`,
+      ),
+    );
+    for (const row of result.data.items) {
+      const unit = node('details');
+      unit.open = true;
+      unit.append(
+        node(
+          'summary',
+          `شماره سیستم: ${textValue(row.internalSystemCode)} · شماره محصول: ${textValue(row.productNumber)}`,
+        ),
+        details(row, ['arrival']),
+      );
+      section.append(unit);
+      const association = row.association as { kind: string; orderId?: string };
+      if (association.orderId) linkedOrders.add(association.orderId);
+    }
+    if (!result.data.items.length) section.append(node('p', 'این صفحه واحدی ندارد.'));
+    root.append(section);
+    count += result.data.items.length;
+    cursor = result.data.nextAfterId;
+  } while (cursor);
+  for (const orderId of linkedOrders) {
+    let afterId: string | undefined,
+      page = 0;
+    const progress = node('section');
+    progress.append(node('h3', 'پیشرفت و ماندهٔ سفارش مرتبط'));
+    root.append(progress);
+    do {
+      const result = await api<{ data: Page }>(
+        '/purchasing/receiving/orders/query',
+        { orderId, view: 'LINES', limit: 20, ...(afterId ? { afterId } : {}) },
+        'ACT-WH',
+      );
+      if (generation !== epoch || read !== receivingRead) throw new Stale();
+      progress.append(
+        node(
+          'h4',
+          `صفحهٔ ${++page} · زمان این صفحه: ${result.data.snapshotAt ?? 'از سرور ارائه نشده است'}`,
+        ),
+        table(result.data.items, [
+          ...originalColumns,
+          'acceptedUnitCount',
+          'remainingUnitCount',
+          'excessUnitCount',
+          'variance',
+        ]),
+      );
+      afterId = result.data.nextAfterId;
+    } while (afterId);
+  }
+  message(
+    `دریافت تأییدشده از سرور بازیابی شد: ${count} واحد؛ پایان تمام صفحات. شناسه‌های موجودی شاهد اثر ثبت‌شده‌اند. هر صفحه وضعیت زمان بازیابی خود را دارد.`,
+    'success',
+  );
+}
 async function dispatchPending() {
   const intent = pending,
     actor = self;
@@ -810,6 +940,7 @@ async function dispatchPending() {
   )
     return;
   const generation = epoch;
+  let receivingAccepted = false;
   busy = true;
   updateControls();
   message('در حال ثبت یا پیگیری همان درخواست…');
@@ -826,6 +957,10 @@ async function dispatchPending() {
       el<HTMLFormElement>('order-form').reset();
       el('lines').replaceChildren();
       addLine();
+    } else if (intent.path === '/purchasing/receiving/confirm') {
+      receivingAccepted = true;
+      await readArrival(command.target.id);
+      receivingEditor?.clear();
     } else {
       // Canonical exact-label lookup, not a local optimistic option or get-or-create.
       const options = await api<{ data: { items: Option[] } }>(
@@ -843,7 +978,7 @@ async function dispatchPending() {
     pending = undefined;
     lockedPending = false;
   } catch (error) {
-    if (error instanceof ApiError && [400, 422].includes(error.status)) {
+    if (!receivingAccepted && error instanceof ApiError && [400, 422].includes(error.status)) {
       const command = JSON.parse(intent.body) as { payload: { catalogue: Kind; label: string } };
       if (
         intent.path === '/purchasing/inbound-catalogues' &&
@@ -860,9 +995,17 @@ async function dispatchPending() {
         refreshSelects();
         renderCatalogues();
         message('عنوان دقیق قبلاً ثبت شده است؛ گزینهٔ موجود برای انتخاب بارگذاری شد.', 'success');
-      } else message(errorText(error), 'error');
+      } else
+        message(
+          intent.path === '/purchasing/receiving/confirm' &&
+            error.outcome?.result?.family === 'GUARD_CONFLICT'
+            ? 'دریافت رد شد: پیشرفت خط یا کد واحد با ثبت موجود تعارض دارد. اصل سفارش و پیشرفت را تازه‌سازی و اطلاعات را بازبینی کنید؛ این درخواست نتیجهٔ قطعی رد دارد.'
+            : errorText(error),
+          'error',
+        );
       sessionStorage.removeItem(pendingSlot);
       pending = undefined;
+      if (intent.path === '/purchasing/receiving/confirm') receivingEditor?.reject();
     } else throw error;
   } finally {
     if (generation === epoch) {
@@ -886,7 +1029,7 @@ async function startCommand(path: string, body: string) {
       body,
     });
     const encrypted = await sealIntent(intent, actor.browser.recoveryKey!);
-    if (generation !== epoch || self !== actor) throw new Stale();
+    if (generation !== epoch || self !== actor || checkLocalExpiry()) throw new Stale();
     // Storage denial/quota failure must prevent the very first dispatch.
     sessionStorage.setItem(pendingSlot, encrypted);
     pending = intent;
@@ -965,12 +1108,15 @@ for (const [id, panel] of [
   ['show-register', 'register-panel'],
   ['show-lookup', 'lookup-panel'],
   ['show-catalogues', 'catalogue-panel'],
+  ['show-receive', 'receiving-panel'],
 ] as const)
   el(id).addEventListener('click', () => navigate(panel, true));
 el('role').addEventListener('change', () => {
   epoch++;
   role = input('role') as Role;
   clearBusiness();
+  receivingEditor?.clear();
+  receivingEditor = undefined;
   navigate('lookup-panel');
   updateControls();
 });
@@ -1052,6 +1198,7 @@ on('lookup-form', 'submit', async () => {
   } else await readOrder('/purchasing/operational-orders/lookup', { orderReference: value });
 });
 on('refresh-receiving', 'click', () => loadReceiving(false));
+on('arrival-lookup-form', 'submit', () => readArrival(input('arrival-lookup-id')));
 on('more-receiving', 'click', () => loadReceiving(true));
 on('receiving-view', 'change', () => loadReceiving(false));
 // Revalidate on workstation focus/back navigation. A rotated cookie cannot authorize stale intent.

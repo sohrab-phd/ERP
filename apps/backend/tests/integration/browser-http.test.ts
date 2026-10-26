@@ -46,8 +46,8 @@ void test('P1 browser admission, cookies, CSRF, security headers, closed files/r
           ),
         );
       assert.equal((await c.call('/identity/accounts', {})).status, 404);
-      assert.equal((await c.call('/purchasing/receiving/confirm', {})).status, 404);
-      assert.equal((await c.call('/purchasing/receiving/arrivals/query', {})).status, 404);
+      assert.equal((await c.call('/purchasing/receiving/confirm', {})).status, 403);
+      assert.equal((await c.call('/purchasing/receiving/arrivals/query', {})).status, 403);
       assert.equal((await c.call('/purchasing/inbound-catalogues/query', '{bad')).status, 400);
       assert.equal(
         (

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>خرید عملیاتی | نوردکاران</title>
+    <title>خرید و دریافت انبار | نوردکاران</title>
     <link rel="stylesheet" href="/operator/styles.css" />
     <script type="module" src="/operator/app.js"></script>
   </head>
@@ -11,7 +11,7 @@
     <header>
       <div>
         <p class="eyebrow">نوردکاران · ERP–MES</p>
-        <h1>خرید عملیاتی</h1>
+        <h1>خرید و دریافت انبار</h1>
       </div>
       <p id="identity">در حال بررسی نشست…</p>
       <button id="logout" hidden type="button">خروج امن</button>
@@ -53,6 +53,7 @@
           ><button type="button" id="show-register">ثبت سفارش</button
           ><button type="button" id="show-lookup">بازیابی سفارش</button
           ><button type="button" id="show-catalogues">کاتالوگ‌های مشترک</button>
+          <button type="button" id="show-receive" hidden>ثبت دریافت انبار</button>
         </nav>
         <section id="recovery" hidden aria-labelledby="recovery-title">
           <h2 id="recovery-title">پیگیری عملیات قبلی</h2>
@@ -62,8 +63,8 @@
           ><button id="discard" type="button" class="secondary">بستن پیگیری…</button>
           <div id="discard-confirm" hidden>
             <p>
-              بستن پیگیری، عملیات ثبت‌شده را لغو نمی‌کند. ابتدا با شماره یا شناسهٔ سفارش نتیجه را
-              بررسی کنید. ثبت دوباره با شمارهٔ تازه ممکن است سفارش دیگری بسازد.
+              بستن پیگیری، عملیات ثبت‌شده یا اثر موجودی را لغو نمی‌کند. ابتدا با شماره یا شناسه،
+              نتیجه را بررسی کنید. ثبت دوباره با درخواست تازه ممکن است سفارش یا موجودی تکراری بسازد.
             </p>
             <button id="confirm-discard" type="button">پیگیری را می‌بندم</button
             ><button id="cancel-discard" type="button">بازگشت</button>
@@ -143,6 +144,11 @@
           <button id="refresh-catalogues" type="button">تازه‌سازی گزینه‌ها</button>
           <div id="catalogue-options"></div>
         </section>
+        <section id="receiving-panel" hidden aria-label="ثبت و تأیید دریافت انبار"></section>
+        <section id="arrival-panel" hidden aria-label="نتیجهٔ قطعی دریافت">
+          <h2>دریافت تأییدشده از سرور</h2>
+          <div id="arrival-result"></div>
+        </section>
         <section id="lookup-panel" aria-labelledby="lookup-title">
           <h2 id="lookup-title">بازیابی اصل سفارش و دریافت‌ها</h2>
           <form id="lookup-form" method="post">
@@ -158,6 +164,17 @@
                 dir="auto"
                 maxlength="256" /></label
             ><button type="submit">بازیابی</button>
+          </form>
+          <form id="arrival-lookup-form" hidden method="post">
+            <label
+              >شناسهٔ ورود برای بازیابی دریافت انبار<input
+                id="arrival-lookup-id"
+                required
+                dir="ltr"
+                pattern="[0-9a-f-]{36}"
+                maxlength="36"
+            /></label>
+            <button type="submit">بازیابی دریافت تأییدشده</button>
           </form>
           <div id="order-result"></div>
           <section id="receiving" hidden aria-labelledby="receiving-title">
@@ -182,7 +199,7 @@
       </div>
     </main>
     <footer>
-      ثبت و مشاهدهٔ خرید · مشاهدهٔ دریافت · اطلاعات نمایش‌داده‌شده پس از بازیابی از سرور
+      خرید و دریافت انبار · تأیید انبار اثر موجودی دارد · نتیجهٔ ثبت از سرور بازیابی می‌شود
     </footer>
   </body>
 </html>

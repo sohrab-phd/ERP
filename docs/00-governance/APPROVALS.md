@@ -3,15 +3,24 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.31.0
+version: 0.32.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-10-26
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-046 — Bounded P2 Warehouse receiving browser implementation
+
+[Actual Owner directive](approved-baselines/APR-046-p2-receiving-ui-authorization.md),
+2026-10-26, authorizes P2 from clean `1dfaccb4b73c1d3367e34c9f8d0d1a571a740770`:
+existing Persian UI, accepted I2 confirmation/readback and sole-IPS effects,
+minimal browser admission, focused Windows/PG/browser tests, review/docs/local
+commit. P2 remains in_review, not accepted. APR-043/APR-045 retain their accepted
+scopes. No business/schema/Identity-policy change, O-01, P3, push or deployment.
 
 ## APR-045 — Formal Owner P1 acceptance
 

@@ -11,11 +11,12 @@ records actual Owner acceptance of P1 implementation
 functional scope. See [accepted P1 behavior/evidence](docs/12-implementation-planning/P1_IMPLEMENTATION_STATUS.md).
 Thirteen backend capabilities remain accepted; P1 adds the accepted Persian
 purchasing browser workflow, not another backend module or ERP completion percentage.
-Current task is acceptance documentation/governance closure and local commit only.
-Implementation gate/local unlock are closed. **P2 NOT AUTHORIZED**; receiving
-confirmation UI requires a separate Owner directive. No push, production/TLS,
-external exposure or factory UAT approval. Earlier current-stage text below is
-historical; [CURRENT_PHASE](docs/00-governance/CURRENT_PHASE.md) controls scope.
+Current execution authority is [APR-046](docs/00-governance/approved-baselines/APR-046-p2-receiving-ui-authorization.md):
+**P2 authorized for bounded implementation, not accepted**. The existing browser
+now admits Warehouse receiving confirmation and canonical arrival/IPS readback.
+See [P2 status/evidence](docs/12-implementation-planning/P2_IMPLEMENTATION_STATUS.md).
+No push, production/TLS, external exposure, factory UAT or P3. Earlier stage text
+below is historical; [CURRENT_PHASE](docs/00-governance/CURRENT_PHASE.md) controls scope.
 
 ## Earlier delivered foundation and backend capabilities
 
@@ -139,8 +140,8 @@ P1 is Owner-accepted at `22b5389af4d88cff38afdac1bebad68badd06f9c` under
 See [operation, security, exact executed evidence and acceptance checklist](docs/12-implementation-planning/P1_IMPLEMENTATION_STATUS.md).
 Native Persian/RTL UI supports personal login/logout, Procurement order registration,
 shared catalogue add/select for Procurement/Warehouse, canonical original-order
-lookup and both order-scoped receiving views. Receiving confirmation has no browser
-route. No framework, dependency, schema or business-policy change is required.
+lookup and both order-scoped receiving views. P2 adds the bounded Warehouse
+confirmation workflow below; no framework, dependency, schema or business policy changes.
 
 Use the pinned Windows runtime and existing development PostgreSQL/account/grant
 setup above. Keep DATABASE_URL on the development runtime database; the disposable
@@ -166,6 +167,33 @@ Browser mode is disabled when both browser settings are absent. Production confi
 requires an HTTPS origin and existing loopback/TLS-terminator policy; deployment,
 certificate/proxy setup and factory acceptance are separately authorized work.
 
+## P2 Warehouse receiving browser workflow — in review
+
+ACT-WH uses **ثبت دریافت انبار**: look up each original order, choose a line per
+physical unit, enter the actual arrival/documents and independently verified
+attributes, review, then explicitly confirm the complete arrival. The accepted I2
+command is atomic, including multi-order arrivals. Whole-consignment W2/W3 are
+separate from each unit's stock W1. After success, all canonical arrival pages,
+Inventory identities and related order progress are retrieved from the server.
+PROC retains order-scoped read access and cannot confirm or read whole arrivals.
+
+In the same ignored environment file configure **both**
+`BROWSER_RECEIVING_LOCATION_ID` (the installation's stable UUID for the actual
+receiving location) and `BROWSER_RECEIVING_LOCATION_LABEL` (its familiar name).
+There is no location-master endpoint; this is named workstation placement
+configuration, not a newly validated database master. Never generate an arbitrary
+location as factory data. Missing placement leaves receiving entry disabled;
+invalid/partial configuration prevents startup. Do not confirm at this workstation
+if the shown location is incorrect. Existing Inventory material-type resolution
+must support the selected catalogue label; no automatic type mapping is added.
+
+Use the P1 build/start commands above and the same personal accounts/origin/secret.
+An uncertain confirmation remains frozen and actor-bound in encrypted tab recovery;
+reauthenticate with the original account and **پیگیری با همان درخواست**. Do not
+create another intent to compensate for a timeout. Definitive rejections permit
+correction and fresh progress review. Canonical arrival UUID lookup is available
+in the order-lookup screen. No receipt reversal/editing, broad search, production
+setup or factory UAT is included. P2 awaits fresh independent review and Owner acceptance.
 ## 1. Historical design-phase overview (before APR-018)
 
 | This repository **is** | This repository **is not** |

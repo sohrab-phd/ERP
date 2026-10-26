@@ -17,6 +17,7 @@ const files = [
   'inbound-integrity',
   'inbound-http',
   'browser-http',
+  'p2-browser-http',
   'inbound-recovery',
   'inbound-additional',
   'receiving',

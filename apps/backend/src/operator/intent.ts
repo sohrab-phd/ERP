@@ -50,7 +50,12 @@ export async function openIntent(value: string, secret: string): Promise<Intent>
     typeof intent.accountId !== 'string' ||
     typeof intent.personId !== 'string' ||
     !['ACT-PROC', 'ACT-WH'].includes(intent.role) ||
-    !['/purchasing/operational-orders', '/purchasing/inbound-catalogues'].includes(intent.path) ||
+    ![
+      '/purchasing/operational-orders',
+      '/purchasing/inbound-catalogues',
+      '/purchasing/receiving/confirm',
+    ].includes(intent.path) ||
+    (intent.path === '/purchasing/receiving/confirm' && intent.role !== 'ACT-WH') ||
     typeof intent.body !== 'string'
   )
     throw new Error('Invalid recovery data');

@@ -27,6 +27,8 @@ function testReport() {
     recoveryKey: !!self?.browser.recoveryKey, ciphertext: !!sessionStorage.getItem('navard-p1-pending-v1'),
     orderCleared: !document.getElementById('order-result').textContent,
     receivingCleared: !document.getElementById('receiving-result').textContent,
+    receivingEditorCleared: !document.getElementById('receiving-panel').textContent,
+    arrivalCleared: !document.getElementById('arrival-result').textContent,
     referenceCleared: !document.getElementById('recovery-reference').textContent });
 }
 for (const [label, work] of [
@@ -87,6 +89,7 @@ await withDatabase(async (db) => {
             throw new Error('Catalogue pagination fixture failed');
         }
       } else if (command === 'drop-next') h.loseNextOrderResponse();
+      else if (command === 'drop-next-receiving') h.loseNextReceivingResponse();
       else if (command === 'unavailable-session') h.unavailableNextSession();
       else if (command === 'fence-commands') h.setCommandAdmission(false);
       else if (command === 'unfence-commands') h.setCommandAdmission(true);
@@ -118,6 +121,18 @@ await withDatabase(async (db) => {
           'SELECT (SELECT count(*)::int FROM procurement.operational_purchase_order) AS orders,(SELECT count(*)::int FROM procurement.operational_purchase_order_line) AS lines,(SELECT count(*)::int FROM procurement.inbound_received_unit) AS received',
         );
         console.log(JSON.stringify(rows.rows[0]));
+      } else if (command === 'p2-stock') {
+        const rows = await db.owner.query(
+          `SELECT a.arrival_id,a.arrival_jy,a.arrival_jm,a.arrival_jd,a.origin_net_kg_text,a.destination_net_kg_text,
+          u.received_unit_id,u.internal_system_code,u.product_number,u.actual,u.order_id,u.line_id,
+          o.unit_id,o.lot_id,o.effect_id,o.accepted_unit_weight_kg_text,l.on_hand_delta::text AS stock_kg
+          FROM procurement.inbound_arrival a
+          JOIN procurement.inbound_received_unit u USING(installation_id,authority_scope,arrival_id)
+          JOIN inventory.inbound_unit_origin o USING(installation_id,authority_scope,received_unit_id,arrival_id)
+          JOIN inventory.ledger l ON l.installation_id=o.installation_id AND l.unit_id=o.unit_id AND l.effect_id=o.effect_id
+          WHERE u.internal_system_code LIKE 'P2-BROWSER-%' ORDER BY u.internal_system_code`,
+        );
+        console.log(JSON.stringify(rows.rows));
       } else if (command === 'readback') {
         const rows = await db.owner.query<{ reference: string; lines: unknown }>(
           "SELECT order_reference AS reference, (SELECT jsonb_agg(jsonb_build_object('lineId',line_id,'position',position,'widthM',width_m_text,'thicknessMm',thickness_mm_text,'unitWeightKg',unit_weight_kg_text,'orderedUnitCount',ordered_unit_count_text,'lengthM',length_m_text,'itemNumber',item_number,'colorOptionId',color_option_id,'qualityGradeOptionId',quality_grade_option_id,'materialTypeOptionId',material_type_option_id,'ralColorNumber',ral_color_number) ORDER BY position) FROM procurement.operational_purchase_order_line l WHERE l.order_id=o.order_id) AS lines FROM procurement.operational_purchase_order o ORDER BY order_reference",

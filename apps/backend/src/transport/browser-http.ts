@@ -10,6 +10,7 @@ const assets = new Map([
   ['/operator/app.js', ['app.js', 'text/javascript; charset=utf-8']],
   ['/operator/intent.js', ['intent.js', 'text/javascript; charset=utf-8']],
   ['/operator/display.js', ['display.js', 'text/javascript; charset=utf-8']],
+  ['/operator/receiving.js', ['receiving.js', 'text/javascript; charset=utf-8']],
   ['/operator/styles.css', ['styles.css', 'text/css; charset=utf-8']],
 ]);
 export function browserHeaders(response: ServerResponse, secure: boolean) {
@@ -61,7 +62,11 @@ export function createBrowserHandler(
           '/purchasing/inbound-catalogues',
           '/purchasing/inbound-catalogues/query',
         ].includes(route) || /^\/purchasing\/operational-orders\/[0-9a-f-]{36}$/u.test(route);
-      const receiving = route === '/purchasing/receiving/orders/query';
+      const receiving = [
+        '/purchasing/receiving/orders/query',
+        '/purchasing/receiving/arrivals/query',
+        '/purchasing/receiving/confirm',
+      ].includes(route);
       if (!identity && !inbound && !receiving) {
         respond(response, 404, { error: 'not-found' });
         request.resume();

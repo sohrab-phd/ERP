@@ -99,6 +99,11 @@ select {
   width: 100%;
   min-width: 0;
 }
+input[type='checkbox'] {
+  width: 26px;
+  min-height: 26px;
+  align-self: flex-start;
+}
 button {
   background: #176349;
   color: white;

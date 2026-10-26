@@ -7,6 +7,7 @@ export interface BrowserConfig {
   origin: string;
   secret: string;
   installationId: string;
+  receivingLocation?: { id: string; label: string };
 }
 interface Admission {
   config: BrowserConfig;
@@ -111,6 +112,9 @@ export function browserSession(request: IncomingMessage, session: SelfSession) {
     grants,
     browser: {
       csrf: mac(a.config, 'csrf-v1', a.token),
+      ...(grants.some((g) => g.actorRole === 'ACT-WH') && a.config.receivingLocation
+        ? { receivingLocation: a.config.receivingLocation }
+        : {}),
       // Encryption only, never an authentication credential. The key is not persisted by the UI.
       ...(grants.length
         ? {

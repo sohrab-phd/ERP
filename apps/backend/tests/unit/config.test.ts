@@ -6,6 +6,36 @@ const env = {
   DATABASE_URL: 'postgresql://runtime@127.0.0.1/navard_erp_dev',
   INSTALLATION_ID: '00000000-0000-4000-8000-000000000001',
 };
+void test('P2 receiving placement is paired explicit configuration; never generated or accepted without a browser', () => {
+  const browser = {
+    ...env,
+    BROWSER_ORIGIN: 'http://127.0.0.1:3000',
+    BROWSER_SESSION_SECRET: Buffer.alloc(32, 1).toString('base64url'),
+  };
+  assert.equal(loadConfig(browser).browser?.receivingLocation, undefined);
+  assert.deepEqual(
+    loadConfig({
+      ...browser,
+      BROWSER_RECEIVING_LOCATION_ID: env.INSTALLATION_ID,
+      BROWSER_RECEIVING_LOCATION_LABEL: 'انبار ورودی',
+    }).browser?.receivingLocation,
+    { id: env.INSTALLATION_ID, label: 'انبار ورودی' },
+  );
+  for (const values of [
+    { BROWSER_RECEIVING_LOCATION_ID: env.INSTALLATION_ID },
+    { BROWSER_RECEIVING_LOCATION_LABEL: 'انبار' },
+    { BROWSER_RECEIVING_LOCATION_ID: 'bad', BROWSER_RECEIVING_LOCATION_LABEL: 'انبار' },
+    { BROWSER_RECEIVING_LOCATION_ID: env.INSTALLATION_ID, BROWSER_RECEIVING_LOCATION_LABEL: '\n' },
+  ])
+    assert.throws(() => loadConfig({ ...browser, ...values }));
+  assert.throws(() =>
+    loadConfig({
+      ...env,
+      BROWSER_RECEIVING_LOCATION_ID: env.INSTALLATION_ID,
+      BROWSER_RECEIVING_LOCATION_LABEL: 'انبار',
+    }),
+  );
+});
 void test('configuration validates once, default values, stable ID and immutable result', () => {
   const c = loadConfig(env);
   assert.equal(c.port, 3000);

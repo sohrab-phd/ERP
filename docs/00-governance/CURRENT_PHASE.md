@@ -3,15 +3,27 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.64.0
+version: 0.65.0
 owners: [chief-solution-architect]
-depends_on: [APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-10-26
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
+
+Current execution authority: [APR-046](approved-baselines/APR-046-p2-receiving-ui-authorization.md)
+records the actual Owner P2 directive issued2026-10-26. **P2 AUTHORIZED FOR BOUNDED
+IMPLEMENTATION; NOT ACCEPTED.** Extend the existing browser UI for accepted I2
+Warehouse receiving, canonical stock-effect readback, tests/review/docs/local commit
+only. No schema/business-policy/Identity/Inventory redesign, P1 O-01, push,
+deployment, factory UAT or P3. Separate independent review and Owner acceptance
+remain required. [P2 status](../12-implementation-planning/P2_IMPLEMENTATION_STATUS.md)
+is canonical. APR-045 P1 acceptance remains unchanged. The closed P2 authority
+statements below describe the prior acceptance task, superseded only by APR-046.
+
+## Prior APR-045 acceptance scope (historical)
 
 Current authority: [APR-045](approved-baselines/APR-045-p1-owner-acceptance.md) records the
 actual Owner decision issued2026-10-26: **P1 ACCEPTED FOR ITS APPROVED ENGINEERING

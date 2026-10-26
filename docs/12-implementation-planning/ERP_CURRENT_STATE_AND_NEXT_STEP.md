@@ -3,16 +3,26 @@ id: PLAN-ERP-CURRENT-ASSESSMENT-001
 title: ERP current state and next development recommendation
 phase: 12-implementation-planning
 status: in_review
-version: 1.0.1
+version: 1.0.2
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
+depends_on: [APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
 last_reviewed: 2026-10-26
 approval: null
 ---
 
 # ارزیابی وضعیت واقعی ERP و پیشنهاد گام بعد
 
-## وضعیت جاری پس از پذیرش P1 — 2026-10-26
+## وضعیت جاری P2 — 2026-10-26
+
+[APR-046](../00-governance/approved-baselines/APR-046-p2-receiving-ui-authorization.md)
+دستور صریح جدید Owner برای P2 را ثبت می‌کند: رابط ثبت و تأیید دریافت انبار بر
+قرارداد موجود I2، اتصال امن محدود، آزمون/شاهد/بازبینی و commit محلی مجاز است.
+[وضعیت P2](P2_IMPLEMENTATION_STATUS.md) مرجع اجرا و شواهد است؛ P2 هنوز پذیرفته
+نشده و منتظر بازبینی مستقل و تصمیم Owner می‌ماند. پذیرش P1/APR-045 و I2/APR-043
+تغییر نمی‌کند. P3، push، استقرار و UAT کارخانه مجاز نیستند. متن بسته‌بودن مجوز
+P2 در یادداشت قبلی، وضعیت تاریخی پیش از APR-046 است.
+
+## وضعیت پیشین پس از پذیرش P1 — 2026-10-26
 
 [APR-045](../00-governance/approved-baselines/APR-045-p1-owner-acceptance.md) تصمیم واقعی Owner را ثبت
 می‌کند: **P1 در commit `22b5389af4d88cff38afdac1bebad68badd06f9c` برای دامنهٔ

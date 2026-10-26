@@ -6,7 +6,7 @@ export interface Config {
   installationId: string;
   logLevel: 'debug' | 'info' | 'warn' | 'error';
   commandAdmissionReconciled?: boolean;
-  browser?: { origin: string; secret: string };
+  browser?: { origin: string; secret: string; receivingLocation?: { id: string; label: string } };
 }
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 export function loadConfig(env: NodeJS.ProcessEnv): Readonly<Config> {
@@ -44,6 +44,22 @@ export function loadConfig(env: NodeJS.ProcessEnv): Readonly<Config> {
     throw new Error('LOG_LEVEL is invalid');
   const admission = env.COMMAND_ADMISSION_RECONCILED ?? 'false';
   let browser: Config['browser'];
+  const locationId = env.BROWSER_RECEIVING_LOCATION_ID;
+  const locationLabel = env.BROWSER_RECEIVING_LOCATION_LABEL;
+  if (
+    (locationId !== undefined || locationLabel !== undefined) &&
+    (!locationId ||
+      !uuid.test(locationId) ||
+      !locationLabel ||
+      !locationLabel.trim() ||
+      [...locationLabel].length > 128 ||
+      Buffer.byteLength(locationLabel) > 512 ||
+      /\p{Cc}/u.test(locationLabel) ||
+      !env.BROWSER_ORIGIN)
+  )
+    throw new Error(
+      'Browser receiving location requires a configured browser, stable UUID and label',
+    );
   if (env.BROWSER_ORIGIN !== undefined || env.BROWSER_SESSION_SECRET !== undefined) {
     let origin: URL;
     try {
@@ -72,7 +88,13 @@ export function loadConfig(env: NodeJS.ProcessEnv): Readonly<Config> {
       throw new Error(
         'BROWSER_SESSION_SECRET requires a random 32-byte or longer base64url secret',
       );
-    browser = { origin: origin.origin, secret };
+    browser = {
+      origin: origin.origin,
+      secret,
+      ...(locationId && locationLabel
+        ? { receivingLocation: { id: locationId, label: locationLabel } }
+        : {}),
+    };
   }
   if (admission !== 'true' && admission !== 'false')
     throw new Error('COMMAND_ADMISSION_RECONCILED is invalid');

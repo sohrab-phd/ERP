@@ -6,6 +6,10 @@ import type { DatabaseFixture } from './database-fixture.js';
 import { installation, operators } from './receipt-harness.js';
 export const browserTestPassword = 'synthetic receipt individual password';
 export type BrowserRole = 'ACT-PROC' | 'ACT-WH' | 'ACT-SEC' | 'ACT-CUST';
+export const browserReceivingLocation = {
+  id: '55555555-5555-4555-8555-555555555555',
+  label: 'انبار آزمون',
+};
 export async function browserHarness(db: DatabaseFixture, fixedPort?: number) {
   const people = await operators(db);
   await db.owner.query(
@@ -27,10 +31,15 @@ export async function browserHarness(db: DatabaseFixture, fixedPort?: number) {
     installationId: installation,
     logLevel: 'error' as const,
     commandAdmissionReconciled: true,
-    browser: { origin, secret: randomBytes(32).toString('base64url') },
+    browser: {
+      origin,
+      secret: randomBytes(32).toString('base64url'),
+      receivingLocation: browserReceivingLocation,
+    },
   };
   const app = compose(config);
   let dropNextOrderResponse = false;
+  let dropNextReceivingResponse = false;
   let unavailableSession = false,
     holdLogout = false;
   let releaseResponse: (() => void) | undefined;
@@ -53,6 +62,14 @@ export async function browserHarness(db: DatabaseFixture, fixedPort?: number) {
     if (dropNextOrderResponse && request.url === '/ui-api/purchasing/operational-orders') {
       dropNextOrderResponse = false;
       // Deliberately lose the HTTP response AFTER the normal real command/COMMIT.
+      response.end = () => {
+        response.destroy();
+        return response;
+      };
+    }
+    if (dropNextReceivingResponse && request.url === '/ui-api/purchasing/receiving/confirm') {
+      dropNextReceivingResponse = false;
+      // Lose only the response; the normal owner command has already committed.
       response.end = () => {
         response.destroy();
         return response;
@@ -112,7 +129,11 @@ export async function browserHarness(db: DatabaseFixture, fixedPort?: number) {
           accountId: string;
           personId: string;
           grants: unknown[];
-          browser: { csrf: string; recoveryKey?: string };
+          browser: {
+            csrf: string;
+            recoveryKey?: string;
+            receivingLocation?: { id: string; label: string };
+          };
         };
         csrf = self.browser.csrf;
         return { response, self };
@@ -140,6 +161,9 @@ export async function browserHarness(db: DatabaseFixture, fixedPort?: number) {
     },
     loseNextOrderResponse: () => {
       dropNextOrderResponse = true;
+    },
+    loseNextReceivingResponse: () => {
+      dropNextReceivingResponse = true;
     },
   };
 }

@@ -3,9 +3,9 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.26.0
+version: 0.27.0
 owners: [chief-solution-architect]
-depends_on: [APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
+depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-10-26
 approval: null
 supersedes: null
@@ -13,7 +13,16 @@ supersedes: null
 
 # Architecture Documentation Index
 
-## Current P1 Owner acceptance and P2 stop boundary (2026-10-26)
+## Current P2 bounded implementation (2026-10-26)
+
+- [APR-046 actual bounded P2 Owner authority](00-governance/approved-baselines/APR-046-p2-receiving-ui-authorization.md)
+- [P2 Warehouse receiving workflow, evidence and review status](12-implementation-planning/P2_IMPLEMENTATION_STATUS.md)
+
+P2 is authorized for implementation and remains in_review, not accepted.
+APR-045 P1 acceptance and thirteen backend capability acceptances remain unchanged.
+No P3, push, deployment or factory UAT. Prior stop-boundary text below is historical.
+
+## Prior P1 Owner acceptance and P2 stop boundary (2026-10-26)
 
 - [APR-045 actual Owner acceptance of exact P1 implementation](00-governance/approved-baselines/APR-045-p1-owner-acceptance.md)
 - [Accepted P1 behavior, original authority and review/evidence provenance](12-implementation-planning/P1_IMPLEMENTATION_STATUS.md)
