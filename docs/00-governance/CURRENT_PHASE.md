@@ -6,7 +6,7 @@ status: in_review
 version: 0.63.0
 owners: [chief-solution-architect]
 depends_on: [APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-10-25
+last_reviewed: 2026-10-26
 approval: null
 supersedes: null
 ---
@@ -22,6 +22,14 @@ No receiving-write UI, schema/policy change, P2, push, deployment or production
 acceptance. Stop after local P1 delivery for separate independent review and Owner
 acceptance. Thirteen backend capabilities remain Owner accepted. The APR-043
 task restriction below is historical and superseded only by this bounded grant.
+
+Owner follow-up issued 2026-10-26 authorizes **P1 bounded remediation of R-01 and
+R-02 only**, their focused verification, directly affected documentation and a
+new local commit for independent re-review. See the remediation record in
+[P1 status](../12-implementation-planning/P1_IMPLEMENTATION_STATUS.md).
+APR-044 remains the original implementation authority; no new business baseline
+or Owner acceptance is created. O-01 is explicitly excluded. P2, push and deployment
+remain unauthorized.
 
 ## Prior APR-043 acceptance scope (historical)
 

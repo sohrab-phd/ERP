@@ -1,0 +1,467 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { readFile } from 'node:fs/promises';
+import { createContext, Script } from 'node:vm';
+import { randomBytes } from 'node:crypto';
+import * as intent from '../../src/operator/intent.js';
+import { textValue } from '../../src/operator/display.js';
+
+// Component tests execute the built application, not a second session/rendering
+// implementation. This deliberately small DOM/clock adapter is not browser E2E.
+class Element {
+  children: Element[] = [];
+  parent: Element | undefined;
+  hidden = false;
+  disabled = false;
+  value = '';
+  name = '';
+  required = false;
+  dataset: Record<string, string> = {};
+  attributes = new Map<string, string>();
+  listeners = new Map<string, ((event: Interaction) => void)[]>();
+  private text = '';
+  constructor(readonly tagName = 'div') {}
+  get textContent(): string {
+    return this.text + this.children.map((child) => child.textContent).join('');
+  }
+  set textContent(value: string) {
+    this.text = value;
+    this.children = [];
+  }
+  get options() {
+    return this.children;
+  }
+  append(...children: Element[]) {
+    for (const child of children) {
+      child.parent = this;
+      this.children.push(child);
+    }
+  }
+  replaceChildren(...children: Element[]) {
+    this.text = '';
+    this.children = [];
+    this.append(...children);
+  }
+  remove() {
+    if (this.parent) this.parent.children = this.parent.children.filter((child) => child !== this);
+  }
+  setAttribute(name: string, value: string) {
+    this.attributes.set(name, value);
+  }
+  addEventListener(type: string, listener: (event: Interaction) => void) {
+    const listeners = this.listeners.get(type) ?? [];
+    listeners.push(listener);
+    this.listeners.set(type, listeners);
+  }
+  querySelectorAll(selector: string): Element[] {
+    return this.children.flatMap((child) => [
+      ...(selector
+        .split(',')
+        .some((part) =>
+          part === 'select[data-catalogue]'
+            ? child.tagName === 'select' && !!child.dataset.catalogue
+            : child.tagName === part,
+        )
+        ? [child]
+        : []),
+      ...child.querySelectorAll(selector),
+    ]);
+  }
+  querySelector(selector: string) {
+    return this.querySelectorAll(selector)[0];
+  }
+  reset() {
+    for (const control of this.querySelectorAll('input,select')) control.value = '';
+  }
+  focus() {}
+}
+class Input extends Element {}
+class Select extends Element {}
+class Interaction {
+  prevented = false;
+  stopped = false;
+  constructor(readonly target: Element) {}
+  preventDefault() {
+    this.prevented = true;
+  }
+  stopImmediatePropagation() {
+    this.stopped = true;
+  }
+}
+
+const idle = 30 * 60 * 1000;
+const initial = Date.parse('2026-10-26T00:00:00Z');
+const order = {
+  orderId: '11111111-1111-4111-8111-111111111111',
+  orderReference: 'private original',
+  registrationDateJalali: '1403-12-30',
+  lines: [],
+};
+function person(name = 'A', role = 'ACT-PROC') {
+  return {
+    accountId: 'account-' + name,
+    personId: 'person-' + name,
+    username: name,
+    expiresAt: new Date(initial + 8 * 60 * 60 * 1000).toISOString(),
+    grants: [{ actorRole: role }],
+    browser: { csrf: 'csrf-' + name, recoveryKey: randomBytes(32).toString('base64url') },
+  };
+}
+interface Page {
+  items: Record<string, unknown>[];
+  snapshotAt?: string;
+  nextAfterId?: string;
+}
+async function harness() {
+  const elements = new Map<string, Element>();
+  const element = (id: string) => {
+    if (!elements.has(id)) elements.set(id, new Element());
+    return elements.get(id)!;
+  };
+  element('receiving-view').value = 'LINES';
+  element('login-form').append(new Element('button'));
+  const document = new Element();
+  const window = new Element();
+  const storage = new Map<string, string>();
+  let wall = initial;
+  let monotonic = 0;
+  let sequence = 0;
+  const timers = new Map<number, { at: number; callback: () => void; repeat?: number }>();
+  const requests: { path: string; body: unknown }[] = [];
+  const pages: Page[] = [];
+  const state = {
+    actor: person(),
+    status: 200,
+    dropCommand: false,
+    hold: undefined as undefined | Promise<Response>,
+  };
+  const context = createContext({
+    ...intent,
+    textValue,
+    document: Object.assign(document, {
+      visibilityState: 'visible',
+      getElementById: element,
+      createElement: (tag: string) =>
+        tag === 'select' ? new Select(tag) : tag === 'input' ? new Input(tag) : new Element(tag),
+      querySelectorAll: (selector: string) =>
+        [...elements.values()].flatMap((root) => root.querySelectorAll(selector)),
+    }),
+    window,
+    HTMLInputElement: Input,
+    HTMLSelectElement: Select,
+    BroadcastChannel: class {
+      postMessage() {}
+    },
+    Date: class extends Date {
+      static override now() {
+        return wall;
+      }
+    },
+    performance: { now: () => monotonic },
+    setTimeout: (callback: () => void, delay: number) => {
+      timers.set(++sequence, { at: monotonic + delay, callback });
+      return sequence;
+    },
+    clearTimeout: (id: number) => timers.delete(id),
+    // Retained only so the same regressions can run against the original source.
+    setInterval: (callback: () => void, delay: number) => {
+      timers.set(++sequence, { at: monotonic + delay, callback, repeat: delay });
+      return sequence;
+    },
+    sessionStorage: {
+      getItem: (key: string) => storage.get(key) ?? null,
+      setItem: (key: string, value: string) => storage.set(key, value),
+      removeItem: (key: string) => storage.delete(key),
+    },
+    AbortController,
+    crypto,
+    fetch: async (path: string, options: { body?: string }) => {
+      requests.push({ path, body: options.body ? JSON.parse(options.body) : undefined });
+      if (state.hold) return state.hold;
+      if (state.status !== 200) return new Response('{}', { status: state.status });
+      if (path.endsWith('/identity/session')) return Response.json(state.actor);
+      if (path.endsWith('/inbound-catalogues/query')) return Response.json({ data: { items: [] } });
+      if (path.endsWith('/receiving/orders/query'))
+        return Response.json({ data: pages.shift() ?? { items: [] } });
+      if (path.endsWith('/operational-orders')) {
+        if (state.dropCommand) throw new Error('controlled response loss');
+        return Response.json({ status: 'completed', result: { outcome: 'accepted' } });
+      }
+      return Response.json({ data: order });
+    },
+  });
+  // Only static module linkage and auto-start are supplied by the test adapter.
+  // All application functions and event registrations remain the actual code.
+  const source = await readFile(
+    process.env.P1_OPERATOR_APP_SOURCE ?? new URL('../../src/operator/app.js', import.meta.url),
+    'utf8',
+  );
+  new Script(
+    source
+      .replace(/^import[\s\S]*?from ['"][^'"]+['"];\r?\n/gmu, '')
+      .replace(/^export \{\};?\r?\n/gmu, '')
+      .replace('action(bootstrap)();', ''),
+    { filename: 'actual-operator-app.js' },
+  ).runInContext(context);
+  const run = <T = unknown>(expression: string): T =>
+    new Script(expression).runInContext(context) as T;
+  await run<Promise<void>>('bootstrap()');
+  return {
+    run,
+    element,
+    storage,
+    requests,
+    pages,
+    state,
+    async advance(ms: number, runTimers = true, wallDelta = ms) {
+      wall += wallDelta;
+      monotonic += ms;
+      if (runTimers) {
+        for (const [id, timer] of [...timers]) {
+          if (timer.at > monotonic) continue;
+          timers.delete(id);
+          if (timer.repeat) timers.set(id, { ...timer, at: monotonic + timer.repeat });
+          timer.callback();
+        }
+        await Promise.resolve();
+      }
+    },
+    emit(type: string, surface: 'window' | 'document' = 'document') {
+      const event = new Interaction(new Element());
+      for (const listener of (surface === 'window' ? window : document).listeners.get(type) ?? []) {
+        listener(event);
+        if (event.stopped) break;
+      }
+      return event;
+    },
+  };
+}
+
+void test('R-01 foreground idle lock clears sensitive roots/DOM but preserves actor-bound encrypted immutable recovery', async () => {
+  const h = await harness();
+  const original = h.state.actor;
+  h.state.dropCommand = true;
+  const body = intent.commandBody(
+    'RegisterOperationalPurchaseOrder',
+    'operational-purchase-order',
+    {
+      orderReference: 'private pending',
+      registrationDateJalali: '1403-12-30',
+      lines: [],
+    },
+  );
+  await assert.rejects(
+    h.run<Promise<void>>(`startCommand('/purchasing/operational-orders', ${JSON.stringify(body)})`),
+  );
+  const ciphertext = h.storage.get(intent.pendingSlot)!;
+  assert.ok(ciphertext && !ciphertext.includes('private pending'));
+  h.element('order-result').textContent = 'private original';
+  h.element('receiving-result').textContent = 'private receiving';
+  h.run('currentOrder = {orderReference:"private original"}; prepared = {private: true}');
+  const requestCount = h.requests.length;
+  await h.advance(idle - 1);
+  assert.equal(h.run('!!self'), true);
+  h.emit('pointerdown');
+  h.emit('keydown');
+  await h.advance(1);
+  assert.equal(h.run('self'), undefined);
+  assert.equal(h.run('pending'), undefined);
+  assert.equal(h.run('prepared'), undefined);
+  assert.equal(h.run('currentOrder'), undefined);
+  assert.equal(h.element('workspace').hidden, true);
+  for (const id of ['order-result', 'receiving-result', 'recovery-reference'])
+    assert.equal(h.element(id).textContent, '');
+  assert.equal(
+    h.requests.length,
+    requestCount,
+    'passive timers/input do not renew server sessions',
+  );
+  assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+
+  h.state.actor = person('B', 'ACT-WH');
+  await h.run<Promise<void>>('session()');
+  assert.equal(h.run('pending'), undefined);
+  assert.equal(h.run('lockedPending'), true);
+  assert.equal(h.element('recover').disabled, true);
+  const beforeRetry = h.requests.length;
+  await h.run<Promise<void>>('dispatchPending()');
+  await h.run<Promise<void>>(
+    `startCommand('/purchasing/operational-orders', ${JSON.stringify(body)})`,
+  );
+  assert.equal(h.requests.length, beforeRetry, 'wrong actor cannot retry or overwrite ciphertext');
+  assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+
+  h.run('lock("switch")');
+  h.state.actor = original;
+  await h.run<Promise<void>>('session()');
+  assert.equal(h.run('pending.body'), body);
+  h.state.dropCommand = false;
+  await h.run<Promise<void>>('dispatchPending()');
+  const submissions = h.requests.filter((request) => request.path.endsWith('/operational-orders'));
+  assert.equal(submissions.length, 2);
+  assert.deepEqual(submissions[0]!.body, submissions[1]!.body);
+  assert.equal(h.storage.has(intent.pendingSlot), false);
+});
+
+void test('R-01 only successful authenticated request-start evidence renews local idle validity', async () => {
+  const h = await harness();
+  await h.advance(idle - 1000);
+  await h.run<Promise<void>>('loadCatalogue("COLOR")');
+  await h.advance(1000);
+  assert.equal(h.run('!!self'), true, 'the obsolete original timer cannot lock an active session');
+  await h.advance(idle - 1001);
+  assert.equal(h.run('!!self'), true);
+  await h.advance(1);
+  assert.equal(h.run('self'), undefined);
+});
+
+void test('R-01 response latency is deducted from the local budget and uncertain responses do not renew it', async () => {
+  const h = await harness();
+  await h.advance(1000);
+  let release!: (value: Response) => void;
+  h.state.hold = new Promise<Response>((resolve) => {
+    release = resolve;
+  });
+  const reading = h.run<Promise<void>>('loadCatalogue("COLOR")');
+  await h.advance(10000);
+  release(Response.json({ data: { items: [] } }));
+  await reading;
+  h.state.hold = undefined;
+  await h.advance(idle - 10001);
+  assert.equal(h.run('!!self'), true);
+  await h.advance(1);
+  assert.equal(h.run('self'), undefined, 'receipt time must not extend the deadline');
+
+  const uncertain = await harness();
+  await uncertain.advance(idle - 1000);
+  uncertain.state.status = 503;
+  await assert.rejects(uncertain.run<Promise<void>>('loadCatalogue("COLOR")'));
+  await uncertain.advance(1000);
+  assert.equal(uncertain.run('self'), undefined, 'an uncertain response is not renewal proof');
+});
+
+void test('R-01 delayed timers, resumed lifecycle and attempted UI actions enforce expiry before dispatch', async () => {
+  for (const [type, surface] of [
+    ['focus', 'window'],
+    ['pageshow', 'window'],
+    ['visibilitychange', 'document'],
+    ['pointerdown', 'document'],
+    ['keydown', 'document'],
+    ['click', 'document'],
+    ['submit', 'document'],
+    ['change', 'document'],
+  ] as const) {
+    const h = await harness();
+    await h.advance(idle, false);
+    const before = h.requests.length;
+    h.emit(type, surface);
+    await Promise.resolve();
+    assert.equal(h.run('self'), undefined, type);
+    assert.equal(h.requests.length, before, type + ' must not send a renewal request after expiry');
+  }
+});
+
+void test('R-01 in-flight late replies, server denial, absolute expiry and backward wall-clock do not restore expired state', async () => {
+  const h = await harness();
+  let release!: (value: Response) => void;
+  h.state.hold = new Promise<Response>((resolve) => {
+    release = resolve;
+  });
+  const reading = h.run<Promise<void>>('readOrder("/purchasing/operational-orders/id")');
+  await h.advance(idle, false);
+  release(Response.json({ data: order }));
+  await assert.rejects(reading);
+  assert.equal(h.run('self'), undefined);
+  assert.equal(h.element('order-result').textContent, '');
+  for (const status of [401, 403]) {
+    const denied = await harness();
+    denied.state.status = status;
+    await assert.rejects(denied.run<Promise<void>>('loadCatalogue("COLOR")'));
+    assert.equal(denied.run('self'), undefined);
+  }
+  const absolute = await harness();
+  absolute.run(`self.expiresAt = new Date(Date.now()+1000).toISOString(); armExpiry()`);
+  await absolute.advance(1000);
+  assert.equal(absolute.run('self'), undefined);
+  const rollback = await harness();
+  await rollback.advance(idle, true, -1000);
+  assert.equal(rollback.run('self'), undefined, 'monotonic deadline survives backward wall time');
+});
+
+for (const view of ['LINES', 'RECEIVED_UNITS']) {
+  void test(`R-02 ${view} retains each page timestamp with its records, resets refresh and deduplicates shared headers`, async () => {
+    const h = await harness();
+    h.element('receiving-view').value = view;
+    h.run(`currentOrder = ${JSON.stringify(order)}`);
+    const row = (id: string) =>
+      view === 'LINES'
+        ? { lineId: id, position: '1', acceptedUnitCount: '1', remainingUnitCount: '2' }
+        : {
+            internalSystemCode: id,
+            productNumber: 'product',
+            arrival: {
+              arrivalId: 'one-arrival',
+              arrivalDateJalali: '1403-12-30',
+              waybillWeightKg: '6000.125',
+            },
+          };
+    const first = '2026-10-26T01:00:00.000Z';
+    const second = '2026-10-26T01:01:00.000Z';
+    h.pages.push(
+      { items: [row('page-one-record')], snapshotAt: first, nextAfterId: 'cursor-one' },
+      { items: [row('page-two-record')], snapshotAt: second },
+    );
+    await h.run<Promise<void>>('loadReceiving(false)');
+    assert.ok(h.element('receiving-result').textContent.includes(first));
+    await h.run<Promise<void>>('loadReceiving(true)');
+    const sections = h.element('receiving-result').children;
+    assert.equal(sections.length, 2);
+    assert.equal(sections[0]!.tagName, 'section');
+    assert.ok(sections[0]!.textContent.includes(first));
+    assert.ok(sections[0]!.textContent.includes('page-one-record'));
+    assert.ok(!sections[0]!.textContent.includes(second));
+    assert.ok(!sections[0]!.textContent.includes('page-two-record'));
+    assert.ok(sections[1]!.textContent.includes(second));
+    assert.ok(sections[1]!.textContent.includes('page-two-record'));
+    assert.ok(!sections[1]!.textContent.includes(first));
+    assert.ok(sections[0]!.querySelector('h4')!.textContent.includes('صفحهٔ 1'));
+    assert.ok(sections[1]!.querySelector('h4')!.textContent.includes('صفحهٔ 2'));
+    assert.ok(!h.element('receiving-status').textContent.includes(first));
+    assert.ok(!h.element('receiving-status').textContent.includes(second));
+    assert.equal(h.element('more-receiving').hidden, true);
+    const queries = h.requests.filter((request) =>
+      request.path.endsWith('/receiving/orders/query'),
+    );
+    assert.deepEqual(
+      queries.map((request) => request.body),
+      [
+        { orderId: order.orderId, view, limit: 20 },
+        { orderId: order.orderId, view, limit: 20, afterId: 'cursor-one' },
+      ],
+    );
+    if (view === 'RECEIVED_UNITS')
+      assert.equal(
+        h
+          .element('receiving-result')
+          .querySelectorAll('summary')
+          .filter((summary) => summary.textContent.includes('اطلاعات مشترک کل محموله')).length,
+        1,
+      );
+    h.pages.push({ items: [] });
+    await h.run<Promise<void>>('loadReceiving(false)');
+    assert.equal(h.element('receiving-result').children.length, 1);
+    assert.ok(!h.element('receiving-result').textContent.includes(first));
+    assert.ok(h.element('receiving-result').textContent.includes('از سرور ارائه نشده است'));
+    assert.ok(h.element('receiving-result').textContent.includes('صفحهٔ 1'));
+    assert.equal(h.element('more-receiving').hidden, true);
+    assert.equal(h.element('receiving-status').textContent, 'دریافتی برای این سفارش ثبت نشده است.');
+    h.element('receiving-view').value = view === 'LINES' ? 'RECEIVED_UNITS' : 'LINES';
+    h.pages.push({ items: [], snapshotAt: second });
+    await h.run<Promise<void>>('loadReceiving(false)');
+    assert.equal(h.element('receiving-result').children.length, 1);
+    const caption = h.element('receiving-result').querySelector('h4')!.textContent;
+    assert.ok(caption.includes('صفحهٔ 1'));
+    assert.ok(caption.includes(view === 'LINES' ? 'واحدهای دریافت‌شده' : 'خطوط و ماندهٔ سفارش'));
+    assert.ok(caption.includes(second));
+  });
+}

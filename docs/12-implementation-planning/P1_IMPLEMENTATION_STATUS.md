@@ -3,10 +3,10 @@ id: IMPL-P1-001
 title: P1 Persian operational purchasing UI implementation and evidence
 phase: 12-implementation-planning
 status: in_review
-version: 1.0.0
+version: 1.0.1
 owners: [delivery-lead, chief-solution-architect, security-architect]
 depends_on: [APR-044, APR-039, APR-043, PLAN-DEV-WORKFLOW-001]
-last_reviewed: 2026-10-25
+last_reviewed: 2026-10-26
 approval: null
 ---
 
@@ -15,6 +15,9 @@ approval: null
 Authority: [actual P1 directive](../00-governance/approved-baselines/APR-044-p1-purchasing-ui-authorization.md).
 Baseline clean main c302a20a582be48e9203f88a32df9d31aa3ecbcf. Implementation
 complete for review handoff; no Owner acceptance, deployment or remote push.
+Independent audit of `bf8902a3e6375e09884c1b57a11477cf3fb4e6d0` returned FAIL
+for R-01/R-02. The bounded remediation below supersedes the original delivery's
+engineering closure claims; separate remediation re-review remains required.
 
 ## Bounded execution plan and Definition of Done
 
@@ -77,8 +80,11 @@ and `limit=20`; next-page controls remain available to exhaustion. Original data
 actual values, comparison states, manual acceptance, actors/documents and stock
 identities are read-only. A shared arrival header is displayed once across loaded
 pages; W2/W3 are labelled whole-consignment evidence, never summed/allocated to PO
-lines. Each page retains its own server snapshot time, not a fictional cross-page
-snapshot or aggregate total. Refresh restarts the selected view.
+lines. After R-02 remediation, each appended section has its own view/page/as-of
+caption from server `snapshotAt`; absent metadata is explicitly identified. The
+original implementation replaced a shared timestamp and did not retain prior-page
+metadata, contrary to its original claim. No cross-page snapshot or aggregate total
+is invented. Refresh restarts the selected view.
 
 Only transport/configuration/composition and UI change. Existing Procurement owner
 commands/queries, current Identity grants, PostgreSQL transactions/outcomes/audit,
@@ -110,7 +116,8 @@ must present that session's value. A rotated cookie cannot authorize a stale tab
 request. Recovery decryption material is returned only with current P1 grants and
 is derived separately from origin/installation/account/person. Neither it nor the
 bearer/password is persisted. Identity retains expiration/revocation/current-grant
-checks and audit; passive polling stops when the operator is inactive.
+checks and audit. R-01 remediation removes periodic session polling entirely;
+local input does not renew server or client idle validity.
 
 One unresolved complete envelope is encrypted using native AES-GCM with random
 96-bit IV and version-bound AAD in tab sessionStorage BEFORE the first dispatch.
@@ -141,7 +148,126 @@ not served. These controls follow the assessed [OWASP CSRF](https://cheatsheetse
 and [session](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
 guidance, without a certification or production-TLS claim.
 
-## Executed verification and evidence
+## R-01/R-02 bounded remediation — 2026-10-26
+
+Actual authority: the Owner's **CODEX DIRECTIVE — P1 BOUNDED REMEDIATION**, issued
+in this chat on 2026-10-26. Baseline clean `main`, full commit
+`bf8902a3e6375e09884c1b57a11477cf3fb4e6d0`; no intervening revision or user edits.
+APR-044 remains the original authority. This authorizes R-01/R-02 corrections,
+focused tests/evidence/docs/review and a new local commit only, not acceptance,
+policy/schema/transport changes, O-01, P2, push or deployment. Current phase records
+that follow-up without creating a business-approval baseline.
+
+The original independent audit is preserved at
+`artifacts/tests/p1-independent-audit-2026-10-26.md`, SHA256
+`D6F79CA5CC11810698BE8AF7070346BD70A29625033AD429C6C171EE19E3FFFA`.
+Its FAIL verdict remains historical fact, not rewritten by the implementer.
+
+R-01: Identity `session()` renews `last_seen_at` in a committed transaction and
+`context()` delegates to it. Successful authenticated API responses therefore
+provide conservative renewal evidence from **request start**, not response receipt.
+The UI tracks that start plus the existing30-minute idle limit with wall and
+monotonic clocks, bounded also by the unchanged server eight-hour absolute expiry.
+Only successful authenticated responses renew it; input and uncertain errors do
+not. Other-tab activity may renew the server without this tab knowing: safe local
+lock is intentional. No backend policy/contract or artificial heartbeat is added.
+
+An exact local deadline timer, synchronous checks before/after API responses,
+focus/pageshow/visibility checks and capture-phase input/submit/navigation guards
+handle foreground idle, delayed timers and resumed interaction. Expiry invokes
+the existing epoch-based lock: authenticated/decrypted/prepared state, business
+DOM, catalogue caches and recovery reference are cleared. Ciphertext in tab
+sessionStorage remains. Late replies cannot restore locked content. Original-actor
+reauthentication restores the immutable envelope; another actor cannot decrypt,
+retry or overwrite it. Cleanup means removal of application state roots, not a
+claim of forensic JavaScript heap erasure.
+
+R-02: each successful receiving page appends a semantic section with Persian view,
+page number and its actual server timestamp. Its table/cards remain inside that
+section; cumulative count/navigation has no shared timestamp. Both views reset
+their sequence on refresh/view change, preserve cursors/exhaustion/empty states,
+and retain existing arrival-header deduplication and whole-consignment W2/W3.
+No query, allocation, aggregate, ownership or receiving-write behavior changes.
+
+Changed files are limited to `operator/app.ts`, a dependency-free component test
+`operator-lifecycle.test.ts` and unit-runner registration, test-only controlled-clock
+support in `browser-server.ts`, this status and CURRENT_PHASE. No dependency,
+module service, migration, authorization matrix or browser admission file changes.
+O-01 remains **deferred/non-blocking**: confirmed registration may stay unresolved
+if its subsequent receiving read fails. `dispatchPending`/`readOrder` completion
+behavior is untouched; O-01 is not a new acceptance or P2 prerequisite.
+
+New Windows verification, separate from all historical P1/audit runs:
+
+| Actual command (pinned Node directory on PATH) | Result / artifacts/tests evidence |
+| --- | --- |
+| `npm.cmd run build` | PASS; p1-remediation-build.log |
+| `npm.cmd run test:unit` |210/210 PASS,0 failed/skipped; p1-remediation-unit.log |
+| `node --test apps/backend/dist/tests/unit/operator-lifecycle.test.js` |7/7 PASS (overlaps210); p1-remediation-regression-green.log |
+| `node --env-file=.env.local --test --test-concurrency=1 apps/backend/dist/tests/unit/browser-intent.test.js apps/backend/dist/tests/unit/browser-display.test.js apps/backend/dist/tests/unit/config.test.js apps/backend/dist/tests/integration/browser-http.test.js` |16/16 PASS:8real-PG+8unit/config overlap; p1-remediation-focused.log |
+| `npm.cmd run preflight`, `npm.cmd run format:check`, `npm.cmd run lint`, `npm.cmd run boundaries`, `npm.cmd run typecheck` | All PASS; p1-remediation-{preflight,format-check,lint,boundaries,typecheck}.log |
+| `git diff --check` | PASS before local commit |
+
+The seven new component cases execute actual compiled application functions/event
+handlers in a minimal Node VM DOM/clock adapter with mocked HTTP and real crypto;
+they are not browser E2E. They assert exact idle boundary, sensitive-state roots,
+ciphertext retention, original/wrong-actor recovery/no-overwrite, request-start
+renewal/latency, no error/input renewal, stale replies, server denial, absolute and
+monotonic expiry, delayed lifecycle guards, both views' distinct page timestamps,
+record association/cursors/exhaustion/refresh/missing metadata/header deduplication.
+The same tests against safely transpiled original Git source fail7/7 (expected
+red, no tracked checkout/edit); green7/7 proves the corrections. Reproduce red by
+extracting original app.ts with `git show bf8902a:apps/backend/src/operator/app.ts`,
+transpiling with the pinned TypeScript `transpileModule` into ignored artifacts,
+then setting test-only `P1_OPERATOR_APP_SOURCE` to that JS file before the same
+node:test command. Remove that environment override before green/current runs.
+
+Fresh database identity preflight independently verified loopback55438,
+`navard_i1_test`, exact test acknowledgement, distinct restricted runtime/DDL roles,
+separate dev database and PostgreSQL18.6 before reset. New focused PG cases cover
+current grants/revocation/expiry, all exact fields, immutable replay after COMMIT
+loss, catalogue races/durability, and multi-order/sibling/unlinked receiving isolation.
+The full357-case historical suite was not repeated: no server/domain/transport
+behavior changed, and the affected UI plus existing integration boundaries have
+targeted proof. Historical counts below are not newly executed remediation counts.
+
+Actual in-app browser used the real composed backend and disposable PG. Start:
+`node --env-file=.env.local apps/backend/dist/tests/support/browser-server.js --controlled-clock`.
+Only this explicit test flag injects controls into the test-served module; the
+production asset/allowlist contains no hook. It advances client Date.now/due timer
+callbacks, not performance.now, server/PG time or policy. This is controlled client
+time, not30minutes elapsed.10observed scenarios and limitations are in
+`p1-remediation-browser-receipt.md`; captures/JSON retain timestamp and memory-root
+booleans, never secrets. Real server expiration was tested separately with the
+existing fixture control. Browser execution confirmed: both views' retained
+timestamps and refresh,25lines/24units, one shared header/no unrelated markers;
+double-confirm/post-COMMIT loss, idle clearing with ciphertext retained, wrong-user
+isolation, original-user recovery with same target and counts unchanged at
+3orders/27lines/26received; delayed-timer interaction and genuine server-expiry
+clearing. Browser/server were closed after execution.
+
+| Final local evidence under artifacts/tests | SHA256 |
+| --- | --- |
+| p1-remediation-unit.log |07BF90D19F4F25C5C17C28622996157C16FA8A1616FCC64F05776B20A2F281CD |
+| p1-remediation-focused.log |E43CBAFC7E3C0601557A522572DBE80EC4DF1FBA90D07BF2C1AABD466CEFA3AE |
+| p1-remediation-regression-red.log |B3C9FB90BBCBB3628AE7967E5AAF4EE272DD11571E0C8CF4B966276341BF07AE |
+| p1-remediation-regression-green.log |A39155058388EC29DA39567C3055703FBBD88AC16B743A4DA79163F9BB4F3C2A |
+| p1-remediation-browser-receipt.md |FBB5447C15D1BE58995B58C2013C0C5D7A191F13BE16CA003DBA37C9A4AAED1E |
+| p1-remediation-idle-lock.png |3DBD0EB6ABFA386496A810CEA61D62DDB09C4B92ADAEFD74AE5C4061367F16F2 |
+| p1-remediation-pagination.json |C86CD60FB4B2CD337540F45C4FE476E020EB61DFE526DA5CCD96DA025C460198 |
+| p1-remediation-recovery.json |743EE548F907D1BF8D88E0CA55CE879FCA483E6C06C5D159D0B52D34A7A891EC |
+| p1-remediation-resume.json |AAB4DF2B167AABE9BC30ECB3848B1258EA6F8CE438EB933AE127CC98FBFC50CF |
+
+Evidence is ignored/local, not pushed or promised on another machine. Original
+P1/audit artifacts remain unchanged. Self-review and a separate read-only scoped
+engineering/security reviewer found no required new defect. The reviewer executed
+7compiled tests; root rebuilt and re-executed current final test sources afterwards.
+Fake DOM does not reproduce native event propagation; the real browser resumed
+interaction check supplements it. Review is not Owner acceptance or the next
+fresh-context remediation audit. R-01/R-02 are implemented/verified, pending that
+re-review; P1 remains in_review and P2 stays locked by Owner scope.
+
+## Original implementation verification and evidence (historical)
 
 Windows PowerShell, pinned Node24.21.0/npm11.19.0 and real PostgreSQL18.6/UTF8.
 The existing fixture verifies distinct restricted runtime/DDL roles, acknowledged
@@ -260,10 +386,11 @@ it is not Owner acceptance or permission to push/deploy. Thirteen backend
 capabilities remain accepted; P1 is a UI increment submitted for review, not a
 fourteenth accepted backend capability or a percentage of overall ERP completion.
 
-## P1 acceptance checklist
+## Original P1 acceptance checklist (historical, before independent audit)
 
-PASS means the bounded engineering evidence described above; it never implies
-factory/production approval. This checklist is finalized before local delivery.
+These were delivery-time claims. The later independent audit found R-01/R-02;
+their remediation record above governs current closure/re-review status. PASS
+never implies Owner/factory/production approval.
 
 | Criterion from the Owner directive | Status | Evidence / boundary |
 | --- | --- | --- |

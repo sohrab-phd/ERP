@@ -57,7 +57,15 @@ let busy = false,
   epoch = 0,
   currentOrder: Order | undefined,
   receivingCursor: string | undefined,
-  receivingCount = 0;
+  receivingCount = 0,
+  receivingPage = 0;
+// Identity renews last_seen_at in session()/context(). Use request START, not receipt
+// time: a successful authenticated response proves renewal no earlier than that.
+// Pointer/keyboard activity is never evidence of server renewal.
+const idleMs = 30 * 60 * 1000;
+let idleUntil = 0,
+  idleUntilMonotonic = 0,
+  expiryTimer: ReturnType<typeof setTimeout> | undefined;
 let prepared: unknown;
 let loggingOut = false;
 let logoutController: AbortController | undefined;
@@ -99,10 +107,13 @@ function clearBusiness() {
   currentOrder = undefined;
   receivingCursor = undefined;
   receivingCount = 0;
+  receivingPage = 0;
   arrivals.clear();
 }
 function lock(text: string) {
   epoch++;
+  clearTimeout(expiryTimer);
+  idleUntil = idleUntilMonotonic = 0;
   self = undefined;
   pending = undefined;
   prepared = undefined;
@@ -115,6 +126,8 @@ function lock(text: string) {
   el('catalogue-options').replaceChildren();
   el<HTMLFormElement>('catalogue-form').reset();
   el<HTMLFormElement>('lookup-form').reset();
+  el('recovery-reference').textContent = '';
+  el('receiving-status').textContent = '';
   show('workspace', false);
   show('login-panel', true);
   show('logout', false);
@@ -125,8 +138,40 @@ function lock(text: string) {
   el('identity').textContent = 'ورود با حساب شخصی';
   message(text, 'error');
 }
+function checkLocalExpiry(): boolean {
+  if (
+    self &&
+    (Date.now() >= idleUntil ||
+      performance.now() >= idleUntilMonotonic ||
+      Date.now() >= Date.parse(self.expiresAt))
+  ) {
+    lock('نشست پایان یافته است. برای ادامه و پیگیری عملیات با همان حساب وارد شوید.');
+    return true;
+  }
+  return false;
+}
+function armExpiry() {
+  clearTimeout(expiryTimer);
+  if (!self || checkLocalExpiry()) return;
+  expiryTimer = setTimeout(
+    () => {
+      if (!checkLocalExpiry()) armExpiry();
+    },
+    Math.max(
+      0,
+      Math.min(
+        idleUntil - Date.now(),
+        idleUntilMonotonic - performance.now(),
+        Date.parse(self.expiresAt) - Date.now(),
+      ),
+    ),
+  );
+}
 async function api<T>(path: string, body?: string | object, selectedRole: Role = role): Promise<T> {
+  if (checkLocalExpiry()) throw new Stale();
   const generation = epoch;
+  const startedAt = Date.now(),
+    startedMonotonic = performance.now();
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 15000);
   try {
@@ -145,9 +190,9 @@ async function api<T>(path: string, body?: string | object, selectedRole: Role =
         ? {}
         : { body: typeof body === 'string' ? body : JSON.stringify(body) }),
     });
-    if (generation !== epoch) throw new Stale();
+    if (generation !== epoch || checkLocalExpiry()) throw new Stale();
     const value = (await response.json()) as T;
-    if (generation !== epoch) throw new Stale();
+    if (generation !== epoch || checkLocalExpiry()) throw new Stale();
     if (!response.ok) {
       if ((response.status === 401 || response.status === 403) && path !== '/identity/login') {
         lock(
@@ -158,6 +203,11 @@ async function api<T>(path: string, body?: string | object, selectedRole: Role =
         throw new Stale();
       }
       throw new ApiError(response.status, value as Outcome);
+    }
+    if (path !== '/identity/login') {
+      idleUntil = Math.max(idleUntil, startedAt + idleMs);
+      idleUntilMonotonic = Math.max(idleUntilMonotonic, startedMonotonic + idleMs);
+      armExpiry();
     }
     return value;
   } finally {
@@ -283,6 +333,8 @@ async function restorePending() {
 }
 async function session() {
   const value = await api<Self>('/identity/session');
+  const confirmedUntil = idleUntil,
+    confirmedMonotonic = idleUntilMonotonic;
   const changed =
     self &&
     (self.accountId !== value.accountId ||
@@ -295,7 +347,11 @@ async function session() {
   if (changed) {
     lock('نشست یا مجوز تغییر کرده است.');
   }
+  idleUntil = confirmedUntil;
+  idleUntilMonotonic = confirmedMonotonic;
   self = value;
+  if (checkLocalExpiry()) throw new Stale();
+  armExpiry();
   const roles = [...permissions()];
   el('role').replaceChildren(
     ...roles.map((r) => {
@@ -648,6 +704,7 @@ async function loadReceiving(more: boolean) {
   if (!more) {
     receivingCursor = undefined;
     receivingCount = 0;
+    receivingPage = 0;
     arrivals.clear();
     el('receiving-result').replaceChildren();
   }
@@ -661,8 +718,16 @@ async function loadReceiving(more: boolean) {
       ...(more && receivingCursor ? { afterId: receivingCursor } : {}),
     });
     if (read !== receivingRead) throw new Stale();
+    const section = node('section');
+    receivingPage++;
+    section.append(
+      node(
+        'h4',
+        `${view === 'LINES' ? 'خطوط و ماندهٔ سفارش' : 'واحدهای دریافت‌شده و مغایرت‌ها'} · صفحهٔ ${receivingPage} · زمان این صفحه: ${page.data.snapshotAt ?? 'از سرور ارائه نشده است'}`,
+      ),
+    );
     if (view === 'LINES')
-      el('receiving-result').append(
+      section.append(
         table(page.data.items, [
           ...originalColumns,
           'acceptedUnitCount',
@@ -681,7 +746,7 @@ async function loadReceiving(more: boolean) {
             node('summary', `اطلاعات مشترک کل محموله · ${textValue(header.arrivalDateJalali)}`),
             details(header),
           );
-          el('receiving-result').append(arrival);
+          section.append(arrival);
         }
         const unit = node('details');
         unit.append(
@@ -691,13 +756,14 @@ async function loadReceiving(more: boolean) {
           ),
           details(row, ['arrival']),
         );
-        el('receiving-result').append(unit);
+        section.append(unit);
       }
+    el('receiving-result').append(section);
     receivingCount += page.data.items.length;
     receivingCursor = page.data.nextAfterId;
     show('more-receiving', !!receivingCursor);
     el('receiving-status').textContent = receivingCount
-      ? `${receivingCount} مورد نمایش داده شد. ${receivingCursor ? 'صفحهٔ بعد موجود است.' : 'پایان نتایج.'} زمان این صفحه: ${page.data.snapshotAt ?? ''}؛ هر صفحه وضعیت زمان بازیابی خود را دارد.`
+      ? `${receivingCount} مورد نمایش داده شد. ${receivingCursor ? 'صفحهٔ بعد موجود است.' : 'پایان نتایج.'} هر صفحه وضعیت زمان بازیابی خود را دارد.`
       : 'دریافتی برای این سفارش ثبت نشده است.';
   } catch (error) {
     if (read === receivingRead)
@@ -968,6 +1034,7 @@ on('receiving-view', 'change', () => loadReceiving(false));
 // Revalidate on workstation focus/back navigation. A rotated cookie cannot authorize stale intent.
 let checking = false;
 async function revalidate() {
+  if (checkLocalExpiry()) return;
   if (!self || busy || checking) return;
   checking = true;
   try {
@@ -985,19 +1052,19 @@ window.addEventListener('pagehide', () => {
   logoutController?.abort();
   lock('برای ادامه وارد شوید.');
 });
-let lastActivity = Date.now();
-for (const event of ['pointerdown', 'keydown'])
-  document.addEventListener(event, () => {
-    lastActivity = Date.now();
-  });
-setInterval(
-  action(async () => {
-    if (self && Date.parse(self.expiresAt) <= Date.now())
-      lock('نشست پایان یافته است. برای ادامه وارد شوید.');
-    else if (Date.now() - lastActivity < 60000) await revalidate();
-  }),
-  60000,
-);
+// Capture before navigation/form handlers, including resumed tabs whose timers were
+// throttled. Visibility/focus revalidation also checks expiry synchronously first.
+for (const event of ['pointerdown', 'keydown', 'click', 'submit', 'change'])
+  document.addEventListener(
+    event,
+    (e) => {
+      if (checkLocalExpiry()) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    },
+    true,
+  );
 async function bootstrap() {
   const retry = el<HTMLButtonElement>('retry-session');
   retry.disabled = true;

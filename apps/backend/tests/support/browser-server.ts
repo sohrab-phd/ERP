@@ -5,10 +5,68 @@ import { seedBrowserScenarios } from './browser-scenarios.js';
 import { installation } from './receipt-harness.js';
 import { optionCommand } from './inbound-harness.js';
 
+// Explicit test-only clock injected into the served module, never a product asset
+// or a production hook. Real HTTP, Identity policy and PostgreSQL time stay real.
+const controlledClock = `
+const testRealNow = Date.now.bind(Date), testSetTimeout = window.setTimeout.bind(window), testClearTimeout = window.clearTimeout.bind(window);
+let testOffset = 0;
+const testTimers = new Map();
+Date.now = () => testRealNow() + testOffset;
+window.setTimeout = (callback, delay = 0, ...args) => {
+  const id = testSetTimeout(() => { testTimers.delete(id); callback(...args); }, delay);
+  testTimers.set(id, { due: Date.now() + delay, callback: () => callback(...args) });
+  return id;
+};
+window.clearTimeout = (id) => { testTimers.delete(id); testClearTimeout(id); };
+const testControls = document.createElement('aside');
+testControls.setAttribute('aria-label', 'کنترل زمان آزمون');
+const testState = document.createElement('output');
+testState.id = 'test-session-state';
+function testReport() {
+  testState.textContent = JSON.stringify({ authenticated: !!self, pending: !!pending,
+    recoveryKey: !!self?.browser.recoveryKey, ciphertext: !!sessionStorage.getItem('navard-p1-pending-v1'),
+    orderCleared: !document.getElementById('order-result').textContent,
+    receivingCleared: !document.getElementById('receiving-result').textContent,
+    referenceCleared: !document.getElementById('recovery-reference').textContent });
+}
+for (const [label, work] of [
+  ['گذشت ۳۰ دقیقه با اجرای تایمر', () => {
+    testOffset += 30 * 60 * 1000;
+    for (const [id, timer] of [...testTimers]) if (timer.due <= Date.now()) {
+      window.clearTimeout(id); timer.callback();
+    }
+  }],
+  ['گذشت ۳۱ دقیقه بدون تایمر', () => { testOffset += 31 * 60 * 1000; }],
+  ['بازنشانی ساعت آزمون', () => { testOffset = 0; }],
+  ['گزارش وضعیت آزمون', () => {}],
+]) {
+  const button = document.createElement('button'); button.type = 'button'; button.textContent = label;
+  button.addEventListener('click', () => { work(); testReport(); }); testControls.append(button);
+}
+testControls.append(testState); document.body.append(testControls);
+`;
+
 // Explicit disposable-database safeguards run before setup; this is never a product entry point.
 await withDatabase(async (db) => {
   const h = await browserHarness(db, 3110);
   try {
+    if (process.argv.includes('--controlled-clock')) {
+      h.app.server.prependListener('request', (request, response) => {
+        if (request.url !== '/operator/app.js') return;
+        const prefix = Buffer.from(controlledClock);
+        const writeHead = response.writeHead.bind(response),
+          end = response.end.bind(response);
+        response.writeHead = (status, headers) => {
+          const values = headers as Record<string, string | number>;
+          return writeHead(status, {
+            ...values,
+            'content-length': Number(values['content-length']) + prefix.length,
+          });
+        };
+        response.end = (chunk: unknown) =>
+          end(Buffer.concat([prefix, Buffer.from(chunk as Uint8Array)]));
+      });
+    }
     await seedBrowserScenarios(h);
     console.log(
       'P1 browser fixture ready at ' +

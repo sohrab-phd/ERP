@@ -8,6 +8,7 @@ const files = [
   'apps/backend/dist/tests/unit/config.test.js',
   'apps/backend/dist/tests/unit/browser-intent.test.js',
   'apps/backend/dist/tests/unit/browser-display.test.js',
+  'apps/backend/dist/tests/unit/operator-lifecycle.test.js',
   'apps/backend/dist/tests/unit/http-host.test.js',
   'apps/backend/dist/tests/unit/logger.test.js',
   'apps/backend/dist/tests/unit/identity.test.js',
