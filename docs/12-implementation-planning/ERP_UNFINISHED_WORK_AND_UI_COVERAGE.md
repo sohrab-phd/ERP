@@ -286,5 +286,3 @@ review, not the formal P2 follow-up. Focused local-link/frontmatter and final
 working/staged whitespace checks pass; exact counts are retained in
 `artifacts/tests/erp-inventory-docs.log`. No product tests were rerun merely for
 this documentation-only assessment; the fresh P2 results retain their exact scope.
-
-
