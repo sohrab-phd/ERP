@@ -3,15 +3,40 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.18.0
+version: 0.19.0
 owners: [chief-solution-architect]
 depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
-last_reviewed: 2026-10-25
+last_reviewed: 2026-11-04
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
+
+## Current reconciliation — 2026-11-04
+
+The actual Owner continuation instruction authorizes only SEC-P2-01/WF-P2-01
+remediation and then read-only unfinished-work/UI assessment. Corrections are
+locally committed at `8554a1e6958cc0d9e2529f7994c9babcdd7ec6bd`; P2 remains
+in_review, pending separate independent follow-up PASS and explicit Owner
+acceptance. [Prioritized A–F register and13-capability UI matrix](ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md)
+are the current execution proposal; [fresh verification](P2_REMEDIATION_REPORT.md)
+does not accept the increment. Thirteen backend capabilities and P1 remain accepted.
+
+No demonstrated missing backend has still-applicable implementation authority in
+this inventory. UI gaps, operational P3 prerequisites and policy-dependent future
+commands are separate. P3 is NOT AUTHORIZED/NOT COMPLETED; P4/P5 before P3 require
+an explicit Owner roadmap adjustment, and every bounded product slice requires
+its own authority and acceptance. No push or rollout.
+
+Historical scope/OQ/out-of-scope text below is not a current blanket work grant.
+In particular: SRC-007/APR-042/043 supersede unresolved I2 decisions and the early
+nonunique receipt-code statement; accepted MAKE resolves normal route/completion/
+disposition policy but not stop/cancel/rework/warehouse conversion. Sales now has
+the accepted RecordFulfillmentMake extension; dispatch consumes reservations but
+does not implement Sales closure. Old candidate command names never establish
+current implementation or permission. Current phase and exact accepted owner
+contracts resolve conflicts; original acceptance records/OQ statuses are preserved.
 
 Current [APR-043](../00-governance/approved-baselines/APR-043-i2-backend-acceptance.md)
 formally accepts I2 implementation b585fd795fb0276bc936af254c6d56fd7e3bcbe8 after

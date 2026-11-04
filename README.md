@@ -5,6 +5,14 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
+Current continuation (2026-11-04): bounded P2 audit remediation is locally
+delivered at `8554a1e6958cc0d9e2529f7994c9babcdd7ec6bd`; P2 remains in_review
+pending separate independent follow-up PASS and explicit Owner acceptance.
+See the [remediation evidence](docs/12-implementation-planning/P2_REMEDIATION_REPORT.md)
+and [unfinished-work/UI coverage assessment](docs/12-implementation-planning/ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md).
+No P3/later increment, deployment, real-data migration or push is authorized.
+The2026-10-26 scope snapshot below is historical; CURRENT_PHASE controls.
+
 Current scope (2026-10-26): [APR-045](docs/00-governance/approved-baselines/APR-045-p1-owner-acceptance.md)
 records actual Owner acceptance of P1 implementation
 `22b5389af4d88cff38afdac1bebad68badd06f9c` for its approved engineering and

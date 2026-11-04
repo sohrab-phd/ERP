@@ -3,14 +3,34 @@ id: PLAN-ERP-CURRENT-ASSESSMENT-001
 title: ERP current state and next development recommendation
 phase: 12-implementation-planning
 status: in_review
-version: 1.0.2
+version: 1.1.0
 owners: [delivery-lead, chief-solution-architect]
 depends_on: [APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
-last_reviewed: 2026-10-26
+last_reviewed: 2026-11-04
 approval: null
 ---
 
 # ارزیابی وضعیت واقعی ERP و پیشنهاد گام بعد
+
+## Current verified assessment — 2026-11-04
+
+The [read-only unfinished-work register,13-capability backend-to-UI matrix and
+bounded roadmap](ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md) supersede earlier
+current-state snapshots below. Verified P2 remediation commit:
+`8554a1e6958cc0d9e2529f7994c9babcdd7ec6bd`, with227fresh unit and110real-PG passes
+plus actual browser/SQL evidence in the [remediation package](P2_REMEDIATION_REPORT.md).
+Both audit findings have implementation corrections; P2 remains **in_review**
+until formal independent follow-up PASS and explicit Owner acceptance.
+
+Thirteen backend capabilities and P1 retain their accepted bounded scopes.
+P3 is not authorized/completed. Accepted commercial/production/trace/evidence
+backends lack operator browser journeys; that is not blanket authority to build
+them. Next permitted gate is P2 review/Owner decision, then separately authorized
+P3. Advancing P4/P5 engineering before P3 needs an explicit roadmap adjustment.
+No new product increment, deployment, real-data migration or push occurred.
+Earlier statements of no UI, P2 not authorized, unresolved I2 decisions and
+acceptance-documentation-only scope remain historical, resolved by the newer
+applicable authority cited in the current assessment.
 
 ## وضعیت جاری P2 — 2026-10-26
 
