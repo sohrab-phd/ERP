@@ -3,10 +3,10 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.32.0
+version: 0.33.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
-last_reviewed: 2026-10-26
+last_reviewed: 2026-11-04
 approval: null
 supersedes: null
 ---
@@ -14,6 +14,13 @@ supersedes: null
 # Approval and Checkpoint Register
 
 ## APR-046 — Bounded P2 Warehouse receiving browser implementation
+
+Owner follow-up issued2026-11-04 explicitly authorizes only SEC-P2-01 and
+WF-P2-01 remediation, necessary tests/docs/local commit, then read-only repository
+inventory. [Remediation package](../12-implementation-planning/P2_REMEDIATION_REPORT.md)
+retains P2 in_review pending separate independent follow-up PASS and explicit
+Owner acceptance. This records the actual instruction, not a new approval of P2,
+P3 or later UI work. No push/deployment.
 
 [Actual Owner directive](approved-baselines/APR-046-p2-receiving-ui-authorization.md),
 2026-10-26, authorizes P2 from clean `1dfaccb4b73c1d3367e34c9f8d0d1a571a740770`:

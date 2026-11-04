@@ -894,39 +894,65 @@ async function readArrival(arrivalId: string) {
     count += result.data.items.length;
     cursor = result.data.nextAfterId;
   } while (cursor);
-  for (const orderId of linkedOrders) {
-    let afterId: string | undefined,
-      page = 0;
-    const progress = node('section');
-    progress.append(node('h3', 'پیشرفت و ماندهٔ سفارش مرتبط'));
-    root.append(progress);
-    do {
-      const result = await api<{ data: Page }>(
-        '/purchasing/receiving/orders/query',
-        { orderId, view: 'LINES', limit: 20, ...(afterId ? { afterId } : {}) },
-        'ACT-WH',
-      );
-      if (generation !== epoch || read !== receivingRead) throw new Stale();
-      progress.append(
-        node(
-          'h4',
-          `صفحهٔ ${++page} · زمان این صفحه: ${result.data.snapshotAt ?? 'از سرور ارائه نشده است'}`,
-        ),
-        table(result.data.items, [
-          ...originalColumns,
-          'acceptedUnitCount',
-          'remainingUnitCount',
-          'excessUnitCount',
-          'variance',
-        ]),
-      );
-      afterId = result.data.nextAfterId;
-    } while (afterId);
-  }
+  // Exhausted canonical arrival pages establish receipt independently of the
+  // supplementary order-progress reads below. Their failure cannot undo it.
   message(
     `دریافت تأییدشده از سرور بازیابی شد: ${count} واحد؛ پایان تمام صفحات. شناسه‌های موجودی شاهد اثر ثبت‌شده‌اند. هر صفحه وضعیت زمان بازیابی خود را دارد.`,
     'success',
   );
+  for (const orderId of linkedOrders) {
+    const progress = node('section');
+    root.append(progress);
+    const loadProgress = async () => {
+      let afterId: string | undefined,
+        page = 0;
+      progress.replaceChildren(node('h3', 'پیشرفت و ماندهٔ سفارش مرتبط'));
+      try {
+        do {
+          const result = await api<{ data: Page }>(
+            '/purchasing/receiving/orders/query',
+            { orderId, view: 'LINES', limit: 20, ...(afterId ? { afterId } : {}) },
+            'ACT-WH',
+          );
+          if (generation !== epoch || read !== receivingRead) throw new Stale();
+          progress.append(
+            node(
+              'h4',
+              `صفحهٔ ${++page} · زمان این صفحه: ${result.data.snapshotAt ?? 'از سرور ارائه نشده است'}`,
+            ),
+            table(result.data.items, [
+              ...originalColumns,
+              'acceptedUnitCount',
+              'remainingUnitCount',
+              'excessUnitCount',
+              'variance',
+            ]),
+          );
+          afterId = result.data.nextAfterId;
+        } while (afterId);
+      } catch (error) {
+        // api() locks on 401/403 and rejects expired/stale continuations. Never
+        // turn those into a warning that could resurrect cleared business data.
+        if (error instanceof Stale || generation !== epoch || read !== receivingRead) throw error;
+        const warning = node(
+          'p',
+          'دریافت قطعی است؛ بازیابی پیشرفت و ماندهٔ این سفارش کامل نشد. ماندهٔ نمایش‌داده‌شده ممکن است کامل یا تازه نباشد. فقط اطلاعات را دوباره بازیابی کنید؛ ثبت دریافت را تکرار نکنید.',
+        );
+        warning.setAttribute('role', 'status');
+        const refresh = node('button', 'بازیابی دوبارهٔ پیشرفت سفارش');
+        refresh.type = 'button';
+        refresh.addEventListener(
+          'click',
+          action(async () => {
+            if (generation !== epoch || read !== receivingRead) return;
+            await loadProgress();
+          }),
+        );
+        progress.append(warning, refresh);
+      }
+    };
+    await loadProgress();
+  }
 }
 async function dispatchPending() {
   const intent = pending,

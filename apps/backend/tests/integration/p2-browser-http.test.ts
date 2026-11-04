@@ -332,3 +332,108 @@ void test('P2 audit failure rolls back receiving/IPS/outcome and immutable brows
     }
   });
 });
+
+void test('P2 remediation: progress failures and read-only refresh preserve committed identities, optional semantics and one stock bundle', async () => {
+  await withDatabase(async (db) => {
+    const h = await setup(db);
+    try {
+      const c = h.command(3),
+        units = c.payload.units as Mutable[];
+      Object.assign(units[0]!.actual as Mutable, {
+        colorOptionId: null,
+        qualityGradeOptionId: null,
+        ralColorNumber: null,
+        lengthM: null,
+      });
+      const color = optionCommand('COLOR', 'رنگ واقعی'),
+        quality = optionCommand('QUALITY_GRADE', 'کیفیت واقعی');
+      for (const option of [color, quality])
+        assert.equal((await h.proc.call('/purchasing/inbound-catalogues', option)).status, 200);
+      Object.assign(units[2]!.actual as Mutable, {
+        colorOptionId: color.target.id,
+        qualityGradeOptionId: quality.target.id,
+        ralColorNumber: '0012',
+        lengthM: '2.123456789012345678',
+      });
+      units[2]!.acceptance = { confirmed: true, specificationMismatch: true };
+      h.loseNextReceivingResponse();
+      await assert.rejects(h.wh.call(confirm, c));
+      const committed = await counts(db);
+      assert.deepEqual(committed, { arrivals: 1, units: 3, ledger: 3, origins: 3 });
+      const canonical = await data(await h.wh.call(arrival, { arrivalId: c.target.id }));
+      const rows = canonical.items as Row[];
+      for (const [index, input] of units.entries()) {
+        const actual = rows.find((r) => r.receivedUnitId === input.receivedUnitId)!.actual as Row;
+        for (const [inputName, outputName] of [
+          ['colorOptionId', 'color'],
+          ['qualityGradeOptionId', 'qualityGrade'],
+          ['ralColorNumber', 'ralColorNumber'],
+          ['lengthM', 'lengthM'],
+        ]) {
+          if (index === 0) assert.equal(actual[outputName!], null);
+          else if (index === 1) assert.equal(Object.hasOwn(actual, outputName!), false);
+          else
+            assert.deepEqual(
+              inputName!.endsWith('OptionId')
+                ? (actual[outputName!] as Row).optionId
+                : actual[outputName!],
+              (input.actual as Mutable)[inputName!],
+            );
+        }
+      }
+      const snapshot = async () =>
+        (
+          await db.owner.query<{
+            received_unit_id: string;
+            unit_id: string;
+            lot_id: string;
+            effect_id: string;
+            kg: string;
+          }>(`SELECT u.received_unit_id,o.unit_id,o.lot_id,o.effect_id,l.on_hand_delta::text kg
+        FROM procurement.inbound_received_unit u JOIN inventory.inbound_unit_origin o USING(installation_id,authority_scope,received_unit_id,arrival_id)
+        JOIN inventory.ledger l ON l.installation_id=o.installation_id AND l.unit_id=o.unit_id AND l.effect_id=o.effect_id ORDER BY u.received_unit_id`)
+        ).rows;
+      const stock = await snapshot();
+      assert.deepEqual(
+        stock.map((r) => r.kg),
+        ['2000', '2000', '2000'],
+      );
+      for (const status of [503, 400] as const) {
+        h.failReceivingProgress(status);
+        const replay = await h.wh.call(confirm, c);
+        assert.equal(replay.status, 200);
+        assert.equal(((await replay.json()) as { replayed: boolean }).replayed, true);
+        const readback = await data(await h.wh.call(arrival, { arrivalId: c.target.id }));
+        assert.deepEqual(readback.arrival, canonical.arrival);
+        assert.deepEqual(readback.items, canonical.items);
+        assert.equal(
+          (await h.wh.call(progress, { orderId: h.original.orderId, view: 'LINES' })).status,
+          status,
+        );
+        assert.deepEqual(await counts(db), committed);
+        assert.deepEqual(await snapshot(), stock);
+      }
+      h.failReceivingProgress(0);
+      const refreshed = await data(
+        await h.wh.call(progress, { orderId: h.original.orderId, view: 'LINES' }),
+      );
+      assert.equal((refreshed.items as Row[])[0]!.acceptedUnitCount, '3');
+      assert.deepEqual(await counts(db), committed);
+      assert.deepEqual(await snapshot(), stock);
+      assert.equal(
+        (
+          await db.owner.query<{ count: number }>(
+            "SELECT count(*)::int count FROM kernel.command_outcome WHERE command='ConfirmPurchaseReceiving'",
+          )
+        ).rows[0]!.count,
+        1,
+      );
+      assert.deepEqual(
+        await data(await h.wh.call('/purchasing/operational-orders/' + h.original.orderId)),
+        h.original.original,
+      );
+    } finally {
+      await h.app.stop();
+    }
+  });
+});

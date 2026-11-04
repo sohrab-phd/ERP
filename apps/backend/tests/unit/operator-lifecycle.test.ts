@@ -113,6 +113,7 @@ interface Page {
   items: Record<string, unknown>[];
   snapshotAt?: string;
   nextAfterId?: string;
+  failureStatus?: number;
 }
 async function harness() {
   const elements = new Map<string, Element>();
@@ -131,10 +132,13 @@ async function harness() {
   const timers = new Map<number, { at: number; callback: () => void; repeat?: number }>();
   const requests: { path: string; body: unknown }[] = [];
   const pages: Page[] = [];
+  const arrivalPages: Page[] = [];
   const state = {
     actor: person(),
     status: 200,
     dropCommand: false,
+    progressStatus: 200,
+    arrivalStatus: 200,
     hold: undefined as undefined | Promise<Response>,
     original: { ...order, lines: [] as Record<string, unknown>[] },
   };
@@ -185,14 +189,25 @@ async function harness() {
       if (state.status !== 200) return new Response('{}', { status: state.status });
       if (path.endsWith('/identity/session')) return Response.json(state.actor);
       if (path.endsWith('/inbound-catalogues/query')) return Response.json({ data: { items: [] } });
-      if (path.endsWith('/receiving/orders/query'))
-        return Response.json({ data: pages.shift() ?? { items: [] } });
+      if (path.endsWith('/receiving/orders/query')) {
+        if (state.progressStatus === 0) throw new Error('controlled progress response loss');
+        if (state.progressStatus !== 200)
+          return new Response('{}', { status: state.progressStatus });
+        const page = pages.shift() ?? { items: [] };
+        return page.failureStatus
+          ? new Response('{}', { status: page.failureStatus })
+          : Response.json({ data: page });
+      }
       if (path.endsWith('/operational-orders') || path.endsWith('/receiving/confirm')) {
         if (state.dropCommand) throw new Error('controlled response loss');
         return Response.json({ status: 'completed', result: { outcome: 'accepted' } });
       }
-      if (path.endsWith('/receiving/arrivals/query'))
-        return Response.json({ data: { arrival: { arrivalId: 'canonical' }, items: [] } });
+      if (path.endsWith('/receiving/arrivals/query')) {
+        if (state.arrivalStatus !== 200) return new Response('{}', { status: state.arrivalStatus });
+        return Response.json({
+          data: { arrival: { arrivalId: 'canonical' }, ...(arrivalPages.shift() ?? { items: [] }) },
+        });
+      }
       return Response.json({ data: state.original });
     },
   });
@@ -229,6 +244,7 @@ async function harness() {
     storage,
     requests,
     pages,
+    arrivalPages,
     state,
     async advance(ms: number, runTimers = true, wallDelta = ms) {
       wall += wallDelta;
@@ -332,6 +348,200 @@ async function receivingEditorHarness() {
   control('accept-confirmed').checked = true;
   const prepare = () => emit(root.querySelectorAll('form')[1]!, 'submit');
   return { ...h, root, control, button, emit, settle, prepare };
+}
+
+for (const status of [503, 400, 0]) {
+  void test(`SEC-P2-01 accepted receiving survives supplementary progress failure ${status}; refresh never resubmits`, async () => {
+    const h = await receivingEditorHarness();
+    h.prepare();
+    h.state.dropCommand = true;
+    h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+    await h.settle();
+    const submissions = () => h.requests.filter((r) => r.path.endsWith('/receiving/confirm'));
+    assert.equal(submissions().length, 1);
+    const ciphertext = h.storage.get(intent.pendingSlot);
+    assert.ok(ciphertext, 'response loss must retain immutable recovery');
+    h.state.dropCommand = false;
+    h.state.progressStatus = status;
+    h.arrivalPages.push(
+      {
+        items: [{ internalSystemCode: 'canonical-one', association: { orderId: order.orderId } }],
+        nextAfterId: 'next',
+      },
+      { items: [{ internalSystemCode: 'canonical-two', association: { orderId: order.orderId } }] },
+    );
+    await h.run<Promise<void>>('dispatchPending()');
+    assert.equal(submissions().length, 2);
+    assert.deepEqual(submissions()[0]!.body, submissions()[1]!.body);
+    assert.equal(h.run('pending'), undefined);
+    assert.equal(h.storage.has(intent.pendingSlot), false);
+    assert.equal(h.element('recovery').hidden, true);
+    assert.match(h.element('message').textContent, /دریافت تأییدشده.*2 واحد/u);
+    assert.equal(h.element('message').dataset.kind, 'success');
+    const result = h.element('arrival-result');
+    assert.match(result.textContent, /canonical-one/u);
+    assert.match(result.textContent, /canonical-two/u);
+    assert.match(result.textContent, /پیشرفت.*کامل نشد/u);
+    const refresh = result
+      .querySelectorAll('button')
+      .find((b) => b.textContent === 'بازیابی دوبارهٔ پیشرفت سفارش')!;
+    assert.ok(refresh, 'failed supplementary read needs a read-only refresh');
+    h.state.progressStatus = 200;
+    h.pages.push({ items: [{ acceptedUnitCount: '2' }], snapshotAt: 'refreshed-progress' });
+    const arrivalReads = h.requests.filter((r) =>
+      r.path.endsWith('/receiving/arrivals/query'),
+    ).length;
+    h.emit(refresh, 'click');
+    await h.settle();
+    await h.run<Promise<void>>('dispatchPending()');
+    assert.equal(submissions().length, 2, 'refresh/recovery cannot submit a resolved command');
+    assert.equal(
+      h.requests.filter((r) => r.path.endsWith('/receiving/arrivals/query')).length,
+      arrivalReads,
+    );
+    assert.match(result.textContent, /canonical-one/u);
+    assert.match(result.textContent, /canonical-two/u);
+    assert.match(result.textContent, /refreshed-progress/u);
+    assert.doesNotMatch(result.textContent, /پیشرفت.*کامل نشد/u);
+  });
+}
+
+for (const status of [401, 403]) {
+  void test(`SEC-P2-01 supplementary ${status} still locks and clears receiving without restoring stale data`, async () => {
+    const h = await receivingEditorHarness();
+    h.prepare();
+    h.state.progressStatus = status;
+    h.arrivalPages.push({ items: [{ association: { orderId: order.orderId } }] });
+    h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+    await h.settle();
+    assert.equal(h.run('self'), undefined);
+    assert.equal(h.element('arrival-result').textContent, '');
+    assert.equal(h.element('workspace').hidden, true);
+    assert.ok(h.storage.has(intent.pendingSlot));
+    assert.doesNotMatch(h.element('message').textContent, /دریافت تأییدشده/u);
+  });
+}
+
+void test('SEC-P2-01 incomplete progress is labeled; a delayed refresh cannot resurrect receiving after lock', async () => {
+  const h = await receivingEditorHarness();
+  h.prepare();
+  h.arrivalPages.push({
+    items: [{ internalSystemCode: 'confirmed-unit', association: { orderId: order.orderId } }],
+  });
+  h.pages.push(
+    {
+      items: [{ acceptedUnitCount: '1' }],
+      snapshotAt: 'partial-progress-page',
+      nextAfterId: 'next',
+    },
+    { items: [], failureStatus: 503 },
+  );
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  await h.settle();
+  assert.equal(h.run('pending'), undefined);
+  assert.match(h.element('arrival-result').textContent, /partial-progress-page/u);
+  assert.match(h.element('arrival-result').textContent, /کامل یا تازه نباشد/u);
+  let release!: (response: Response) => void;
+  h.state.hold = new Promise<Response>((resolve) => {
+    release = resolve;
+  });
+  h.emit(
+    h
+      .element('arrival-result')
+      .querySelectorAll('button')
+      .find((b) => b.textContent === 'بازیابی دوبارهٔ پیشرفت سفارش')!,
+    'click',
+  );
+  await h.settle();
+  h.run('lock("session ended")');
+  release(
+    Response.json({
+      data: { items: [{ private: 'must not reappear' }], snapshotAt: 'late-private-progress' },
+    }),
+  );
+  await h.settle();
+  assert.equal(h.run('self'), undefined);
+  assert.equal(h.element('arrival-result').textContent, '');
+  assert.equal(h.element('workspace').hidden, true);
+  assert.equal(h.storage.has(intent.pendingSlot), false);
+  assert.equal(h.requests.filter((r) => r.path.endsWith('/receiving/confirm')).length, 1);
+});
+
+void test('SEC-P2-01 canonical arrival read failure retains the same accepted command for safe recovery', async () => {
+  const h = await receivingEditorHarness();
+  h.prepare();
+  h.state.arrivalStatus = 400;
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  await h.settle();
+  assert.ok(h.run('pending'));
+  assert.ok(h.storage.has(intent.pendingSlot));
+  h.state.arrivalStatus = 200;
+  await h.run<Promise<void>>('dispatchPending()');
+  const submissions = h.requests.filter((r) => r.path.endsWith('/receiving/confirm'));
+  assert.deepEqual(submissions[0]!.body, submissions[1]!.body);
+  assert.equal(h.storage.has(intent.pendingSlot), false);
+});
+
+for (const mode of ['NOT_RECORDED', 'ABSENT', 'VALUE']) {
+  void test(`WF-P2-01 final review preserves all four optional actual meanings: ${mode}`, async () => {
+    const h = await receivingEditorHarness();
+    const color = '44444444-4444-4444-8444-444444444444',
+      quality = '55555555-5555-4555-8555-555555555555';
+    h.run(
+      `catalogues.get('COLOR').set('${color}', {optionId:'${color}',catalogue:'COLOR',label:'رنگ واقعی'}); catalogues.get('QUALITY_GRADE').set('${quality}', {optionId:'${quality}',catalogue:'QUALITY_GRADE',label:'کیفیت واقعی'});refreshSelects()`,
+    );
+    const values = {
+      colorOptionId: color,
+      qualityGradeOptionId: quality,
+      ralColorNumber: '0012',
+      lengthM: '2.123456789012345678',
+    };
+    for (const [name, value] of Object.entries(values)) {
+      const state = h.control('state-' + name);
+      state.value = mode;
+      h.emit(state, 'change');
+      h.control(name + '-').value = value;
+    }
+    h.prepare();
+    const actual = h.root
+      .querySelectorAll('div')
+      .find((d) => d.children[0]?.textContent === 'مقادیر واقعی پیشنهادی')!;
+    const displayed = new Map(
+      actual
+        .querySelectorAll('dt')
+        .map((c) => [
+          c.textContent,
+          c.parent!.children[c.parent!.children.indexOf(c) + 1]!.textContent,
+        ]),
+    );
+    for (const [name, value] of Object.entries(values)) {
+      const expected =
+        mode === 'ABSENT'
+          ? 'صریحاً بدون مقدار'
+          : mode === 'NOT_RECORDED'
+            ? 'ثبت نشده'
+            : name === 'colorOptionId'
+              ? 'رنگ واقعی'
+              : name === 'qualityGradeOptionId'
+                ? 'کیفیت واقعی'
+                : value;
+      const label = h.run<string>(`labels[${JSON.stringify(name)}]`);
+      if (mode === 'VALUE' && name.endsWith('OptionId'))
+        assert.ok(displayed.get(label)?.includes(expected), name + ' observed catalogue label');
+      else assert.equal(displayed.get(label), expected, name + ' review meaning');
+    }
+    h.state.dropCommand = true;
+    h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+    await h.settle();
+    const sent = h.requests.find((r) => r.path.endsWith('/receiving/confirm'))!.body as {
+      payload: { units: { actual: Record<string, unknown> }[] };
+    };
+    for (const [name, value] of Object.entries(values)) {
+      const actual = sent.payload.units[0]!.actual;
+      assert.equal(Object.hasOwn(actual, name), mode !== 'NOT_RECORDED');
+      assert.equal(actual[name], mode === 'ABSENT' ? null : mode === 'VALUE' ? value : undefined);
+    }
+  });
 }
 
 void test('P2 complete receiving review freezes exact intent; repeated clicks, local lock and same-actor replay preserve it', async () => {

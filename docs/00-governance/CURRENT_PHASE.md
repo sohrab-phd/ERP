@@ -3,15 +3,29 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.65.0
+version: 0.66.0
 owners: [chief-solution-architect]
 depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-10-26
+last_reviewed: 2026-11-04
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
+
+## Effective Owner continuation directive — 2026-11-04
+
+The actual Owner directive in this chat authorizes bounded remediation of
+**SEC-P2-01 and WF-P2-01 only**, necessary regressions/documentation and a local
+commit, followed by a read-only repository-wide unfinished-work/UI assessment.
+The independent audit of `4e608693cae9fc45d37506728909f6e2862ca13b` returned
+FAIL; [remediation evidence](../12-implementation-planning/P2_REMEDIATION_REPORT.md)
+does not supersede that audit with self-acceptance. **P2 remains in_review** until
+a separate independent follow-up passes and the Owner explicitly accepts it.
+APR-046/APR-045/APR-043 remain applicable; no new APR or business policy is inferred.
+No unrelated P2 redesign, schema/command/Inventory-writer change, P3, later UI
+increment, production deployment, real-data migration or push is authorized.
+The implementation grant below is historical except for this bounded follow-up.
 
 Current execution authority: [APR-046](approved-baselines/APR-046-p2-receiving-ui-authorization.md)
 records the actual Owner P2 directive issued2026-10-26. **P2 AUTHORIZED FOR BOUNDED

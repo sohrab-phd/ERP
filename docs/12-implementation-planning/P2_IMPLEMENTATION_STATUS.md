@@ -3,14 +3,27 @@ id: IMPL-P2-001
 title: P2 Persian Warehouse receiving browser implementation status
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, chief-solution-architect]
 depends_on: [APR-046, APR-045, APR-043, IMPL-P1-001, PLAN-DEV-WORKFLOW-001]
-last_reviewed: 2026-10-26
+last_reviewed: 2026-11-04
 approval: null
 ---
 
 # P2 Warehouse receiving UI — in review
+
+## Current bounded remediation — 2026-11-04
+
+The independent audit of `4e608693cae9fc45d37506728909f6e2862ca13b` returned
+**FAIL — BOUNDED REMEDIATION REQUIRED**, SEC-P2-01 and WF-P2-01 (both medium /
+REQUIRED). The actual Owner continuation directive in this chat authorizes only
+those fixes, necessary regressions/docs/local commit and the subsequent read-only
+inventory. [Remediation package and fresh evidence](P2_REMEDIATION_REPORT.md)
+record canonical success despite supplementary progress failure, read-only retry,
+and truthful omitted/null/value final review. P2 remains **in_review**, pending
+separate independent follow-up PASS and explicit Owner acceptance. No P3,
+unrelated product work, rollout or push. The evidence below is the original
+implementation history, not a claim that the failed audit passed.
 
 Authority: actual Owner [APR-046](../00-governance/approved-baselines/APR-046-p2-receiving-ui-authorization.md).
 Starting `main`: `1dfaccb4b73c1d3367e34c9f8d0d1a571a740770`, tracked tree clean.
@@ -103,7 +116,10 @@ with ACT-WH. Persistence precedes first dispatch; uncertain failure retains the
 same frozen envelope. Expiry/logout clears editor DOM/caches/review and decrypted
 state while retaining ciphertext. The original actor can recover/replay after
 reauthentication; another actor cannot decrypt or dispatch it. Accepted receiving
-readback failure retains recovery until authoritative replay/readback succeeds;
+canonical arrival-readback failure retains recovery until authoritative
+replay/readback succeeds. After all canonical arrival pages succeed, supplementary
+order-progress failure leaves receiving confirmed, labels progress incomplete and
+offers read-only refresh without replaying the resolved command;
 definitive400/422 rejection releases the frozen review for correction.409/503 are
 not unconditional fresh-command instructions. Existing P1 O-01 is unchanged/deferred.
 

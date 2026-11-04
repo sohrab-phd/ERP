@@ -3,15 +3,23 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.27.0
+version: 0.28.0
 owners: [chief-solution-architect]
 depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
-last_reviewed: 2026-10-26
+last_reviewed: 2026-11-04
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## Current P2 remediation and acceptance gate (2026-11-04)
+
+- [SEC-P2-01/WF-P2-01 remediation package and fresh verification](12-implementation-planning/P2_REMEDIATION_REPORT.md)
+- [Current bounded authority and independent-review/Owner-acceptance stop](00-governance/CURRENT_PHASE.md)
+
+P2 remains in_review. Its original independent audit returned FAIL; remediation
+implementation is not a formal independent follow-up PASS or Owner acceptance.
 
 ## Current P2 bounded implementation (2026-10-26)
 

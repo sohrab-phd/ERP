@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { createServer } from 'node:net';
 import { randomBytes } from 'node:crypto';
+import type { OutgoingHttpHeaders, OutgoingHttpHeader } from 'node:http';
 import { compose } from '../../src/composition-root.js';
 import type { DatabaseFixture } from './database-fixture.js';
 import { installation, operators } from './receipt-harness.js';
@@ -40,10 +41,26 @@ export async function browserHarness(db: DatabaseFixture, fixedPort?: number) {
   const app = compose(config);
   let dropNextOrderResponse = false;
   let dropNextReceivingResponse = false;
+  let receivingProgressFailure = 0;
   let unavailableSession = false,
     holdLogout = false;
   let releaseResponse: (() => void) | undefined;
   app.server.prependListener('request', (request, response) => {
+    if (receivingProgressFailure && request.url === '/ui-api/purchasing/receiving/orders/query') {
+      const writeHead = response.writeHead.bind(response);
+      // Fault only a successful supplementary read after normal authorization and
+      // the real PostgreSQL query. Never rewrite admission failures or commands.
+      response.writeHead = (
+        status: number,
+        messageOrHeaders?: string | OutgoingHttpHeaders | OutgoingHttpHeader[],
+        headers?: OutgoingHttpHeaders | OutgoingHttpHeader[],
+      ) => {
+        const code = status === 200 ? receivingProgressFailure : status;
+        return typeof messageOrHeaders === 'string'
+          ? writeHead(code, messageOrHeaders, headers)
+          : writeHead(code, messageOrHeaders);
+      };
+    }
     if (unavailableSession && request.url === '/ui-api/identity/session') {
       unavailableSession = false;
       const writeHead = response.writeHead.bind(response);
@@ -164,6 +181,9 @@ export async function browserHarness(db: DatabaseFixture, fixedPort?: number) {
     },
     loseNextReceivingResponse: () => {
       dropNextReceivingResponse = true;
+    },
+    failReceivingProgress: (status: 0 | 400 | 503) => {
+      receivingProgressFailure = status;
     },
   };
 }

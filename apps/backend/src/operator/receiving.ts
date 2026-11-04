@@ -660,7 +660,10 @@ export function createReceiving(deps: Dependencies) {
           const original = orders.get(orderId)?.lines.find((l) => l.lineId === lineId);
           const pair = make('section');
           const entered = enteredUnits.find((u) => u.receivedUnitId === unit.id)!;
-          const actualPreview = { ...entered.actual };
+          // Omission is not evidence of absence. Show each optional state in review
+          // while keeping the frozen command's omitted/null/value payload unchanged.
+          const actualPreview: Row = Object.fromEntries(optional.map((name) => [name, undefined]));
+          Object.assign(actualPreview, entered.actual);
           for (const name of Object.keys(kinds)) {
             const option = deps.catalogues().find((o) => o.optionId === actualPreview[name]);
             if (option) actualPreview[name] = { optionId: option.optionId, label: option.label };
@@ -684,7 +687,10 @@ export function createReceiving(deps: Dependencies) {
             make('h4', `اصل سفارش: ${orders.get(orderId)?.orderReference ?? 'بدون ارتباط'}`),
             original ? deps.render(original) : make('p', 'ارتباط بدون خط سفارش'),
           );
-          actual.append(make('h4', 'مقادیر واقعی پیشنهادی'), deps.render(actualPreview));
+          actual.append(
+            make('h4', 'مقادیر واقعی پیشنهادی'),
+            deps.render({ actual: actualPreview }),
+          );
           specifications.append(ordered, actual);
           pair.append(specifications);
           compare.append(pair);
