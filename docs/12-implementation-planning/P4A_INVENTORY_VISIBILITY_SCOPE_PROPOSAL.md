@@ -3,7 +3,7 @@ id: PLAN-P4A-SCOPE-001
 title: P4a Inventory Visibility and Discovery scope proposal
 phase: 12-implementation-planning
 status: draft
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, security-architect]
 depends_on: [APR-047, APR-043, APR-045, IMPL-P2-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-05
@@ -13,6 +13,21 @@ approval: null
 # P4a Inventory Visibility and Discovery — scope proposal
 
 **PROPOSED / NOT AUTHORIZED / NOT IMPLEMENTED.**
+
+Design follow-up2026-11-05: the actual Owner's subsequent design-only directive
+permits the bounded [read-contract design](P4A_INVENTORY_READ_CONTRACT_DESIGN.md),
+[source/state matrix](P4A_INVENTORY_SOURCE_AND_STATE_MATRIX.md) and
+[implementation authorization decisions](P4A_IMPLEMENTATION_AUTHORIZATION_DECISIONS.md).
+They refine the initial proposal below, without authorizing implementation or
+creating an approval record. Source verification identifies two hard Owner
+decisions: limited WH disclosure of allocated/customer production stock, and the
+integer-kg expectation versus accepted general-production exact decimal kg.
+The all-origin/five-current-state recommendation is conditional; no legacy-only
+substitution, fractional-stock omission or new customer permission is approved.
+The detailed package now specifies exact routes/fields/cursors/bounds and explicit
+index-only migration proposals; its decisions supersede the initial design
+questions below only as proposals, never as accepted contracts.
+
 [APR-047](../00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
 accepts P2 and puts P4a next in software-first planning. It authorizes this concise
 proposal only. Missing read contracts and UI implementation require a separate
