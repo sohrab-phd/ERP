@@ -3,10 +3,10 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.33.0
+version: 0.34.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
-last_reviewed: 2026-11-04
+last_reviewed: 2026-11-05
 approval: null
 supersedes: null
 ---
@@ -14,6 +14,13 @@ supersedes: null
 # Approval and Checkpoint Register
 
 ## APR-046 — Bounded P2 Warehouse receiving browser implementation
+
+Latest actual Owner follow-up issued2026-11-04 authorizes only SEC-P2-01-NAV,
+necessary regressions/harness corrections, investigation of the257-unit PG
+failure/hang, evidence/docs and local commit from `35ceb2d`. It does not accept
+P2 or authorize another increment. [Final bounded package](../12-implementation-planning/P2_NAV_REMEDIATION_REPORT.md)
+retains the independent-review/Owner-acceptance gate and reports unresolved
+evidence explicitly. No new APR, push or deployment authority is inferred.
 
 Owner follow-up issued2026-11-04 explicitly authorizes only SEC-P2-01 and
 WF-P2-01 remediation, necessary tests/docs/local commit, then read-only repository

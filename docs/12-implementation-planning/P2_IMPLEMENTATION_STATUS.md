@@ -3,16 +3,29 @@ id: IMPL-P2-001
 title: P2 Persian Warehouse receiving browser implementation status
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [delivery-lead, chief-solution-architect]
 depends_on: [APR-046, APR-045, APR-043, IMPL-P1-001, PLAN-DEV-WORKFLOW-001]
-last_reviewed: 2026-11-04
+last_reviewed: 2026-11-05
 approval: null
 ---
 
 # P2 Warehouse receiving UI — in review
 
 ## Current bounded remediation — 2026-11-04
+
+The independent remediation follow-up of `35ceb2d` returned FAIL for the residual
+SEC-P2-01-NAV lifecycle race and incomplete PostgreSQL verification. The latest
+actual Owner directive authorizes only that correction, the257-unit investigation,
+related regressions/harness/docs and a local commit. The
+[final bounded package](P2_NAV_REMEDIATION_REPORT.md) supersedes earlier remediation
+delivery claims for current readiness; historical evidence remains intact.
+Canonical pagination now terminally resolves its exact receiving intent before
+supplementary progress. Stale progress cannot alter current recovery, busy state
+or feedback. P2 remains **in_review**, subject to the evidence blockers and
+separate independent follow-up PASS plus explicit Owner acceptance.
+
+### Earlier remediation (historical)
 
 The independent audit of `4e608693cae9fc45d37506728909f6e2862ca13b` returned
 **FAIL — BOUNDED REMEDIATION REQUIRED**, SEC-P2-01 and WF-P2-01 (both medium /

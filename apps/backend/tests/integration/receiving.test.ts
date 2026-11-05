@@ -4,6 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { fork } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
+import { createConnection } from 'node:net';
 import { compose } from '../../src/composition-root.js';
 import {
   type CommandRequest,
@@ -60,75 +61,145 @@ async function setup(db: DatabaseFixture, databaseUrl = process.env.TEST_DATABAS
     logLevel: 'error',
     commandAdmissionReconciled: true,
   });
-  await app.start();
-  const address = app.server.address();
-  assert.ok(address && typeof address !== 'string');
-  const port = address.port;
-  const tokens = new Map<Role, string>([
-    ['ACT-PROC', people.proc.token],
-    ['ACT-WH', people.wh.token],
-    ['ACT-SEC', people.sec.token],
-  ]);
-  const customer = await people.person('ACT-CUST');
-  tokens.set('ACT-CUST', customer.token);
-  async function call(
-    path: string,
-    input: unknown,
-    role: Role = 'ACT-WH',
-    token?: string,
-  ): Promise<Reply> {
-    const response = await fetch(`http://127.0.0.1:${port}${path}`, {
-      method: 'POST',
-      headers: {
-        authorization: `Bearer ${token ?? tokens.get(role)!}`,
-        'x-erp-role': role,
-        'content-type': 'application/json; charset=utf-8',
-      },
-      body: typeof input === 'string' ? input : JSON.stringify(input),
-    });
-    const raw = await response.text();
-    return { status: response.status, body: object(JSON.parse(raw)), raw };
+  try {
+    await app.start();
+    const address = app.server.address();
+    assert.ok(address && typeof address !== 'string');
+    const port = address.port;
+    const tokens = new Map<Role, string>([
+      ['ACT-PROC', people.proc.token],
+      ['ACT-WH', people.wh.token],
+      ['ACT-SEC', people.sec.token],
+    ]);
+    const customer = await people.person('ACT-CUST');
+    tokens.set('ACT-CUST', customer.token);
+    async function call(
+      path: string,
+      input: unknown,
+      role: Role = 'ACT-WH',
+      token?: string,
+    ): Promise<Reply> {
+      const response = await fetch(`http://127.0.0.1:${port}${path}`, {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${token ?? tokens.get(role)!}`,
+          'x-erp-role': role,
+          'content-type': 'application/json; charset=utf-8',
+        },
+        body: typeof input === 'string' ? input : JSON.stringify(input),
+      });
+      const raw = await response.text();
+      return { status: response.status, body: object(JSON.parse(raw)), raw };
+    }
+    async function accept(path: string, command: CommandRequest, role: Role = 'ACT-WH') {
+      const response = await call(path, command, role);
+      assert.equal(response.status, 200, response.raw);
+      completed(response.body as unknown as ExecutionResult, 'accepted');
+      return response;
+    }
+    const material = optionCommand('MATERIAL_TYPE', 'COIL');
+    await accept(routes.option, material, 'ACT-PROC');
+    async function order(count = '5', weight = '2000', optionalFields: MutableRecord = {}) {
+      const template = orderCommand(material.target.id);
+      const command = {
+        ...template,
+        payload: {
+          ...template.payload,
+          orderReference: 'PO-' + randomUUID(),
+          lines: [
+            {
+              materialTypeOptionId: material.target.id,
+              widthM: '1.200',
+              thicknessMm: '0.35',
+              unitWeightKg: weight,
+              orderedUnitCount: count,
+              ...optionalFields,
+            },
+          ],
+        },
+      };
+      await accept(routes.order, command, 'ACT-PROC');
+      const lookup = await fetch(`http://127.0.0.1:${port}${routes.order}/${command.target.id}`, {
+        headers: { authorization: `Bearer ${people.wh.token}`, 'x-erp-role': 'ACT-WH' },
+      });
+      assert.equal(lookup.status, 200);
+      const projection = object(object(await lookup.json()).data);
+      const first = items(projection.lines)[0]!;
+      return { command, orderId: command.target.id, lineId: first.lineId as string, projection };
+    }
+    return { people, app, call, accept, material: material.target.id, order };
+  } catch (error) {
+    // Callers cannot own cleanup until setup returns its app.
+    try {
+      await app.stop();
+    } catch (cleanupError) {
+      throw new AggregateError([error, cleanupError], 'Receiving fixture setup and cleanup failed');
+    }
+    throw error;
   }
-  async function accept(path: string, command: CommandRequest, role: Role = 'ACT-WH') {
-    const response = await call(path, command, role);
-    assert.equal(response.status, 200, response.raw);
-    completed(response.body as unknown as ExecutionResult, 'accepted');
-    return response;
-  }
-  const material = optionCommand('MATERIAL_TYPE', 'COIL');
-  await accept(routes.option, material, 'ACT-PROC');
-  async function order(count = '5', weight = '2000', optionalFields: MutableRecord = {}) {
-    const template = orderCommand(material.target.id);
-    const command = {
-      ...template,
-      payload: {
-        ...template.payload,
-        orderReference: 'PO-' + randomUUID(),
-        lines: [
-          {
-            materialTypeOptionId: material.target.id,
-            widthM: '1.200',
-            thicknessMm: '0.35',
-            unitWeightKg: weight,
-            orderedUnitCount: count,
-            ...optionalFields,
-          },
-        ],
-      },
-    };
-    await accept(routes.order, command, 'ACT-PROC');
-    const lookup = await fetch(`http://127.0.0.1:${port}${routes.order}/${command.target.id}`, {
-      headers: { authorization: `Bearer ${people.wh.token}`, 'x-erp-role': 'ACT-WH' },
-    });
-    assert.equal(lookup.status, 200);
-    const projection = object(object(await lookup.json()).data);
-    const first = items(projection.lines)[0]!;
-    return { command, orderId: command.target.id, lineId: first.lineId as string, projection };
-  }
-  return { people, app, call, accept, material: material.target.id, order };
 }
 type Server = Awaited<ReturnType<typeof setup>>;
 type Original = Awaited<ReturnType<Server['order']>>;
+void test('I2 test fixture: failed setup closes its HTTP server and PostgreSQL pool before returning the original error', async () => {
+  await withDatabase(async (db) => {
+    const failure = new Error('Synthetic setup response failure');
+    const originalFetch = globalThis.fetch;
+    let origin: string | undefined;
+    let openedConnections = 0;
+    async function appConnections() {
+      const result = await db.owner.query<{ count: number }>(
+        "SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND application_name='navard-envelope'",
+      );
+      return result.rows[0]!.count;
+    }
+    globalThis.fetch = async (...args: Parameters<typeof fetch>) => {
+      const response = await originalFetch(...args);
+      const input = args[0];
+      const url = new URL(
+        typeof input === 'string' ? input : input instanceof URL ? input.href : input.url,
+      );
+      if (origin === undefined && url.pathname === routes.option) {
+        origin = url.origin;
+        assert.equal(response.status, 200);
+        await response.arrayBuffer();
+        openedConnections = await appConnections();
+        throw failure;
+      }
+      return response;
+    };
+    try {
+      await assert.rejects(setup(db), (error: unknown) => error === failure);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+    assert.ok(origin);
+    assert.ok(openedConnections > 0, 'The real setup request must have opened the app pool');
+    const address = new URL(origin);
+    await assert.rejects(
+      new Promise<void>((resolve, reject) => {
+        // A fresh socket avoids fetch's retained keep-alive connection to the stopped server.
+        const socket = createConnection({ host: address.hostname, port: Number(address.port) });
+        socket.setTimeout(2000, () => {
+          socket.destroy();
+          reject(new Error('Closed-listener observation timed out'));
+        });
+        socket.once('connect', () => {
+          socket.destroy();
+          resolve();
+        });
+        socket.once('error', reject);
+      }),
+      (error: unknown) =>
+        error instanceof Error && 'code' in error && error.code === 'ECONNREFUSED',
+    );
+    let remaining = await appConnections();
+    for (let attempt = 0; remaining > 0 && attempt < 50; attempt++) {
+      await delay(20);
+      remaining = await appConnections();
+    }
+    assert.equal(remaining, 0, 'Failed setup must close every composed-app connection');
+  });
+});
 function arrival(h: Server, original?: Original, count = 1, expected = '0'): MutableCommand {
   const waybillId = randomUUID(),
     receiptId = randomUUID();

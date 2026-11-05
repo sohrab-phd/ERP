@@ -845,7 +845,7 @@ async function loadReceiving(more: boolean) {
     }
   }
 }
-async function readArrival(arrivalId: string) {
+async function readArrival(arrivalId: string, onConfirmed?: () => void) {
   const generation = epoch;
   const read = ++receivingRead;
   const root = el('arrival-result');
@@ -896,6 +896,7 @@ async function readArrival(arrivalId: string) {
   } while (cursor);
   // Exhausted canonical arrival pages establish receipt independently of the
   // supplementary order-progress reads below. Their failure cannot undo it.
+  onConfirmed?.();
   message(
     `دریافت تأییدشده از سرور بازیابی شد: ${count} واحد؛ پایان تمام صفحات. شناسه‌های موجودی شاهد اثر ثبت‌شده‌اند. هر صفحه وضعیت زمان بازیابی خود را دارد.`,
     'success',
@@ -933,7 +934,8 @@ async function readArrival(arrivalId: string) {
       } catch (error) {
         // api() locks on 401/403 and rejects expired/stale continuations. Never
         // turn those into a warning that could resurrect cleared business data.
-        if (error instanceof Stale || generation !== epoch || read !== receivingRead) throw error;
+        if (generation !== epoch || read !== receivingRead) throw new Stale();
+        if (error instanceof Stale) throw error;
         const warning = node(
           'p',
           'دریافت قطعی است؛ بازیابی پیشرفت و ماندهٔ این سفارش کامل نشد. ماندهٔ نمایش‌داده‌شده ممکن است کامل یا تازه نباشد. فقط اطلاعات را دوباره بازیابی کنید؛ ثبت دریافت را تکرار نکنید.',
@@ -966,7 +968,8 @@ async function dispatchPending() {
   )
     return;
   const generation = epoch;
-  let receivingAccepted = false;
+  let receivingAccepted = false,
+    receivingResolved = false;
   busy = true;
   updateControls();
   message('در حال ثبت یا پیگیری همان درخواست…');
@@ -985,8 +988,26 @@ async function dispatchPending() {
       addLine();
     } else if (intent.path === '/purchasing/receiving/confirm') {
       receivingAccepted = true;
-      await readArrival(command.target.id);
-      receivingEditor?.clear();
+      await readArrival(command.target.id, () => {
+        if (
+          generation !== epoch ||
+          self !== actor ||
+          pending !== intent ||
+          !permissions().has(intent.role) ||
+          checkLocalExpiry()
+        )
+          throw new Stale();
+        sessionStorage.removeItem(pendingSlot);
+        pending = undefined;
+        lockedPending = false;
+        receivingResolved = true;
+        receivingEditor?.clear();
+        busy = false;
+        updateControls();
+      });
+      // Supplementary progress may outlive navigation or a newer command.
+      // This exact intent was already terminally resolved at canonical readback.
+      return;
     } else {
       // Canonical exact-label lookup, not a local optimistic option or get-or-create.
       const options = await api<{ data: { items: Option[] } }>(
@@ -1034,7 +1055,7 @@ async function dispatchPending() {
       if (intent.path === '/purchasing/receiving/confirm') receivingEditor?.reject();
     } else throw error;
   } finally {
-    if (generation === epoch) {
+    if (!receivingResolved && generation === epoch && (!pending || pending === intent)) {
       busy = false;
       updateControls();
     }

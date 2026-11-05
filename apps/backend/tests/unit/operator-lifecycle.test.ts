@@ -114,6 +114,7 @@ interface Page {
   snapshotAt?: string;
   nextAfterId?: string;
   failureStatus?: number;
+  hold?: Promise<Response>;
 }
 async function harness() {
   const elements = new Map<string, Element>();
@@ -140,6 +141,8 @@ async function harness() {
     progressStatus: 200,
     arrivalStatus: 200,
     hold: undefined as undefined | Promise<Response>,
+    progressHold: undefined as undefined | Promise<Response>,
+    arrivalHold: undefined as undefined | Promise<Response>,
     original: { ...order, lines: [] as Record<string, unknown>[] },
   };
   const context = createContext({
@@ -190,10 +193,12 @@ async function harness() {
       if (path.endsWith('/identity/session')) return Response.json(state.actor);
       if (path.endsWith('/inbound-catalogues/query')) return Response.json({ data: { items: [] } });
       if (path.endsWith('/receiving/orders/query')) {
+        if (state.progressHold) return state.progressHold;
         if (state.progressStatus === 0) throw new Error('controlled progress response loss');
         if (state.progressStatus !== 200)
           return new Response('{}', { status: state.progressStatus });
         const page = pages.shift() ?? { items: [] };
+        if (page.hold) return page.hold;
         return page.failureStatus
           ? new Response('{}', { status: page.failureStatus })
           : Response.json({ data: page });
@@ -203,9 +208,13 @@ async function harness() {
         return Response.json({ status: 'completed', result: { outcome: 'accepted' } });
       }
       if (path.endsWith('/receiving/arrivals/query')) {
+        if (state.arrivalHold) return state.arrivalHold;
         if (state.arrivalStatus !== 200) return new Response('{}', { status: state.arrivalStatus });
+        const page = arrivalPages.shift() ?? { items: [] };
+        if (page.hold) return page.hold;
+        if (page.failureStatus) return new Response('{}', { status: page.failureStatus });
         return Response.json({
-          data: { arrival: { arrivalId: 'canonical' }, ...(arrivalPages.shift() ?? { items: [] }) },
+          data: { arrival: { arrivalId: 'canonical' }, ...page },
         });
       }
       return Response.json({ data: state.original });
@@ -350,6 +359,292 @@ async function receivingEditorHarness() {
   return { ...h, root, control, button, emit, settle, prepare };
 }
 
+for (const replay of [false, true]) {
+  for (const status of [200, 503, 0]) {
+    void test(`SEC-P2-01-NAV canonical success resolves recovery before navigation stales held progress ${status}, replay=${replay}`, async () => {
+      const h = await receivingEditorHarness();
+      h.prepare();
+      if (replay) {
+        h.state.dropCommand = true;
+        h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+        await h.settle();
+        assert.ok(h.storage.has(intent.pendingSlot));
+        h.state.dropCommand = false;
+      }
+      let release!: (response: Response) => void;
+      let reject!: (reason: Error) => void;
+      h.state.progressHold = new Promise<Response>((resolve, fail) => {
+        release = resolve;
+        reject = fail;
+      });
+      h.arrivalPages.push({
+        items: [
+          { internalSystemCode: 'canonical-nav-unit', association: { orderId: order.orderId } },
+        ],
+      });
+      h.emit(replay ? h.element('recover') : h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+      await h.settle();
+      assert.match(h.element('message').textContent, /دریافت تأییدشده/u);
+      assert.match(h.element('arrival-result').textContent, /canonical-nav-unit/u);
+      assert.ok(h.requests.some((r) => r.path.endsWith('/receiving/orders/query')));
+      assert.equal(h.element('show-lookup').disabled, false);
+      assert.equal(h.run('pending'), undefined, 'resolve before supplementary progress settles');
+      assert.equal(h.run('busy'), false, 'a confirmed command must release the editor');
+      h.emit(h.element('show-lookup'), 'click');
+      assert.equal(h.element('lookup-panel').hidden, false);
+      const feedback = h.element('message').textContent;
+      const feedbackKind = h.element('message').dataset.kind;
+      if (status === 0) reject(new Error('held progress transport loss'));
+      else
+        release(
+          status === 200
+            ? Response.json({ data: { items: [], snapshotAt: 'late-private-progress' } })
+            : new Response('{}', { status }),
+        );
+      await h.settle();
+      assert.equal(
+        h.run('pending'),
+        undefined,
+        'canonical success must terminally resolve its intent',
+      );
+      assert.equal(h.storage.has(intent.pendingSlot), false);
+      assert.equal(h.element('recovery').hidden, true);
+      assert.equal(h.run('busy'), false);
+      assert.equal(h.element('lookup-panel').hidden, false);
+      assert.equal(h.element('message').textContent, feedback);
+      assert.equal(h.element('message').dataset.kind, feedbackKind);
+      assert.doesNotMatch(h.element('arrival-result').textContent, /late-private-progress/u);
+      assert.equal(
+        h.requests.filter((r) => r.path.endsWith('/receiving/confirm')).length,
+        replay ? 2 : 1,
+      );
+    });
+  }
+}
+
+for (const transition of ['expiry', 'actor', 'session']) {
+  for (const status of [200, 503, 0]) {
+    void test(`SEC-P2-01-NAV delayed progress ${status} cannot resurrect private state after ${transition}`, async () => {
+      const h = await receivingEditorHarness();
+      h.prepare();
+      let release!: (response: Response) => void;
+      let reject!: (reason: Error) => void;
+      h.state.progressHold = new Promise<Response>((resolve, fail) => {
+        release = resolve;
+        reject = fail;
+      });
+      h.arrivalPages.push({ items: [{ association: { orderId: order.orderId } }] });
+      h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+      await h.settle();
+      assert.equal(h.run('pending'), undefined);
+      if (transition === 'expiry') await h.advance(idle);
+      else {
+        h.state.actor =
+          transition === 'actor'
+            ? person('replacement', 'ACT-WH')
+            : {
+                ...h.state.actor,
+                browser: { ...h.state.actor.browser, csrf: 'replacement-session' },
+              };
+        await h.run<Promise<void>>('session()');
+      }
+      const identity = h.run('self');
+      const message = h.element('message').textContent;
+      if (status === 0) reject(new Error('late session progress transport loss'));
+      else
+        release(
+          status === 200
+            ? Response.json({
+                data: { items: [{ private: 'late-secret' }], snapshotAt: 'late-secret' },
+              })
+            : new Response('{}', { status }),
+        );
+      await h.settle();
+      assert.equal(h.run('self'), identity);
+      assert.equal(h.element('message').textContent, message);
+      assert.equal(h.element('arrival-result').textContent, '');
+      assert.equal(h.storage.has(intent.pendingSlot), false);
+      assert.equal(h.run('pending'), undefined);
+    });
+  }
+}
+
+for (const transition of ['expiry', 'actor', 'session']) {
+  void test(`SEC-P2-01-NAV delayed canonical read preserves unresolved ciphertext across ${transition}`, async () => {
+    const h = await receivingEditorHarness();
+    h.prepare();
+    let release!: (response: Response) => void;
+    h.state.arrivalHold = new Promise<Response>((resolve) => {
+      release = resolve;
+    });
+    h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+    await h.settle();
+    const ciphertext = h.storage.get(intent.pendingSlot);
+    assert.ok(ciphertext);
+    assert.ok(h.run('pending'));
+    if (transition === 'expiry') await h.advance(idle);
+    else {
+      h.state.actor =
+        transition === 'actor'
+          ? person('other-warehouse', 'ACT-WH')
+          : { ...h.state.actor, browser: { ...h.state.actor.browser, csrf: 'another-session' } };
+      await h.run<Promise<void>>('session()');
+    }
+    const current = h.run('pending');
+    const identity = h.run('self');
+    release(Response.json({ data: { arrival: {}, items: [] } }));
+    await h.settle();
+    assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+    assert.equal(h.run('pending'), current);
+    assert.equal(h.run('self'), identity);
+    assert.equal(h.element('arrival-result').textContent, '');
+    assert.doesNotMatch(h.element('message').textContent, /دریافت تأییدشده/u);
+  });
+}
+
+void test('SEC-P2-01-NAV older progress continuation cannot clear a newer command or its busy state', async () => {
+  const h = await receivingEditorHarness();
+  h.prepare();
+  let releaseProgress!: (response: Response) => void;
+  h.state.progressHold = new Promise<Response>((resolve) => {
+    releaseProgress = resolve;
+  });
+  h.arrivalPages.push({ items: [{ association: { orderId: order.orderId } }] });
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  await h.settle();
+  assert.equal(h.run('pending'), undefined);
+  h.emit(h.element('show-lookup'), 'click');
+  let releaseCommand!: (response: Response) => void;
+  h.state.hold = new Promise<Response>((resolve) => {
+    releaseCommand = resolve;
+  });
+  const first = h.requests.find((r) => r.path.endsWith('/receiving/confirm'))!.body as Record<
+    string,
+    unknown
+  >;
+  const body = JSON.stringify({
+    ...first,
+    idempotency_key: '77777777-7777-4777-8777-777777777777',
+    target: { kind: 'inbound-arrival', id: '88888888-8888-4888-8888-888888888888' },
+  });
+  const next = h.run<Promise<void>>(
+    `startCommand('/purchasing/receiving/confirm', ${JSON.stringify(body)})`,
+  );
+  await h.settle();
+  const newer = h.run('pending');
+  const ciphertext = h.storage.get(intent.pendingSlot);
+  assert.ok(newer);
+  assert.ok(ciphertext);
+  releaseProgress(Response.json({ data: { items: [], snapshotAt: 'old-progress' } }));
+  await h.settle();
+  assert.equal(h.run('pending'), newer);
+  assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+  assert.equal(h.run('busy'), true);
+  h.state.hold = undefined;
+  h.state.progressHold = undefined;
+  releaseCommand(Response.json({ status: 'completed', result: { outcome: 'accepted' } }));
+  await next;
+  assert.equal(h.run('pending'), undefined);
+});
+
+void test('SEC-P2-01-NAV a stale canonical read cannot resolve a replacement intent', async () => {
+  const h = await receivingEditorHarness();
+  h.prepare();
+  let release!: (response: Response) => void;
+  h.state.arrivalHold = new Promise<Response>((resolve) => {
+    release = resolve;
+  });
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  await h.settle();
+  const original = h.run('pending');
+  assert.ok(original);
+  h.run('pending = Object.freeze({...pending, body: "newer immutable body"}); busy = true');
+  const replacement = h.run('pending');
+  const ciphertext = h.storage.get(intent.pendingSlot);
+  release(Response.json({ data: { arrival: {}, items: [] } }));
+  await h.settle();
+  assert.equal(h.run('pending'), replacement);
+  assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+  assert.equal(h.run('busy'), true);
+  assert.doesNotMatch(h.element('message').textContent, /دریافت تأییدشده/u);
+});
+
+void test('SEC-P2-01-NAV all supplementary pages complete without controlling canonical resolution', async () => {
+  const h = await receivingEditorHarness();
+  h.prepare();
+  h.arrivalPages.push({ items: [{ association: { orderId: order.orderId } }] });
+  h.pages.push(
+    { items: [], snapshotAt: 'progress-first', nextAfterId: 'next-progress' },
+    { items: [], snapshotAt: 'progress-last' },
+  );
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  await h.settle();
+  assert.equal(h.run('pending'), undefined);
+  assert.equal(h.storage.has(intent.pendingSlot), false);
+  assert.match(h.element('arrival-result').textContent, /progress-first/u);
+  assert.match(h.element('arrival-result').textContent, /progress-last/u);
+  assert.ok(h.requests.some((r) => (r.body as { afterId?: string })?.afterId === 'next-progress'));
+});
+
+void test('SEC-P2-01-NAV navigation invalidates a held second supplementary page without rendering it', async () => {
+  const h = await receivingEditorHarness();
+  h.prepare();
+  let release!: (response: Response) => void;
+  const held = new Promise<Response>((resolve) => {
+    release = resolve;
+  });
+  h.arrivalPages.push({ items: [{ association: { orderId: order.orderId } }] });
+  h.pages.push(
+    { items: [], snapshotAt: 'first-progress-page', nextAfterId: 'second' },
+    { items: [], hold: held },
+  );
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  await h.settle();
+  assert.match(h.element('arrival-result').textContent, /first-progress-page/u);
+  assert.equal(h.run('pending'), undefined);
+  h.emit(h.element('show-lookup'), 'click');
+  release(Response.json({ data: { items: [], snapshotAt: 'stale-second-progress-page' } }));
+  await h.settle();
+  assert.doesNotMatch(h.element('arrival-result').textContent, /stale-second-progress-page/u);
+  assert.equal(h.element('lookup-panel').hidden, false);
+  assert.equal(h.element('recovery').hidden, true);
+});
+
+void test('SEC-P2-01-NAV incomplete canonical pagination cannot resolve recovery', async () => {
+  const h = await receivingEditorHarness();
+  h.prepare();
+  let release!: (response: Response) => void;
+  const held = new Promise<Response>((resolve) => {
+    release = resolve;
+  });
+  h.arrivalPages.push(
+    { items: [{ association: { orderId: order.orderId } }], nextAfterId: 'second' },
+    { items: [], hold: held },
+  );
+  h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+  await h.settle();
+  const pending = h.run('pending');
+  const ciphertext = h.storage.get(intent.pendingSlot);
+  assert.ok(pending);
+  assert.ok(ciphertext);
+  const progressRequests = h.requests.filter((r) =>
+    r.path.endsWith('/receiving/orders/query'),
+  ).length;
+  release(new Response('{}', { status: 503 }));
+  await h.settle();
+  assert.equal(h.run('pending'), pending);
+  assert.equal(h.storage.get(intent.pendingSlot), ciphertext);
+  assert.doesNotMatch(h.element('message').textContent, /دریافت تأییدشده/u);
+  assert.equal(
+    h.requests.filter((r) => r.path.endsWith('/receiving/orders/query')).length,
+    progressRequests,
+  );
+  await h.run<Promise<void>>('dispatchPending()');
+  const submissions = h.requests.filter((r) => r.path.endsWith('/receiving/confirm'));
+  assert.deepEqual(submissions[0]!.body, submissions[1]!.body);
+  assert.equal(h.storage.has(intent.pendingSlot), false);
+});
+
 for (const status of [503, 400, 0]) {
   void test(`SEC-P2-01 accepted receiving survives supplementary progress failure ${status}; refresh never resubmits`, async () => {
     const h = await receivingEditorHarness();
@@ -407,6 +702,17 @@ for (const status of [503, 400, 0]) {
 }
 
 for (const status of [401, 403]) {
+  void test(`SEC-P2-01-NAV canonical ${status} retains encrypted recovery while clearing private state`, async () => {
+    const h = await receivingEditorHarness();
+    h.prepare();
+    h.state.arrivalStatus = status;
+    h.emit(h.button('تأیید نهایی دریافت و ثبت موجودی'), 'click');
+    await h.settle();
+    assert.equal(h.run('self'), undefined);
+    assert.equal(h.element('arrival-result').textContent, '');
+    assert.equal(h.element('workspace').hidden, true);
+    assert.ok(h.storage.has(intent.pendingSlot), 'canonical evidence has not established success');
+  });
   void test(`SEC-P2-01 supplementary ${status} still locks and clears receiving without restoring stale data`, async () => {
     const h = await receivingEditorHarness();
     h.prepare();
@@ -417,7 +723,11 @@ for (const status of [401, 403]) {
     assert.equal(h.run('self'), undefined);
     assert.equal(h.element('arrival-result').textContent, '');
     assert.equal(h.element('workspace').hidden, true);
-    assert.ok(h.storage.has(intent.pendingSlot));
+    assert.equal(
+      h.storage.has(intent.pendingSlot),
+      false,
+      'canonical success already resolved recovery before supplementary authorization failure',
+    );
     assert.doesNotMatch(h.element('message').textContent, /دریافت تأییدشده/u);
   });
 }

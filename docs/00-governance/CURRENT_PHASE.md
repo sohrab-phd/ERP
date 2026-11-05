@@ -3,10 +3,10 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.66.0
+version: 0.67.0
 owners: [chief-solution-architect]
 depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-11-04
+last_reviewed: 2026-11-05
 approval: null
 supersedes: null
 ---
@@ -14,6 +14,18 @@ supersedes: null
 # Current Phase Authorization
 
 ## Effective Owner continuation directive — 2026-11-04
+
+The subsequent actual Owner **P2 final bounded remediation** directive starts
+from clean `35ceb2d434e71004daaac6113907b8247fa6dabe` and authorizes only
+SEC-P2-01-NAV, necessary regression/harness work, investigation of the unexplained
+257-unit PostgreSQL failure/hang, directly related evidence/docs and a local
+commit. [Final bounded package](../12-implementation-planning/P2_NAV_REMEDIATION_REPORT.md)
+records the correction, executed verification and remaining evidence blockers.
+This supersedes the earlier implementation task scope below, without granting
+acceptance. The independent follow-up FAIL report remains unchanged. **P2 remains
+in_review**. No push, deployment, P3 or P4/P5 is authorized.
+
+### Earlier continuation scope (historical)
 
 The actual Owner directive in this chat authorizes bounded remediation of
 **SEC-P2-01 and WF-P2-01 only**, necessary regressions/documentation and a local

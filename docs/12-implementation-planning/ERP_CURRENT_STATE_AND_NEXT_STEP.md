@@ -3,16 +3,23 @@ id: PLAN-ERP-CURRENT-ASSESSMENT-001
 title: ERP current state and next development recommendation
 phase: 12-implementation-planning
 status: in_review
-version: 1.1.0
+version: 1.2.0
 owners: [delivery-lead, chief-solution-architect]
 depends_on: [APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
-last_reviewed: 2026-11-04
+last_reviewed: 2026-11-05
 approval: null
 ---
 
 # ارزیابی وضعیت واقعی ERP و پیشنهاد گام بعد
 
 ## Current verified assessment — 2026-11-04
+
+Current P2 readiness is governed by the
+[final bounded NAV remediation and PG diagnosis](P2_NAV_REMEDIATION_REPORT.md).
+The independent follow-up of `35ceb2d` returned FAIL; this latest authorized
+correction does not grant acceptance or erase that audit. The original257-unit
+failure trigger remains an evidence blocker unless specifically resolved in that
+report. P2 stays **in_review**. The earlier delivery counts below are historical.
 
 The [read-only unfinished-work register,13-capability backend-to-UI matrix and
 bounded roadmap](ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md) supersede earlier
