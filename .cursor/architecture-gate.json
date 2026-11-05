@@ -3,27 +3,27 @@
   "mode": "architecture-only",
   "enforcement": "locked",
   "implementationAuthorized": true,
-  "approvedBaseline": "docs/00-governance/approved-baselines/APR-046-p2-receiving-ui-authorization.md",
+  "approvedBaseline": "docs/00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md",
   "workspaceRoot": ".",
   "unlockMarker": ".cursor/IMPLEMENTATION_UNLOCK.json",
   "checkpointMarker": ".cursor/PHASE_CHECKPOINT_APPROVAL.json",
   "allowedWritePathsWhileLocked": [
-  "README.md",
-  ".gitignore",
-  "docs/**/*.md",
-  ".cursor/rules/**/*.mdc",
-  ".cursor/skills/**/*.md",
-  "AGENTS.md"
-],
-"protectedPaths": [
-  ".cursor/architecture-gate.json",
-  ".cursor/hooks.json",
-  ".cursor/hooks/**",
-  ".cursor/IMPLEMENTATION_UNLOCK.json",
-  ".cursor/PHASE_CHECKPOINT_APPROVAL.json",
-  ".codex/hooks.json",
-  ".codex/hooks/**"
-],
+    "README.md",
+    ".gitignore",
+    "docs/**/*.md",
+    ".cursor/rules/**/*.mdc",
+    ".cursor/skills/**/*.md",
+    "AGENTS.md"
+  ],
+  "protectedPaths": [
+    ".cursor/architecture-gate.json",
+    ".cursor/hooks.json",
+    ".cursor/hooks/**",
+    ".cursor/IMPLEMENTATION_UNLOCK.json",
+    ".cursor/PHASE_CHECKPOINT_APPROVAL.json",
+    ".codex/hooks.json",
+    ".codex/hooks/**"
+  ],
   "unknownWriteOperation": "deny",
   "deleteOrRenameWhileLocked": "deny",
   "unlockRequirements": {

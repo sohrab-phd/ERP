@@ -3,15 +3,36 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.68.0
+version: 0.69.0
 owners: [chief-solution-architect]
-depends_on: [APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-11-05
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
+
+## Effective P4a implementation scope — 2026-11-05
+
+[APR-048](approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
+records the actual Owner's D1–D4 decisions and bounded P4a implementation grant
+from design revision12e4ea8. P4a is AUTHORIZED FOR BOUNDED IMPLEMENTATION, NOT
+ACCEPTED. Personal organizational ACT-WH only; exact Inventory whitelist across
+legacy/I2/production, five current/two historical states, exact integer/fractional
+kg strings, three browser POST reads, native Persian RTL UI using ui-ux-pro-max,
+one conditionally justified index-only migration among six approved candidates,
+real Windows PG/Chromium/performance/regression proof, independent engineering/
+security/database/QA review and fixes, actual documentation and local commits.
+Preserve unrelated installed-skill/AGENTS/skills-lock changes outside commits.
+
+Canonical gate/local scope records may reflect only this bounded actual grant.
+No stock writer/adjust/rebuild, extra roles/customer/commercial disclosure, adjacent
+workflow, dependency/framework, factory provisioning/pilot/deployment, P4b–P5,
+push or fabricated product acceptance. Broader policy/schema/query deviation needs
+Owner decision. APR-047's exact P2 acceptance and UNKNOWN historical257residual,
+P1/I2 acceptances/software-first roadmap and all P3 operational gates remain intact.
+Stop after verified local P4a delivery for explicit Owner acceptance.
 
 ## Effective Owner acceptance and documentation scope — 2026-11-05
 
