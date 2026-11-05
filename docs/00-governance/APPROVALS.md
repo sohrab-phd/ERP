@@ -3,15 +3,35 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.34.0
+version: 0.35.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+depends_on: [APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-11-05
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-047 — Formal P2 acceptance and software-first roadmap alignment
+
+[Actual Owner decision](approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md),
+2026-11-05, accepts bounded P2 implementation
+`f6ef316c711474775b158e8d12fea4a885f2f368`. Final independent verdict is PASS WITH
+NON-BLOCKING OBSERVATIONS; SEC-P2-01-NAV and WF-P2-01 are CLOSED; required
+independent review is SATISFIED. The historical257trigger remains unknown and is
+retained as a documented nonblocking residual; fixture leak corrected, complete
+independent111/111PG and isolated257pass, unchanged workload/assertions and no
+current reproducible Inventory integrity defect. New failure requires full
+diagnostics and fresh assessment. Hosted CI was not executed during that review.
+
+P1/I2 and thirteen backend capability acceptances remain intact. Software-first
+planning puts P4a next proposed, then P4b/c/d, P5a/b/c and remaining role-specific
+interfaces, then P3 after its unchanged operational gates. P4a and later product
+work are NOT AUTHORIZED; P3 is pending, not accepted/completed/authorized.
+Only acceptance/status/roadmap documentation, concise P4a proposal, validation and
+one local governance commit are authorized now. No push, pilot or deployment.
+Earlier APR-046 delivery/review-gate wording below is historical, preserved.
 
 ## APR-046 — Bounded P2 Warehouse receiving browser implementation
 

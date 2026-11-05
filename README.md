@@ -5,7 +5,24 @@ Foolad Navardkaran (شرکت فولاد نوردکاران): sales, procurement,
 production, shipping, Finance-Lite, genealogy/traceability, and
 operational monitoring.
 
-Current continuation (2026-11-04): bounded P2 audit remediation is locally
+Current Owner decision (2026-11-05): [APR-047](docs/00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
+formally accepts bounded P2 at `f6ef316c711474775b158e8d12fea4a885f2f368` after
+independent PASS WITH NON-BLOCKING OBSERVATIONS. SEC-P2-01-NAV/WF-P2-01 are closed;
+the historical257trigger remains unknown and is retained as nonblocking.
+P1 and thirteen backend capabilities remain accepted. This is not whole-ERP,
+factory UAT/pilot or production readiness; hosted CI was not run during that review.
+
+Software-first [roadmap](docs/12-implementation-planning/ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md#software-first-roadmap--owner-priority-2026-11-05):
+P4aInventory visibility/discovery next proposed, then P4bSales, P4cReservation,
+P4dShipping, P5aPlanning, P5bPersonal execution, P5cTrace and remaining role-specific
+interfaces, then P3controlled factory pilot after all operational gates.
+[P4a scope proposal](docs/12-implementation-planning/P4A_INVENTORY_VISIBILITY_SCOPE_PROPOSAL.md)
+is PROPOSED / NOT AUTHORIZED / NOT IMPLEMENTED. P3 remains pending/not authorized.
+Current task permits acceptance/roadmap documentation and one local commit only;
+no implementation, deployment, pilot or remote push. Historical scope snapshots
+below are superseded by [CURRENT_PHASE](docs/00-governance/CURRENT_PHASE.md).
+
+Prior continuation (2026-11-04, historical): bounded P2 audit remediation is locally
 delivered at `8554a1e6958cc0d9e2529f7994c9babcdd7ec6bd`; P2 remains in_review
 pending separate independent follow-up PASS and explicit Owner acceptance.
 See the [remediation evidence](docs/12-implementation-planning/P2_REMEDIATION_REPORT.md)
@@ -13,7 +30,7 @@ and [unfinished-work/UI coverage assessment](docs/12-implementation-planning/ERP
 No P3/later increment, deployment, real-data migration or push is authorized.
 The2026-10-26 scope snapshot below is historical; CURRENT_PHASE controls.
 
-Current scope (2026-10-26): [APR-045](docs/00-governance/approved-baselines/APR-045-p1-owner-acceptance.md)
+Prior scope (2026-10-26, historical): [APR-045](docs/00-governance/approved-baselines/APR-045-p1-owner-acceptance.md)
 records actual Owner acceptance of P1 implementation
 `22b5389af4d88cff38afdac1bebad68badd06f9c` for its approved engineering and
 functional scope. See [accepted P1 behavior/evidence](docs/12-implementation-planning/P1_IMPLEMENTATION_STATUS.md).
@@ -175,7 +192,7 @@ Browser mode is disabled when both browser settings are absent. Production confi
 requires an HTTPS origin and existing loopback/TLS-terminator policy; deployment,
 certificate/proxy setup and factory acceptance are separately authorized work.
 
-## P2 Warehouse receiving browser workflow — in review
+## P2 Warehouse receiving browser workflow — Owner accepted
 
 ACT-WH uses **ثبت دریافت انبار**: look up each original order, choose a line per
 physical unit, enter the actual arrival/documents and independently verified
@@ -201,7 +218,9 @@ reauthenticate with the original account and **پیگیری با همان درخ
 create another intent to compensate for a timeout. Definitive rejections permit
 correction and fresh progress review. Canonical arrival UUID lookup is available
 in the order-lookup screen. No receipt reversal/editing, broad search, production
-setup or factory UAT is included. P2 awaits fresh independent review and Owner acceptance.
+setup or factory UAT is included. P2 is Owner accepted under APR-047 at the exact
+reviewed revision; independent review is satisfied. Subsequent product work and
+the pending P3 pilot need separate Owner authority.
 ## 1. Historical design-phase overview (before APR-018)
 
 | This repository **is** | This repository **is not** |

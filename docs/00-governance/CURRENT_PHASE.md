@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.67.0
+version: 0.68.0
 owners: [chief-solution-architect]
-depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-11-05
 approval: null
 supersedes: null
@@ -13,7 +13,34 @@ supersedes: null
 
 # Current Phase Authorization
 
-## Effective Owner continuation directive — 2026-11-04
+## Effective Owner acceptance and documentation scope — 2026-11-05
+
+[APR-047](approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
+records actual Owner **formal P2 acceptance and software-first roadmap alignment**.
+P2 is ACCEPTED at exactly `f6ef316c711474775b158e8d12fea4a885f2f368`; independent
+review SATISFIED, SEC-P2-01-NAV/WF-P2-01 CLOSED. The historical257exception remains
+UNKNOWN, documented nonblocking per the independent closure and Owner decision.
+P1/APR-045, I2/APR-043 and thirteen bounded backend acceptances remain intact.
+
+Current execution is **documentation only**: record acceptance/status, align
+roadmap/backlog, prepare concise [P4a scope proposal](../12-implementation-planning/P4A_INVENTORY_VISIBILITY_SCOPE_PROPOSAL.md),
+validate documentation and make one local documentation/governance commit.
+P2 implementation/remediation authority is complete; historical executable gate/
+unlock records are unchanged by this task and grant no additional scope.
+No source/test/schema/migration/dependency or feature changes are authorized.
+
+Next proposed software increment: **P4a Inventory Visibility and Discovery —
+PROPOSED / NOT AUTHORIZED / NOT IMPLEMENTED**. Owner priority is P1/P2accepted →
+P4a → P4bSales → P4cReservation → P4dShipping → P5aPlanning → P5bPersonal execution →
+P5cTrace → remaining role-specific interfaces → P3controlled factory pilot.
+This planning order is not a blanket implementation grant. Each slice/missing
+read contract needs separate bounded Owner authority, review and acceptance.
+P3 remains pending, NOT AUTHORIZED / NOT COMPLETED / NOT ACCEPTED, with all
+software/infrastructure/UAT/operational gates preserved. No factory UAT/production
+readiness, hosted-CI success, push, deployment or pilot is inferred. Stop after
+local documentation delivery for the next Owner directive.
+
+## Prior bounded remediation directive — 2026-11-04 (historical)
 
 The subsequent actual Owner **P2 final bounded remediation** directive starts
 from clean `35ceb2d434e71004daaac6113907b8247fa6dabe` and authorizes only

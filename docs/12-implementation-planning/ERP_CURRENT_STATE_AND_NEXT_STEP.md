@@ -3,16 +3,41 @@ id: PLAN-ERP-CURRENT-ASSESSMENT-001
 title: ERP current state and next development recommendation
 phase: 12-implementation-planning
 status: in_review
-version: 1.2.0
+version: 1.3.0
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
+depends_on: [APR-047, APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
 last_reviewed: 2026-11-05
 approval: null
 ---
 
 # ارزیابی وضعیت واقعی ERP و پیشنهاد گام بعد
 
-## Current verified assessment — 2026-11-04
+## Current Owner acceptance and next proposal — 2026-11-05
+
+[APR-047](../00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
+records actual Owner acceptance of P2 implementation
+`f6ef316c711474775b158e8d12fea4a885f2f368`. Required independent review is satisfied,
+SEC-P2-01-NAV/WF-P2-01 closed, historical257exception UNKNOWN but explicitly
+accepted as a documented nonblocking residual. P1/I2 and thirteen backend
+capability acceptances remain intact. Latest review verified252unit/111PG,
+isolated257and three Chromium races/SQL/static checks; recording acceptance does
+not rerun them or establish hosted-CI/UAT/production readiness.
+
+Owner priority is remaining software interfaces before controlled factory pilot.
+Next proposed increment is **P4a Inventory Visibility and Discovery**, followed by
+P4bSales/assessment, P4cReservation, P4dShipping/dispatch, P5aPlanning, P5bPersonal
+execution, P5cTrace, remaining role-specific admin/purchasing/invoice/evidence and
+other approved gaps, then P3 after software/infrastructure/UAT/operational gates.
+[P4a proposal](P4A_INVENTORY_VISIBILITY_SCOPE_PROPOSAL.md) identifies legacy-only
+keyed reads versus missing discovery across stock source families and role/read
+decisions. P4a is PROPOSED / NOT AUTHORIZED / NOT IMPLEMENTED. P3 remains pending,
+NOT AUTHORIZED / NOT COMPLETED / NOT ACCEPTED; later backends do not imply UIs.
+Only documentation/proposal/validation and one local commit are authorized now;
+no product change, pilot, deployment or push. The
+[aligned roadmap](ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md#software-first-roadmap--owner-priority-2026-11-05)
+supersedes earlier next-step suggestions below, which remain historical.
+
+## Prior verified assessment — 2026-11-04 (historical)
 
 Current P2 readiness is governed by the
 [final bounded NAV remediation and PG diagnosis](P2_NAV_REMEDIATION_REPORT.md).
@@ -39,7 +64,7 @@ Earlier statements of no UI, P2 not authorized, unresolved I2 decisions and
 acceptance-documentation-only scope remain historical, resolved by the newer
 applicable authority cited in the current assessment.
 
-## وضعیت جاری P2 — 2026-10-26
+## وضعیت پیشین P2 — 2026-10-26 (historical)
 
 [APR-046](../00-governance/approved-baselines/APR-046-p2-receiving-ui-authorization.md)
 دستور صریح جدید Owner برای P2 را ثبت می‌کند: رابط ثبت و تأیید دریافت انبار بر

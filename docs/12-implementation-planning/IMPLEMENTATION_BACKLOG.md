@@ -3,17 +3,42 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.19.0
+version: 0.20.0
 owners: [chief-solution-architect]
-depends_on: [APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
-last_reviewed: 2026-11-04
+depends_on: [APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
+last_reviewed: 2026-11-05
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
 
-## Current reconciliation — 2026-11-04
+## Current Owner priority and acceptance — 2026-11-05
+
+[APR-047](../00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
+formally accepts bounded P2 at `f6ef316c711474775b158e8d12fea4a885f2f368` after
+independent PASS WITH NON-BLOCKING OBSERVATIONS. SEC-P2-01-NAV/WF-P2-01 closed;
+historical257trigger UNKNOWN and retained as nonblocking, not diagnosed. P1/I2 and
+thirteen backend capabilities retain their accepted scopes. Hosted CI was not run
+during the independent local review; acceptance is not factory readiness.
+
+Software-first planning order: P1accepted → P2accepted → **P4a Inventory visibility/
+discovery (next proposed)** → P4bSales/fulfillment assessment → P4cReservation →
+P4dShipping/dispatch → P5aPlanning/managerial workflow → P5bPersonal execution →
+P5cGenealogy/trace → remaining role-specific administration/purchasing/invoice and
+other approved interface gaps → **P3controlled factory pilot** after its unchanged
+software/infrastructure/UAT/operational prerequisites. See the
+[bounded roadmap](ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md#software-first-roadmap--owner-priority-2026-11-05)
+and [concise P4a proposal](P4A_INVENTORY_VISIBILITY_SCOPE_PROPOSAL.md).
+
+P4a is PROPOSED / NOT AUTHORIZED / NOT IMPLEMENTED; missing read contracts, role/
+origin/state scope and browser admission need explicit separate Owner authority.
+No new Inventory write is proposed. P4b–P5c/later interfaces are not complete merely
+because backends are accepted. P3 remains pending/NOT AUTHORIZED/NOT COMPLETED/
+NOT ACCEPTED. Current scope permits only documentation/proposal/validation and one
+local governance commit, no implementation, pilot, push or deployment.
+
+## Earlier reconciliation — 2026-11-04 (historical)
 
 The actual Owner continuation instruction authorizes only SEC-P2-01/WF-P2-01
 remediation and then read-only unfinished-work/UI assessment. Corrections are

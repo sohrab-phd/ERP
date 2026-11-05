@@ -3,9 +3,9 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.30.0
+version: 0.31.0
 owners: [chief-solution-architect]
-depends_on: [APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
+depends_on: [APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-11-05
 approval: null
 supersedes: null
@@ -13,7 +13,22 @@ supersedes: null
 
 # Architecture Documentation Index
 
-## Current P2 remediation and acceptance gate (2026-11-04)
+## Current P2 Owner acceptance and software-first priority (2026-11-05)
+
+- [APR-047 formal P2 Owner acceptance, retained residual and planning priority](00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
+- [Accepted P2 behavior, exact revision and independent review provenance](12-implementation-planning/P2_IMPLEMENTATION_STATUS.md)
+- [Software-first roadmap and remaining UI register](12-implementation-planning/ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md#software-first-roadmap--owner-priority-2026-11-05)
+- [P4a Inventory visibility/discovery scope proposal — not authorized](12-implementation-planning/P4A_INVENTORY_VISIBILITY_SCOPE_PROPOSAL.md)
+- [Current effective Owner scope and stop boundary](00-governance/CURRENT_PHASE.md)
+
+P1/P2 are accepted within their bounded software scopes; thirteen backend
+acceptances remain intact. P4a is next PROPOSED / NOT AUTHORIZED / NOT IMPLEMENTED.
+P4b–P5c and remaining interfaces precede pending P3 in planning only. P3 retains
+all operational gates and is not authorized/completed/accepted. No implementation,
+push, pilot or deployment is granted by this documentation task. Earlier review
+gates/next-step snapshots below are historical; APR-047 controls current status.
+
+## Prior P2 remediation and acceptance gate (2026-11-04, historical)
 
 - [Final P2 NAV remediation, PostgreSQL diagnosis and current readiness](12-implementation-planning/P2_NAV_REMEDIATION_REPORT.md)
 - [Earlier SEC-P2-01/WF-P2-01 remediation evidence](12-implementation-planning/P2_REMEDIATION_REPORT.md)
@@ -23,7 +38,7 @@ supersedes: null
 P2 remains in_review. Its original independent audit returned FAIL; remediation
 implementation is not a formal independent follow-up PASS or Owner acceptance.
 
-## Current P2 bounded implementation (2026-10-26)
+## Prior P2 bounded implementation (2026-10-26, historical)
 
 - [APR-046 actual bounded P2 Owner authority](00-governance/approved-baselines/APR-046-p2-receiving-ui-authorization.md)
 - [P2 Warehouse receiving workflow, evidence and review status](12-implementation-planning/P2_IMPLEMENTATION_STATUS.md)

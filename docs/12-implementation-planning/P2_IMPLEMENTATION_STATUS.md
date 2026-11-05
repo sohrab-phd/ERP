@@ -2,17 +2,49 @@
 id: IMPL-P2-001
 title: P2 Persian Warehouse receiving browser implementation status
 phase: 12-implementation-planning
-status: in_review
-version: 0.3.0
+status: accepted
+version: 1.0.0
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-046, APR-045, APR-043, IMPL-P1-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-047, APR-046, APR-045, APR-043, IMPL-P1-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-05
-approval: null
+approval: APR-047 actual Owner acceptance of f6ef316c711474775b158e8d12fea4a885f2f368 on 2026-11-05
 ---
 
-# P2 Warehouse receiving UI — in review
+# P2 Warehouse receiving UI — Owner accepted
 
-## Current bounded remediation — 2026-11-04
+## Formal acceptance — 2026-11-05
+
+[APR-047](../00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
+records actual Project Owner acceptance of exactly
+`f6ef316c711474775b158e8d12fea4a885f2f368` for bounded P2 software scope.
+Independent engineering/security/QA review is SATISFIED; SEC-P2-01-NAV and WF-P2-01
+are CLOSED. Final independent report is
+`artifacts/tests/p2-independent-final-closure-review-2026-11-05.md`, verdict PASS
+WITH NON-BLOCKING OBSERVATIONS. It independently verified252unit/component,
+111affectedPG, isolated257and three Chromium races plus SQL/static evidence;
+focused reruns overlap. Hosted CI was not executed. Recording acceptance does not
+rerun these tests or accept the whole ERP, UAT, deployment or pilot.
+
+Canonical arrival pagination resolves the exact actor/session/intent synchronously
+before supplementary progress; ordinary navigation and late errors cannot revive
+unknown recovery or clear newer work. Genuinely uncertain canonical completion
+retains immutable encrypted recovery. Omission/null/value final review stays correct.
+
+The historical257failure remains retained, exact triggering exception UNKNOWN.
+The separately reproduced fixture setup resource leak is corrected; independent
+complete TAP/normal exits,111/111and isolated257pass preserve original workload/
+assertions; no current reproducible Inventory integrity defect was established.
+This is a documented **nonblocking residual**, not a diagnosed historical trigger.
+A recurrence requires complete failure diagnostics and fresh assessment.
+
+P1/I2 acceptances remain intact. Software-first planning proposes
+[P4a Inventory visibility/discovery](P4A_INVENTORY_VISIBILITY_SCOPE_PROPOSAL.md) next,
+then remaining interfaces before pending P3. No P4/P5/P3 implementation, push,
+deployment or factory pilot is authorized. Earlier delivery acceptance matrices
+and in_review statements below are historical snapshots, superseded for current
+status only by APR-047; original audits/remediation/evidence remain unchanged.
+
+## Prior bounded remediation — 2026-11-04 (historical)
 
 The independent remediation follow-up of `35ceb2d` returned FAIL for the residual
 SEC-P2-01-NAV lifecycle race and incomplete PostgreSQL verification. The latest
@@ -241,7 +273,7 @@ Historical P1 audits/FAIL reports, APR-043/APR-045 and accepted business documen
 remain untouched. Distinct automated scope is217unit+113PG; component/focused
 reruns and browser scenario checks are not added to that count.
 
-## Self-review, scope and handoff
+## Original implementation self-review, scope and handoff (historical)
 
 Self-review of the complete diff checked exact admission, current server roles,
 post-async expiry/epoch guards, encrypted immutable receiving replay, original/
