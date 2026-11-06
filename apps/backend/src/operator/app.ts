@@ -218,9 +218,10 @@ async function api<T>(
         ? {}
         : { body: typeof body === 'string' ? body : JSON.stringify(body) }),
     });
-    if (generation !== epoch || checkLocalExpiry()) throw new Stale();
+    if (signal?.aborted || generation !== epoch || checkLocalExpiry()) throw new Stale();
     const value = (await response.json()) as T;
-    if (generation !== epoch || checkLocalExpiry()) throw new Stale();
+    // A superseded Inventory request must not change the shell's session or idle timer.
+    if (signal?.aborted || generation !== epoch || checkLocalExpiry()) throw new Stale();
     if (!response.ok) {
       if ((response.status === 401 || response.status === 403) && path !== '/identity/login') {
         lock(

@@ -14,6 +14,8 @@ import { withDatabase } from '../support/database-fixture.js';
 import { completed, installation } from '../support/receipt-harness.js';
 import { reservationCommand } from '../support/reservation-harness.js';
 import { productionCommand } from '../support/production-harness.js';
+import { follow } from '../support/sales-harness.js';
+import { shippingCommand } from '../support/shipping-harness.js';
 import {
   inventoryDiscoveryHarness,
   inventoryRoutes,
@@ -659,63 +661,116 @@ void test('P4a real PostgreSQL browser reads preserve source, quantity, lifecycl
       );
 
       await t.test(
-        'one page retains a committed before-snapshot bundle while a real owner reservation commits without read writer locks',
+        'one page retains its committed bundle during real reserve, pack, issue, consume and dispatch writes',
         async () => {
+          async function duringWrite(read: () => Promise<Row>, write: () => Promise<unknown>) {
+            const barrier = readBarrier();
+            // The wrapper preserves the real query and pauses after it establishes the snapshot.
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            const original = PostgresInventoryDiscoveryStore.prototype.candidates;
+            PostgresInventoryDiscoveryStore.prototype.candidates = async function (...args) {
+              const result = await original.apply(this, args);
+              await barrier.enter();
+              return result;
+            };
+            const pending = read();
+            try {
+              await barrier.ready;
+              const started = performance.now();
+              await write();
+              assert.ok(
+                performance.now() - started < 4000,
+                'writer must complete while read is open',
+              );
+              const waits = (
+                await db.owner.query<{ n: number }>(
+                  "SELECT count(*)::int AS n FROM pg_locks l JOIN pg_stat_activity a USING(pid) WHERE a.datname=current_database() AND a.application_name='navard-envelope' AND l.locktype='advisory' AND NOT l.granted",
+                )
+              ).rows[0]!.n;
+              assert.equal(waits, 0);
+              barrier.release();
+              return await pending;
+            } finally {
+              barrier.release();
+              PostgresInventoryDiscoveryStore.prototype.candidates = original;
+              await pending.catch(() => undefined);
+            }
+          }
+          function stock(row: Row, state: string, hand: string, reserved: string, free: string) {
+            assert.equal(row.state, state);
+            assert.deepEqual(row.quantities, {
+              onHandKg: hand,
+              reservedKg: reserved,
+              unreservedKg: free,
+            });
+          }
           const source = await h.legacy();
           const order = await fixture.order([source.unitId], { demandedKg: '5', partial: true });
           const request = reservationCommand(order.orderId, order.itemId, source.unitId, '5');
           completed(await fixture.salesRun(request), 'accepted');
-          const barrier = readBarrier();
-          // This method is deliberately rebound with apply(this,args) below.
-          // eslint-disable-next-line @typescript-eslint/unbound-method
-          const original = PostgresInventoryDiscoveryStore.prototype.candidates;
-          PostgresInventoryDiscoveryStore.prototype.candidates = async function (...args) {
-            const result = await original.apply(this, args);
-            await barrier.enter();
-            return result;
-          };
-          let pending: Promise<Row> | undefined;
-          try {
-            pending = list({ unitId: source.unitId });
-            await barrier.ready;
-            const activation = {
-              ...request,
-              command: 'ActivateReservation',
-              payload: {},
-              idempotency_key: randomUUID(),
-            };
-            const started = performance.now();
-            completed(await fixture.salesRun(activation), 'accepted');
-            assert.ok(
-              performance.now() - started < 4000,
-              'reader must not acquire Inventory writer locks',
-            );
-            const waits = (
-              await db.owner.query<{ n: number }>(
-                "SELECT count(*)::int AS n FROM pg_locks l JOIN pg_stat_activity a USING(pid) WHERE a.datname=current_database() AND a.application_name='navard-envelope' AND l.locktype='advisory' AND NOT l.granted",
-              )
-            ).rows[0]!.n;
-            assert.equal(waits, 0);
-            barrier.release();
-            const before = rows(await pending)[0]!;
-            assert.equal(before.state, 'AVAILABLE');
-            assert.deepEqual(before.quantities, {
-              onHandKg: '11',
-              reservedKg: '0',
-              unreservedKg: '11',
-            });
-          } finally {
-            barrier.release();
-            PostgresInventoryDiscoveryStore.prototype.candidates = original;
-            await pending?.catch(() => undefined);
-          }
-          const after = rows(await list({ unitId: source.unitId }))[0]!;
-          assert.equal(after.state, 'RESERVED');
-          assert.deepEqual(after.quantities, {
-            onHandKg: '11',
-            reservedKg: '5',
-            unreservedKg: '6',
+          const beforeReserve = await duringWrite(
+            async () => rows(await list({ unitId: source.unitId, state: 'AVAILABLE' }))[0]!,
+            async () => {
+              completed(await fixture.salesRun(follow(request, 'ActivateReservation')), 'accepted');
+            },
+          );
+          stock(beforeReserve, 'AVAILABLE', '11', '0', '11');
+          assert.deepEqual(rows(await list({ unitId: source.unitId, state: 'AVAILABLE' })), []);
+          stock(
+            rows(await list({ unitId: source.unitId, state: 'RESERVED' }))[0]!,
+            'RESERVED',
+            '11',
+            '5',
+            '6',
+          );
+
+          const shippingStock = await h.legacy();
+          const sales = await fixture.order([shippingStock.unitId]);
+          const claim = await fixture.claim(sales.orderId, sales.itemId, shippingStock.unitId);
+          const pack = shippingCommand('DraftPackage', 'package', {
+            orderId: sales.orderId,
+            reservationIds: [claim.target.id],
           });
+          const ship = async (command: typeof pack) => {
+            completed(await fixture.app.command(JSON.stringify(command), fixture.ship), 'accepted');
+          };
+          await ship(pack);
+          const beforePack = await duringWrite(
+            () => detail(shippingStock.unitId),
+            () => ship(follow(pack, 'PackPackage')),
+          );
+          stock(beforePack, 'RESERVED', '11', '11', '0');
+          stock(await detail(shippingStock.unitId), 'PACKED', '11', '11', '0');
+          const shipment = shippingCommand('DraftShipment', 'shipment', { orderId: sales.orderId });
+          await ship(shipment);
+          await ship(follow(pack, 'AssignPackageToShipment', { shipmentId: shipment.target.id }));
+          await ship(follow(shipment, 'MarkShipmentReady'));
+          await ship(follow(shipment, 'StartLoading'));
+          const beforeDispatch = await duringWrite(
+            () => detail(shippingStock.unitId),
+            () => ship(follow(shipment, 'DispatchShipment')),
+          );
+          stock(beforeDispatch, 'PACKED', '11', '11', '0');
+          stock(await detail(shippingStock.unitId), 'SHIPPED', '0', '0', '0');
+
+          const production = await fixture.prepare({ issue: false });
+          const beforeIssue = await duringWrite(
+            () => detail(production.source),
+            async () => {
+              completed(await fixture.run(production.issue), 'accepted');
+            },
+          );
+          stock(beforeIssue, 'AVAILABLE', '110', '0', '110');
+          stock(await detail(production.source), 'ISSUED_TO_PRODUCTION', '110', '0', '110');
+          const consume = fixture.complete(production.ops[0]!, production.source);
+          const beforeConsume = await duringWrite(
+            () => detail(production.source),
+            async () => {
+              completed(await fixture.run(consume.input), 'accepted');
+            },
+          );
+          stock(beforeConsume, 'ISSUED_TO_PRODUCTION', '110', '0', '110');
+          stock(await detail(production.source), 'CONSUMED', '0', '0', '0');
         },
       );
 
@@ -1008,7 +1063,7 @@ void test('P4a real PostgreSQL browser reads preserve source, quantity, lifecycl
       );
 
       await t.test(
-        'concurrent committed insertions before an anchor wait for refresh while later UUIDs remain discoverable',
+        'keyset continuation reflects writes and filters ahead of its anchor; earlier inserts need refresh',
         async () => {
           const initial = rows(await list())
             .map((row) => String(row.unitId))
@@ -1047,6 +1102,61 @@ void test('P4a real PostgreSQL browser reads preserve source, quantity, lifecycl
           for (const added of additions) assert.equal(observed.includes(added), added > anchor);
           const refreshed = rows(await list()).map((row) => String(row.unitId));
           for (const added of additions) assert.ok(refreshed.includes(added));
+
+          const [start, leaving, entering] = [await h.legacy(), await h.legacy(), await h.legacy()]
+            .map((stock) => stock.unitId)
+            .sort() as [string, string, string];
+          const startOrder = await fixture.order([start]);
+          await fixture.claim(startOrder.orderId, startOrder.itemId, start);
+          const leavingOrder = await fixture.order([leaving]);
+          const claim = await fixture.claim(leavingOrder.orderId, leavingOrder.itemId, leaving);
+          const pack = shippingCommand('DraftPackage', 'package', {
+            orderId: leavingOrder.orderId,
+            reservationIds: [claim.target.id],
+          });
+          completed(await fixture.app.command(JSON.stringify(pack), fixture.ship), 'accepted');
+
+          async function cursorAtStart(filters: Row) {
+            let current = await list(filters, 1);
+            while (rows(current)[0]?.unitId !== start) {
+              assert.equal(typeof current.nextCursor, 'string');
+              current = await list(filters, 1, String(current.nextCursor));
+            }
+            assert.equal(typeof current.nextCursor, 'string');
+            return String(current.nextCursor);
+          }
+          const reservedFilter = { state: 'RESERVED' };
+          const filteredCursor = await cursorAtStart(reservedFilter);
+          const allCursor = await cursorAtStart({});
+          assert.equal(object((await detail(entering)).quantities).reservedKg, '0');
+          const enteringOrder = await fixture.order([entering], { demandedKg: '5', partial: true });
+          await fixture.claim(enteringOrder.orderId, enteringOrder.itemId, entering, '5');
+          completed(
+            await fixture.app.command(JSON.stringify(follow(pack, 'PackPackage')), fixture.ship),
+            'accepted',
+          );
+          async function remaining(filters: Row, cursor: string) {
+            const units: Row[] = [];
+            let next: string | null = cursor;
+            while (next !== null) {
+              const page = await list(filters, 1, next);
+              units.push(...rows(page));
+              assert.ok(page.nextCursor === null || typeof page.nextCursor === 'string');
+              next = page.nextCursor;
+            }
+            return units;
+          }
+          const filtered = await remaining(reservedFilter, filteredCursor);
+          assert.ok(filtered.every((unit) => unit.unitId !== leaving));
+          assert.equal(
+            object(filtered.find((unit) => unit.unitId === entering)?.quantities).reservedKg,
+            '5',
+          );
+          const unfiltered = await remaining({}, allCursor);
+          assert.equal(
+            object(unfiltered.find((unit) => unit.unitId === entering)?.quantities).reservedKg,
+            '5',
+          );
         },
       );
 
@@ -1482,17 +1592,33 @@ void test('P4a real PostgreSQL browser reads preserve source, quantity, lifecycl
       );
 
       await t.test(
-        'a single Unit with more than ten thousand Ledger rows reports a query limit without partial quantities',
+        'ten thousand Ledger rows succeed and one more reports a query limit without partial quantities',
         async () => {
           const hot = await h.legacy();
-          await db.owner.query(
-            `
+          const seed = `
           INSERT INTO inventory.ledger(installation_id,authority_scope,ledger_id,unit_id,source_fact_id,effect_id,binding,on_hand_delta,reserved_delta,issuer,subject,actor_role,request_id,command_id,command_version,idempotency_key)
-          SELECT $1,$1,gen_random_uuid(),$2,gen_random_uuid(),gen_random_uuid(),'synthetic history bound probe',CASE WHEN n%2=0 THEN -1 ELSE 1 END,0,'local:test','synthetic','ACT-WH',gen_random_uuid(),'HistoryBoundProbe',1,gen_random_uuid()
-          FROM generate_series(1,10000) n
-        `,
+          SELECT $1,$1,gen_random_uuid(),$2,gen_random_uuid(),gen_random_uuid(),'synthetic history bound probe',CASE WHEN n=9998 THEN -2 WHEN n%2=0 THEN -1 ELSE 1 END,0,'local:test','synthetic','ACT-WH',gen_random_uuid(),'HistoryBoundProbe',1,gen_random_uuid()
+          FROM generate_series($3::int,$4::int) n`;
+          await db.owner.query(seed, [installation, hot.unitId, 1, 9999]);
+          const historyRows = async () =>
+            (
+              await db.owner.query<{ n: number }>(
+                'SELECT count(*)::int AS n FROM inventory.ledger WHERE installation_id=$1 AND authority_scope=$1 AND unit_id=$2',
+                [installation, hot.unitId],
+              )
+            ).rows[0]!.n;
+          assert.equal(await historyRows(), 10000);
+          assert.deepEqual((await detail(hot.unitId)).quantities, {
+            onHandKg: '11',
+            reservedKg: '0',
+            unreservedKg: '11',
+          });
+          await db.owner.query(seed, [installation, hot.unitId, 10000, 10000]);
+          await db.owner.query(
+            'UPDATE inventory.balance SET on_hand=10 WHERE installation_id=$1 AND authority_scope=$1 AND unit_id=$2',
             [installation, hot.unitId],
           );
+          assert.equal(await historyRows(), 10001);
           const before = await h.stockSnapshot();
           const response = await h.wh.call(inventoryRoutes.detail, { unitId: hot.unitId });
           assert.equal(response.status, 422);

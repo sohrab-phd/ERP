@@ -12,7 +12,7 @@ approval: null
 
 # P4a Warehouse Inventory visibility — delivery evidence
 
-**P4a IMPLEMENTED AND INDEPENDENTLY VERIFIED — READY FOR OWNER ACCEPTANCE — NOT YET ACCEPTED**
+**P4a IMPLEMENTED — FORMAL OWNER ACCEPTANCE PENDING**
 [APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
 records D1/D2/D4 approval and conditional D3 index authority in governance commit
 `0e90d9068ae7dae3a70e715f7e56b8a5f581ee28`. The approved design baseline on `main`
@@ -154,6 +154,30 @@ GPU process was denied. The approved Windows retry kept Chromium's browser sandb
 enabled. Startup failure and earlier harness corrections remain in the local logs.
 The final pinned preflight, format, lint, boundaries, typecheck, unit and build
 output is in `p4a-static-unit-final.log`.
+
+### Owner readiness audit corrections
+
+The readiness audit of `d10983a92f898e09c76c92b4698f0ffa7db20bb2` reproduced a
+superseded Inventory 403 locking the active workspace and a Back loop when an
+operator reopened the same Lot from one of its Units. The first audit browser run
+reproduced the 403 failure against that revision. The corrected shell ignores
+responses from invalidated Inventory requests before applying session or idle
+timer effects. Current denials still lock the workspace. Reopening the same Lot
+restores focus to the Unit without replacing the original detail and list path.
+Independent review reproduced both defects and verified the fixes.
+
+The audit browser suite exercises those two paths and a delayed response across
+same-account cookie and CSRF rotation. The PostgreSQL snapshot test now covers
+reservation, packing, issue, consumption and dispatch with real owner commands
+committing during a paused read. Continuation tests check changes in filter
+membership and quantities ahead of an existing cursor. The Ledger test covers the
+exact 10,000-row success boundary and the 10,001-row rejection. The suite inventory
+and case count remain the same. The audit uses a separate full-suite output and
+environment record for the corrected commit under `artifacts/tests/p4a-acceptance-*`.
+
+The correction affects frontend navigation and response ownership, plus test
+coverage. The measured server, SQL, writer and index code is the same, so the
+existing benchmark remains the performance evidence for the corrected revision.
 
 ### Scale benchmarks and candidate evidence
 

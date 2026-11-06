@@ -152,7 +152,6 @@ export function createInventory(deps: Dependencies) {
   let lotPageIndex = 0;
   let lotCursors: (string | undefined)[] = [undefined];
   let lotReturnUnit = '';
-  let lotReturnFrom: 'list' | 'lot' = 'list';
   let status: HTMLElement | undefined;
   let result: HTMLElement | undefined;
   let controls: HTMLButtonElement[] = [];
@@ -644,11 +643,14 @@ export function createInventory(deps: Dependencies) {
           button(
             'واحدهای مرتبط با لات',
             () => {
+              if (detailReturn === 'lot') {
+                void loadLot(unit.unitId);
+                return;
+              }
               lotId = unit.lotId;
               lotPageIndex = 0;
               lotCursors = [undefined];
               lotReturnUnit = unit.unitId;
-              lotReturnFrom = detailReturn;
               void loadLot();
             },
             'inventory-open-lot',
@@ -705,7 +707,7 @@ export function createInventory(deps: Dependencies) {
   async function loadLot(restoreUnit?: string) {
     if (!active || !deps.canUse()) return;
     view = 'lot';
-    const title = frame('واحدهای مرتبط با لات', () => openUnit(lotReturnUnit, lotReturnFrom));
+    const title = frame('واحدهای مرتبط با لات', () => openUnit(lotReturnUnit, 'list'));
     const id = make('p', 'شناسه لات: ');
     id.append(isolated(lotId, 'ltr'));
     result!.append(id);
@@ -753,7 +755,7 @@ export function createInventory(deps: Dependencies) {
       lotCursors = [undefined];
       nextCursor = null;
       unitId = lotId = lotReturnUnit = '';
-      detailReturn = lotReturnFrom = 'list';
+      detailReturn = 'list';
       controls = [];
       status = result = undefined;
       lastFailed = undefined;

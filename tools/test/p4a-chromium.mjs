@@ -279,7 +279,7 @@ async function screenshot(name) {
 async function direct(route, body, options = {}) {
   return cdp.evaluate(`(async () => {
     const session=await fetch('/ui-api/identity/session',{headers:{'x-erp-browser':'1'}});const self=await session.json();
-    const response=await fetch(${JSON.stringify('/ui-api' + route)},{method:${JSON.stringify(options.method ?? 'POST')},headers:{'x-erp-browser':'1','x-erp-role':${JSON.stringify(options.role ?? 'ACT-WH')},${options.noCsrf ? '' : "'x-erp-csrf':self.browser.csrf,"}'content-type':'application/json'},${options.method === 'GET' ? '' : 'body:' + JSON.stringify(JSON.stringify(body))}});
+    const response=await fetch(${JSON.stringify('/ui-api' + route)},{method:${JSON.stringify(options.method ?? 'POST')},${options.noCookie ? "credentials:'omit'," : ''}headers:{'x-erp-browser':'1','x-erp-role':${JSON.stringify(options.role ?? 'ACT-WH')},${options.noCsrf ? '' : "'x-erp-csrf':self.browser.csrf,"}${options.bearer ? "authorization:'Bearer chromium-admission-probe'," : ''}'content-type':'application/json'},${options.method === 'GET' ? '' : 'body:' + JSON.stringify(JSON.stringify(body))}});
     return {status:response.status,body:await response.json(),cache:response.headers.get('cache-control')};
   })()`);
 }
@@ -609,6 +609,46 @@ try {
       assert.equal(await cdp.evaluate('document.activeElement.id'), 'inventory-title');
     }
   });
+  await check('a superseded Inventory denial cannot lock a newer authorized view', async () => {
+    await filter();
+    await control('revoke');
+    try {
+      await cdp.evaluate("window.__p4aChecks.arm('json','/inventory/v1/units/query')");
+      await click('#inventory-refresh');
+      await until(() => cdp.evaluate('window.__p4aChecks.reached()'), 'Old denial gate missing');
+      assert.equal((await ui.last()).status, 403);
+    } finally {
+      await control('restore');
+    }
+    await filter({ unitId: ready.refs.free.unitId });
+    assert.equal((await ui.last()).status, 200);
+    assert.deepEqual(await ui.ids(), [ready.refs.free.unitId]);
+    await cdp.evaluate('window.__p4aChecks.release(); new Promise(r => setTimeout(r, 0))');
+    assert.equal(await cdp.evaluate("document.getElementById('workspace').hidden"), false);
+    assert.deepEqual(await ui.ids(), [ready.refs.free.unitId]);
+    assert.equal(await cdp.evaluate('document.activeElement.id'), 'inventory-title');
+  });
+  await check('reopening the same Lot from a member retains its original Back path', async () => {
+    const original = ready.refs.wip.unitId;
+    await detail(original);
+    await click('#inventory-open-lot');
+    await settled();
+    const member = (await ui.ids()).find((id) => id !== original);
+    assert.ok(member);
+    await click('#inventory-unit-' + member);
+    await settled();
+    assert.equal((await ui.last()).value.data.unit.unitId, member);
+    await click('#inventory-open-lot');
+    await settled();
+    assert.equal(await cdp.evaluate('document.activeElement.id'), 'inventory-unit-' + member);
+    await click('#inventory-back');
+    await settled();
+    assert.equal((await ui.last()).value.data.unit.unitId, original);
+    await click('#inventory-back');
+    await settled();
+    assert.deepEqual(await ui.ids(), [original]);
+    assert.equal(await cdp.evaluate('document.activeElement.id'), 'inventory-unit-' + original);
+  });
   await check(
     'desktop contrast, responsive RTL, reduced motion and zoom remain usable',
     async () => {
@@ -704,7 +744,7 @@ try {
     },
   );
   await check(
-    'native browser method, CSRF and denied-role admission keep sanitized errors',
+    'native browser method, CSRF, cookie and denied-role admission keep sanitized errors',
     async () => {
       assert.deepEqual(await direct('/inventory/v1/units/query', {}, { method: 'GET' }), {
         status: 405,
@@ -712,6 +752,8 @@ try {
         cache: 'no-store',
       });
       assert.equal((await direct('/inventory/v1/units/query', {}, { noCsrf: true })).status, 403);
+      assert.equal((await direct('/inventory/v1/units/query', {}, { bearer: true })).status, 403);
+      assert.equal((await direct('/inventory/v1/units/query', {}, { noCookie: true })).status, 401);
       for (const role of ['ACT-PROC', 'ACT-SEC', 'ACT-SALES', 'ACT-CUST', 'ACT-PLAN', 'ACT-OP'])
         assert.equal((await direct('/inventory/v1/units/query', {}, { role })).status, 403);
       const absent = await direct('/inventory/v1/units/detail', {
@@ -896,6 +938,42 @@ try {
       await login();
       await list();
       assert.deepEqual((await ui.last()).input.filters, {});
+    },
+  );
+  await check(
+    'same-account session replacement discards a delayed Inventory response',
+    async () => {
+      await filter({ origin: 'PRODUCTION' });
+      await cdp.evaluate("window.__p4aChecks.arm('json','/inventory/v1/units/query')");
+      await click('#inventory-refresh');
+      await until(() => cdp.evaluate('window.__p4aChecks.reached()'), 'Session race gate missing');
+      const replacement = await cdp.evaluate(`(async () => {
+      const headers = {'x-erp-browser':'1'};
+      const current = async () => (await fetch('/ui-api/identity/session', {headers})).json();
+      const before = await current();
+      const login = await fetch('/ui-api/identity/login', {method:'POST',
+        headers:{...headers,'content-type':'application/json'},
+        body:JSON.stringify({username:'receipt.act-wh',password:${JSON.stringify(browserTestPassword)}})});
+      const after = await current();
+      return {status:login.status,sameActor:before.accountId===after.accountId&&before.personId===after.personId,
+        rotated:before.browser.csrf!==after.browser.csrf};
+    })()`);
+      assert.deepEqual(replacement, { status: 200, sameActor: true, rotated: true });
+      await cdp.evaluate("window.dispatchEvent(new Event('focus'))");
+      await until(
+        () =>
+          cdp.evaluate(
+            "!document.getElementById('workspace').hidden&&!document.getElementById('show-inventory').hidden&&!document.getElementById('inventory-panel').textContent",
+          ),
+        'Same-account rotation did not clear the previous Inventory view',
+      );
+      await list();
+      assert.deepEqual((await ui.last()).input.filters, {});
+      const current = await ui.ids();
+      assert.ok(current.length);
+      await cdp.evaluate('window.__p4aChecks.release(); new Promise(r => setTimeout(r, 0))');
+      assert.deepEqual(await ui.ids(), current);
+      assert.equal(await cdp.evaluate('document.activeElement.id'), 'inventory-title');
     },
   );
   await check(
