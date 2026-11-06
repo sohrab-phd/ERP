@@ -5,12 +5,23 @@ phase: 12-implementation-planning
 status: in_review
 version: 1.1.0
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-047, APR-046, APR-045, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, IMPL-P2-REMEDIATION-001]
+depends_on: [APR-048, APR-047, APR-046, APR-045, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, IMPL-P2-REMEDIATION-001]
 last_reviewed: 2026-11-05
 approval: null
 ---
 
 # ERP unfinished work and operator UI coverage — current alignment2026-11-05
+
+## Current P4a local delivery — 2026-11-07
+
+[APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
+approves the bounded D1–D4 read/UI design and authorizes P4a only. The Inventory
+owner reads and native WH interface have completed local verification and independent
+review. [P4a delivery evidence](P4A_IMPLEMENTATION_STATUS.md).
+Earlier P4a PROPOSED/NOT AUTHORIZED/NOT IMPLEMENTED statements below are historical
+planning snapshots, superseded only for this bounded increment. P1/P2/backend
+acceptances, P2 historical257UNKNOWN residual, P4b–P5/P3 separate grants and all
+pilot prerequisites remain unchanged. No P4a Owner product acceptance is recorded.
 
 ## Current acceptance and software-first priority — 2026-11-05
 

@@ -11,6 +11,7 @@ const assets = new Map([
   ['/operator/intent.js', ['intent.js', 'text/javascript; charset=utf-8']],
   ['/operator/display.js', ['display.js', 'text/javascript; charset=utf-8']],
   ['/operator/receiving.js', ['receiving.js', 'text/javascript; charset=utf-8']],
+  ['/operator/inventory.js', ['inventory.js', 'text/javascript; charset=utf-8']],
   ['/operator/styles.css', ['styles.css', 'text/css; charset=utf-8']],
 ]);
 export function browserHeaders(response: ServerResponse, secure: boolean) {
@@ -30,7 +31,7 @@ export function browserHeaders(response: ServerResponse, secure: boolean) {
 /** No CORS or arbitrary proxy. Legacy routes still reject Origin and cannot use these cookies. */
 export function createBrowserHandler(
   config: BrowserConfig,
-  handlers: { identity: Handler; inbound: Handler; receiving: Handler },
+  handlers: { identity: Handler; inbound: Handler; receiving: Handler; inventory?: Handler },
 ) {
   return async (request: IncomingMessage, response: ServerResponse): Promise<boolean> => {
     const path = request.url ?? '';
@@ -67,7 +68,14 @@ export function createBrowserHandler(
         '/purchasing/receiving/arrivals/query',
         '/purchasing/receiving/confirm',
       ].includes(route);
-      if (!identity && !inbound && !receiving) {
+      const inventory =
+        handlers.inventory !== undefined &&
+        [
+          '/inventory/v1/units/query',
+          '/inventory/v1/units/detail',
+          '/inventory/v1/lots/units/query',
+        ].includes(route);
+      if (!identity && !inbound && !receiving && !inventory) {
         respond(response, 404, { error: 'not-found' });
         request.resume();
         return true;
@@ -79,10 +87,15 @@ export function createBrowserHandler(
         route === '/identity/session' && request.method === 'GET',
       );
       request.url = route;
-      await (identity ? handlers.identity : inbound ? handlers.inbound : handlers.receiving)(
-        request,
-        response,
-      );
+      await (
+        identity
+          ? handlers.identity
+          : inbound
+            ? handlers.inbound
+            : inventory
+              ? handlers.inventory!
+              : handlers.receiving
+      )(request, response);
     } catch (error) {
       if (!response.headersSent) response.setHeader('connection', 'close');
       const status =

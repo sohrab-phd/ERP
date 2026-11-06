@@ -71,6 +71,15 @@ import { PostgresReceivingStore } from './infrastructure/postgresql/receiving-st
 import { PostgresInventoryInboundReceivingStore } from './infrastructure/postgresql/inventory-receiving-store.js';
 import { createReceivingHandler } from './transport/receiving-http.js';
 import { createBrowserHandler } from './transport/browser-http.js';
+import {
+  InventoryDiscoveryService,
+  InventoryReadCursors,
+  InventoryReadError,
+  type InventoryReadBinding,
+  type InventoryReadQuery,
+} from './modules/inventory/index.js';
+import { PostgresInventoryDiscoveryStore } from './infrastructure/postgresql/inventory-discovery-store.js';
+import { createInventoryReadHandler } from './transport/inventory-http.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -1045,6 +1054,101 @@ export function compose(config: Readonly<Config>) {
       });
     return result;
   };
+  const inventoryReadAdmissions = new WeakMap<TransactionContext, ExecutionContext>();
+  const inventoryReads = new PostgresTransactions(pool, {
+    deadlineMs: 8000,
+    acquireTimeoutMs: 5000,
+    statementTimeoutMs: 4000,
+    lockTimeoutMs: 1000,
+  });
+  const inventoryDiscovery = new InventoryDiscoveryService(
+    new PostgresInventoryDiscoveryStore(),
+    new InventoryReadCursors(config.browser?.secret ?? randomUUID(), config.browser?.origin ?? ''),
+    (ctx) =>
+      inventoryReadAdmissions.get(ctx.transaction) === ctx.actor &&
+      ctx.actor.actorRole === 'ACT-WH' &&
+      org(ctx.actor) &&
+      ctx.actor.installationId === config.installationId &&
+      ctx.actor.authorityScopeId === config.installationId,
+  );
+  const inventoryDiscoveryQuery = async (
+    kind: InventoryReadQuery,
+    input: unknown,
+    actor: ExecutionContext,
+    binding: InventoryReadBinding,
+    signal?: AbortSignal,
+  ) => {
+    const controller = new AbortController();
+    const combined = signal ? AbortSignal.any([signal, controller.signal]) : controller.signal;
+    const timer = setTimeout(() => controller.abort(), 8000);
+    timer.unref();
+    const readCurrent = () =>
+      actor.actorRole === 'ACT-WH' &&
+      org(actor) &&
+      actor.installationId === config.installationId &&
+      actor.authorityScopeId === config.installationId &&
+      identity.isCurrent(actor);
+    const authorize = async () => {
+      combined.throwIfAborted();
+      if (!(await readCurrent())) throw new InventoryReadError(403, 'forbidden');
+      combined.throwIfAborted();
+    };
+    const work = async () => {
+      await authorize();
+      const tx = await inventoryReads.begin('read-snapshot', combined);
+      let result, failure: unknown, observedAt: string | undefined;
+      inventoryReadAdmissions.set(tx.context, actor);
+      try {
+        // Establish RR's observation before reading data, then use the same host
+        // UTC clock for both metadata fields (PG and Windows clocks can differ).
+        await tx.decisionTime();
+        observedAt = new Date().toISOString();
+        result = await Promise.race([
+          inventoryDiscovery.query({ actor, transaction: tx.context }, kind, input, binding),
+          tx.aborted,
+        ]);
+        await tx.commit();
+      } catch (error) {
+        failure = error;
+        await tx.rollback();
+      } finally {
+        inventoryReadAdmissions.delete(tx.context);
+        await tx.release();
+      }
+      // Fresh authority is deliberately outside RR and after connection release, including errors.
+      await authorize();
+      if (failure !== undefined) {
+        if (failure instanceof Error) throw failure;
+        throw new InventoryReadError(503, 'unavailable');
+      }
+      if (result === undefined || observedAt === undefined)
+        throw new InventoryReadError(503, 'unavailable');
+      const data = {
+        ...result,
+        freshness: {
+          observedAt,
+          respondedAt: new Date(Math.max(Date.now(), Date.parse(observedAt))).toISOString(),
+          consistency: 'PAGE_SNAPSHOT',
+          quantityBasis: 'LEDGER_VERIFIED_BALANCE',
+        },
+      };
+      if (Buffer.byteLength(JSON.stringify({ data })) > 131072)
+        throw new InventoryReadError(422, 'query-limit');
+      return data;
+    };
+    let onAbort: () => void = () => undefined;
+    const aborted = new Promise<never>((_, reject) => {
+      onAbort = () => reject(new InventoryReadError(503, 'unavailable'));
+      combined.addEventListener('abort', onAbort, { once: true });
+      if (combined.aborted) onAbort();
+    });
+    try {
+      return await Promise.race([work(), aborted]);
+    } finally {
+      clearTimeout(timer);
+      combined.removeEventListener('abort', onAbort);
+    }
+  };
   const identityHandler = createIdentityHandler(identity);
   const inboundHandler = createInboundHandler({ identity, command, query: inboundQuery });
   const receivingHandler = createReceivingHandler({ identity, command, query: receivingQuery });
@@ -1053,7 +1157,12 @@ export function compose(config: Readonly<Config>) {
       ? {
           browser: createBrowserHandler(
             { ...config.browser, installationId: config.installationId },
-            { identity: identityHandler, inbound: inboundHandler, receiving: receivingHandler },
+            {
+              identity: identityHandler,
+              inbound: inboundHandler,
+              receiving: receivingHandler,
+              inventory: createInventoryReadHandler({ identity, query: inventoryDiscoveryQuery }),
+            },
           ),
         }
       : {}),
@@ -1082,6 +1191,7 @@ export function compose(config: Readonly<Config>) {
     genealogyQuery,
     identity,
     inventory,
+    inventoryDiscoveryQuery,
     receipts,
     purchases,
     inbound,

@@ -5,13 +5,26 @@ phase: 02-domain-business-architecture
 status: in_review
 version: 0.6.0
 owners: [chief-solution-architect, data-architect]
-depends_on: [APR-042, APR-038, GOV-DATA-DICT-001, DOM-CAP-BC-001]
-last_reviewed: 2026-10-25
+depends_on: [APR-048, APR-042, APR-038, GOV-DATA-DICT-001, DOM-CAP-BC-001]
+last_reviewed: 2026-11-05
 approval: APR-004 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
 
 # Module Capability and Data-Ownership Matrix
+
+## P4a Inventory read ownership — APR-048
+
+[APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
+authorizes Inventory's typed discovery/detail/Lot-association read port. Its single
+SELECT-only PostgreSQL reader joins Inventory Unit/origins/Ledger/Balance/active
+claims/issues on one bounded read-only snapshot. No source-owner documentary SQL,
+new truth table, copied master or writer is introduced. Composition privately
+admits a current personal organizational WH actor and revalidates after releasing
+the snapshot. Only the approved stock whitelist gets the narrow customer-stock
+exception; no customer/commercial/source-document authority follows. Existing
+module writers/ports and ACT-IPS posting ownership remain unchanged. Actual
+implementation and evidence are in [P4a status](../12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md).
 
 ## Implemented I2 receiving ownership — APR-042
 

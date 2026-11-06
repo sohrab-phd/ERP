@@ -16,6 +16,14 @@ walk(resolve('packages/shared-kernel'));
 const owner = (f) => (f.startsWith(resolve('packages/shared-kernel') + sep) ? 'kernel' : 'backend');
 const edges = new Map();
 const issues = [];
+// APR-048 adds one Inventory-owned SELECT projection; writer ownership is unchanged.
+const discoveryReader = resolve(
+  'apps/backend/src/infrastructure/postgresql/inventory-discovery-store.ts',
+);
+const discoveryRead = (file, text) =>
+  file === discoveryReader &&
+  /\bSELECT\b/i.test(text) &&
+  !/\b(INSERT|UPDATE|DELETE|TRUNCATE|ALTER|DROP|CREATE|GRANT|REVOKE|CALL|COPY)\b/i.test(text);
 for (const file of files) {
   const targets = [];
   const source = ts.createSourceFile(
@@ -47,6 +55,7 @@ for (const file of files) {
           'shipping-store.ts',
           'production-store.ts',
           'inventory-production-store.ts',
+          'inventory-discovery-store.ts',
         ].some((name) => target === resolve('apps/backend/src/infrastructure/postgresql', name)) &&
         file.startsWith(resolve('apps/backend/src') + sep) &&
         file !== resolve('apps/backend/src/composition-root.ts')
@@ -98,6 +107,7 @@ for (const file of files) {
       /\binventory\.(unit|ledger|balance|reservation)\b/i.test(node.text) &&
       file.startsWith(resolve('apps/backend/src') + sep) &&
       file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-store.ts') &&
+      !discoveryRead(file, node.text) &&
       !(
         file ===
           resolve('apps/backend/src/infrastructure/postgresql/inventory-reservation-store.ts') &&
@@ -110,7 +120,8 @@ for (const file of files) {
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
       /\binventory\.material_lot\b/i.test(node.text) &&
       file.startsWith(resolve('apps/backend/src') + sep) &&
-      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-receipt-store.ts')
+      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-receipt-store.ts') &&
+      !discoveryRead(file, node.text)
     )
       issues.push(relative(root, file) + ': inventory origin SQL outside persistence owner');
     if (
@@ -161,7 +172,8 @@ for (const file of files) {
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
       /\binventory\.inbound_unit_origin\b/i.test(node.text) &&
       file.startsWith(resolve('apps/backend/src') + sep) &&
-      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-receiving-store.ts')
+      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-receiving-store.ts') &&
+      !discoveryRead(file, node.text)
     )
       issues.push(relative(root, file) + ': receiving origin SQL outside Inventory owner');
     if (
@@ -198,7 +210,9 @@ for (const file of files) {
       (ts.isStringLiteralLike(node) || ts.isNoSubstitutionTemplateLiteral(node)) &&
       /\binventory\.production_(issue|origin)\b/i.test(node.text) &&
       file.startsWith(resolve('apps/backend/src') + sep) &&
-      file !== resolve('apps/backend/src/infrastructure/postgresql/inventory-production-store.ts')
+      file !==
+        resolve('apps/backend/src/infrastructure/postgresql/inventory-production-store.ts') &&
+      !discoveryRead(file, node.text)
     )
       issues.push(relative(root, file) + ': Production inventory SQL outside Inventory owner');
     if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier)

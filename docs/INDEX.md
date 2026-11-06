@@ -18,10 +18,12 @@ supersedes: null
 - [APR-047 formal P2 Owner acceptance, retained residual and planning priority](00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
 - [Accepted P2 behavior, exact revision and independent review provenance](12-implementation-planning/P2_IMPLEMENTATION_STATUS.md)
 - [Software-first roadmap and remaining UI register](12-implementation-planning/ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md#software-first-roadmap--owner-priority-2026-11-05)
-- [P4a Inventory visibility/discovery scope proposal — not authorized](12-implementation-planning/P4A_INVENTORY_VISIBILITY_SCOPE_PROPOSAL.md)
-- [P4a proposed read contracts and verification design — not authorized](12-implementation-planning/P4A_INVENTORY_READ_CONTRACT_DESIGN.md)
+- [P4a initial scope proposal — historical, superseded by APR-048](12-implementation-planning/P4A_INVENTORY_VISIBILITY_SCOPE_PROPOSAL.md)
+- [APR-048 — actual Owner P4a D1–D4 implementation authorization, not product acceptance](00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
+- [P4a delivered surfaces, verification and review status](12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md)
+- [P4a approved read design and verification contract — APR-048](12-implementation-planning/P4A_INVENTORY_READ_CONTRACT_DESIGN.md)
 - [P4a verified source/state/field matrix](12-implementation-planning/P4A_INVENTORY_SOURCE_AND_STATE_MATRIX.md)
-- [P4a implementation-readiness Owner decisions — open](12-implementation-planning/P4A_IMPLEMENTATION_AUTHORIZATION_DECISIONS.md)
+- [P4a original decision package — resolved under APR-048](12-implementation-planning/P4A_IMPLEMENTATION_AUTHORIZATION_DECISIONS.md)
 - [Current effective Owner scope and stop boundary](00-governance/CURRENT_PHASE.md)
 
 P1/P2 are accepted within their bounded software scopes; thirteen backend

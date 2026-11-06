@@ -3,15 +3,30 @@ id: SEC-RBAC-001
 title: Role Permission and Scope Matrix
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.7.0
+version: 0.8.0
 owners: [security-architect, business-control-owner]
-depends_on: [APR-042, APR-038, DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
-last_reviewed: 2026-10-25
+depends_on: [APR-048, APR-042, APR-038, DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
+last_reviewed: 2026-11-05
 approval: null
 supersedes: null
 ---
 
 # Role Permission and Scope Matrix
+
+## Implemented P4a Inventory read exception — APR-048
+
+Only current personal organizational ACT-WH in trusted installation=authority may
+use DiscoverInventoryUnits/GetInventoryUnitDetail/ListInventoryLotUnits v1 under
+[APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md).
+An ACT-WH selector is checked against a real current grant. Customer-bound,
+temporary/shared, PROC/SEC/SALES/Customer/PLAN/OP actors gain no P4a admission.
+The approved Inventory-only projection covers all3origins and five current/two
+historical-detail states including customer stock, with NO customer/scope/demand/
+reservation ownership/commercial/production documents, raw Ledger/audit/outcomes.
+Rows are authorized in SQL before paging/enrichment; current account/session/grant
+is checked freshly after snapshot release. No source-document permission or
+Inventory write follows. Existing P1/P2 and legacy keyed-role policies remain.
+Owner product acceptance is pending. [P4a implementation and evidence](../12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md).
 
 ## Implemented I2 receiving authority — APR-042 / SRC-007
 

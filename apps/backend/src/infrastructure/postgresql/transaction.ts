@@ -30,6 +30,7 @@ export interface TransactionBounds {
   lockTimeoutMs?: number;
   statementTimeoutMs?: number;
   deadlineMs?: number;
+  acquireTimeoutMs?: number;
 }
 
 export class PostgresTransactions implements TransactionPort {
@@ -38,11 +39,50 @@ export class PostgresTransactions implements TransactionPort {
     private readonly bounds: TransactionBounds = {},
   ) {}
 
-  async begin(mode: 'write' | 'read-snapshot' = 'write'): Promise<TransactionSession> {
+  async begin(
+    mode: 'write' | 'read-snapshot' = 'write',
+    signal?: AbortSignal,
+  ): Promise<TransactionSession> {
     let client: PoolClient;
     try {
-      client = await this.pool.connect();
+      client =
+        signal || this.bounds.acquireTimeoutMs !== undefined
+          ? await new Promise<PoolClient>((resolve, reject) => {
+              let settled = false;
+              const cleanup = () => {
+                clearTimeout(timer);
+                signal?.removeEventListener('abort', fail);
+              };
+              const fail = () => {
+                if (!settled) {
+                  settled = true;
+                  cleanup();
+                  reject(new TechnicalError('retryable'));
+                }
+              };
+              const timer = setTimeout(fail, this.bounds.acquireTimeoutMs ?? 5000);
+              timer.unref();
+              signal?.addEventListener('abort', fail, { once: true });
+              if (signal?.aborted) {
+                fail();
+                return;
+              }
+              void this.pool.connect().then((acquired) => {
+                if (settled) {
+                  acquired.release();
+                  return;
+                }
+                settled = true;
+                cleanup();
+                resolve(acquired);
+              }, fail);
+            })
+          : await this.pool.connect();
     } catch {
+      throw new TechnicalError('retryable');
+    }
+    if (signal?.aborted) {
+      client.release();
       throw new TechnicalError('retryable');
     }
     const context = createTransactionContext();
@@ -66,12 +106,18 @@ export class PostgresTransactions implements TransactionPort {
     };
     const release = (discard = false): Promise<void> => {
       if (timer) clearTimeout(timer);
+      signal?.removeEventListener('abort', onAbort);
       if (!state.released) {
         state.released = true;
         client.removeListener('error', onConnectionError);
         client.release(discard || !state.finished);
       }
       return Promise.resolve();
+    };
+    const onAbort = () => {
+      state.timedOut = true;
+      void release(true);
+      rejectAborted(new TechnicalError('retryable'));
     };
     client.on('error', onConnectionError);
     const timer = setTimeout(() => {
@@ -80,6 +126,8 @@ export class PostgresTransactions implements TransactionPort {
       rejectAborted(new TechnicalError(state.committing ? 'uncertain' : 'retryable'));
     }, this.bounds.deadlineMs ?? 30_000);
     timer.unref();
+    signal?.addEventListener('abort', onAbort, { once: true });
+    if (signal?.aborted) onAbort();
     try {
       await client.query(
         mode === 'read-snapshot'

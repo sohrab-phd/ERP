@@ -390,6 +390,14 @@ export class IdentityService {
     actorRole: HumanRole,
     customerScope?: string,
   ): Promise<ExecutionContext> {
+    return (await this.contextAndSession(token, actorRole, customerScope)).actor;
+  }
+
+  async contextAndSession(
+    token: string,
+    actorRole: HumanRole,
+    customerScope?: string,
+  ): Promise<{ actor: ExecutionContext; self: SelfSession }> {
     if (
       !humanRoles.includes(actorRole) ||
       (customerScope !== undefined && !validCustomer(customerScope))
@@ -413,7 +421,7 @@ export class IdentityService {
     });
     this.issued.set(context, { digest: tokenDigest, accountId: self.accountId });
     authenticatedContexts.add(context);
-    return context;
+    return { actor: context, self };
   }
 
   async isCurrent(context: ExecutionContext, tx?: TransactionContext): Promise<boolean> {

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>خرید و دریافت انبار | نوردکاران</title>
+    <title>خرید، دریافت و موجودی انبار | نوردکاران</title>
     <link rel="stylesheet" href="/operator/styles.css" />
     <script type="module" src="/operator/app.js"></script>
   </head>
@@ -11,7 +11,7 @@
     <header>
       <div>
         <p class="eyebrow">نوردکاران · ERP–MES</p>
-        <h1>خرید و دریافت انبار</h1>
+        <h1>خرید، دریافت و موجودی انبار</h1>
       </div>
       <p id="identity">در حال بررسی نشست…</p>
       <button id="logout" hidden type="button">خروج امن</button>
@@ -54,6 +54,7 @@
           ><button type="button" id="show-lookup">بازیابی سفارش</button
           ><button type="button" id="show-catalogues">کاتالوگ‌های مشترک</button>
           <button type="button" id="show-receive" hidden>ثبت دریافت انبار</button>
+          <button type="button" id="show-inventory" hidden>موجودی انبار</button>
         </nav>
         <section id="recovery" hidden aria-labelledby="recovery-title">
           <h2 id="recovery-title">پیگیری عملیات قبلی</h2>
@@ -145,6 +146,7 @@
           <div id="catalogue-options"></div>
         </section>
         <section id="receiving-panel" hidden aria-label="ثبت و تأیید دریافت انبار"></section>
+        <section id="inventory-panel" hidden aria-labelledby="inventory-title"></section>
         <section id="arrival-panel" hidden aria-label="نتیجهٔ قطعی دریافت">
           <h2>دریافت تأییدشده از سرور</h2>
           <div id="arrival-result"></div>

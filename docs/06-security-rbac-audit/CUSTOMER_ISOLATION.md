@@ -3,15 +3,33 @@ id: SEC-ISO-001
 title: Customer Isolation Policy
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.4.0
+version: 0.5.0
 owners: [security-architect]
-depends_on: [SEC-RBAC-001, APP-QRY-001, APP-ENV-001, APR-007, APR-008]
-last_reviewed: 2026-10-10
+depends_on: [APR-048, SEC-RBAC-001, APP-QRY-001, APP-ENV-001, APR-007, APR-008]
+last_reviewed: 2026-11-05
 approval: null
 supersedes: null
 ---
 
 # Customer Isolation Policy
+
+## P4a Inventory-only organizational Warehouse exception — APR-048
+
+[APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
+explicitly authorizes current personally authenticated organizational ACT-WH to
+read ONLY the [P4a Inventory whitelist](../12-implementation-planning/P4A_INVENTORY_READ_CONTRACT_DESIGN.md)
+within trusted installation=authority across legacy/I2/production, including
+customer-owned/allocated/reserved/packed/issued stock. Five current states and
+zero-stock historical CONSUMED/SHIPPED detail/Lot association are permitted.
+This narrowly named exception qualifies the general customer-key stock rule below
+only for the three P4a browser read contracts. It grants no customer identity/key,
+commercial/demand/reservation ownership or production order/operation/personnel/
+source-document access; no other role or customer selector. Keep all stored
+customer keys/relationships and unrelated owner-port policies intact. SQL scope
+precedes filters/pagination/lookahead/aggregation/enrichment; same404 for missing/
+foreign/denied/unsupported Unit/Lot. Fresh session/account/grant validation after
+releasing the read snapshot precedes disclosure. No stock writes or generic proxy.
+Owner product acceptance is pending. [P4a implementation and evidence](../12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md).
 
 APR-008 remains historical structure approval. This live OQ/source reconciliation
 is delegated technical work, not human baseline approval.

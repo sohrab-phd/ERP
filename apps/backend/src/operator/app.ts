@@ -8,6 +8,7 @@ import {
 } from './intent.js';
 import { textValue } from './display.js';
 import { createReceiving } from './receiving.js';
+import { createInventory } from './inventory.js';
 
 type Role = 'ACT-PROC' | 'ACT-WH';
 type Kind = 'MATERIAL_TYPE' | 'QUALITY_GRADE' | 'COLOR';
@@ -88,6 +89,7 @@ let orderRead = 0,
   receivingRead = 0;
 const arrivals = new Set<string>();
 let receivingEditor: ReturnType<typeof createReceiving> | undefined;
+let inventoryView: ReturnType<typeof createInventory> | undefined;
 class Stale extends Error {}
 class RecoveryStorageError extends Error {}
 class ApiError extends Error {
@@ -108,6 +110,8 @@ function node<K extends keyof HTMLElementTagNameMap>(tag: K, text?: string) {
   return n;
 }
 function clearBusiness() {
+  inventoryView?.clear();
+  inventoryView = undefined;
   orderRead++;
   receivingRead++;
   el('order-result').replaceChildren();
@@ -183,12 +187,20 @@ function armExpiry() {
     ),
   );
 }
-async function api<T>(path: string, body?: string | object, selectedRole: Role = role): Promise<T> {
+async function api<T>(
+  path: string,
+  body?: string | object,
+  selectedRole: Role = role,
+  signal?: AbortSignal,
+): Promise<T> {
   if (checkLocalExpiry()) throw new Stale();
   const generation = epoch;
   const startedAt = Date.now(),
     startedMonotonic = performance.now();
   const controller = new AbortController();
+  const abort = () => controller.abort();
+  if (signal?.aborted) controller.abort();
+  signal?.addEventListener('abort', abort, { once: true });
   const timer = setTimeout(() => controller.abort(), 15000);
   try {
     const response = await fetch('/ui-api' + path, {
@@ -228,6 +240,7 @@ async function api<T>(path: string, body?: string | object, selectedRole: Role =
     return value;
   } finally {
     clearTimeout(timer);
+    signal?.removeEventListener('abort', abort);
   }
 }
 function errorText(error: unknown): string {
@@ -308,6 +321,7 @@ function updateControls() {
   el<HTMLButtonElement>('role').disabled = busy || prepared !== undefined;
   show('show-register', permissions().has('ACT-PROC') && role === 'ACT-PROC');
   show('show-receive', permissions().has('ACT-WH') && role === 'ACT-WH');
+  show('show-inventory', permissions().has('ACT-WH') && role === 'ACT-WH');
   show('arrival-lookup-form', permissions().has('ACT-WH') && role === 'ACT-WH');
   receivingEditor?.setBlocked(blocked || role !== 'ACT-WH');
   show('recovery', !!pending || lockedPending);
@@ -415,6 +429,7 @@ async function session() {
   updateControls();
 }
 function navigate(panel: string, userNavigation = false) {
+  inventoryView?.hide();
   if (userNavigation) {
     orderRead++;
     receivingRead++;
@@ -436,9 +451,25 @@ function navigate(panel: string, userNavigation = false) {
     'catalogue-panel',
     'receiving-panel',
     'arrival-panel',
+    'inventory-panel',
   ])
     show(id, id === panel);
   if (panel === 'register-panel' && role !== 'ACT-PROC') show(panel, false);
+  if (panel === 'inventory-panel') {
+    if (role !== 'ACT-WH' || !permissions().has('ACT-WH') || !self) {
+      show(panel, false);
+      return;
+    }
+    inventoryView ??= createInventory({
+      root: el('inventory-panel'),
+      ...(self.browser.receivingLocation ? { location: self.browser.receivingLocation } : {}),
+      canUse: () =>
+        !!self && role === 'ACT-WH' && permissions().has('ACT-WH') && !checkLocalExpiry(),
+      api: <T>(path: string, body: object, signal: AbortSignal) =>
+        api<T>(path, body, 'ACT-WH', signal),
+    });
+    inventoryView.show();
+  }
   if (panel === 'receiving-panel') {
     if (role !== 'ACT-WH' || !permissions().has('ACT-WH')) {
       show(panel, false);
@@ -1156,6 +1187,7 @@ for (const [id, panel] of [
   ['show-lookup', 'lookup-panel'],
   ['show-catalogues', 'catalogue-panel'],
   ['show-receive', 'receiving-panel'],
+  ['show-inventory', 'inventory-panel'],
 ] as const)
   el(id).addEventListener('click', () => navigate(panel, true));
 el('role').addEventListener('change', () => {

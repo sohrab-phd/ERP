@@ -12,6 +12,12 @@ approval: null
 
 # P4a Inventory Visibility and Discovery — scope proposal
 
+Current decision2026-11-05: [APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
+approves D1/D2/D4 and conditional D3 and authorizes bounded P4a implementation.
+The proposal-only/no-authorization wording below is the preserved earlier design
+snapshot; [P4a status](P4A_IMPLEMENTATION_STATUS.md) owns actual delivery/evidence.
+No Owner product acceptance follows from implementation authority.
+
 **PROPOSED / NOT AUTHORIZED / NOT IMPLEMENTED.**
 
 Design follow-up2026-11-05: the actual Owner's subsequent design-only directive

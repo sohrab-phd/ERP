@@ -3,15 +3,35 @@ id: APP-QRY-001
 title: Application Query Catalogue
 phase: 05-application-api-architecture
 status: in_review
-version: 0.5.0
+version: 0.6.0
 owners: [solution-architect, api-architect]
-depends_on: [APR-042, APR-038, APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
-last_reviewed: 2026-10-25
+depends_on: [APR-048, APR-042, APR-038, APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
+last_reviewed: 2026-11-05
 approval: APR-007 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
 
 # Application Query Catalogue
+
+## Implemented P4a browser-only Inventory reads — APR-048
+
+| Query/version | Exact POST route | Authority / projection |
+| --- | --- | --- |
+| DiscoverInventoryUnits v1 | /ui-api/inventory/v1/units/query | Current personal organizational WH; eight exact filters; five current stock states, three source families; exact summary whitelist |
+| GetInventoryUnitDetail v1 | /ui-api/inventory/v1/units/detail | Same WH; one Unit; current or zero-stock CONSUMED/SHIPPED; exact origin-specific source projection |
+| ListInventoryLotUnits v1 | /ui-api/inventory/v1/lots/units/query | Same WH; authoritative Lot-associated Units including multi-Unit production batch, seven supported states; no aggregate/master |
+
+[APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
+approves the exact [P4a contracts](../12-implementation-planning/P4A_INVENTORY_READ_CONTRACT_DESIGN.md)
+and narrow Inventory-only customer-stock exception. No customer identity/scope,
+commercial/demand/production documents, raw Ledger/audit or added browser roles.
+Ledger-verified exact canonical integer/fractional kg strings; unreserved is
+arithmetic, not eligibility. Default25/max50, signed query/filter/actor/session-
+bound original600s cursors;8KiB request/128KiB response, per-page RR READ ONLY,
+no cross-page snapshot. Final current authority AFTER snapshot connection release.
+Refresh repeats the read without a command envelope or stock effect. Legacy keyed
+Unit/Lot, Sales availability and I2 read contracts still apply to their own routes.
+Owner product acceptance is pending. [P4a implementation and evidence](../12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md).
 
 ## Implemented I2 source-backed queries — APR-042
 

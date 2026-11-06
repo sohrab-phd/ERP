@@ -11,6 +11,7 @@ const files = [
   'permissions',
   'identity',
   'inventory',
+  'inventory-discovery',
   'receipt',
   'purchase',
   'inbound',

@@ -33,6 +33,8 @@ push or fabricated product acceptance. Broader policy/schema/query deviation nee
 Owner decision. APR-047's exact P2 acceptance and UNKNOWN historical257residual,
 P1/I2 acceptances/software-first roadmap and all P3 operational gates remain intact.
 Stop after verified local P4a delivery for explicit Owner acceptance.
+The delivery record tracks the implementation, verification and independent review.
+[P4a delivery evidence](../12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md).
 
 ## Effective Owner acceptance and documentation scope — 2026-11-05
 

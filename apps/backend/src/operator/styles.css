@@ -238,3 +238,135 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* P4a keeps the native P1/P2 visual language; private data never uses visual-only hiding. */
+#inventory-panel {
+  --inventory-text: #18322e;
+  --inventory-surface: #fff;
+  --inventory-subtle: #eaf2ed;
+  --inventory-line: #cbd7cf;
+  --inventory-error: #8b2719;
+  color: var(--inventory-text);
+}
+#inventory-panel .inventory-toolbar {
+  justify-content: flex-start;
+}
+#inventory-panel .inventory-filter-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+#inventory-panel .inventory-filter-grid label {
+  margin-bottom: 6px;
+}
+#inventory-panel .inventory-exact {
+  unicode-bidi: isolate;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+#inventory-panel .inventory-error,
+#inventory-panel .inventory-field-error {
+  color: var(--inventory-error);
+}
+#inventory-panel .inventory-field-error:empty,
+#inventory-filter-errors:empty {
+  display: none;
+}
+#inventory-panel [aria-invalid='true'] {
+  border: 2px solid var(--inventory-error);
+}
+#inventory-filter-errors:not(:empty) {
+  border-inline-start: 4px solid var(--inventory-error);
+  padding: 12px;
+  margin-block: 12px;
+}
+#inventory-panel .inventory-observation {
+  background: var(--inventory-subtle);
+  border: 1px solid var(--inventory-line);
+  border-radius: 5px;
+  padding: 12px 16px;
+  margin-block: 16px;
+}
+#inventory-panel .inventory-observation p {
+  margin: 0;
+}
+#inventory-panel .inventory-table {
+  table-layout: fixed;
+  font-size: 0.9rem;
+}
+#inventory-panel .inventory-table caption {
+  text-align: start;
+  font-weight: 700;
+  padding-block: 8px;
+}
+#inventory-panel .inventory-table th,
+#inventory-panel .inventory-table td {
+  min-width: 0;
+  padding: 8px;
+}
+#inventory-panel .inventory-table th:last-child {
+  width: 20%;
+}
+#inventory-panel .inventory-table details {
+  padding: 6px;
+  margin: 0;
+}
+#inventory-panel .inventory-table dl {
+  display: block;
+}
+#inventory-panel .inventory-table button {
+  margin-inline: 0;
+}
+#inventory-panel .inventory-state {
+  font-weight: 700;
+}
+#inventory-panel .inventory-state[data-stock-class='HISTORICAL'] {
+  color: #5b4638;
+}
+#inventory-panel nav span {
+  align-self: center;
+}
+#inventory-panel :focus {
+  scroll-margin-block: 20px;
+}
+@media (max-width: 950px) {
+  #inventory-panel .inventory-table,
+  #inventory-panel .inventory-table tbody,
+  #inventory-panel .inventory-table tr,
+  #inventory-panel .inventory-table td {
+    display: block;
+    width: 100%;
+  }
+  #inventory-panel .inventory-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+  }
+  #inventory-panel .inventory-table tr {
+    border: 1px solid var(--inventory-line);
+    border-radius: 5px;
+    margin-bottom: 16px;
+  }
+  #inventory-panel .inventory-table td {
+    border: 0;
+    border-bottom: 1px solid var(--inventory-line);
+  }
+  #inventory-panel .inventory-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 700;
+  }
+  #inventory-panel .inventory-table td:last-child {
+    border-bottom: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #inventory-panel *,
+  #inventory-panel *::before,
+  #inventory-panel *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

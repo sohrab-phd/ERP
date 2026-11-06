@@ -5,13 +5,24 @@ phase: 09-repository-documentation
 status: approved
 version: 0.4.0
 owners: [solution-architect]
-depends_on: [APR-042, APP-MOD-001, REPO-LAY-001, DATA-TX-001, APR-010, APR-011]
-last_reviewed: 2026-10-25
+depends_on: [APR-048, APR-042, APP-MOD-001, REPO-LAY-001, DATA-TX-001, APR-010, APR-011]
+last_reviewed: 2026-11-05
 approval: APR-011 historical rules; APR-042 bounded I2 owner-port reconciliation
 supersedes: null
 ---
 
 # Dependency and Import Rules
+
+## Bounded P4a Inventory read adapter — APR-048
+
+The [authorized P4a](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
+Inventory public read port is composed with one `inventory-discovery-store.ts`
+SELECT-only adapter. Only composition imports that adapter in production; domain
+and transport import Inventory's public index. The boundary checker permits its
+read-only SQL for Inventory-owned stock/origin/claim/issue evidence while preserving
+all existing sole-writer rules. No private Procurement/Production reads, direct
+stock writes, generic proxy or frontend dependency is admitted. Native browser
+code calls only three closed owner read routes; UI visibility is not authorization.
 
 ## Current bounded receiving dependency — APR-042
 
