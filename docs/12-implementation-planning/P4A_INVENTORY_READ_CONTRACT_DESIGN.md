@@ -12,7 +12,7 @@ approval: null
 
 # P4a Inventory discovery and canonical read design
 
-Current Owner decision2026-11-05: [APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md) approves D1/D2/D4 and conditionally approves D3, and authorizes bounded implementation. This supersedes the design-task-only / OPEN / NOT AUTHORIZED statements below as historical proposal wording. The design baseline remains12e4ea8, with the exact Owner amendments in APR-048; P4a product acceptance remains pending.
+Current Owner decision2026-11-05: [APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md) approves D1/D2/D4 and conditionally approves D3, and authorizes bounded implementation. This supersedes the design-task-only / OPEN / NOT AUTHORIZED statements below as historical proposal wording. The design baseline remains12e4ea8, with the exact Owner amendments in APR-048; P4a software acceptance is recorded in [APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md) at exactly `6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10` on 2026-11-07.
 
 **PROPOSED CONTRACTS — IMPLEMENTATION NOT AUTHORIZED.** The actual Owner directive
 of2026-11-05 authorizes source inspection, this bounded design, validation and an

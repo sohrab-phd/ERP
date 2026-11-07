@@ -3,16 +3,39 @@ id: PLAN-ERP-CURRENT-ASSESSMENT-001
 title: ERP current state and next development recommendation
 phase: 12-implementation-planning
 status: in_review
-version: 1.3.0
+version: 1.4.0
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-047, APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
-last_reviewed: 2026-11-05
+depends_on: [APR-049, APR-047, APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
+last_reviewed: 2026-11-07
 approval: null
 ---
 
 # ارزیابی وضعیت واقعی ERP و پیشنهاد گام بعد
 
-## Current Owner acceptance and next proposal — 2026-11-05
+## Current Owner P4a acceptance and next proposal — 2026-11-07
+
+[APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
+formally accepts Warehouse Inventory Visibility at
+`6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10`. P1 Purchasing, P2 Warehouse Receiving
+and P4a Inventory read/UI workflows are accepted within their recorded scopes.
+The thirteen accepted backend capabilities keep their existing responsibilities.
+P4a's final proof includes 271 unit tests, one clean 398-case PostgreSQL invocation
+and 25 actual Chromium checks, with all required review findings closed.
+[Accepted implementation and evidence](P4A_IMPLEMENTATION_STATUS.md).
+
+P4b Sales UI is the next PROPOSED workstream and awaits a separate Owner directive
+for discovery, design and implementation. Resolve the local mandatory skill
+configuration through separately reviewed tooling/governance work before the next
+frontend implementation stage. Measure representative full migration-wide write
+overhead before factory deployment or operational performance acceptance. These
+are retained nonblocking limits of software acceptance.
+
+P3 remains pending behind its software, environment, security, restore, UAT,
+training and operational gates. This recording task permits documentation and one
+local documentation-only acceptance commit. The P2 historical 257-Unit residual
+retains its accepted UNKNOWN/nonblocking classification under APR-047.
+
+## Prior P2 acceptance and P4a proposal — 2026-11-05 (historical)
 
 [APR-047](../00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
 records actual Owner acceptance of P2 implementation

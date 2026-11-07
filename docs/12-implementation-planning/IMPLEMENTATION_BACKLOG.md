@@ -3,30 +3,39 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.21.0
+version: 0.22.0
 owners: [chief-solution-architect]
-depends_on: [APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
-last_reviewed: 2026-11-05
+depends_on: [APR-049, APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
+last_reviewed: 2026-11-07
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
 
-## Current P4a local delivery — 2026-11-07
+## Current P4a acceptance and next proposed workstream — 2026-11-07
 
-[APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
-approves D1/D2/D4 and conditional D3 and authorizes P4a Inventory-only WH reads/UI,
-the evidence-justified candidate index scope, full verification and independent
-review. The native read surfaces and five measured indexes are implemented and
-independently verified. Owner acceptance is pending. [P4a delivery](P4A_IMPLEMENTATION_STATUS.md).
-Earlier proposal-only wording below is a historical snapshot. P1/P2 and thirteen
-bounded backend acceptances remain; no additional backend module is counted from
-this read/UI extension. P4b/P4c/P4d/P5 and P3 require their own grants; no next slice,
-factory pilot, deployment or push is authorized. Stop for Owner acceptance after
-verified P4a local delivery.
+[APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
+formally accepts P4a Warehouse Inventory Visibility at exactly
+`6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10`. The three Inventory read contracts,
+native Persian RTL interface and five measured indexes are accepted within
+D1–D4. Verification passed 271 unit tests, the complete 398-case PostgreSQL run
+and 25 actual Chromium checks. All required review findings are closed.
+[Accepted P4a delivery](P4A_IMPLEMENTATION_STATUS.md).
 
-## Current Owner priority and acceptance — 2026-11-05
+P1, P2 and P4a are accepted software interfaces. The thirteen bounded backend
+acceptances retain their scopes. P4b Sales UI is the next PROPOSED workstream,
+awaiting separate Owner authorization for discovery, design and implementation.
+Its required Sales/customer/stock reads remain to be assessed under that future
+directive. P4a Warehouse visibility grants no Sales access.
+
+Before the next frontend implementation stage, resolve skill reproducibility
+through a separately reviewed tooling/governance change. Before deployment or
+operational performance acceptance, measure representative migration-wide write
+overhead against the pre-0019 schema. These accepted limitations are still open.
+The current task is acceptance documentation and one local documentation commit.
+
+## Prior Owner priority and P2 acceptance — 2026-11-05 (historical)
 
 [APR-047](../00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
 formally accepts bounded P2 at `f6ef316c711474775b158e8d12fea4a885f2f368` after

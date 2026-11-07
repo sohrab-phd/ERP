@@ -3,17 +3,31 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.31.0
+version: 0.32.0
 owners: [chief-solution-architect]
-depends_on: [APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
-last_reviewed: 2026-11-05
+depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
+last_reviewed: 2026-11-07
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
 
-## Current P2 Owner acceptance and software-first priority (2026-11-05)
+## Current P4a Owner acceptance and next proposed P4b workstream (2026-11-07)
+
+- [APR-049 formal P4a Owner acceptance, exact revision, evidence and limitations](00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
+- [Accepted P4a implementation and final clean verification](12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md)
+- [Current phase and separate P4b authorization boundary](00-governance/CURRENT_PHASE.md)
+- [Roadmap and current Inventory/Sales coverage](12-implementation-planning/ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md#software-first-roadmap--owner-priority-2026-11-05)
+
+P1, P2 and P4a are accepted within their bounded software scopes. P4b Sales UI is
+next PROPOSED and awaits separate discovery, design and implementation authority.
+The representative migration-wide write-overhead measurement and separately
+reviewed skill reproducibility change retain their deployment/performance and
+frontend implementation gates under APR-049. Current scope is documentation and
+one local acceptance-record commit.
+
+## Prior P2 acceptance and software-first priority (2026-11-05, historical)
 
 - [APR-047 formal P2 Owner acceptance, retained residual and planning priority](00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
 - [Accepted P2 behavior, exact revision and independent review provenance](12-implementation-planning/P2_IMPLEMENTATION_STATUS.md)

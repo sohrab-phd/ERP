@@ -3,15 +3,41 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.35.0
+version: 0.36.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
-last_reviewed: 2026-11-05
+depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+last_reviewed: 2026-11-07
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-049 — Formal P4a Warehouse Inventory Visibility acceptance
+
+[Actual Owner acceptance](approved-baselines/APR-049-p4a-owner-acceptance.md),
+2026-11-07, accepts exactly `6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10` for the
+bounded P4a software capability. The retained clean full PostgreSQL run passed
+398/398 with exit 0 and zero failures or skips. Unit tests passed 271/271 and
+actual Chromium passed 25/25. Both final browser defects and all required
+engineering, security, database and QA findings are closed.
+
+The same-index writer baseline leaves complete migration-wide write overhead
+unquantified. A representative measurement is required before factory deployment
+or operational performance acceptance. The local UI/UX skill installation is
+not reproducible from tracked files alone and requires a separately reviewed
+tooling/governance change before the next frontend implementation stage.
+APR-047's historical P2 residual keeps its accepted nonblocking classification.
+P4b Sales UI is next proposed, awaiting separate discovery, design and implementation
+authorization. This task permits one local documentation-only acceptance commit.
+
+## APR-048 — P4a D1–D4 decisions and bounded implementation authority
+
+[Existing Owner authorization](approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md),
+2026-11-05, approves the exact Warehouse Inventory read design and native Persian
+RTL workflow, conditionally permits one evidence-justified index-only migration,
+and requires real verification, independent review, fixes and local delivery.
+Product acceptance is recorded separately by APR-049.
 
 ## APR-047 — Formal P2 acceptance and software-first roadmap alignment
 

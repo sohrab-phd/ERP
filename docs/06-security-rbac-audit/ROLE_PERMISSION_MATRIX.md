@@ -3,10 +3,10 @@ id: SEC-RBAC-001
 title: Role Permission and Scope Matrix
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.8.0
+version: 0.8.1
 owners: [security-architect, business-control-owner]
-depends_on: [APR-048, APR-042, APR-038, DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
-last_reviewed: 2026-11-05
+depends_on: [APR-049, APR-048, APR-042, APR-038, DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
+last_reviewed: 2026-11-07
 approval: null
 supersedes: null
 ---
@@ -26,7 +26,8 @@ reservation ownership/commercial/production documents, raw Ledger/audit/outcomes
 Rows are authorized in SQL before paging/enrichment; current account/session/grant
 is checked freshly after snapshot release. No source-document permission or
 Inventory write follows. Existing P1/P2 and legacy keyed-role policies remain.
-Owner product acceptance is pending. [P4a implementation and evidence](../12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md).
+The Owner accepted the bounded P4a software capability at
+`6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10`. [APR-049 acceptance](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md).
 
 ## Implemented I2 receiving authority — APR-042 / SRC-007
 

@@ -3,10 +3,10 @@ id: APP-QRY-001
 title: Application Query Catalogue
 phase: 05-application-api-architecture
 status: in_review
-version: 0.6.0
+version: 0.6.1
 owners: [solution-architect, api-architect]
-depends_on: [APR-048, APR-042, APR-038, APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
-last_reviewed: 2026-11-05
+depends_on: [APR-049, APR-048, APR-042, APR-038, APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
+last_reviewed: 2026-11-07
 approval: APR-007 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
@@ -31,7 +31,8 @@ bound original600s cursors;8KiB request/128KiB response, per-page RR READ ONLY,
 no cross-page snapshot. Final current authority AFTER snapshot connection release.
 Refresh repeats the read without a command envelope or stock effect. Legacy keyed
 Unit/Lot, Sales availability and I2 read contracts still apply to their own routes.
-Owner product acceptance is pending. [P4a implementation and evidence](../12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md).
+The Owner accepted the bounded P4a software capability at
+`6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10`. [APR-049 acceptance](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md).
 
 ## Implemented I2 source-backed queries — APR-042
 

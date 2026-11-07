@@ -3,17 +3,44 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.69.0
+version: 0.70.0
 owners: [chief-solution-architect]
-depends_on: [APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-11-05
+depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+last_reviewed: 2026-11-07
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
 
-## Effective P4a implementation scope — 2026-11-05
+## Effective P4a acceptance and next workstream — 2026-11-07
+
+[APR-049](approved-baselines/APR-049-p4a-owner-acceptance.md) records the Owner's
+formal acceptance of P4a Warehouse Inventory Visibility at exactly
+`6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10`. P1, P2 and P4a are accepted within
+their recorded software scopes. The clean full PostgreSQL run passed 398/398,
+unit tests passed 271/271 and actual Chromium passed 25/25. Independent review
+closed both final browser defects and all required findings.
+
+P4b Sales UI is the next PROPOSED workstream. Await a separate Owner directive
+for its discovery, design and implementation. The P4a Warehouse read exception
+does not grant Sales access or authorize P4b product work.
+
+Two nonblocking software-acceptance limits remain. The same-index 2.21% writer
+comparison does not establish full migration-wide overhead, so representative
+pre-0019 comparison is required before deployment or operational performance
+acceptance. The local mandatory UI/UX skill configuration is not reproducible
+from tracked files alone, so a separately reviewed tooling/governance change
+is required before the next frontend implementation stage.
+
+Current authority covers acceptance/governance/status/roadmap Markdown,
+documentation validation and one local documentation-only commit. Accepted
+product code and executable gate/unlock files are outside this recording task.
+Factory deployment, operational UAT, pilot activation, remote push and subsequent
+roadmap implementation require their separate Owner decisions. APR-047's P2
+historical residual and all P3 operational prerequisites retain their status.
+
+## Prior P4a implementation scope — 2026-11-05 (historical)
 
 [APR-048](approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
 records the actual Owner's D1–D4 decisions and bounded P4a implementation grant
@@ -36,7 +63,7 @@ Stop after verified local P4a delivery for explicit Owner acceptance.
 The delivery record tracks the implementation, verification and independent review.
 [P4a delivery evidence](../12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md).
 
-## Effective Owner acceptance and documentation scope — 2026-11-05
+## Prior P2 acceptance and documentation scope — 2026-11-05 (historical)
 
 [APR-047](approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
 records actual Owner **formal P2 acceptance and software-first roadmap alignment**.

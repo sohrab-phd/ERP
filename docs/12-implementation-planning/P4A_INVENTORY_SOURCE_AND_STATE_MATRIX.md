@@ -12,7 +12,7 @@ approval: null
 
 # P4a source and state matrix
 
-Current Owner decision2026-11-05: [APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md) approves D1/D2/D4 and conditionally approves D3, and authorizes bounded implementation. This supersedes the design-task-only / OPEN / NOT AUTHORIZED statements below as historical proposal wording. The design baseline remains12e4ea8, with the exact Owner amendments in APR-048; P4a product acceptance remains pending.
+Current Owner decision2026-11-05: [APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md) approves D1/D2/D4 and conditionally approves D3, and authorizes bounded implementation. This supersedes the design-task-only / OPEN / NOT AUTHORIZED statements below as historical proposal wording. The design baseline remains12e4ea8, with the exact Owner amendments in APR-048; P4a software acceptance is recorded in [APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md) at exactly `6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10` on 2026-11-07.
 
 **DESIGN ONLY — IMPLEMENTATION NOT AUTHORIZED.** Facts below are repository
 observations at `7c5105ee7e0b6d06d3fa56e0e41ac1341d95c2a3`, whose product code is

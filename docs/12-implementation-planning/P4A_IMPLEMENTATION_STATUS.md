@@ -2,23 +2,27 @@
 id: IMPL-P4A-001
 title: P4a Warehouse Inventory visibility implementation and evidence
 phase: 12-implementation-planning
-status: in_review
-version: 0.2.0
+status: approved
+version: 1.0.0
 owners: [delivery-lead, inventory-domain-owner, security-architect]
-depends_on: [APR-048, PLAN-P4A-READS-001, PLAN-P4A-SOURCES-001, IMPL-P4A-UI-SPEC-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-049, APR-048, PLAN-P4A-READS-001, PLAN-P4A-SOURCES-001, IMPL-P4A-UI-SPEC-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-07
-approval: null
+approval: APR-049
 ---
 
 # P4a Warehouse Inventory visibility — delivery evidence
 
-**P4a IMPLEMENTED — FORMAL OWNER ACCEPTANCE PENDING**
+**P4a FORMALLY ACCEPTED BY OWNER at `6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10`.**
+[APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
+records the explicit 2026-11-07 Owner decision for the bounded software capability.
+P4b Sales UI is the next proposed workstream and awaits separate authorization.
+
 [APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
 records D1/D2/D4 approval and conditional D3 index authority in governance commit
 `0e90d9068ae7dae3a70e715f7e56b8a5f581ee28`. The approved design baseline on `main`
 is `12e4ea8b60aed301b86bb15985da4a3423968789`. APR-047 records P2 acceptance at
 `f6ef316c711474775b158e8d12fea4a885f2f368`. This record covers P4a implementation
-and local verification. Formal acceptance remains an Owner decision.
+and local verification. APR-049 records the subsequent formal acceptance.
 
 ## Bounded goal, workflow and execution plan
 
@@ -34,7 +38,7 @@ work; (2) secure Inventory owner reads and measured justified indexes; (3) nativ
 WH UI with mandatory skill; (4) frozen Windows static/unit/real-PG/Chromium/
 performance/regression proof; (5) independent engineering/security/database/QA
 review, required fixes and retest; (6) canonical evidence, explicit staging and a
-local delivery commit. Owner acceptance is the next gate.
+local delivery commit. Formal Owner acceptance is recorded in APR-049.
 
 ## Implemented read responsibility and public contracts
 
@@ -130,13 +134,13 @@ browser storage/URLs; existing encrypted P1/P2 pending-intent recovery is retain
 | --- | --- |
 | Runtime | Restored existing ignored Node24.21.0/npm11.19.0 and PG18.6 cluster at127.0.0.1:55438; actual navard_i1_test, distinct restricted runtime/DDL-owner, separate dev DB/ACK and UTF8 verified; no cluster initialized/replaced or18.2service substituted |
 | Unit/component | Final frozen runner passed 271/271 with zero failures, cancellations or skips. Independent focused backend/UI run passed 19/19 |
-| PostgreSQL | 398 distinct cases passed across the full frozen run and the focused rerun. The full run passed all 366 unchanged cases and failed one P4a fixture assertion, also counted against its parent. The corrected 32-case P4a suite passed with exit 0 and zero skips or cancellations. Final server deadline 7,806.21 ms, client 7,812.34 ms |
-| Chromium | Chrome 156.0.8078.81 against the final composed app and PostgreSQL 18.6 passed 22/22 with zero failures, skips or console errors. The fixture exited normally. Covered native RTL at 375 px and 200% zoom, exact Persian quantities, focus, all filters, session/race protections, actual cross-origin and Host/CSRF denial, and P1/P2 same-key recovery. The 34 sampled contrast ratios had a 7.20:1 minimum |
+| PostgreSQL | The clean complete invocation at accepted revision 6c0fbbb passed 398/398 with exit 0, zero failures, cancellations, skips or todo across all 39 integration files. Server deadline 7,803.16 ms, client 7,808.75 ms. The verified disposable PostgreSQL 18.6 cluster returned to its original stopped state |
+| Chromium | Chrome 156.0.8078.81 against the composed app and PostgreSQL 18.6 passed 25/25 with zero failures, skips or console errors. The fixture exited normally. Added stale-denial, same-Lot return and same-account session replacement checks passed alongside the previous 22. Native RTL at 375 px and 200% zoom, exact Persian quantities, focus, cross-origin/Host/CSRF, P1/P2 recovery and 34 contrast samples with a 7.20:1 minimum remain covered |
 | Performance/indexes | Revised PostgreSQL 18.6 run passed all measured gates with 100,000 Units, 4,604 warm reads overlapping both writers and 400 writer samples per variant. Retained 0019 exact-five index migration passed all four migration tests, including populated 0018 upgrade |
 | Static | Frozen runtime/package preflight, full Prettier, ESLint, ownership boundaries across 187 files, TypeScript and operator asset build passed. Earlier authored test typing and formatting corrections are reflected in the final source |
-| Independent review | Non-author engineering, security, database and QA review examined the implementation and actual evidence. The medium Refresh/re-entry filter mismatch and the required admission fixture update were corrected and retested. The independent focused run passed 19/19. The review examined the final PG and Chromium logs, D3 plans, measured concurrency and migration. No high, critical or required finding remains open |
+| Independent review | Non-author engineering, API, security, database and QA review examined the implementation and actual evidence. Refresh/re-entry, the admission fixture, the stale-denial race and the Lot Back loop were corrected and re-reviewed. Added same-account replacement and exact PostgreSQL coverage gaps are closed. No high, critical or required finding remains open |
 
-The pinned `npm run verify` invocation recorded preflight, format, lint, ownership,
+The earlier pinned `npm run verify` invocation recorded preflight, format, lint, ownership,
 typecheck and 271 unit cases before running all 398 real-PG cases. It exited 1 after
 396 passes because the admission fixture still intercepted the previous Identity
 method. The stale assertion and its parent are the two failures counted in
@@ -145,15 +149,20 @@ run using `node --env-file=.env.local --test apps/backend/dist/tests/integration
 passed all 32 cases in `p4a-inventory-pg-final.log`, including admission at 16/17,
 revocation, resource limits, intact WIP finalization and concurrent paging. The
 366 unaffected cases and corrected 32 provide 398 distinct passing cases across
-two invocations. The focused migration log is `p4a-migration-final.log`.
+two invocations. Those results are historical. The subsequent clean full run in
+`p4a-acceptance-clean-full-pg.log` and its environment receipt resolves that
+discrepancy for the accepted revision. The focused migration log is
+`p4a-migration-final.log`, and its four cases also passed in the clean full run.
 
-The final `node tools/test/p4a-chromium.mjs` evidence is in
-`p4a-chromium-final-verified.log` and `p4a-chromium-results.json`. The first final
+The earlier `node tools/test/p4a-chromium.mjs` evidence is in
+`p4a-chromium-final-verified.log` and `p4a-d10983a-chromium-results.json`. The first final
 launch in the restricted shell failed before test execution because the Chromium
 GPU process was denied. The approved Windows retry kept Chromium's browser sandbox
 enabled. Startup failure and earlier harness corrections remain in the local logs.
 The final pinned preflight, format, lint, boundaries, typecheck, unit and build
-output is in `p4a-static-unit-final.log`.
+output is in `p4a-static-unit-final.log`. Accepted-revision evidence is retained
+in `p4a-acceptance-corrected-static-unit.log` and
+`p4a-acceptance-final-chromium-results.json`. APR-049 records their fingerprints.
 
 ### Owner readiness audit corrections
 
@@ -178,6 +187,19 @@ environment record for the corrected commit under `artifacts/tests/p4a-acceptanc
 The correction affects frontend navigation and response ownership, plus test
 coverage. The measured server, SQL, writer and index code is the same, so the
 existing benchmark remains the performance evidence for the corrected revision.
+
+### Accepted limitations and future gates
+
+The 2.21% writer-p95 comparison uses the same indexes for both read workloads.
+Complete migration-wide write overhead against the pre-0019 schema remains
+unquantified. A separate representative measurement is required before factory
+deployment or operational performance acceptance.
+
+The installed `ui-ux-pro-max` package, modified `AGENTS.md` and `skills-lock.json`
+were available locally but remain outside the accepted product commit. Tracked
+files alone do not reproduce this configuration. A separately reviewed tooling
+and governance change must resolve it before the next frontend implementation
+stage. Both limitations are nonblocking for software acceptance under APR-049.
 
 ### Scale benchmarks and candidate evidence
 
@@ -290,5 +312,5 @@ P3 operational prerequisites and P2 historical257UNKNOWN residual remain intact.
 Pre-existing AGENTS.md modification, `.agents/skills/ui-ux-pro-max/` and
 `skills-lock.json` are fingerprinted in ignored
 `artifacts/tests/p4a-preserved-installation.json`, preserved and excluded from P4a
-staging and commits. The commit containing this delivery record is the local P4a
-implementation handoff under APR-048.
+staging and commits. The accepted product is exactly 6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10.
+The subsequent APR-049 documentation commit records acceptance separately.

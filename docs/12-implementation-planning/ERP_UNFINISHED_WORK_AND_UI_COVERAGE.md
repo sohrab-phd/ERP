@@ -3,27 +3,36 @@ id: PLAN-ERP-UNFINISHED-001
 title: Verified unfinished-work register and backend-to-UI coverage
 phase: 12-implementation-planning
 status: in_review
-version: 1.1.0
+version: 1.2.0
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-048, APR-047, APR-046, APR-045, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, IMPL-P2-REMEDIATION-001]
-last_reviewed: 2026-11-05
+depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, IMPL-P2-REMEDIATION-001]
+last_reviewed: 2026-11-07
 approval: null
 ---
 
-# ERP unfinished work and operator UI coverage — current alignment2026-11-05
+# ERP unfinished work and operator UI coverage — current alignment 2026-11-07
 
-## Current P4a local delivery — 2026-11-07
+## Current P4a acceptance and next workstream — 2026-11-07
 
-[APR-048](../00-governance/approved-baselines/APR-048-p4a-inventory-visibility-implementation-authorization.md)
-approves the bounded D1–D4 read/UI design and authorizes P4a only. The Inventory
-owner reads and native WH interface have completed local verification and independent
-review. [P4a delivery evidence](P4A_IMPLEMENTATION_STATUS.md).
+[APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
+formally accepts P4a Warehouse Inventory Visibility at
+`6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10`. P1, P2 and P4a are accepted software
+interfaces. P4a passed 271 unit tests, a clean complete 398-case PostgreSQL run and
+25 actual Chromium checks, with all required independent findings closed.
+[Accepted P4a delivery](P4A_IMPLEMENTATION_STATUS.md).
 Earlier P4a PROPOSED/NOT AUTHORIZED/NOT IMPLEMENTED statements below are historical
-planning snapshots, superseded only for this bounded increment. P1/P2/backend
-acceptances, P2 historical257UNKNOWN residual, P4b–P5/P3 separate grants and all
-pilot prerequisites remain unchanged. No P4a Owner product acceptance is recorded.
+planning snapshots, superseded for this bounded increment. The roadmap table and
+Inventory coverage below now reflect acceptance.
 
-## Current acceptance and software-first priority — 2026-11-05
+P4b Sales UI is the next PROPOSED workstream. Separate Owner direction is required
+for discovery, design and implementation. Resolve skill reproducibility through
+a separately reviewed tooling/governance change before the next frontend
+implementation stage. Representative full migration-wide write overhead must be
+measured before deployment or operational performance acceptance. Both are open,
+nonblocking software-acceptance limitations. The P2 historical residual retains
+its APR-047 classification. Factory pilot and deployment retain separate gates.
+
+## Prior P2 acceptance and software-first priority — 2026-11-05 (historical)
 
 [APR-047](../00-governance/approved-baselines/APR-047-p2-owner-acceptance-software-first-roadmap.md)
 formally accepts bounded P2 at `f6ef316c711474775b158e8d12fea4a885f2f368` after
@@ -137,8 +146,9 @@ All13 rows below have ACCEPTED backend status **within their published bounded
 scope**, not full module completion. API paths are legacy bearer routes unless
 explicitly prefixed `/ui-api`. Existing browser page is `/` with native sections,
 not a separate router/framework. The exact [browser allowlist](../../apps/backend/src/transport/browser-http.ts)
-contains only identity login/logout/session, I1 orders/catalogues and I2 queries/
-confirmation. Other legacy handlers reject browser Origin; a hidden button or
+contains identity login/logout/session, I1 orders/catalogues, I2 queries/
+confirmation and the three P4a Inventory reads. Other legacy handlers reject
+browser Origin. A hidden button or
 existing bearer API does not make another capability browser-ready.
 
 Source/test references are repository-relative. `unit/` and `integration/` in the
@@ -146,13 +156,13 @@ coverage column mean `apps/backend/tests/unit/` and `apps/backend/tests/integrat
 Tests listed as available are source-inspected, not newly executed unless marked.
 UIs marked NOT_IMPLEMENTED need new bounded Owner authorization under APR-047's
 software-first order, including exact browser admission and missing essential reads.
-P3 operational gates still apply before a factory pilot, not before proposing P4a.
+P3 operational gates still apply before a factory pilot. P4b awaits its own directive.
 
 | # / accepted backend and authority | Current executable boundary / owner source | UI status, existing browser routes, role | Missing journey / dependencies | Test source available / next priority |
 | --- | --- | --- | --- | --- |
 | 1 / Command envelope foundation; APR-018, acceptance carried by APR-020 | `executeCommand/executeQuery`, durable bound outcomes/replay, current access, audit+business transaction; shared-kernel `src/envelope/{execute,query}.ts`, PostgreSQL transaction/outcome/audit adapters;0001–0003. Recovery admission fenced by default. | ACCEPTED, indirectly used by P1/P2. Generic factory command screen is not required. Native `/health/live`, `/health/ready` are operational probes, not business UI. | No approved missing generic UI; restore/admission operating procedure is E03. Dependencies: PG/Identity and owner services. | Shared-kernel unit execute/binding/admission; integration transaction/outcome-concurrency/replay-audit/crash-retry/migration/permissions. Preserve as foundation. |
 | 2 / Identity and authorization; APR-019; acceptance APR-020 | `modules/identity/{service,contracts,authorization,password}.ts`; `identity-http.ts`: login/session/logout/password, account create/query, grants, disable/revoke;0004, disposition flag0014. | PARTIAL UI: ACCEPTED personal login/logout/session at `/` through `/ui-api/identity/{login,logout,session}`. All personal roles authenticate; current app supports PROC/WH navigation. ACT-SEC admin UI and authenticated self-service password-change UI NOT_IMPLEMENTED (no admin-reset contract); native `/identity/{accounts,account-query,grants,disable,revoke,password}` are not browser-admitted. | Role-appropriate account/grant/password administration and real personnel mapping; preserve last-steward/current-session safeguards. No shared Station identity or SSO/password-recovery invention. | unit/integration identity; browser-http/operator-lifecycle/config. Login regression freshly covered by unit/PG/browser; full Identity PG not rerun. Admin UI later, genuine factory need determines priority. |
-| 3 / IPS Inventory kernel; APR-020; acceptance APR-021 | `modules/inventory/{posting-service,contracts,quantity}.ts`, inventory-store.ts; internal `post` STOCK_IN/STOCK_OUT/RESERVE/RELEASE, availability/snapshot and restricted rebuild;0005. Ledger truth, Balance projection, ACT-IPS sole executor. | No general stock-writer UI is required or allowed. Operator stock view NOT_IMPLEMENTED. Canonical per-receiving Inventory IDs are visible in P2; these are not a general availability browser. | WH/SEC keyed Unit/Lot reads in row4 are legacy material_lot-only and organizational AVAILABLE; I2/production coverage is a missing general read contract. Sales availability is internal demand/customer-scoped owner access. General browse/search/eligible Unit discovery and direct SALES stock-read authorization are separate read gaps, not accepted kernel defects. | unit inventory-quantity/boundaries/availability/production; integration inventory freshly executed within110. Proposed P4a, narrowly authorize needed read surface first. |
+| 3 / IPS Inventory kernel; APR-020; acceptance APR-021 | `modules/inventory/{posting-service,contracts,quantity}.ts`, inventory-store.ts; internal `post` STOCK_IN/STOCK_OUT/RESERVE/RELEASE, availability/snapshot and restricted rebuild;0005. Ledger truth, Balance projection, ACT-IPS sole executor. | P4a Warehouse Inventory read/UI ACCEPTED under APR-049 at 6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10. Discovery, Unit/Lot, exact kg and native RTL cover all approved origins/states through three closed browser reads. | Warehouse-only projection. Sales stock eligibility/customer reads need separate P4b scope. Complete migration-wide write overhead and skill reproducibility retain their future gates. | Accepted P4a evidence includes 271 unit, 398 complete real-PG and 25 Chromium checks. No added backend capability count or stock-writing UI. |
 | 4 / Legacy manual receipt and keyed inventory visibility; APR-021; acceptance APR-022 | `PostGoodsReceipt` v1; receipt-service.ts, Inventory receipt.ts and receipt-http.ts; POST `/receipts/post`, GET `/receipts/{id}`, `/inventory/units/{id}`, `/inventory/lots/{id}` -> GetGoodsReceipt/GetInventoryUnit/GetLot;0006. No mandatory PO/ticket; later0018 duplicate-code guard intentional. | NOT_IMPLEMENTED browser UI/routes. Personal org ACT-WH posts; current org WH/SEC keyed stock reads cover legacy material_lot and organizational AVAILABLE state only, not all I2/production stock. P2 supports accepted I2 UNLINKED intake, but does not expose this distinct legacy contract. | First establish actual need for legacy form versus I2; standalone keyed stock/Lot lookup useful for investigation. Inventory+Identity/source-code policy dependencies; no location-master/search API assumed. | unit receipt; integration receipt/receipt-http; later receiving/receiving-integrity compatibility freshly covered. Prioritize stock view in P4a; duplicate intake UI only if real need and separately authorized. |
 | 5 / Sales demand/fulfillment assessment; APR-022, MAKE extension APR-025; acceptance APR-023 | `sales-service.ts`, sales/contracts.ts, sales-http.ts. Six commands: DraftSalesOrder, SubmitSalesOrder, DraftFulfillmentAssessment, RecordFulfillmentStock, RecordFulfillmentMake, ConfirmSalesOrder. POST `/sales/commands`; GET `/sales/{orders,assessments}/{id}`;0007/0013. | NOT_IMPLEMENTED UI and no browser routes. Exact customer-scoped ACT-SALES. Confirming is not reserving; MAKE intent does not auto-start production. | Draft→submit→assess STOCK/MAKE→confirm with customer and eligible Unit selection/readback. `tools/sales/provision-customer.mjs` exists, but no general customer/order/discovery browser. Obtain essential read scope if needed. | unit sales (including accepted MAKE extension); integration sales/sales-http plus production cross-owner tests. Unit freshly executed; Sales PG source/historical evidence only. P4b. |
 | 6 / Reservation request/activation; APR-023; acceptance APR-024 | `inventory/reservation.ts`, inventory-reservation-store.ts, reservation-http.ts. RequestReservation `{orderId,itemId,unitId,kg}`, ActivateReservation `{}`; POST `/reservations/commands`; GET `/reservations/{id}`;0008/0009. REQUESTED has no stock effect; activation calls IPS, dispatch consumes. | NOT_IMPLEMENTED UI/browser routes. Customer ACT-SALES request/activate/read; org ACT-WH may activate exact target without commercial-query grant. | Explicit stock reservation with readable current state and competition; requires confirmed STOCK demand/selection and Inventory. WH query/discovery need must not be bypassed by broader Sales access. General release/TTL is excluded. | unit reservation; integration reservation/reservation-http and shipping boundaries. Available historical PG tests prove priority/no-steal/replay. P4c, after usable demand/stock context. |
@@ -162,7 +172,7 @@ P3 operational gates still apply before a factory pilot, not before proposing P4
 | 10 / Completed-purchase/sent-proforma evidence; APR-027; acceptance APR-028 | purchase-service/purchase-contracts.ts, purchase-http.ts; RecordCompletedPurchase / RecordPurchaseProformaSent; POST `/purchasing/{purchases,proformas}`, matching keyed GET;0015. Immutable existing document/sent-evidence references, not message delivery or stock. | NOT_IMPLEMENTED UI/browser routes. Org ACT-PROC. P1 operational PO register is a different capability. | One documentary record then optional linked sent-proforma/readback. No supplier master, approval workflow, amounts or mandatory receiving linkage. Identity/envelope only. | unit purchase; integration purchase/purchase-http, immutable SQL/current-role/rollback/recovery. Only unit freshly run here. Smaller later PROC evidence increment. |
 | 11 / Issued-invoice documentary evidence; APR-028; acceptance APR-029 | invoice-evidence-service/contracts.ts, invoice-evidence-http.ts; RecordIssuedInvoiceEvidence/GetIssuedInvoiceEvidence; POST `/finance/invoice-evidence`, keyed GET;0016. Existing order/customer checked through Sales port. | NOT_IMPLEMENTED UI/browser routes. Org ACT-SALES writes/reads, ACT-FIN reads; customer grants/SEC do not gain automatic access. No amount/payment lifecycle exists. | Issued-reference/date/order/customer entry and permitted FIN readback; existing order/customer discovery must remain safe. No PDFs/transmission or final invoice creation implied. | unit invoice-evidence; integration invoice-evidence/invoice-evidence-http. Unit freshly run, PG historical/source-inspected. Later role-specific evidence UI. |
 | 12 / I1 operational PO and shared catalogues; APR-038; acceptance APR-039 | inbound-service/contracts/values, inbound-http.ts; RegisterOperationalPurchaseOrder, AddInboundCatalogueOption; GetOperationalPurchaseOrder/reference lookup/catalogue exactLabel/pages;0017. Immutable original1–128lines, exact numbers/Jalali and independent add/select. | ACCEPTED P1 at `/`: register-panel, catalogue-panel, lookup-panel. `/ui-api/purchasing/operational-orders` (+lookup/keyed GET), `/ui-api/purchasing/inbound-catalogues` (+query). PROC registers; org PROC/WH read/add catalogues. | No approved gap established. Known reference/UUID lookup is accepted; missing general PO search is not a P1 defect. O-01 remains excluded optional follow-up. | unit inbound-values/browser-intent/display/operator-lifecycle/config; integration inbound variants/browser-http. Relevant unit and browser-http/inbound-http/integrity/recovery freshly executed; P1 accepted review evidence otherwise historical. Preserve. |
-| 13 / I2 purchase-linked receiving/progress; APR-042; acceptance APR-043 | receiving-service/contracts.ts, receiving-store.ts, Inventory inbound-receiving.ts/store; ConfirmPurchaseReceiving/GetReceivingArrival/GetPurchaseOrderReceiving;0018. Shared arrival/documents with distinct physical units, source claims, actual-vs-original and one atomic owner/IPS/outcome/audit bundle. | P2 UI ACCEPTED under APR-047 at f6ef316c711474775b158e8d12fea4a885f2f368; `/` receiving/arrival panels and P1 scoped views; `/ui-api/purchasing/receiving/{confirm,arrivals/query,orders/query}`. Org WH confirms/whole-arrival reads; PROC/WH scoped progress. | Required independent review satisfied; SEC-P2-01-NAV/WF-P2-01 closed; historical257trigger UNKNOWN/nonblocking. Real configuration/UAT remains E, not factory readiness. | Final independent252unit/111PG plus isolated257 and3Chromium races/SQL; older110counts historical. Preserve accepted scope; next proposed software increment P4a, P3 deferred until operational gates. |
+| 13 / I2 purchase-linked receiving/progress; APR-042; acceptance APR-043 | receiving-service/contracts.ts, receiving-store.ts, Inventory inbound-receiving.ts/store; ConfirmPurchaseReceiving/GetReceivingArrival/GetPurchaseOrderReceiving;0018. Shared arrival/documents with distinct physical units, source claims, actual-vs-original and one atomic owner/IPS/outcome/audit bundle. | P2 UI ACCEPTED under APR-047 at f6ef316c711474775b158e8d12fea4a885f2f368; `/` receiving/arrival panels and P1 scoped views; `/ui-api/purchasing/receiving/{confirm,arrivals/query,orders/query}`. Org WH confirms/whole-arrival reads; PROC/WH scoped progress. | Required independent review satisfied; SEC-P2-01-NAV/WF-P2-01 closed; historical257trigger UNKNOWN/nonblocking. Real configuration/UAT remains E, not factory readiness. | Final independent252unit/111PG plus isolated257 and3Chromium races/SQL; older110counts historical. Preserve accepted P2 scope. P4a is accepted under APR-049, P4b is next proposed and P3 retains its operational gates. |
 
 Production's current16commands are `DraftProductionOrder`, `PlanProductionOrder`,
 `ReleaseProductionOrder`, `StartProductionOrder`, `CompleteOperationPartial`,
@@ -230,7 +240,7 @@ defect. Read-only inventory cannot certify that none exists elsewhere.
 | A02 / A+D / P2 optional actual review | WF-P2-01 CLOSED; all four omitted/null/value meanings preserved in components, actual Chromium and SQL. P2 ACCEPTED under APR-047. | No remaining review-display correction required. | Original medium REQUIRED defect closed. | Preserve original audit/remediation and final independent evidence; no feature grant. |
 | A03 / A / canonical status navigation | Historical conflicts listed above; runtime unaffected. Assessment/backlog current addenda reconcile PARTIAL documentation. | Earlier source snapshots remain historical; consumers must follow current authority and bounded source. | Low maintenance/authorization confusion. | Documentation reconciliation allowed in this assessment; no old OQ/business approvals rewritten. |
 | B00 / B / approved missing backend | No demonstrated unimplemented backend requirement with still-applicable implementation authority found after accepted-slice/contract comparison. | Broad original-vision tasks belong to F or C; evidence of a concrete accepted omission would reopen A. | NOT_VERIFIED beyond inspected evidence; no fabricated blocker. | No automatic backend work authorized. |
-| C01 / C / Inventory visibility and Sales demand | Accepted IPS/receipt/Sales backends, matrix rows3–5. UI NOT_IMPLEMENTED. | Role-appropriate stock/unit/lot lookup and demand/assessment journey; usable stock/customer/order discovery may need bounded read authorization. | High operational gap for broader ERP use; blocks factory selling from this UI. | P4a next proposed, then P4b under software-first priority; separate UI/read scope and Owner authorization. No. |
+| C01 / C / Inventory visibility and Sales demand | P4a Warehouse read/UI ACCEPTED under APR-049. Sales UI remains NOT_IMPLEMENTED. | P4b needs an authorized Sales order/assessment workflow and any required customer/eligible stock reads. P4a WH projection does not grant SALES access. | Sales remains a major interface gap. Warehouse discovery is delivered. | P4b is next PROPOSED, awaiting separate discovery/design/implementation authority and the tooling reproducibility gate before frontend implementation. |
 | C02 / C / Reservation to dispatch | Accepted reservation/shipping, rows6–7. UI NOT_IMPLEMENTED. | Explicit request/activation, whole-unit packaging, shipment ready/loading/dispatch and canonical recovery; available-unit/customer/order context. | High operational gap; no browser fulfillment journey. | P4c/P4d, separate bounded grants. Sales confirmation must not reserve; dispatch must not close Sales. No. |
 | C03 / C / Production planning and personal execution | Accepted MAKE, row8. UI NOT_IMPLEMENTED. | PLAN per-order route/material-allocation assignment and personal OP Entry/Start/Complete/report interfaces; Referral is PLAN. Planning/operator queues and personnel assignment are not accepted public contracts; new required reads/assignment need bounded authorization. | High operational gap; accepted production cannot be used by ordinary operators here. | P5a/P5b; explicit scope and essential read review. No. |
 | C04 / C / Source-linked trace | Accepted Genealogy, row9. UI NOT_IMPLEMENTED. | Authorized forward/backward navigation retaining source labels and explicit bounded-limit failures, paired with material/order journeys. | Medium; trace API exists but no usable browser investigation. | P5c or attach bounded trace view to P4/P5 after authorization. No. |
@@ -268,9 +278,10 @@ the missing branch requires its own acceptance evidence after authorization.
 
 ## Software-first roadmap — Owner priority 2026-11-05
 
-APR-047 explicitly reorders planning. P1/P2 are accepted; every later row is a
-proposal requiring separate bounded Owner implementation/read-contract authority,
-independent review and acceptance. Each interface preserves native Persian RTL,
+APR-047 sets the planning order. APR-049 records P4a acceptance on 2026-11-07.
+P1, P2 and P4a are accepted. P4b and later rows require separate bounded Owner
+discovery/design/implementation and read-contract authority, independent review
+and acceptance. Each interface preserves native Persian RTL,
 personal current identity, safe exact values, page/failure/stale/session states
 and owner boundaries. Backend acceptance is not UI completion. This table replaces
 the earlier pilot-first planning sequence; no operational pilot gate is removed.
@@ -279,8 +290,8 @@ the earlier pilot-first planning sequence; no operational pilot gate is removed.
 | --- | --- | --- |
 | 1 — P1 Purchasing UI | ACCEPTED, APR-045 | Preserve personal secure purchasing, catalogues and scoped receiving reads; original exclusions remain. |
 | 2 — P2 Warehouse Receiving UI | ACCEPTED, APR-047, exact f6ef316c711474775b158e8d12fea4a885f2f368 | Independent NAV/WF closure satisfied; original257trigger retained UNKNOWN/nonblocking; no UAT/deployment inference. |
-| 3 — P4a Inventory visibility and discovery UI | NEXT PROPOSED / NOT AUTHORIZED / NOT IMPLEMENTED; accepted Inventory/Identity and P2 source facts | [Concise scope proposal](P4A_INVENTORY_VISIBILITY_SCOPE_PROPOSAL.md): authorized Unit/Lot discovery/detail, exact kg/freshness, stable paginated filters. Explicitly authorize missing all-approved-origin reads and roles; no stock writes/global SALES access. Unit/real-PG/Chromium/security/performance review before acceptance. |
-| 4 — P4b Sales order and fulfillment-assessment UI | NOT AUTHORIZED / NOT_IMPLEMENTED; authorized stock discovery, customer/current SALES scope and six accepted commands | Draft→submit→STOCK/MAKE assessment→confirm. Resolve necessary demand/customer reads explicitly; confirmation does not reserve stock. Exact mapping, isolation, replay and real PG/browser evidence. |
+| 3 — P4a Inventory visibility and discovery UI | ACCEPTED under APR-049 at 6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10 | [Accepted Warehouse read/UI and evidence](P4A_IMPLEMENTATION_STATUS.md), all D1–D4 boundaries and five approved indexes. Retain both nonblocking limits and their future gates. |
+| 4 — P4b Sales order and fulfillment-assessment UI | NEXT PROPOSED / NOT AUTHORIZED / NOT_IMPLEMENTED; separate discovery/design/implementation directive required | Intended Sales workflow remains draft→submit→STOCK/MAKE assessment→confirm, subject to future scope review. Resolve required demand/customer/stock reads and skill reproducibility before frontend implementation. Confirmation does not reserve stock. |
 | 5 — P4c Reservation UI | NOT AUTHORIZED / NOT_IMPLEMENTED; confirmed STOCK demand and stock context | Explicit request/activation/readback; competition/one-ACTIVE/no-steal and partial kg rules; no release/TTL expansion. PG concurrency/rollback/replay and browser uncertainty. |
 | 6 — P4d Shipping and dispatch UI | NOT AUTHORIZED / NOT_IMPLEMENTED; active reservation and customer context | Package/pack/unpack/assignment→shipment prepare/ready/load/dispatch/readback; whole Units. No customer-delivery or Sales-close claim. Atomic exit+reservation-consumption/replay/security and actual browser. |
 | 7 — P5a Production planning and managerial workflow UI | NOT AUTHORIZED / NOT_IMPLEMENTED; MAKE demand, route vocabulary, personal PLAN grants and explicit required reads | Order/route/release/material allocation and managerial referral; Stations use enum names and operations UUIDs. Personnel assignment/queues are missing contracts if needed, not assumed grants. PG/browser/current-role review. |

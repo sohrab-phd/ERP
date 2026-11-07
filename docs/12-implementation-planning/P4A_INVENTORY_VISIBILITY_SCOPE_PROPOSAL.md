@@ -16,7 +16,8 @@ Current decision2026-11-05: [APR-048](../00-governance/approved-baselines/APR-04
 approves D1/D2/D4 and conditional D3 and authorizes bounded P4a implementation.
 The proposal-only/no-authorization wording below is the preserved earlier design
 snapshot; [P4a status](P4A_IMPLEMENTATION_STATUS.md) owns actual delivery/evidence.
-No Owner product acceptance follows from implementation authority.
+Subsequent explicit Owner software acceptance is recorded in [APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
+for `6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10`.
 
 **PROPOSED / NOT AUTHORIZED / NOT IMPLEMENTED.**
 
