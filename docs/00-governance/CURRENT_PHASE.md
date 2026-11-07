@@ -3,7 +3,7 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.71.0
+version: 0.72.0
 owners: [chief-solution-architect]
 depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-11-07
@@ -13,7 +13,29 @@ supersedes: null
 
 # Current Phase Authorization
 
-## Current tooling and governance maintenance — 2026-11-07
+## Current P4b discovery and design authority — 2026-11-07
+
+The actual Owner **START P4b DISCOVERY AND DESIGN** directive in this chat
+authorizes Sales source/contract discovery, capability/gap matrices, proposed
+contracts and native Persian RTL workflows using the pinned skill, explicit OPEN
+Owner decisions, independent engineering/security/database/QA-UI design review,
+documentation validation and one local documentation-only commit. Starting
+`main` at `506dd000e87c331527445e8212656cfc2aefc756`, tree verified clean.
+
+[P4b capability evidence](../12-implementation-planning/P4B_SALES_EXISTING_CAPABILITIES_AND_GAP_MATRIX.md),
+[workflow/contracts](../12-implementation-planning/P4B_SALES_UI_WORKFLOW_AND_CONTRACT_DESIGN.md),
+[OPEN decisions](../12-implementation-planning/P4B_IMPLEMENTATION_AUTHORIZATION_DECISIONS.md)
+and [review/readiness](../12-implementation-planning/P4B_DESIGN_REVIEW_AND_READINESS.md)
+form the design package. **P4b IMPLEMENTATION NOT AUTHORIZED; NOT IMPLEMENTED;
+NOT ACCEPTED.** Stop after the local design commit for Owner decisions and a
+separate bounded implementation directive. No endpoint/component/command/schema/
+migration/authorization/product-test/gate/unlock change, push, deployment, pilot,
+P3 or adjacent roadmap implementation is authorized. This design scope creates
+no new APR or product acceptance. Accepted P1/P2/P4a and all existing APRs remain.
+The pinned skill prerequisite is resolved; P4a migration-wide writer overhead
+remains a separate future deployment/operational performance gate.
+
+## Prior completed tooling and governance maintenance — 2026-11-07
 
 The Owner's UI/UX Skill Governance and Reproducibility directive authorizes review,
 pinning, safe local packaging, AGENTS instructions, directly related documentation,
@@ -22,7 +44,9 @@ independent review and one local tooling/governance commit from baseline
 [reviewed skill record](../12-implementation-planning/UI_UX_SKILL_GOVERNANCE.md)
 documents the reproducible installation and validation. Existing APR acceptance
 records and the accepted P4a product revision retain their historical facts.
-P4b discovery, design and implementation still require a separate Owner directive.
+At that tooling delivery, P4b discovery, design and implementation awaited separate
+Owner direction. The subsequent design-only authority above supersedes only the
+discovery/design boundary; implementation remains separately gated.
 
 ## Effective P4a acceptance and next workstream — 2026-11-07
 
@@ -33,8 +57,9 @@ their recorded software scopes. The clean full PostgreSQL run passed 398/398,
 unit tests passed 271/271 and actual Chromium passed 25/25. Independent review
 closed both final browser defects and all required findings.
 
-P4b Sales UI is the next PROPOSED workstream. Await a separate Owner directive
-for its discovery, design and implementation. The P4a Warehouse read exception
+At P4a acceptance, P4b Sales UI was the next PROPOSED workstream, requiring
+separate discovery/design/implementation direction. Current design-only authority
+is recorded above; implementation remains unauthorized. The P4a Warehouse read exception
 does not grant Sales access or authorize P4b product work.
 
 The same-index 2.21% writer

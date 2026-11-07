@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.32.1
+version: 0.33.0
 owners: [chief-solution-architect]
 depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-11-07
@@ -13,20 +13,25 @@ supersedes: null
 
 # Architecture Documentation Index
 
-## Current P4a Owner acceptance and next proposed P4b workstream (2026-11-07)
+## Current P4a acceptance and P4b discovery/design only (2026-11-07)
 
 - [APR-049 formal P4a Owner acceptance, exact revision, evidence and limitations](00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
 - [Accepted P4a implementation and final clean verification](12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md)
 - [Current phase and separate P4b authorization boundary](00-governance/CURRENT_PHASE.md)
 - [Roadmap and current Inventory/Sales coverage](12-implementation-planning/ERP_UNFINISHED_WORK_AND_UI_COVERAGE.md#software-first-roadmap--owner-priority-2026-11-05)
+- [P4b actual Sales capabilities and gap matrix](12-implementation-planning/P4B_SALES_EXISTING_CAPABILITIES_AND_GAP_MATRIX.md)
+- [P4b proposed browser contracts and Persian RTL workflow](12-implementation-planning/P4B_SALES_UI_WORKFLOW_AND_CONTRACT_DESIGN.md)
+- [P4b OPEN Owner decisions — implementation not authorized](12-implementation-planning/P4B_IMPLEMENTATION_AUTHORIZATION_DECISIONS.md)
+- [P4b independent design review and future verification gates](12-implementation-planning/P4B_DESIGN_REVIEW_AND_READINESS.md)
 
-P1, P2 and P4a are accepted within their bounded software scopes. P4b Sales UI is
-next PROPOSED and awaits separate discovery, design and implementation authority.
+P1, P2 and P4a are accepted within their bounded software scopes. P4b Sales UI
+discovery/design is authorized by the actual Owner directive of 2026-11-07;
+implementation remains NOT AUTHORIZED, with decisions OPEN and approval NULL.
 The representative migration-wide write-overhead measurement remains a
 deployment/performance gate. The
 [reviewed UI/UX skill configuration](12-implementation-planning/UI_UX_SKILL_GOVERNANCE.md)
-addresses the reproducibility gate recorded in APR-049. Current scope is limited
-tooling/governance maintenance under the separate Owner directive.
+addresses the reproducibility gate recorded in APR-049. Current scope is design
+documents, independent reviews, validation and one local documentation-only commit.
 
 ## Prior P2 acceptance and software-first priority (2026-11-05, historical)
 

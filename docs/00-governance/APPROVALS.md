@@ -3,7 +3,7 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.36.0
+version: 0.37.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-11-07
@@ -12,6 +12,19 @@ supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## Current P4b discovery/design-only Owner directive — 2026-11-07
+
+The actual Owner directive in this chat authorizes source/contract discovery,
+design/governance documents, pinned-skill Persian RTL workflow design, independent
+engineering/security/database/QA-UI reviews, validation and one local docs-only
+commit from `506dd000e87c331527445e8212656cfc2aefc756`. It does not authorize
+P4b implementation or acceptance, product/schema/policy/gate changes, adjacent
+slices, P3, push, deployment or pilot. [OPEN Owner decisions and scope](../12-implementation-planning/P4B_IMPLEMENTATION_AUTHORIZATION_DECISIONS.md)
+and [design review](../12-implementation-planning/P4B_DESIGN_REVIEW_AND_READINESS.md)
+record this task without inventing a new APR. Existing APR-000–049 are unchanged.
+The skill reproducibility prerequisite is resolved by the reviewed tooling
+commit; APR-049's migration-wide writer-cost deployment gate remains open.
 
 ## APR-049 — Formal P4a Warehouse Inventory Visibility acceptance
 
@@ -24,12 +37,14 @@ engineering, security, database and QA findings are closed.
 
 The same-index writer baseline leaves complete migration-wide write overhead
 unquantified. A representative measurement is required before factory deployment
-or operational performance acceptance. The local UI/UX skill installation is
-not reproducible from tracked files alone and requires a separately reviewed
-tooling/governance change before the next frontend implementation stage.
+or operational performance acceptance. The UI/UX reproducibility limitation was
+recorded at acceptance time; the later
+[reviewed tooling work](../12-implementation-planning/UI_UX_SKILL_GOVERNANCE.md)
+resolves it without modifying the original APR-049 record.
 APR-047's historical P2 residual keeps its accepted nonblocking classification.
-P4b Sales UI is next proposed, awaiting separate discovery, design and implementation
-authorization. This task permits one local documentation-only acceptance commit.
+P4b discovery/design is now authorized as recorded above; implementation remains
+separately gated. The original acceptance task permitted one local documentation
+commit and did not authorize a subsequent product slice.
 
 ## APR-048 — P4a D1–D4 decisions and bounded implementation authority
 

@@ -3,7 +3,7 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.22.1
+version: 0.23.0
 owners: [chief-solution-architect]
 depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-11-07
@@ -24,16 +24,22 @@ and 25 actual Chromium checks. All required review findings are closed.
 [Accepted P4a delivery](P4A_IMPLEMENTATION_STATUS.md).
 
 P1, P2 and P4a are accepted software interfaces. The thirteen bounded backend
-acceptances retain their scopes. P4b Sales UI is the next PROPOSED workstream,
-awaiting separate Owner authorization for discovery, design and implementation.
-Its required Sales/customer/stock reads remain to be assessed under that future
-directive. P4a Warehouse visibility grants no Sales access.
+acceptances retain their scopes. The actual 2026-11-07 Owner directive authorizes
+**P4b Sales UI DISCOVERY AND DESIGN ONLY**. The
+[capability matrix](P4B_SALES_EXISTING_CAPABILITIES_AND_GAP_MATRIX.md),
+[workflow/contracts](P4B_SALES_UI_WORKFLOW_AND_CONTRACT_DESIGN.md),
+[OPEN decision sheet](P4B_IMPLEMENTATION_AUTHORIZATION_DECISIONS.md) and
+[review/readiness](P4B_DESIGN_REVIEW_AND_READINESS.md) define the proposed increment.
+P4b implementation is NOT AUTHORIZED / NOT IMPLEMENTED / NOT ACCEPTED. Stop for
+Owner decisions and separate bounded implementation authority. P4a Warehouse
+visibility grants no Sales access; P4c/P4d/P5/P3 remain outside this task.
 
 The [reviewed tooling work](UI_UX_SKILL_GOVERNANCE.md) addresses skill reproducibility
 before the next frontend implementation stage. Before deployment or
 operational performance acceptance, measure representative migration-wide write
 overhead against the pre-0019 schema. That performance gate remains open.
-The current task is tooling/governance maintenance under its explicit Owner directive.
+The current task permits design/governance Markdown, reviews, validation and one
+local documentation-only commit; no product, schema or executable gate changes.
 
 ## Prior Owner priority and P2 acceptance — 2026-11-05 (historical)
 
