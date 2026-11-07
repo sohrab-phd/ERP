@@ -3,9 +3,9 @@ id: PLAN-ERP-CURRENT-ASSESSMENT-001
 title: ERP current state and next development recommendation
 phase: 12-implementation-planning
 status: in_review
-version: 1.4.0
+version: 1.4.1
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-049, APR-047, APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
+depends_on: [TOOL-UIUX-001, APR-049, APR-047, APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
 last_reviewed: 2026-11-07
 approval: null
 ---
@@ -24,15 +24,15 @@ and 25 actual Chromium checks, with all required review findings closed.
 [Accepted implementation and evidence](P4A_IMPLEMENTATION_STATUS.md).
 
 P4b Sales UI is the next PROPOSED workstream and awaits a separate Owner directive
-for discovery, design and implementation. Resolve the local mandatory skill
-configuration through separately reviewed tooling/governance work before the next
-frontend implementation stage. Measure representative full migration-wide write
+for discovery, design and implementation. The
+[reviewed tooling configuration](UI_UX_SKILL_GOVERNANCE.md) addresses the mandatory
+skill reproducibility gate. Measure representative full migration-wide write
 overhead before factory deployment or operational performance acceptance. These
-are retained nonblocking limits of software acceptance.
+were retained nonblocking limits of software acceptance under APR-049.
 
 P3 remains pending behind its software, environment, security, restore, UAT,
-training and operational gates. This recording task permits documentation and one
-local documentation-only acceptance commit. The P2 historical 257-Unit residual
+training and operational gates. The current directive permits reviewed tooling,
+governance documentation and one local tooling/governance commit. The P2 historical 257-Unit residual
 retains its accepted UNKNOWN/nonblocking classification under APR-047.
 
 ## Prior P2 acceptance and P4a proposal — 2026-11-05 (historical)

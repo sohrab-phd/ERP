@@ -3,9 +3,9 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.22.0
+version: 0.22.1
 owners: [chief-solution-architect]
-depends_on: [APR-049, APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
+depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-11-07
 approval: null
 supersedes: null
@@ -29,11 +29,11 @@ awaiting separate Owner authorization for discovery, design and implementation.
 Its required Sales/customer/stock reads remain to be assessed under that future
 directive. P4a Warehouse visibility grants no Sales access.
 
-Before the next frontend implementation stage, resolve skill reproducibility
-through a separately reviewed tooling/governance change. Before deployment or
+The [reviewed tooling work](UI_UX_SKILL_GOVERNANCE.md) addresses skill reproducibility
+before the next frontend implementation stage. Before deployment or
 operational performance acceptance, measure representative migration-wide write
-overhead against the pre-0019 schema. These accepted limitations are still open.
-The current task is acceptance documentation and one local documentation commit.
+overhead against the pre-0019 schema. That performance gate remains open.
+The current task is tooling/governance maintenance under its explicit Owner directive.
 
 ## Prior Owner priority and P2 acceptance — 2026-11-05 (historical)
 

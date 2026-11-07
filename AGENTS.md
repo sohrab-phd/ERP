@@ -32,3 +32,20 @@
 - Never self-authorize implementation or fabricate human approval; tool access is not approval.
 - Native/OS containment is retired; do not revive installers, ACL hardening or micro-permission hooks.
 - For graph-assisted impact/navigation use [.agents/skills/graphify](.agents/skills/graphify/SKILL.md); keep indexing local and treat source as authority.
+
+## Mandatory UI/UX Skill
+
+- For UI/UX design, review and frontend implementation, read the complete
+  [ui-ux-pro-max skill](.agents/skills/ui-ux-pro-max/SKILL.md) and applicable supporting files.
+- Verify the vendored package with `node tools/skills/verify-ui-ux-pro-max.mjs`.
+  Follow the reviewed [local workflow](docs/12-implementation-planning/UI_UX_SKILL_GOVERNANCE.md),
+  using the actual repository path in place of upstream plugin-path examples.
+- Skill recommendations are advisory and subordinate to Owner authorization,
+  accepted ERP contracts, architecture, security, RBAC, customer isolation and
+  database integrity. Skill availability grants no implementation authority.
+- Preserve the native Persian RTL industrial ERP design system, clear forms,
+  tables, filters, feedback and errors, exact numbers and isolated identifiers.
+  Check warehouse, sales and production usability and actual browser behavior.
+- Frameworks, dependencies, external fonts/services and design-system replacements
+  require explicit approval. Do not run suggested installers or refresh catalogs automatically.
+- Report missing or mismatched skill files before proceeding with UI/UX work.

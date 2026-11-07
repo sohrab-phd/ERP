@@ -3,9 +3,9 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.32.0
+version: 0.32.1
 owners: [chief-solution-architect]
-depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
+depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-11-07
 approval: null
 supersedes: null
@@ -22,10 +22,11 @@ supersedes: null
 
 P1, P2 and P4a are accepted within their bounded software scopes. P4b Sales UI is
 next PROPOSED and awaits separate discovery, design and implementation authority.
-The representative migration-wide write-overhead measurement and separately
-reviewed skill reproducibility change retain their deployment/performance and
-frontend implementation gates under APR-049. Current scope is documentation and
-one local acceptance-record commit.
+The representative migration-wide write-overhead measurement remains a
+deployment/performance gate. The
+[reviewed UI/UX skill configuration](12-implementation-planning/UI_UX_SKILL_GOVERNANCE.md)
+addresses the reproducibility gate recorded in APR-049. Current scope is limited
+tooling/governance maintenance under the separate Owner directive.
 
 ## Prior P2 acceptance and software-first priority (2026-11-05, historical)
 

@@ -3,9 +3,9 @@ id: IMPL-P4A-001
 title: P4a Warehouse Inventory visibility implementation and evidence
 phase: 12-implementation-planning
 status: approved
-version: 1.0.0
+version: 1.0.1
 owners: [delivery-lead, inventory-domain-owner, security-architect]
-depends_on: [APR-049, APR-048, PLAN-P4A-READS-001, PLAN-P4A-SOURCES-001, IMPL-P4A-UI-SPEC-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [TOOL-UIUX-001, APR-049, APR-048, PLAN-P4A-READS-001, PLAN-P4A-SOURCES-001, IMPL-P4A-UI-SPEC-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-07
 approval: APR-049
 ---
@@ -200,6 +200,9 @@ were available locally but remain outside the accepted product commit. Tracked
 files alone do not reproduce this configuration. A separately reviewed tooling
 and governance change must resolve it before the next frontend implementation
 stage. Both limitations are nonblocking for software acceptance under APR-049.
+The subsequent [reviewed tooling work](UI_UX_SKILL_GOVERNANCE.md) resolves skill
+reproducibility through tracked configuration. The original APR-049 record retains
+the acceptance-time limitation, and the migration-wide performance gate remains open.
 
 ### Scale benchmarks and candidate evidence
 

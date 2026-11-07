@@ -3,15 +3,26 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.70.0
+version: 0.71.0
 owners: [chief-solution-architect]
-depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-11-07
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
+
+## Current tooling and governance maintenance — 2026-11-07
+
+The Owner's UI/UX Skill Governance and Reproducibility directive authorizes review,
+pinning, safe local packaging, AGENTS instructions, directly related documentation,
+independent review and one local tooling/governance commit from baseline
+`297eaea614bc891966626115f77e8bb33b263257`. The
+[reviewed skill record](../12-implementation-planning/UI_UX_SKILL_GOVERNANCE.md)
+documents the reproducible installation and validation. Existing APR acceptance
+records and the accepted P4a product revision retain their historical facts.
+P4b discovery, design and implementation still require a separate Owner directive.
 
 ## Effective P4a acceptance and next workstream — 2026-11-07
 
@@ -26,14 +37,14 @@ P4b Sales UI is the next PROPOSED workstream. Await a separate Owner directive
 for its discovery, design and implementation. The P4a Warehouse read exception
 does not grant Sales access or authorize P4b product work.
 
-Two nonblocking software-acceptance limits remain. The same-index 2.21% writer
+The same-index 2.21% writer
 comparison does not establish full migration-wide overhead, so representative
 pre-0019 comparison is required before deployment or operational performance
-acceptance. The local mandatory UI/UX skill configuration is not reproducible
-from tracked files alone, so a separately reviewed tooling/governance change
-is required before the next frontend implementation stage.
+acceptance. The historical skill reproducibility limitation is addressed by the
+current tooling review and tracked configuration documented above. APR-049 retains
+the original limitation as an acceptance-time fact.
 
-Current authority covers acceptance/governance/status/roadmap Markdown,
+The prior acceptance-recording authority covered acceptance/governance/status/roadmap Markdown,
 documentation validation and one local documentation-only commit. Accepted
 product code and executable gate/unlock files are outside this recording task.
 Factory deployment, operational UAT, pilot activation, remote push and subsequent

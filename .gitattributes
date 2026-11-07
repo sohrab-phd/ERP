@@ -12,3 +12,7 @@
 /.node-version text eol=lf
 /.npmrc text eol=lf
 /.env.example text eol=lf
+
+# Preserve the reviewed vendored skill's exact Windows bytes and upstream formatting.
+/.agents/skills/ui-ux-pro-max/** -text whitespace=cr-at-eol
+/.agents/skills/ui-ux-pro-max/scripts/design_system.py whitespace=-blank-at-eol,cr-at-eol

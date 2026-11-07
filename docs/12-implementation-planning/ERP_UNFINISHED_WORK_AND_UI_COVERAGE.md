@@ -3,9 +3,9 @@ id: PLAN-ERP-UNFINISHED-001
 title: Verified unfinished-work register and backend-to-UI coverage
 phase: 12-implementation-planning
 status: in_review
-version: 1.2.0
+version: 1.2.1
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, IMPL-P2-REMEDIATION-001]
+depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, IMPL-P2-REMEDIATION-001]
 last_reviewed: 2026-11-07
 approval: null
 ---
@@ -25,11 +25,11 @@ planning snapshots, superseded for this bounded increment. The roadmap table and
 Inventory coverage below now reflect acceptance.
 
 P4b Sales UI is the next PROPOSED workstream. Separate Owner direction is required
-for discovery, design and implementation. Resolve skill reproducibility through
-a separately reviewed tooling/governance change before the next frontend
-implementation stage. Representative full migration-wide write overhead must be
-measured before deployment or operational performance acceptance. Both are open,
-nonblocking software-acceptance limitations. The P2 historical residual retains
+for discovery, design and implementation. The
+[reviewed skill configuration](UI_UX_SKILL_GOVERNANCE.md) addresses reproducibility
+for the next frontend stage. Representative full migration-wide write overhead
+must still be measured before deployment or operational performance acceptance.
+APR-049 retains both acceptance-time limitations. The P2 historical residual retains
 its APR-047 classification. Factory pilot and deployment retain separate gates.
 
 ## Prior P2 acceptance and software-first priority — 2026-11-05 (historical)
@@ -290,8 +290,8 @@ the earlier pilot-first planning sequence; no operational pilot gate is removed.
 | --- | --- | --- |
 | 1 — P1 Purchasing UI | ACCEPTED, APR-045 | Preserve personal secure purchasing, catalogues and scoped receiving reads; original exclusions remain. |
 | 2 — P2 Warehouse Receiving UI | ACCEPTED, APR-047, exact f6ef316c711474775b158e8d12fea4a885f2f368 | Independent NAV/WF closure satisfied; original257trigger retained UNKNOWN/nonblocking; no UAT/deployment inference. |
-| 3 — P4a Inventory visibility and discovery UI | ACCEPTED under APR-049 at 6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10 | [Accepted Warehouse read/UI and evidence](P4A_IMPLEMENTATION_STATUS.md), all D1–D4 boundaries and five approved indexes. Retain both nonblocking limits and their future gates. |
-| 4 — P4b Sales order and fulfillment-assessment UI | NEXT PROPOSED / NOT AUTHORIZED / NOT_IMPLEMENTED; separate discovery/design/implementation directive required | Intended Sales workflow remains draft→submit→STOCK/MAKE assessment→confirm, subject to future scope review. Resolve required demand/customer/stock reads and skill reproducibility before frontend implementation. Confirmation does not reserve stock. |
+| 3 — P4a Inventory visibility and discovery UI | ACCEPTED under APR-049 at 6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10 | [Accepted Warehouse read/UI and evidence](P4A_IMPLEMENTATION_STATUS.md), all D1–D4 boundaries and five approved indexes. Retain APR-049 acceptance-time limitations. TOOL-UIUX-001 resolves skill reproducibility, while migration-wide performance measurement remains a future gate. |
+| 4 — P4b Sales order and fulfillment-assessment UI | NEXT PROPOSED / NOT AUTHORIZED / NOT_IMPLEMENTED; separate discovery/design/implementation directive required | Intended Sales workflow remains draft→submit→STOCK/MAKE assessment→confirm, subject to future scope review. Resolve required demand/customer/stock reads and verify the reviewed skill configuration before frontend implementation. Confirmation does not reserve stock. |
 | 5 — P4c Reservation UI | NOT AUTHORIZED / NOT_IMPLEMENTED; confirmed STOCK demand and stock context | Explicit request/activation/readback; competition/one-ACTIVE/no-steal and partial kg rules; no release/TTL expansion. PG concurrency/rollback/replay and browser uncertainty. |
 | 6 — P4d Shipping and dispatch UI | NOT AUTHORIZED / NOT_IMPLEMENTED; active reservation and customer context | Package/pack/unpack/assignment→shipment prepare/ready/load/dispatch/readback; whole Units. No customer-delivery or Sales-close claim. Atomic exit+reservation-consumption/replay/security and actual browser. |
 | 7 — P5a Production planning and managerial workflow UI | NOT AUTHORIZED / NOT_IMPLEMENTED; MAKE demand, route vocabulary, personal PLAN grants and explicit required reads | Order/route/release/material allocation and managerial referral; Stations use enum names and operations UUIDs. Personnel assignment/queues are missing contracts if needed, not assumed grants. PG/browser/current-role review. |

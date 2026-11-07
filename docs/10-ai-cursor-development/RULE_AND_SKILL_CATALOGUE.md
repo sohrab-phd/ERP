@@ -3,15 +3,31 @@ id: AI-RULE-001
 title: Rule and Skill Catalogue
 phase: 10-ai-cursor-development
 status: approved
-version: 0.5.0
+version: 0.6.0
 owners: [chief-solution-architect]
-depends_on: [AI-AUTH-001, APR-011, APR-012]
-last_reviewed: 2026-10-02
+depends_on: [TOOL-UIUX-001, AI-AUTH-001, APR-011, APR-012]
+last_reviewed: 2026-11-07
 approval: APR-016
 supersedes: null
 ---
 
 # Rule and Skill Catalogue
+
+## Reviewed UI/UX development skill
+
+The Owner's 2026-11-07 tooling directive permits review and reproducible packaging
+of the existing `ui-ux-pro-max` installation. The
+[local governance record](../12-implementation-planning/UI_UX_SKILL_GOVERNANCE.md)
+pins upstream version 2.15.0 and commit b7d5353e0130feb8c5574ef1251f8a1db1873ccb,
+documents its MIT license, security review and offline workflow, and records the
+validation result. This is a development aid for native Persian RTL interfaces.
+
+The mandatory [AGENTS instructions](../../AGENTS.md) require the skill for relevant
+UI/UX work and preserve Owner scope, architecture, security and business contracts.
+The vendored scripts supply advisory recommendations. They do not select an ERP
+framework, grant dependency installation or authorize a roadmap slice. P4b still
+awaits a separate discovery, design and implementation directive. The legacy
+Cursor inventory below retains its historical context.
 
 Existing Cursor controls that already encode the architecture-first
 gate. Extra skills or MCP remain OQ-018 (`MCP-EXTRA`). This catalogue
