@@ -5,6 +5,7 @@
 - Avoid speculative features, clever abstractions and unnecessary infrastructure or dependencies.
 - Follow accepted architecture, recorded factory evidence and live OQ statuses; invent no business rules.
 - Read only the current task's relevant canonical sources; use targeted search and the document index.
+- Follow the permanent [Codex context efficiency policy](docs/00-governance/CODEX_CONTEXT_EFFICIENCY_POLICY.md) for all tasks and delegated reviews; eliminate redundant work, never required work.
 - For meaningful capabilities follow [DEVELOPMENT_WORKFLOW.md](docs/12-implementation-planning/DEVELOPMENT_WORKFLOW.md).
 - Lifecycle: design/plan -> implement -> test -> review -> fix -> acceptance -> document -> commit.
 - Define a bounded business goal, users, invariants, dependencies, exclusions and Definition of Done.

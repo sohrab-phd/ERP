@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.36.0
+version: 0.37.0
 owners: [chief-solution-architect]
 depends_on: [APR-052, APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-11-08
@@ -12,6 +12,10 @@ supersedes: null
 ---
 
 # Architecture Documentation Index
+
+## Permanent Codex operating policy
+
+- [Project-wide context efficiency policy](00-governance/CODEX_CONTEXT_EFFICIENCY_POLICY.md) — applies across all phases; preserves quality, security, evidence and Owner gates.
 
 ## Current P4b Owner software acceptance (2026-11-08)
 
