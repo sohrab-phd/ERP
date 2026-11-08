@@ -3,9 +3,9 @@ id: PLAN-P4B-DECISIONS-001
 title: P4b OPEN Owner implementation authorization decisions
 phase: 12-implementation-planning
 status: draft
-version: 0.4.0
+version: 0.5.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
-depends_on: [PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, APR-049, TOOL-UIUX-001]
+depends_on: [APR-051, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, APR-049, TOOL-UIUX-001]
 last_reviewed: 2026-11-08
 approval: null
 ---
@@ -16,11 +16,23 @@ approval: null
 approves D1 B, D2 A, D3 A, D4 A, D5 A and conditionally D6 A / D7 A against this
 sheet's exact design baseline `e7e7cafab0b052b34b9fd58fa66269dd74792749`.
 Bounded implementation is authorized, not accepted. New index migrations and
-numeric performance thresholds still require the separate decisions specified
-in APR-050. The OPEN/NULL and design-only statements below are retained historical
+numeric performance thresholds originally required a separate decision; APR-051
+below now records that decision. New migrations remain separately gated. The OPEN/NULL and design-only statements below are retained historical
 proposal text, superseded only by the actual Owner selections and added controls.
 
-## Remaining conditional D7 decision — OPEN
+## Current D7 decision — Owner accepted with documented exception
+
+[APR-051](../00-governance/approved-baselines/APR-051-p4b-performance-decision.md) records the actual Owner decision on2026-11-08: approve20internal Sales
+sessions at20/40normal/peak lookup journeys/minute and the proposed absolute
+server/UI/writer budgets; remove the20%relative writer rule as a blocking P4b
+criterion, explicitly accepting the first normal-run residual risk. The original
+relative rule did not pass; both complete runs and uncertain cause are retained.
+Existing evidence verifies all absolute operation budgets at their stated scopes.
+D7: **OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**.
+No further relative-only investigation. Formal product acceptance remains PENDING.
+[Acceptance package](P4B_OWNER_ACCEPTANCE_PACKAGE.md).
+
+## Earlier conditional D7 decision — historical OPEN snapshot
 
 On2026-11-08 the actual Owner selected **"Review workload and budgets first
 (Recommended)"** in response to the numeric-performance question. Recorded outcome:
@@ -38,7 +50,7 @@ Orders/customer and assessments/order remain UNKNOWN. Numeric budgets, writer
 allowance and performance acceptance are still OPEN; no thresholds were approved.
 The bounded evaluation is completed with both paced runs/history retained. The
 initial normal writer exceedances are not cleared by the better diagnostic repeat;
-repeatability remains an acceptance consideration in the linked workload record.
+repeatability remains recorded in the linked workload record; APR-051 supersedes its former blocking status.
 
 **Owner approval: NULL.** The approved starting resource caps are not performance
 acceptance budgets. The [implementation measurement and proposal](P4B_IMPLEMENTATION_STATUS.md#performance-and-acceptance-gates)

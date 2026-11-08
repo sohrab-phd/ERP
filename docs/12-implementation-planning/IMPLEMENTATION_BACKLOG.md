@@ -3,9 +3,9 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.24.0
+version: 0.25.0
 owners: [chief-solution-architect]
-depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
+depends_on: [APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-11-08
 approval: null
 supersedes: null
@@ -13,7 +13,19 @@ supersedes: null
 
 # Implementation capability backlog
 
-## Current P4b bounded implementation — 2026-11-08
+## Current P4b closure — 2026-11-08
+
+[APR-051](../00-governance/approved-baselines/APR-051-p4b-performance-decision.md) records the actual Owner-approved workload, absolute budgets and
+relative-writer-regression exception. The original relative requirement did not
+pass; both results and causal uncertainty remain retained. Existing evidence
+verifies the absolute budgets at its documented scopes; no more relative-only
+investigation is authorized. [Final acceptance package](P4B_OWNER_ACCEPTANCE_PACKAGE.md).
+P4b is implemented and closure-complete, **NOT formally accepted**. Await explicit
+Owner software acceptance; no new product, migration/index, push, deployment,
+pilot, P3/P4c/P4d/P5 or other slice is authorized. P4a's migration-wide writer-cost
+deployment gate remains OPEN. Earlier snapshots below are historical.
+
+## Earlier P4b implementation before APR-051 — 2026-11-08 (historical)
 
 [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
 supersedes the earlier design-only boundary below. Operational Sales UI, exact

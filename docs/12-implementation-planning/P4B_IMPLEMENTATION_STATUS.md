@@ -3,9 +3,9 @@ id: IMPL-P4B-001
 title: P4b Sales UI implementation and verification evidence
 phase: 12-implementation-planning
 status: in_review
-version: 0.4.0
+version: 0.5.0
 owners: [delivery-lead, sales-domain-owner, security-architect]
-depends_on: [APR-050, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-READINESS-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-051, APR-050, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-READINESS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-08
 approval: null
 ---
@@ -23,7 +23,12 @@ ceiling and provisional20Sales-user test profile at1normal/2peak lookups per use
 per minute. The [bounded internal-workload evaluation](P4B_INTERNAL_WORKLOAD_VERIFICATION.md)
 completed normal/peak, one history check and one diagnostic repeat. The first
 normal run exceeds the proposed20%writer allowance for five Sales operations;
-the repeat does not reproduce it. Both remain evidence; numeric acceptance stays OPEN.
+the repeat does not reproduce it. Both remain evidence. The subsequent actual
+Owner decision [APR-051](../00-governance/approved-baselines/APR-051-p4b-performance-decision.md) approves the workload/absolute budgets and removes the
+relative20%rule as a blocking criterion, accepting its residual risk. D7 is
+**OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**.
+[Final Owner acceptance package and evidence index](P4B_OWNER_ACCEPTANCE_PACKAGE.md).
+The original relative rule is unmet; formal P4b product acceptance remains PENDING.
 Earlier unthrottled measurements below remain retained, with their original scope.
 
 ## Execution plan and Definition of Done
@@ -162,7 +167,11 @@ selected customer even if another grant keeps the bootstrap marker true.
 
 ## Performance and acceptance gates
 
-**MEASURED — NO NUMERIC PERFORMANCE APPROVAL OR PASS.** All data is synthetic.
+**CURRENT: absolute budgets verified; D7 Owner accepted with documented exception
+under APR-051.** The measurements below and their historical proposed/OPEN labels
+precede that decision; no original measurement or failed relative result is
+relabelled successful. See the acceptance package for the current budget check.
+All data is synthetic.
 Generator: [p4b-performance.mjs](../../tools/test/p4b-performance.mjs), fixed
 distribution seed `p4b-deterministic-distribution-v1`; accepted-command fixtures
 use freshly generated identities, not a bit-identical database image. Environment:
@@ -286,7 +295,7 @@ $env:P4B_PERF_TIER='representative' # then stress; omit to reproduce all three
 & "$nodeRoot/node.exe" artifacts/tests/p4b-implementation/recover-small-report.mjs
 ```
 
-### Required Owner decisions — OPEN, approval NULL
+### Historical required Owner decisions — formerly OPEN, before APR-051
 
 The table budgets are proposals with headroom above the measured operation/case
 tails; stock receives more allowance for bounded Ledger/source verification.
@@ -386,8 +395,12 @@ matched controls, sufficient writer tails) were corrected and re-reviewed.
 Final database measured-evidence review independently recomputed raw read/writer
 distributions, verified source/recovery hashes and all required plan methods,
 confirmed identical46index definitions across tiers and closed required findings.
-No known high/critical or required product defect remains. Owner policy/performance
-decisions stay open and are not labelled closed engineering findings.
+No known high/critical or required product defect remains. APR-051 closes the
+Owner performance decision with an explicit relative-regression exception, without
+claiming that engineering resolved the uncertain cause or the former criterion
+passed. Independent closure review recomputed retained absolute percentiles and
+verified source manifests; no new DB/browser/performance execution was needed.
+Formal product acceptance remains with the Owner.
 
 No push, deployment, pilot, adjacent roadmap work or formal product acceptance
 has occurred. After verification, the exact disposable18.6cluster returned to its
@@ -397,6 +410,7 @@ unrelated services and production settings were untouched.
 The later Owner-bounded evaluations likewise restored that original stopped state;
 `internal20-cluster-final-state.json` records their final verification.
 
-**P4b IMPLEMENTED AND VERIFIED — OWNER PERFORMANCE/ACCEPTANCE DECISIONS PENDING.**
-Numeric budgets/workload and formal acceptance remain open; this is not readiness
-for factory deployment, a remote push, or authority to start the next slice.
+**P4b CLOSURE COMPLETE — READY FOR EXPLICIT OWNER SOFTWARE ACCEPTANCE.**
+D7 is Owner accepted with the documented relative-writer-regression exception;
+formal product acceptance remains PENDING. This is not factory deployment
+readiness, remote push authority or permission to start the next slice.

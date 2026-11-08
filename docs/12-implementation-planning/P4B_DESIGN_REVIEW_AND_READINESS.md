@@ -3,16 +3,16 @@ id: PLAN-P4B-READINESS-001
 title: P4b discovery and design review and readiness
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [delivery-lead, security-architect, data-architect, qa-lead]
-depends_on: [PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-DECISIONS-001, APR-049, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-051, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-DECISIONS-001, APR-049, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-08
 approval: null
 ---
 
 # P4b design review and readiness
 
-**Current authority:** [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md) approves D1 B, D2 A, D3 A, D4 A, D5 A and conditional D6 A / D7 A. The proposal and OPEN wording below records the historical design baseline. Bounded implementation is now authorized; [current delivery evidence](P4B_IMPLEMENTATION_STATUS.md) records reality. Numeric performance and final acceptance remain Owner decisions.
+**Current authority:** [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md) approves D1 B, D2 A, D3 A, D4 A, D5 A and conditional D6 A / D7 A. The proposal and OPEN wording below records the historical design baseline. Bounded implementation is delivered; [current delivery evidence](P4B_IMPLEMENTATION_STATUS.md) records reality. APR-051 above closes D7 with the explicit relative-writer exception; formal product acceptance remains an Owner decision.
 
 **HISTORICAL DESIGN PROPOSAL — superseded only within APR-050 bounds**
 
@@ -23,6 +23,18 @@ clean at start. P4a remains accepted at
 is resolved by the baseline tooling commit. No existing APR is revised or new
 APR invented. [Current phase](../00-governance/CURRENT_PHASE.md) records the new
 limited authority, with no executable gate/unlock change.
+
+## Current P4b closure — 2026-11-08
+
+[APR-051](../00-governance/approved-baselines/APR-051-p4b-performance-decision.md) records the actual Owner-approved workload, absolute budgets and
+relative-writer-regression exception. The original relative requirement did not
+pass; both results and causal uncertainty remain retained. Existing evidence
+verifies the absolute budgets at its documented scopes; no more relative-only
+investigation is authorized. [Final acceptance package](P4B_OWNER_ACCEPTANCE_PACKAGE.md).
+P4b is implemented and closure-complete, **NOT formally accepted**. Await explicit
+Owner software acceptance; no new product, migration/index, push, deployment,
+pilot, P3/P4c/P4d/P5 or other slice is authorized. P4a's migration-wide writer-cost
+deployment gate remains OPEN. Earlier snapshots below are historical.
 
 ## Task execution and design Definition of Done
 

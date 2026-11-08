@@ -3,15 +3,28 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.38.0
+version: 0.39.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-050, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+depends_on: [APR-051, APR-050, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-11-08
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-051 — P4b performance decision with documented exception
+
+[Actual Owner decision](approved-baselines/APR-051-p4b-performance-decision.md)
+approves the normative20-session20/40-journey workload and proposed absolute
+p95/p99 budgets. Existing evidence verifies the absolute limits at its documented
+scopes. D7 is **OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**.
+The original20%relative criterion did not pass; the Owner removes it as a blocking
+P4b criterion and accepts the residual risk. Both runs and uncertainty are retained.
+No further relative-only investigation is authorized.
+[Final acceptance package](../12-implementation-planning/P4B_OWNER_ACCEPTANCE_PACKAGE.md).
+This is not formal P4b product acceptance. P4a's migration-wide deployment gate
+remains OPEN; no new product/index/migration, push, pilot or next slice is granted.
 
 ## APR-050 — Formal P4b bounded implementation authorization
 

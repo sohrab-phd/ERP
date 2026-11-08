@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.75.0
+version: 0.76.0
 owners: [chief-solution-architect]
-depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-11-08
 approval: null
 supersedes: null
@@ -30,8 +30,8 @@ verification tooling without changing product or required PostgreSQL test source
 Correctness evidence is292unit,420complete real-PG and30Sales+25regression actual
 Chromium checks, all passing. [Delivery evidence and remaining decisions](../12-implementation-planning/P4B_IMPLEMENTATION_STATUS.md)
 owns exact revisions, commands, workload measurements, review closure and limits.
-P4b remains NOT ACCEPTED; no numeric performance budget is approved. Await explicit
-Owner performance/acceptance decisions before any further product or roadmap work.
+P4b remains NOT ACCEPTED. The subsequent Owner performance decision below closes
+D7 with a documented exception; formal product acceptance remains separately gated.
 
 The subsequent actual Owner workload clarification authorizes a simple paced
 evaluation of20internal Sales users at1normal/2peak lookups/user/minute with
@@ -39,20 +39,28 @@ concurrent writers and one synthetic history-growth check. The approximate20-per
 ERP ceiling is Owner input; rates are engineering assumptions, while per-customer
 order and per-order assessment volumes remain UNKNOWN.
 [Workload record](../12-implementation-planning/P4B_INTERNAL_WORKLOAD_VERIFICATION.md).
-This is measurement authority, not numeric performance acceptance, a writer-budget
-waiver, product expansion, customer portal or external-login/API authority.
+At that historical clarification this was measurement authority, not numeric
+acceptance or a writer-budget waiver. APR-051 below records the later decision.
 The paced evaluation, history check and one diagnostic repeat are complete.
 The first normal profile exceeds the proposed20%writer allowance for five Sales
 operations; a counterbalanced repeat does not reproduce it. Preserve both results
-and keep D7OPEN; no unqualified performance PASS or acceptance follows.
+without claiming the original relative criterion passed. APR-051 supersedes the
+former OPEN policy decision, retaining all measurements and causal uncertainty.
+
+The actual Owner now approves the normative workload and absolute budgets in
+[APR-051](approved-baselines/APR-051-p4b-performance-decision.md), removes the20%
+relative rule as a blocking P4b criterion and accepts its recorded residual risk.
+Existing absolute evidence is verified in the
+[Owner acceptance package](../12-implementation-planning/P4B_OWNER_ACCEPTANCE_PACKAGE.md).
+D7: **OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**.
+No further relative-only experiment is authorized. Documentation/review closure
+is complete; await explicit formal P4b acceptance, not more relative investigation.
 
 New migrations/indexes need separate Owner approval with precise evidence before
-application/commit. Numeric performance budgets need separate Owner approval
-before performance acceptance. Internal codes require proven disclosure safety,
+application/commit. Internal codes require proven disclosure safety,
 otherwise null; filters cannot become an oracle. Preserve accepted commands/RBAC/
 bearer behavior/migration bytes and P1/P2/P4a. No P3/adjacent slice/push/deployment/
-pilot/product acceptance is authorized. Stop for actual performance/acceptance
-decisions; P4a's migration-wide write-overhead deployment gate remains open.
+pilot/product acceptance is authorized. Stop for formal Owner product acceptance; P4a's migration-wide write-overhead deployment gate remains open.
 
 ## Earlier P4b discovery and design authority — 2026-11-07 (historical)
 

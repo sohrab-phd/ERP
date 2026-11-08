@@ -3,14 +3,24 @@ id: IMPL-P4B-WORKLOAD-001
 title: P4b Owner-bounded internal workload evaluation
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [delivery-lead, security-architect, data-architect, qa-lead]
-depends_on: [APR-050, IMPL-P4B-001, PLAN-P4B-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-051, APR-050, IMPL-P4B-001, PLAN-P4B-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-08
 approval: null
 ---
 
-# Internal workload evaluation — D7 OPEN
+# Internal workload evaluation — Owner decision recorded
+
+**Current decision:** [APR-051](../00-governance/approved-baselines/APR-051-p4b-performance-decision.md) approves the documented normative workload and
+absolute budgets, removes the relative20%rule as a blocking P4b criterion and
+accepts its residual risk. Absolute verification is in the
+[acceptance package](P4B_OWNER_ACCEPTANCE_PACKAGE.md). D7 is
+**OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**.
+Formal product acceptance remains PENDING. All measurement values and historical
+OPEN/proposal wording below retain their original meaning; they are not altered
+to imply that the original relative criterion passed. No further performance
+experiment solely for that regression is authorized.
 
 The actual Owner supplied a factory-specific constraint in this chat: the entire
 internal ERP is expected to serve approximately20factory employees. This is a
@@ -224,7 +234,7 @@ evidence does not consistently establish the proposed20%allowance across both ru
 No automatic third run, product change, database tuning or threshold relaxation
 is performed.
 
-## Review, limits and recommended criteria
+## Historical review, limits and proposed criteria — before APR-051
 
 Independent non-author database and QA reviewers recomputed raw journey/cohort
 counts, per-command percentiles/regressions, pace and provenance for both paced
@@ -263,7 +273,7 @@ separate bounded Owner direction, not work started by this report. No index is
 justified by the retained warm plans. P4a's pre-0019 migration-wide writer-cost
 deployment/operational gate remains open and separate.
 
-## Owner decision remains OPEN
+## Historical Owner decision OPEN — superseded by APR-051
 
 Existing [delivery measurements](P4B_IMPLEMENTATION_STATUS.md#performance-and-acceptance-gates)
 remain retained with their original scope. Proposed numeric budgets remain
@@ -277,3 +287,15 @@ stopped state: stop0, pg_ctl status3/no server, readiness2/no response on55438.
 record actual paths/version/times. No unrelated service or production setting
 changed. Product code, accepted commands/bearer contracts, all19migrations and
 pinned UI/UX configuration remain unchanged throughout this follow-up.
+
+## Final D7 closure
+
+The Owner explicitly judges further relative-regression investigation unjustified
+for this internal operational scale. The earlier suggested follow-up is not a
+remaining prerequisite and will not run. Both raw runs, complete samples, receipts,
+17initial wait-poll observations and uncertain root cause are preserved unchanged.
+Independent closure evidence review recomputed all operation/writer/UI percentile
+budgets and verified source manifests without new experiments. No required
+absolute operation is missing or over budget within the documented evidence scopes.
+Only the relative blocking criterion changes; correctness/security/isolation,
+transaction integrity, P4a deployment gates and formal acceptance boundaries do not.

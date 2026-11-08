@@ -3,16 +3,28 @@ id: PLAN-ERP-CURRENT-ASSESSMENT-001
 title: ERP current state and next development recommendation
 phase: 12-implementation-planning
 status: in_review
-version: 1.5.0
+version: 1.6.0
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [TOOL-UIUX-001, APR-049, APR-047, APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
-last_reviewed: 2026-11-07
+depends_on: [APR-051, TOOL-UIUX-001, APR-049, APR-047, APR-046, APR-045, APR-039, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, AUDIT-INBOUND-001]
+last_reviewed: 2026-11-08
 approval: null
 ---
 
 # ارزیابی وضعیت واقعی ERP و پیشنهاد گام بعد
 
-## Current Owner P4a acceptance and next proposal — 2026-11-07
+## Current P4b closure — 2026-11-08
+
+[APR-051](../00-governance/approved-baselines/APR-051-p4b-performance-decision.md) records the actual Owner-approved workload, absolute budgets and
+relative-writer-regression exception. The original relative requirement did not
+pass; both results and causal uncertainty remain retained. Existing evidence
+verifies the absolute budgets at its documented scopes; no more relative-only
+investigation is authorized. [Final acceptance package](P4B_OWNER_ACCEPTANCE_PACKAGE.md).
+P4b is implemented and closure-complete, **NOT formally accepted**. Await explicit
+Owner software acceptance; no new product, migration/index, push, deployment,
+pilot, P3/P4c/P4d/P5 or other slice is authorized. P4a's migration-wide writer-cost
+deployment gate remains OPEN. Earlier snapshots below are historical.
+
+## Earlier Owner P4a acceptance and next proposal — 2026-11-07 (historical)
 
 [APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
 formally accepts Warehouse Inventory Visibility at
