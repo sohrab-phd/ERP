@@ -17,6 +17,7 @@ supersedes: null
 
 - [APR-050 actual Owner implementation decisions and boundaries](00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
 - [P4b delivered behavior, verification and remaining Owner gates](12-implementation-planning/P4B_IMPLEMENTATION_STATUS.md)
+- [P4b Owner-bounded20-user workload, both runs, history check and OPEN criteria](12-implementation-planning/P4B_INTERNAL_WORKLOAD_VERIFICATION.md)
 
 APR-050 supersedes the earlier design-only boundary below. P4b remains NOT
 ACCEPTED; numeric performance budgets and final acceptance require explicit Owner

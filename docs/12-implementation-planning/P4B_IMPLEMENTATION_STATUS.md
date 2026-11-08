@@ -3,7 +3,7 @@ id: IMPL-P4B-001
 title: P4b Sales UI implementation and verification evidence
 phase: 12-implementation-planning
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [delivery-lead, sales-domain-owner, security-architect]
 depends_on: [APR-050, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-READINESS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-08
@@ -17,6 +17,14 @@ Starting `main`: `e7e7cafab0b052b34b9fd58fa66269dd74792749`, clean. Accepted
 P4a `6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10` / APR-049 and pinned tooling
 `506dd000e87c331527445e8212656cfc2aefc756` verified ancestors; skill integrity75files
 passes. **AUTHORIZED FOR BOUNDED IMPLEMENTATION — NOT ACCEPTED.**
+
+Current D7 follow-up: the Owner supplied an approximately20employee internal-user
+ceiling and provisional20Sales-user test profile at1normal/2peak lookups per user
+per minute. The [bounded internal-workload evaluation](P4B_INTERNAL_WORKLOAD_VERIFICATION.md)
+completed normal/peak, one history check and one diagnostic repeat. The first
+normal run exceeds the proposed20%writer allowance for five Sales operations;
+the repeat does not reproduce it. Both remain evidence; numeric acceptance stays OPEN.
+Earlier unthrottled measurements below remain retained, with their original scope.
 
 ## Execution plan and Definition of Done
 
@@ -51,8 +59,10 @@ Product code is implemented at `7f30a6f26b6e53c6152d6851f90d1f5ed844f69a`.
 Standalone measurement corrections are committed at
 `c437df8049a86be77fa421b5df16f678895e8a37` and
 `e4747e7646d411da6fff580b0389ff3e570b3f26`, followed by reporting-only fix
-`6db1854318e4ffe72190ee81baad75f833e9fe84`; there is no product, registered test,
-required runner, package or migration difference from7f30a6f in either revision.
+`6db1854318e4ffe72190ee81baad75f833e9fe84`. Owner-bounded workload and diagnostic
+tooling follow at `9cac8e6e1d372ddfd54cc9260d7daf37fd9067ba` and
+`bfd942fc382db8aed129d8936aea34c73b874c0b`. There is no product, registered test,
+required runner, package or migration difference from7f30a6f in these revisions.
 Latest unit run:292passed,0failed/skipped, exit0
 at e4747e7 (`artifacts/tests/p4b-implementation/unit-committed-final.log` and its
 receipt). Focused PostgreSQL:
@@ -176,7 +186,7 @@ Inventory origin examples and synthetic Ledger fanout1/3/11/99 are explicit.
 Each operation has200warm serial samples and roughly5000concurrent samples/tier.
 Ten distinct personal reader sessions run round-robin without think time; two
 distinct writers run all six accepted Sales commands and PostGoodsReceipt. This
-is a closed-loop saturation scenario, not an asserted human click rate.
+is an unthrottled closed-loop load scenario, not an asserted human click rate.
 
 Before/overlap/after controls use the same schema/indexes, observer and co-writer
 pressure. Both writers continue until both minima finish; readers continue through
@@ -384,6 +394,8 @@ has occurred. After verification, the exact disposable18.6cluster returned to it
 original stopped state: stop exit0, pg_ctl status3/no server, pg_isready2/no response
 at127.0.0.1:55438. `cluster-final-state.json` records exact paths/version/time;
 unrelated services and production settings were untouched.
+The later Owner-bounded evaluations likewise restored that original stopped state;
+`internal20-cluster-final-state.json` records their final verification.
 
 **P4b IMPLEMENTED AND VERIFIED — OWNER PERFORMANCE/ACCEPTANCE DECISIONS PENDING.**
 Numeric budgets/workload and formal acceptance remain open; this is not readiness

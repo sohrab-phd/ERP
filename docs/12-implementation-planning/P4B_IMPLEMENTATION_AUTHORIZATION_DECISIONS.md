@@ -3,7 +3,7 @@ id: PLAN-P4B-DECISIONS-001
 title: P4b OPEN Owner implementation authorization decisions
 phase: 12-implementation-planning
 status: draft
-version: 0.3.0
+version: 0.4.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
 depends_on: [PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, APR-049, TOOL-UIUX-001]
 last_reviewed: 2026-11-08
@@ -36,6 +36,9 @@ lookups per user per minute. [Workload authority and verification](P4B_INTERNAL_
 records these as planning assumptions and the bounded requested evaluation.
 Orders/customer and assessments/order remain UNKNOWN. Numeric budgets, writer
 allowance and performance acceptance are still OPEN; no thresholds were approved.
+The bounded evaluation is completed with both paced runs/history retained. The
+initial normal writer exceedances are not cleared by the better diagnostic repeat;
+repeatability remains an acceptance consideration in the linked workload record.
 
 **Owner approval: NULL.** The approved starting resource caps are not performance
 acceptance budgets. The [implementation measurement and proposal](P4B_IMPLEMENTATION_STATUS.md#performance-and-acceptance-gates)

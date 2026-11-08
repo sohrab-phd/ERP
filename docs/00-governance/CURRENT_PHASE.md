@@ -3,7 +3,7 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.74.0
+version: 0.75.0
 owners: [chief-solution-architect]
 depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-11-08
@@ -32,6 +32,19 @@ Chromium checks, all passing. [Delivery evidence and remaining decisions](../12-
 owns exact revisions, commands, workload measurements, review closure and limits.
 P4b remains NOT ACCEPTED; no numeric performance budget is approved. Await explicit
 Owner performance/acceptance decisions before any further product or roadmap work.
+
+The subsequent actual Owner workload clarification authorizes a simple paced
+evaluation of20internal Sales users at1normal/2peak lookups/user/minute with
+concurrent writers and one synthetic history-growth check. The approximate20-person
+ERP ceiling is Owner input; rates are engineering assumptions, while per-customer
+order and per-order assessment volumes remain UNKNOWN.
+[Workload record](../12-implementation-planning/P4B_INTERNAL_WORKLOAD_VERIFICATION.md).
+This is measurement authority, not numeric performance acceptance, a writer-budget
+waiver, product expansion, customer portal or external-login/API authority.
+The paced evaluation, history check and one diagnostic repeat are complete.
+The first normal profile exceeds the proposed20%writer allowance for five Sales
+operations; a counterbalanced repeat does not reproduce it. Preserve both results
+and keep D7OPEN; no unqualified performance PASS or acceptance follows.
 
 New migrations/indexes need separate Owner approval with precise evidence before
 application/commit. Numeric performance budgets need separate Owner approval
