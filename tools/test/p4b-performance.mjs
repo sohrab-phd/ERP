@@ -162,7 +162,9 @@ const distribution = (values) => ({
   p50: percentile(values, 0.5),
   p95: percentile(values, 0.95),
   p99: percentile(values, 0.99),
-  max: values.length ? Math.max(...values) : null,
+  max: values.length
+    ? values.reduce((maximum, value) => Math.max(maximum, value), -Infinity)
+    : null,
 });
 function summaries(samples) {
   const result = {};
@@ -183,7 +185,8 @@ function summaries(samples) {
       };
     }
     const elapsedMs =
-      Math.max(...selected.map((s) => s.end)) - Math.min(...selected.map((s) => s.start));
+      selected.reduce((maximum, s) => Math.max(maximum, s.end), -Infinity) -
+      selected.reduce((minimum, s) => Math.min(minimum, s.start), Infinity);
     result[operation] = {
       serverMs: distribution(selected.map((s) => s.serverMs)),
       httpClientMs: distribution(selected.map((s) => s.clientMs)),
@@ -1048,8 +1051,8 @@ async function runTier(tier) {
       );
       const overlappingReads = result.samples.filter((s) => s.phase === 'readers-and-writers');
       const readerWindow = {
-        start: Math.min(...overlappingReads.map((s) => s.start)),
-        end: Math.max(...overlappingReads.map((s) => s.end)),
+        start: overlappingReads.reduce((minimum, s) => Math.min(minimum, s.start), Infinity),
+        end: overlappingReads.reduce((maximum, s) => Math.max(maximum, s.end), -Infinity),
       };
       result.readerWindow = readerWindow;
       const insideBaselineWriters = (sample) => {
