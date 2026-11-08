@@ -3,15 +3,36 @@ id: SEC-RBAC-001
 title: Role Permission and Scope Matrix
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.8.1
+version: 0.9.0
 owners: [security-architect, business-control-owner]
-depends_on: [APR-049, APR-048, APR-042, APR-038, DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
-last_reviewed: 2026-11-07
+depends_on: [APR-050, APR-049, APR-048, APR-042, APR-038, DOM-ACTORS-001, SM-SOD-001, APP-CMD-001, APR-007, APR-008]
+last_reviewed: 2026-11-08
 approval: null
 supersedes: null
 ---
 
 # Role Permission and Scope Matrix
+
+## Owner-authorized P4b Sales browser boundary — APR-050
+
+[APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
+authorizes only current personal exact-customer ACT-SALES within the trusted
+installation/authority tuple for the seven specified browser routes. This is
+bounded implementation authority, not P4b acceptance or a changed domain grant.
+
+| Surface | Required current authority / permitted data |
+| --- | --- |
+| customers/query | Authenticated personal session, bounded intersection of exact Sales grants and configured Sales references. No org Sales prerequisite or full customer/grant array. |
+| orders/query/detail, assessments/query/detail | Exactly one x-customer-id matching current ACT-SALES grant; scoped parent/child facts and whitelisted DTOs only. |
+| stock/query | Same selected customer plus existing own DRAFT/SUBMITTED order/item. Inventory-owned eligible organization or same-customer AVAILABLE stock only; five-field projection. |
+| commands | Same exact customer; fixed adapter for six unchanged accepted Sales commands and current durable replay policy. |
+
+Org-only invoice-evidence Sales authority, WH/P4a visibility, ACT-CUST, temporary
+and unrelated roles supply no Sales-workspace permission. Scope precedes labels,
+predicates/limit/lookahead; fresh post-snapshot checks include every returned and
+lookahead roster customer. No reservation/shipping/production action, monetary
+field or wildcard. Codes currently all null: confidential-code filters match only
+the empty established-safe set. [Implementation and actual evidence](../12-implementation-planning/P4B_IMPLEMENTATION_STATUS.md).
 
 ## Implemented P4a Inventory read exception — APR-048
 

@@ -20,7 +20,11 @@ import { PostgresAudit } from './infrastructure/postgresql/audit-store.js';
 import { createLogger } from './infrastructure/logging/json-logger.js';
 import { createHttpHost, closeHttpHost } from './transport/http-host.js';
 import { createIdentityHandler } from './transport/identity-http.js';
-import { IdentityService, IdentityAuthorization } from './modules/identity/index.js';
+import {
+  IdentityService,
+  IdentityAuthorization,
+  type SalesBrowserPrincipal,
+} from './modules/identity/index.js';
 import { PostgresIdentityStore } from './infrastructure/postgresql/identity-store.js';
 import { InventoryPostingService } from './modules/inventory/index.js';
 import type { PostingContext } from './modules/inventory/index.js';
@@ -33,7 +37,14 @@ import { InventoryReceiptService } from './modules/inventory/index.js';
 import { ReceiptService, parseReceiptInput } from './modules/procurement/index.js';
 import { PostgresInventoryReceiptStore } from './infrastructure/postgresql/inventory-receipt-store.js';
 import { PostgresReceiptStore } from './infrastructure/postgresql/receipt-store.js';
-import { SalesService, type SalesContext } from './modules/sales/index.js';
+import {
+  SalesService,
+  SalesBrowserReads,
+  SalesReadError,
+  parseSalesRead,
+  type SalesReadKind,
+  type SalesContext,
+} from './modules/sales/index.js';
 import { PostgresSalesStore } from './infrastructure/postgresql/sales-store.js';
 import { createSalesHandler } from './transport/sales-http.js';
 import { createReceiptHandler } from './transport/receipt-http.js';
@@ -73,6 +84,7 @@ import { createReceivingHandler } from './transport/receiving-http.js';
 import { createBrowserHandler } from './transport/browser-http.js';
 import {
   InventoryDiscoveryService,
+  InventorySalesDiscoveryService,
   InventoryReadCursors,
   InventoryReadError,
   type InventoryReadBinding,
@@ -80,6 +92,8 @@ import {
 } from './modules/inventory/index.js';
 import { PostgresInventoryDiscoveryStore } from './infrastructure/postgresql/inventory-discovery-store.js';
 import { createInventoryReadHandler } from './transport/inventory-http.js';
+import { createSalesBrowserHandler } from './transport/sales-browser-http.js';
+import { SalesReadCursors } from './transport/sales-cursors.js';
 /** Own checked-out error handling: the pool's listener covers only idle clients. */
 export async function pingDatabase(pool: ReturnType<typeof createPool>): Promise<void> {
   const client = await pool.connect();
@@ -107,11 +121,18 @@ export function compose(config: Readonly<Config>) {
   const pool = createPool(config.databaseUrl);
   const log = createLogger(config.logLevel);
   const transactions = new PostgresTransactions(pool);
+  const salesIdentityTransactions = new PostgresTransactions(pool, {
+    deadlineMs: 8000,
+    acquireTimeoutMs: 5000,
+    statementTimeoutMs: 4000,
+    lockTimeoutMs: 1000,
+  });
   const identity = new IdentityService(
     new PostgresIdentityStore(pool),
     transactions,
     config.installationId,
     config.installationId,
+    salesIdentityTransactions,
   );
   const org = (context: ExecutionContext) =>
     context.customerScope === undefined && context.temporary !== true;
@@ -1149,6 +1170,139 @@ export function compose(config: Readonly<Config>) {
       combined.removeEventListener('abort', onAbort);
     }
   };
+  const salesReadAdmissions = new WeakMap<TransactionContext, ExecutionContext>();
+  const salesReadTransactions = new PostgresTransactions(pool, {
+    deadlineMs: 8000,
+    acquireTimeoutMs: 5000,
+    statementTimeoutMs: 4000,
+    lockTimeoutMs: 1000,
+  });
+  const inventorySalesDiscovery: InventorySalesDiscoveryService =
+    new InventorySalesDiscoveryService(new PostgresInventoryDiscoveryStore(), {
+      canRead: (ctx) => Promise.resolve(salesBrowserReads.stockReadAllowed(ctx)),
+    });
+  const salesBrowserReads: SalesBrowserReads = new SalesBrowserReads(
+    salesStore,
+    { discover: (ctx, input) => inventorySalesDiscovery.discover(ctx, input) },
+    (ctx) =>
+      salesReadAdmissions.get(ctx.transaction) === ctx.actor &&
+      ctx.actor.actorRole === 'ACT-SALES' &&
+      validUuid(ctx.actor.customerScope),
+  );
+  const salesCursors = new SalesReadCursors(
+    config.browser?.secret ?? randomUUID(),
+    config.browser?.origin ?? '',
+  );
+  const salesBrowserQuery = async (
+    kind: SalesReadKind,
+    raw: unknown,
+    principal: SalesBrowserPrincipal,
+    customerId: string | undefined,
+    signal: AbortSignal,
+  ) => {
+    const input = parseSalesRead(kind, raw);
+    const binding = salesCursors.binding({
+      principal,
+      actorRole: 'ACT-SALES',
+      customerId: customerId ?? '',
+      kind,
+      input: { ...input, cursor: null },
+      policy: 1,
+    });
+    const cursor = salesCursors.read(input.cursor, binding);
+    const customerIds = customerId ? [customerId] : [];
+    await identity.authorizeSalesReader(principal, customerIds, undefined, signal);
+    const actor = customerId
+      ? await identity.salesContext(principal, customerId, signal)
+      : undefined;
+    const tx = await salesReadTransactions.begin('read-snapshot', signal);
+    let result: unknown, failure: unknown, snapshotAt: string | undefined;
+    try {
+      snapshotAt = (await tx.decisionTime()).toISOString();
+      await identity.authorizeSalesReader(principal, customerIds, tx.context);
+      if (kind === 'customers/query') {
+        result = await Promise.race([
+          salesStore.customers(principal, tx.context, cursor.afterId, input.limit + 1),
+          tx.aborted,
+        ]);
+        customerIds.push(...(result as { customerId: string }[]).map((row) => row.customerId));
+      } else {
+        if (!actor) throw new SalesReadError(400, 'invalid');
+        salesReadAdmissions.set(tx.context, actor);
+        const ctx: SalesContext = {
+          actor,
+          transaction: tx.context,
+          request: {
+            command: kind,
+            contract_version: 1,
+            idempotency_key: randomUUID(),
+            target: { kind: 'query', id: input.orderId ?? input.assessmentId ?? randomUUID() },
+            payload: {},
+            preconditions: {},
+          },
+        };
+        result = await Promise.race([
+          salesBrowserReads.query(ctx, kind, input, cursor.afterId),
+          tx.aborted,
+        ]);
+      }
+      await tx.commit();
+    } catch (error) {
+      failure = error;
+      try {
+        await tx.rollback();
+      } catch {
+        /* failed snapshot remains nondisclosing */
+      }
+    } finally {
+      salesReadAdmissions.delete(tx.context);
+      await tx.release();
+    }
+    // Outside RR and after releasing the connection: each returned/lookahead roster
+    // membership must STILL be granted; another remaining grant is insufficient.
+    signal.throwIfAborted();
+    await identity.authorizeSalesReader(principal, customerIds, undefined, signal);
+    signal.throwIfAborted();
+    if (failure !== undefined) {
+      if (failure instanceof Error) throw failure;
+      throw new SalesReadError(503, 'unavailable');
+    }
+    if (result === undefined || snapshotAt === undefined)
+      throw new SalesReadError(503, 'unavailable');
+    let data: unknown = result;
+    if (Array.isArray(result)) {
+      if (result.length > input.limit + 1) throw new SalesReadError(503, 'unavailable');
+      const items = result.slice(0, input.limit) as Record<string, unknown>[];
+      const last = items.at(-1);
+      const lastId =
+        last?.[
+          kind === 'customers/query'
+            ? 'customerId'
+            : kind === 'orders/query'
+              ? 'orderId'
+              : kind === 'assessments/query'
+                ? 'assessmentId'
+                : 'unitId'
+        ];
+      data = {
+        items,
+        ...(result.length > input.limit && typeof lastId === 'string'
+          ? { nextCursor: salesCursors.next(lastId, cursor.issuedAt, binding) }
+          : {}),
+      };
+    }
+    const response = {
+      data,
+      observation: {
+        snapshotAt,
+        respondedAt: new Date(Math.max(Date.now(), Date.parse(snapshotAt))).toISOString(),
+        consistency: 'PAGE_SNAPSHOT',
+      },
+    };
+    if (Buffer.byteLength(JSON.stringify(response)) > 131072)
+      throw new SalesReadError(503, 'unavailable');
+    return response;
+  };
   const identityHandler = createIdentityHandler(identity);
   const inboundHandler = createInboundHandler({ identity, command, query: inboundQuery });
   const receivingHandler = createReceivingHandler({ identity, command, query: receivingQuery });
@@ -1162,6 +1316,7 @@ export function compose(config: Readonly<Config>) {
               inbound: inboundHandler,
               receiving: receivingHandler,
               inventory: createInventoryReadHandler({ identity, query: inventoryDiscoveryQuery }),
+              sales: createSalesBrowserHandler({ identity, command, query: salesBrowserQuery }),
             },
           ),
         }
@@ -1203,6 +1358,7 @@ export function compose(config: Readonly<Config>) {
     purchaseQuery,
     sales,
     salesQuery,
+    salesBrowserQuery,
     shipping,
     shippingQuery,
     reservations,

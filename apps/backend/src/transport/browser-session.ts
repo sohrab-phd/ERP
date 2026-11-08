@@ -112,11 +112,14 @@ export function browserSession(request: IncomingMessage, session: SelfSession) {
     grants,
     browser: {
       csrf: mac(a.config, 'csrf-v1', a.token),
+      installationId: a.config.installationId,
+      authorityScopeId: session.authorityScopeId ?? a.config.installationId,
+      hasCustomerSales: session.hasCustomerSales === true,
       ...(grants.some((g) => g.actorRole === 'ACT-WH') && a.config.receivingLocation
         ? { receivingLocation: a.config.receivingLocation }
         : {}),
       // Encryption only, never an authentication credential. The key is not persisted by the UI.
-      ...(grants.length
+      ...(grants.length || session.hasCustomerSales === true
         ? {
             recoveryKey: mac(
               a.config,

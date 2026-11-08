@@ -18,6 +18,53 @@ const activeSession =
   "s.revoked_at IS NULL AND a.enabled AND s.expires_at>clock_timestamp() AND s.last_seen_at>clock_timestamp()-interval '30 minutes'";
 export class PostgresIdentityStore implements IdentityStore {
   constructor(private readonly pool: Pool) {}
+  async browserGrants(
+    installation: string,
+    authority: string,
+    accountId: string,
+    tx?: TransactionContext,
+  ) {
+    const client = tx ? transactionClient(tx) : this.pool;
+    const grants = (
+      await client.query<Grant>(
+        'SELECT actor_role AS "actorRole",authority_scope_id AS "authorityScopeId",customer_scope AS "customerScope" FROM identity.role_grant WHERE installation_id=$1 AND authority_scope_id=$2 AND account_id=$3 AND customer_scope=\'\' AND actor_role IN (\'ACT-PROC\',\'ACT-WH\') ORDER BY actor_role LIMIT 2',
+        [installation, authority, accountId],
+      )
+    ).rows;
+    const marker = await client.query<{ allowed: boolean }>(
+      "SELECT EXISTS(SELECT 1 FROM identity.role_grant WHERE installation_id=$1 AND authority_scope_id=$2 AND account_id=$3 AND actor_role='ACT-SALES' AND customer_scope ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$') AS allowed",
+      [installation, authority, accountId],
+    );
+    return { grants, hasCustomerSales: marker.rows[0]?.allowed === true };
+  }
+  async readSession(installation: string, digest: string, tx?: TransactionContext) {
+    return (
+      await (tx ? transactionClient(tx) : this.pool).query<SessionRecord>(
+        'SELECT ' +
+          sessionColumns +
+          ' FROM identity.session s JOIN identity.account a USING(installation_id,account_id) WHERE s.installation_id=$1 AND s.token_digest=$2 AND ' +
+          activeSession,
+        [installation, digest],
+      )
+    ).rows[0];
+  }
+  async salesAccess(
+    installation: string,
+    authority: string,
+    digest: string,
+    accountId: string,
+    personId: string,
+    customers: readonly string[],
+    tx?: TransactionContext,
+  ) {
+    const result = await (tx ? transactionClient(tx) : this.pool).query<{ allowed: boolean }>(
+      'SELECT EXISTS(SELECT 1 FROM identity.session s JOIN identity.account a USING(installation_id,account_id) WHERE s.installation_id=$1 AND s.token_digest=$2 AND s.account_id=$3 AND a.person_id=$4 AND ' +
+        activeSession +
+        " AND NOT EXISTS(SELECT 1 FROM unnest($6::text[]) c(customer_id) WHERE NOT EXISTS(SELECT 1 FROM identity.role_grant g WHERE g.installation_id=s.installation_id AND g.account_id=s.account_id AND g.authority_scope_id=$5 AND g.actor_role='ACT-SALES' AND g.customer_scope=c.customer_id))) AS allowed",
+      [installation, digest, accountId, personId, authority, customers],
+    );
+    return result.rows[0]?.allowed === true;
+  }
   async currentGrant(
     installation: string,
     digest: string,

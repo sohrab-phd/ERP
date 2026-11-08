@@ -12,6 +12,14 @@ approval: null
 
 # P4b Owner decision sheet
 
+**Current Owner decision:** [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
+approves D1 B, D2 A, D3 A, D4 A, D5 A and conditionally D6 A / D7 A against this
+sheet's exact design baseline `e7e7cafab0b052b34b9fd58fa66269dd74792749`.
+Bounded implementation is authorized, not accepted. New index migrations and
+numeric performance thresholds still require the separate decisions specified
+in APR-050. The OPEN/NULL and design-only statements below are retained historical
+proposal text, superseded only by the actual Owner selections and added controls.
+
 **DESIGN PROPOSAL — IMPLEMENTATION NOT AUTHORIZED**
 
 All choices below remain **OPEN** with **Owner approval: NULL**. Recommendations

@@ -3,15 +3,39 @@ id: APP-QRY-001
 title: Application Query Catalogue
 phase: 05-application-api-architecture
 status: in_review
-version: 0.6.1
+version: 0.7.0
 owners: [solution-architect, api-architect]
-depends_on: [APR-049, APR-048, APR-042, APR-038, APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
-last_reviewed: 2026-11-07
+depends_on: [APR-050, APR-049, APR-048, APR-042, APR-038, APP-CMD-001, DATA-GEN-001, APR-006, APR-007]
+last_reviewed: 2026-11-08
 approval: APR-007 historical structure; APR-038 bounded I1 implementation
 supersedes: null
 ---
 
 # Application Query Catalogue
+
+## Bounded P4b Sales browser contracts — APR-050
+
+Exactly six POST reads under `/ui-api/sales/v1/`, authorized by
+[APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md):
+
+| Route suffix | Contract / owner |
+| --- | --- |
+| customers/query | ListSalesCustomers: current granted/configured reference intersection; Identity-issued private principal and Sales-owned labels |
+| orders/query | DiscoverSalesOrders: exact orderId/state/itemType, selected customer, bounded summaries |
+| orders/detail | Public GetSalesOrder through bounded browser wrapper; no private binding/MAKE reference |
+| assessments/query | ListSalesOrderAssessments: own parent, all independent assessments, no assumed latest |
+| assessments/detail | Public GetFulfillmentAssessment through wrapper; recursive DTO whitelist |
+| stock/query | DiscoverSalesStockForItem: Inventory-owned eligible five-field projection for authorized order/item |
+
+The seventh route `commands` is a fixed six-command adapter, not a read or new
+business operation. Legacy bearer routes remain separate. Exact shape/filter/
+null/error and bounds follow the [approved design](../12-implementation-planning/P4B_SALES_UI_WORKFLOW_AND_CONTRACT_DESIGN.md)
+with APR-050 amendments. Default25/allowed10,25,50; UUID keysets, no totals;
+signed actor/session/customer/query-bound original600s cursors, per-page RR
+observation, no chronology/frozen traversal. Data and Identity checks are bounded/
+abortable, with fresh authority after release. Commands retain4096-byte limits
+and whole-kg demand distinct from fractional Inventory strings.
+[Actual delivery status](../12-implementation-planning/P4B_IMPLEMENTATION_STATUS.md).
 
 ## Implemented P4a browser-only Inventory reads — APR-048
 

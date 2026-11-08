@@ -9,8 +9,15 @@ import {
 import { textValue } from './display.js';
 import { createReceiving } from './receiving.js';
 import { createInventory } from './inventory.js';
+import { createSales } from './sales.js';
+import {
+  openSalesIntent,
+  sealSalesIntent,
+  salesPendingSlot,
+  type SalesIntent,
+} from './sales-intent.js';
 
-type Role = 'ACT-PROC' | 'ACT-WH';
+type Role = 'ACT-PROC' | 'ACT-WH' | 'ACT-SALES';
 type Kind = 'MATERIAL_TYPE' | 'QUALITY_GRADE' | 'COLOR';
 interface Self {
   accountId: string;
@@ -20,6 +27,9 @@ interface Self {
   grants: { actorRole: Role }[];
   browser: {
     csrf: string;
+    installationId: string;
+    authorityScopeId: string;
+    hasCustomerSales?: boolean;
     recoveryKey?: string;
     receivingLocation?: { id: string; label: string };
   };
@@ -90,6 +100,12 @@ let orderRead = 0,
 const arrivals = new Set<string>();
 let receivingEditor: ReturnType<typeof createReceiving> | undefined;
 let inventoryView: ReturnType<typeof createInventory> | undefined;
+let salesView: ReturnType<typeof createSales> | undefined;
+let salesCustomer: string | undefined;
+let salesPending: SalesIntent | undefined;
+let salesTerminal: { intent: SalesIntent; outcome: 'accepted' | 'rejected' } | undefined;
+let lockedSalesPending = false;
+let salesWriteOwner: symbol | undefined;
 class Stale extends Error {}
 class RecoveryStorageError extends Error {}
 class ApiError extends Error {
@@ -110,6 +126,9 @@ function node<K extends keyof HTMLElementTagNameMap>(tag: K, text?: string) {
   return n;
 }
 function clearBusiness() {
+  salesView?.clear();
+  salesView = undefined;
+  salesCustomer = undefined;
   inventoryView?.clear();
   inventoryView = undefined;
   orderRead++;
@@ -129,7 +148,10 @@ function lock(text: string) {
   clearTimeout(expiryTimer);
   idleUntil = idleUntilMonotonic = 0;
   self = undefined;
+  salesWriteOwner = undefined;
   pending = undefined;
+  salesPending = undefined;
+  salesTerminal = undefined;
   prepared = undefined;
   busy = false;
   clearBusiness();
@@ -192,9 +214,21 @@ async function api<T>(
   body?: string | object,
   selectedRole: Role = role,
   signal?: AbortSignal,
+  selectedCustomer?: string,
 ): Promise<T> {
   if (checkLocalExpiry()) throw new Stale();
   const generation = epoch;
+  const sales = path.startsWith('/sales/v1/');
+  const customer = salesCustomer;
+  if (
+    sales &&
+    (role !== 'ACT-SALES' || (selectedCustomer !== undefined && selectedCustomer !== customer))
+  )
+    throw new Stale();
+  const isStale = () =>
+    signal?.aborted ||
+    generation !== epoch ||
+    (sales && (role !== 'ACT-SALES' || salesCustomer !== customer));
   const startedAt = Date.now(),
     startedMonotonic = performance.now();
   const controller = new AbortController();
@@ -210,7 +244,8 @@ async function api<T>(
       signal: controller.signal,
       headers: {
         'x-erp-browser': '1',
-        'x-erp-role': selectedRole,
+        ...(sales ? {} : { 'x-erp-role': selectedRole }),
+        ...(selectedCustomer === undefined ? {} : { 'x-customer-id': selectedCustomer }),
         ...(self ? { 'x-erp-csrf': self.browser.csrf } : {}),
         ...(body === undefined ? {} : { 'content-type': 'application/json; charset=utf-8' }),
       },
@@ -218,10 +253,10 @@ async function api<T>(
         ? {}
         : { body: typeof body === 'string' ? body : JSON.stringify(body) }),
     });
-    if (signal?.aborted || generation !== epoch || checkLocalExpiry()) throw new Stale();
+    if (isStale() || checkLocalExpiry()) throw new Stale();
     const value = (await response.json()) as T;
     // A superseded Inventory request must not change the shell's session or idle timer.
-    if (signal?.aborted || generation !== epoch || checkLocalExpiry()) throw new Stale();
+    if (isStale() || checkLocalExpiry()) throw new Stale();
     if (!response.ok) {
       if ((response.status === 401 || response.status === 403) && path !== '/identity/login') {
         lock(
@@ -312,25 +347,42 @@ for (const event of ['input', 'change'])
       control.setCustomValidity('');
   });
 function permissions() {
-  return new Set(self?.grants.map((g) => g.actorRole) ?? []);
+  const result = new Set(self?.grants.map((g) => g.actorRole) ?? []);
+  if (self?.browser.hasCustomerSales) result.add('ACT-SALES');
+  return result;
 }
 function updateControls() {
-  const blocked = busy || !!pending || lockedPending || prepared !== undefined;
+  const blocked = writeBlocked();
   el<HTMLFieldSetElement>('order-fields').disabled = blocked;
   el<HTMLFieldSetElement>('catalogue-fields').disabled = blocked;
-  el<HTMLButtonElement>('recover').disabled = busy || !pending || !permissions().has(pending.role);
+  el<HTMLButtonElement>('recover').disabled =
+    busy || (!legacyRecoveryAllowed() && !salesRecoveryAllowed());
+  el<HTMLButtonElement>('discard').disabled =
+    busy || (!legacyRecoveryAllowed() && !salesRecoveryAllowed());
   el<HTMLButtonElement>('role').disabled = busy || prepared !== undefined;
   show('show-register', permissions().has('ACT-PROC') && role === 'ACT-PROC');
   show('show-receive', permissions().has('ACT-WH') && role === 'ACT-WH');
   show('show-inventory', permissions().has('ACT-WH') && role === 'ACT-WH');
+  show('show-sales', permissions().has('ACT-SALES') && role === 'ACT-SALES');
+  show('show-lookup', role !== 'ACT-SALES');
+  show('show-catalogues', role !== 'ACT-SALES');
   show('arrival-lookup-form', permissions().has('ACT-WH') && role === 'ACT-WH');
   receivingEditor?.setBlocked(blocked || role !== 'ACT-WH');
-  show('recovery', !!pending || lockedPending);
-  el('recovery-note').textContent = lockedPending
-    ? 'یک پیگیری رمز‌شده در این تب وجود دارد که این حساب اجازهٔ بازکردن آن را ندارد. با حساب اصلی وارد شوید یا پس از بررسی نتیجه، پیگیری را صریحاً ببندید. می‌توانید برای کار مستقل تب تازه باز کنید.'
-    : 'نتیجهٔ عملیات تا دریافت پاسخ قطعی نامعلوم است. اطلاعات ثابت مانده است. پیگیری همان درخواست را تکرار می‌کند و سفارش یا اثر موجودی تازه‌ای نمی‌سازد.';
-  const command = pending
-    ? (JSON.parse(pending.body) as {
+  salesView?.updateControls();
+  show('recovery', !!pending || lockedPending || !!salesPending || lockedSalesPending);
+  el('recovery-note').textContent =
+    salesRecoveryAllowed() && salesTerminal?.intent === salesPending
+      ? 'نتیجهٔ عملیات قطعی است؛ پاک‌کردن پیگیری محلی کامل نشد. پیگیری دوباره فقط پاک‌کردن همان سابقه را امتحان می‌کند و درخواست ثبت را ارسال نمی‌کند.'
+      : !legacyRecoveryAllowed() && !salesRecoveryAllowed()
+        ? 'پیگیری رمز‌شده در این تب باقی است؛ ثبت تازه در همهٔ نقش‌ها مسدود است. برای پیگیری یا بستن آگاهانه، با حساب، نقش و مشتری مجازِ همان عملیات وارد شوید. اطلاعات خواندنی مجاز را می‌توانید بررسی کنید.'
+        : 'نتیجهٔ عملیات تا دریافت پاسخ قطعی نامعلوم است. اطلاعات ثابت مانده است. پیگیری همان درخواست را تکرار می‌کند و سفارش یا اثر موجودی تازه‌ای نمی‌سازد.';
+  const visible = salesRecoveryAllowed()
+    ? salesPending
+    : legacyRecoveryAllowed()
+      ? pending
+      : undefined;
+  const command = visible
+    ? (JSON.parse(visible.body) as {
         target: { id: string };
         payload: { orderReference?: string; label?: string; waybills?: { reference: string }[] };
       })
@@ -339,31 +391,95 @@ function updateControls() {
     ? `${command.payload.orderReference ?? command.payload.label ?? command.payload.waybills?.[0]?.reference ?? ''} · ${command.target.id}`
     : '';
 }
+function storedIntentPresent(): boolean {
+  try {
+    return !!sessionStorage.getItem(pendingSlot) || !!sessionStorage.getItem(salesPendingSlot);
+  } catch {
+    return true; // Storage uncertainty fails closed for every new write.
+  }
+}
+function writeBlocked(): boolean {
+  return (
+    busy ||
+    !!pending ||
+    lockedPending ||
+    !!salesPending ||
+    lockedSalesPending ||
+    prepared !== undefined ||
+    storedIntentPresent()
+  );
+}
+function legacyRecoveryAllowed(): boolean {
+  return (
+    !!self &&
+    !!pending &&
+    pending.accountId === self.accountId &&
+    pending.personId === self.personId &&
+    role === pending.role &&
+    permissions().has(pending.role)
+  );
+}
+function salesRecoveryAllowed(): boolean {
+  return (
+    !!self &&
+    !!salesPending &&
+    role === 'ACT-SALES' &&
+    permissions().has('ACT-SALES') &&
+    salesCustomer === salesPending.customerId &&
+    salesPending.accountId === self.accountId &&
+    salesPending.personId === self.personId &&
+    salesPending.installationId === self.browser.installationId &&
+    salesPending.authorityScopeId === self.browser.authorityScopeId
+  );
+}
 async function restorePending() {
   pending = undefined;
+  salesPending = undefined;
+  salesTerminal = undefined;
   lockedPending = false;
+  lockedSalesPending = false;
   let saved: string | null;
+  let savedSales: string | null;
   try {
     saved = sessionStorage.getItem(pendingSlot);
+    savedSales = sessionStorage.getItem(salesPendingSlot);
   } catch {
     lockedPending = true;
+    lockedSalesPending = true;
     updateControls();
     throw new RecoveryStorageError();
   }
-  if (!saved) return;
   const actor = self;
   const generation = epoch;
-  try {
-    if (!actor?.browser.recoveryKey) throw new Error('No current purchasing grant');
-    const intent = await openIntent(saved, actor.browser.recoveryKey);
-    if (generation !== epoch || actor !== self || checkLocalExpiry()) throw new Stale();
-    if (intent.accountId !== actor.accountId || intent.personId !== actor.personId)
-      throw new Error('Different actor');
-    pending = intent;
-  } catch (e) {
-    if (e instanceof Stale) throw e;
-    lockedPending = true;
-  }
+  if (saved)
+    try {
+      if (!actor?.browser.recoveryKey) throw new Error('No current purchasing grant');
+      const intent = await openIntent(saved, actor.browser.recoveryKey);
+      if (generation !== epoch || actor !== self || checkLocalExpiry()) throw new Stale();
+      if (intent.accountId !== actor.accountId || intent.personId !== actor.personId)
+        throw new Error('Different actor');
+      pending = intent;
+    } catch (e) {
+      if (e instanceof Stale) throw e;
+      lockedPending = true;
+    }
+  if (savedSales)
+    try {
+      if (!actor?.browser.recoveryKey) throw new Error('No current recovery key');
+      const intent = await openSalesIntent(savedSales, actor.browser.recoveryKey);
+      if (generation !== epoch || actor !== self || checkLocalExpiry()) throw new Stale();
+      if (
+        intent.accountId !== actor.accountId ||
+        intent.personId !== actor.personId ||
+        intent.installationId !== actor.browser.installationId ||
+        intent.authorityScopeId !== actor.browser.authorityScopeId
+      )
+        throw new Error('Different actor');
+      salesPending = intent; // Customer details remain hidden until its authorized roster selection.
+    } catch (error) {
+      if (error instanceof Stale) throw error;
+      lockedSalesPending = true;
+    }
 }
 async function session() {
   const generation = epoch;
@@ -386,6 +502,9 @@ async function session() {
     (self.accountId !== value.accountId ||
       self.personId !== value.personId ||
       self.browser.csrf !== value.browser.csrf ||
+      self.browser.hasCustomerSales !== value.browser.hasCustomerSales ||
+      self.browser.installationId !== value.browser.installationId ||
+      self.browser.authorityScopeId !== value.browser.authorityScopeId ||
       JSON.stringify(self.grants) !== JSON.stringify(value.grants));
   // An unchanged refresh must not replace an actor while its intent is being encrypted,
   // or restore a stale ciphertext over a command that just reached a terminal outcome.
@@ -404,7 +523,7 @@ async function session() {
   const roles = [...permissions()];
   el('role').replaceChildren(
     ...roles.map((r) => {
-      const o = node('option', r === 'ACT-PROC' ? 'خرید' : 'انبار');
+      const o = node('option', r === 'ACT-PROC' ? 'خرید' : r === 'ACT-WH' ? 'انبار' : 'فروش');
       o.value = r;
       return o;
     }),
@@ -412,13 +531,13 @@ async function session() {
   if (!roles.includes(role)) role = roles[0] ?? 'ACT-PROC';
   el<HTMLSelectElement>('role').value = role;
   el('identity').textContent =
-    `${value.username} · ${roles.map((r) => (r === 'ACT-PROC' ? 'خرید' : 'انبار')).join(' / ') || 'بدون مجوز خرید و انبار'}`;
+    `${value.username} · ${roles.map((r) => (r === 'ACT-PROC' ? 'خرید' : r === 'ACT-WH' ? 'انبار' : 'فروش')).join(' / ') || 'بدون مجوز عملیاتی'}`;
   show('login-panel', false);
   show('logout', true);
   show('workspace', false);
   if (!roles.length) {
     clearBusiness();
-    message('این حساب مجوز خرید یا انبار ندارد. از مسئول دسترسی پیگیری کنید.', 'error');
+    message('این حساب مجوز خرید، انبار یا فروش ندارد. از مسئول دسترسی پیگیری کنید.', 'error');
     return;
   }
   try {
@@ -428,9 +547,12 @@ async function session() {
   }
   if (!el('lines').children.length) addLine();
   updateControls();
+  if (role === 'ACT-SALES') navigate('sales-panel');
 }
 function navigate(panel: string, userNavigation = false) {
+  if (userNavigation && salesView && !salesView.canLeave()) return;
   inventoryView?.hide();
+  salesView?.hide();
   if (userNavigation) {
     orderRead++;
     receivingRead++;
@@ -453,9 +575,32 @@ function navigate(panel: string, userNavigation = false) {
     'receiving-panel',
     'arrival-panel',
     'inventory-panel',
+    'sales-panel',
   ])
     show(id, id === panel);
   if (panel === 'register-panel' && role !== 'ACT-PROC') show(panel, false);
+  if (panel === 'sales-panel') {
+    if (role !== 'ACT-SALES' || !permissions().has('ACT-SALES') || !self) {
+      show(panel, false);
+      return;
+    }
+    salesView ??= createSales({
+      root: el('sales-panel'),
+      canUse: () =>
+        !!self && role === 'ACT-SALES' && permissions().has('ACT-SALES') && !checkLocalExpiry(),
+      writeBlocked,
+      api: <T>(path: string, body: object, customerId: string | undefined, signal: AbortSignal) =>
+        api<T>(path, body, 'ACT-SALES', signal, customerId),
+      customerChanged: (customerId) => {
+        epoch++;
+        salesCustomer = customerId;
+        updateControls();
+        return true;
+      },
+      command: startSalesCommand,
+    });
+    salesView.show();
+  }
   if (panel === 'inventory-panel') {
     if (role !== 'ACT-WH' || !permissions().has('ACT-WH') || !self) {
       show(panel, false);
@@ -579,6 +724,7 @@ function numberLines() {
   });
 }
 async function loadCatalogue(kind: Kind, more = false) {
+  if (role === 'ACT-SALES') return;
   const page = await api<{ data: { items: Option[]; nextAfterId?: string } }>(
     '/purchasing/inbound-catalogues/query',
     {
@@ -992,6 +1138,7 @@ async function dispatchPending() {
   const intent = pending,
     actor = self;
   if (
+    !legacyRecoveryAllowed() ||
     !intent ||
     !actor ||
     intent.accountId !== actor.accountId ||
@@ -1094,7 +1241,7 @@ async function dispatchPending() {
   }
 }
 async function startCommand(path: string, body: string) {
-  if (busy || pending || lockedPending || !self?.browser.recoveryKey) return;
+  if (writeBlocked() || role === 'ACT-SALES' || !self?.browser.recoveryKey) return;
   const actor = self,
     generation = epoch;
   busy = true;
@@ -1109,6 +1256,7 @@ async function startCommand(path: string, body: string) {
     });
     const encrypted = await sealIntent(intent, actor.browser.recoveryKey!);
     if (generation !== epoch || self !== actor || checkLocalExpiry()) throw new Stale();
+    if (storedIntentPresent()) throw new RecoveryStorageError();
     // Storage denial/quota failure must prevent the very first dispatch.
     sessionStorage.setItem(pendingSlot, encrypted);
     pending = intent;
@@ -1121,6 +1269,155 @@ async function startCommand(path: string, body: string) {
     throw new RecoveryStorageError();
   }
   await dispatchPending();
+}
+function salesError(error: unknown): string {
+  if (!(error instanceof ApiError)) return errorText(error);
+  const family = error.outcome?.result?.family;
+  if (family === 'GUARD_STATE')
+    return 'وضعیت سفارش یا ارزیابی تغییر کرده است. اطلاعات را تازه‌سازی و اقدام مجاز را دوباره بررسی کنید.';
+  if (family === 'GUARD_INVARIANT')
+    return 'تقاضا یا انتخاب موجودی پذیرفته نشد. کیلوگرم کامل، مشخصات اقلام و موجودی مشاهده‌شده را بازبینی کنید.';
+  if (family === 'GUARD_IDEMPOTENT_DUP')
+    return 'این عملیات قبلاً ثبت شده است. نتیجهٔ اصلی را از سرور بازیابی کنید؛ ثبت تازه انجام نشد.';
+  if (family === 'GUARD_CONFLICT' || error.status === 409)
+    return 'هویت یا مشخصات این درخواست با ثبت قبلی تعارض دارد. اطلاعات قطعی را بازیابی کنید؛ تاریخچه بازنویسی نشد.';
+  return error.status === 400 || error.status === 422
+    ? 'درخواست فروش پذیرفته نشد. قالب فیلدها، انتخاب مشتری و اندازهٔ کامل درخواست را بررسی کنید.'
+    : errorText(error);
+}
+function finishSalesIntent(intent: SalesIntent, outcome: 'accepted' | 'rejected'): boolean {
+  if (salesPending !== intent) return false;
+  salesTerminal = { intent, outcome };
+  // Resolve this exact intent before any supplementary read can fail or outlive navigation.
+  try {
+    sessionStorage.removeItem(salesPendingSlot);
+    lockedSalesPending = false;
+    salesPending = undefined;
+    salesTerminal = undefined;
+    return true;
+  } catch {
+    lockedSalesPending = false;
+    message(
+      'نتیجهٔ ثبت قطعی دریافت شد، اما پاک‌کردن پیگیری محلی کامل نشد. ثبت تازه مسدود است؛ پس از برقراری ذخیره‌سازی، همان نتیجه را پیگیری کنید.',
+      'error',
+    );
+    return false;
+  }
+}
+async function dispatchSalesPending(): Promise<'accepted' | 'rejected' | 'uncertain'> {
+  const intent = salesPending;
+  if (!intent || !salesRecoveryAllowed() || busy || checkLocalExpiry()) return 'uncertain';
+  if (salesTerminal?.intent === intent) {
+    const outcome = salesTerminal.outcome;
+    finishSalesIntent(intent, outcome);
+    updateControls();
+    return outcome;
+  }
+  const generation = epoch;
+  const owner = Symbol('sales-dispatch');
+  salesWriteOwner = owner;
+  busy = true;
+  updateControls();
+  try {
+    const result = await api<Outcome>(
+      intent.path,
+      intent.body,
+      'ACT-SALES',
+      undefined,
+      intent.customerId,
+    );
+    if (generation !== epoch || salesPending !== intent || !salesRecoveryAllowed())
+      throw new Stale();
+    if (result.status !== 'completed' || result.result?.outcome !== 'accepted')
+      throw new ApiError(503);
+    if (finishSalesIntent(intent, 'accepted'))
+      message('عملیات فروش قطعی شد. جزئیات را از سرور بازیابی کنید.', 'success');
+    return 'accepted';
+  } catch (error) {
+    if (generation !== epoch || salesPending !== intent || error instanceof Stale)
+      return 'uncertain';
+    if (error instanceof ApiError && [400, 409, 422].includes(error.status)) {
+      if (finishSalesIntent(intent, 'rejected')) message(salesError(error), 'error');
+      return 'rejected';
+    }
+    message(salesError(error), 'error');
+    return 'uncertain';
+  } finally {
+    if (salesWriteOwner === owner) {
+      salesWriteOwner = undefined;
+      busy = false;
+      updateControls();
+    }
+  }
+}
+async function startSalesCommand(
+  body: string,
+  customerId: string,
+): Promise<'accepted' | 'rejected' | 'uncertain'> {
+  const actor = self,
+    generation = epoch;
+  if (
+    !actor?.browser.recoveryKey ||
+    role !== 'ACT-SALES' ||
+    !permissions().has('ACT-SALES') ||
+    customerId !== salesCustomer ||
+    writeBlocked() ||
+    checkLocalExpiry()
+  )
+    return 'rejected';
+  if (new TextEncoder().encode(body).length > 4096) {
+    message(
+      'اندازهٔ کامل درخواست از ۴۰۹۶ بایت بیشتر است. تعداد اقلام یا متن را کاهش دهید؛ هیچ داده‌ای کوتاه یا ارسال نشد.',
+      'error',
+    );
+    return 'rejected';
+  }
+  const owner = Symbol('sales-encryption');
+  salesWriteOwner = owner;
+  busy = true;
+  updateControls();
+  try {
+    const intent: SalesIntent = Object.freeze({
+      installationId: actor.browser.installationId,
+      authorityScopeId: actor.browser.authorityScopeId,
+      accountId: actor.accountId,
+      personId: actor.personId,
+      role: 'ACT-SALES',
+      customerId,
+      path: '/sales/v1/commands',
+      body,
+    });
+    const encrypted = await sealSalesIntent(intent, actor.browser.recoveryKey);
+    if (
+      generation !== epoch ||
+      self !== actor ||
+      customerId !== salesCustomer ||
+      checkLocalExpiry()
+    )
+      throw new Stale();
+    if (storedIntentPresent()) throw new RecoveryStorageError();
+    sessionStorage.setItem(salesPendingSlot, encrypted);
+    salesPending = intent;
+  } catch (error) {
+    if (generation === epoch && !(error instanceof Stale))
+      message(errorText(new RecoveryStorageError()), 'error');
+    return 'rejected';
+  } finally {
+    if (salesWriteOwner === owner) {
+      salesWriteOwner = undefined;
+      busy = false;
+      updateControls();
+    }
+  }
+  return dispatchSalesPending();
+}
+async function recoverCurrent() {
+  if (salesRecoveryAllowed()) {
+    const intent = salesPending!;
+    const result = await dispatchSalesPending();
+    if (result === 'accepted' && role === 'ACT-SALES' && salesCustomer === intent.customerId)
+      await salesView?.refreshAfterCommand(intent.body);
+  } else if (legacyRecoveryAllowed()) await dispatchPending();
 }
 on('login-form', 'submit', async () => {
   if (loggingOut) return;
@@ -1189,16 +1486,25 @@ for (const [id, panel] of [
   ['show-catalogues', 'catalogue-panel'],
   ['show-receive', 'receiving-panel'],
   ['show-inventory', 'inventory-panel'],
+  ['show-sales', 'sales-panel'],
 ] as const)
   el(id).addEventListener('click', () => navigate(panel, true));
 el('role').addEventListener('change', () => {
+  if (salesView && !salesView.canLeave()) {
+    el<HTMLSelectElement>('role').value = role;
+    return;
+  }
   epoch++;
   role = input('role') as Role;
   clearBusiness();
   receivingEditor?.clear();
   receivingEditor = undefined;
-  navigate('lookup-panel');
+  navigate(role === 'ACT-SALES' ? 'sales-panel' : 'lookup-panel');
   updateControls();
+  if (role !== 'ACT-SALES')
+    action(async () => {
+      await Promise.all(kinds.map((k) => loadCatalogue(k)));
+    })();
 });
 el('add-line').addEventListener('click', addLine);
 on('refresh-catalogues', 'click', async () => {
@@ -1221,7 +1527,7 @@ on('catalogue-form', 'submit', async () => {
   );
 });
 on('order-form', 'submit', async () => {
-  if (busy || pending || lockedPending || role !== 'ACT-PROC') return;
+  if (writeBlocked() || role !== 'ACT-PROC') return;
   prepared = {
     orderReference: input('order-reference'),
     registrationDateJalali: input('order-date'),
@@ -1255,14 +1561,21 @@ el('cancel-order').addEventListener('click', () => {
   show('order-confirm', false);
   updateControls();
 });
-on('recover', 'click', dispatchPending);
+on('recover', 'click', recoverCurrent);
 el('discard').addEventListener('click', () => show('discard-confirm', true));
 el('cancel-discard').addEventListener('click', () => show('discard-confirm', false));
 el('confirm-discard').addEventListener('click', () => {
   if (busy) return;
-  sessionStorage.removeItem(pendingSlot);
-  pending = undefined;
-  lockedPending = false;
+  if (salesRecoveryAllowed()) {
+    sessionStorage.removeItem(salesPendingSlot);
+    salesPending = undefined;
+    salesTerminal = undefined;
+    lockedSalesPending = false;
+  } else if (legacyRecoveryAllowed()) {
+    sessionStorage.removeItem(pendingSlot);
+    pending = undefined;
+    lockedPending = false;
+  } else return;
   show('discard-confirm', false);
   updateControls();
   message('پیگیری بسته شد؛ این کار هیچ سفارش ثبت‌شده‌ای را لغو نمی‌کند.');
@@ -1289,6 +1602,12 @@ async function revalidate() {
   checking = true;
   try {
     await session();
+    // Bootstrap deliberately exposes no customer grant array. Its unchanged
+    // Sales marker cannot prove this selected customer's permission still exists.
+    if (self && role === 'ACT-SALES' && salesCustomer) {
+      const customer = salesCustomer;
+      await api('/sales/v1/orders/query', { limit: 10 }, 'ACT-SALES', undefined, customer);
+    }
   } finally {
     checking = false;
   }

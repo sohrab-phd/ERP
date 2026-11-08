@@ -10,7 +10,7 @@ import { browserTestPassword } from '../../apps/backend/dist/tests/support/brows
 // Actual Chromium + the composed native app + the guarded real PostgreSQL fixture.
 // No browser automation dependency or production-side test hook is installed.
 const root = process.cwd();
-const output = resolve('artifacts/tests');
+const output = resolve(process.env.P4A_CHROMIUM_OUTPUT ?? 'artifacts/tests');
 mkdirSync(output, { recursive: true });
 const results = [];
 const consoleErrors = [];

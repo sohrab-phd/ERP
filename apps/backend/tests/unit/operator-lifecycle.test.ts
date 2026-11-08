@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createContext, Script } from 'node:vm';
 import { randomBytes } from 'node:crypto';
 import * as intent from '../../src/operator/intent.js';
+import * as salesIntent from '../../src/operator/sales-intent.js';
 import { textValue } from '../../src/operator/display.js';
 
 // Component tests execute the built application, not a second session/rendering
@@ -147,6 +148,7 @@ async function harness() {
   };
   const context = createContext({
     ...intent,
+    ...salesIntent,
     textValue,
     document: Object.assign(document, {
       visibilityState: 'visible',

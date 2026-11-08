@@ -3,7 +3,7 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.37.0
+version: 0.38.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-11-07
@@ -12,6 +12,18 @@ supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-050 — Formal P4b bounded implementation authorization
+
+[Actual Owner decisions](approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
+approve D1 B / D2 A / D3 A / D4 A / D5 A, with D6 A index migrations and D7 A
+numeric performance budgets requiring subsequent explicit decisions. Approved
+design revision `e7e7cafab0b052b34b9fd58fa66269dd74792749`; clean `main` verified.
+Seven exact Sales browser routes, current customer grants, owner reads, six
+unchanged commands, Persian RTL UI/recovery/interlock and new real evidence/reviews
+are authorized. This is implementation authority, not acceptance. Additional
+internal-code confidentiality/roster fresh-authorization safeguards are binding.
+No migration automatically approved, push/deployment/pilot or adjacent-slice work.
 
 ## Current P4b discovery/design-only Owner directive — 2026-11-07
 

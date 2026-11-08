@@ -155,7 +155,16 @@ export function createIdentityHandler(
           Number(request.headers['content-length'] ?? 0) !== 0
         )
           throw new IdentityError('invalid');
-        reply(response, 200, browserSession(request, await identity.session(token(request))));
+        reply(
+          response,
+          200,
+          browserSession(
+            request,
+            await (browserRequest(request)
+              ? identity.browserSelf(token(request))
+              : identity.session(token(request))),
+          ),
+        );
         return;
       }
       // Authenticate framing/header before any expensive credential operation.

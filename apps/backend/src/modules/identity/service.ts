@@ -22,12 +22,26 @@ interface Issuance {
   digest: string;
   accountId: string;
 }
+interface SalesQueryTransactions {
+  begin(mode?: 'write' | 'read-snapshot', signal?: AbortSignal): Promise<TransactionSession>;
+}
 export interface SelfSession {
   accountId: string;
   personId: string;
   username: string;
   expiresAt: Date;
   grants: Grant[];
+  hasCustomerSales?: boolean;
+  installationId?: string;
+  authorityScopeId?: string;
+}
+/** Private authenticated query capability. Never serialized into browser DTOs. */
+export interface SalesBrowserPrincipal {
+  readonly installationId: string;
+  readonly authorityScopeId: string;
+  readonly accountId: string;
+  readonly personId: string;
+  readonly sessionDigest: string;
 }
 const authenticatedContexts = new WeakSet<ExecutionContext>();
 
@@ -78,20 +92,34 @@ function sameGrant(grant: Grant, role: HumanRole, authority: string, customer: s
 
 export class IdentityService {
   private readonly issued = new WeakMap<ExecutionContext, Issuance>();
+  private readonly salesReaders = new WeakSet<SalesBrowserPrincipal>();
   constructor(
     private readonly store: IdentityStore,
     private readonly transactions: TransactionPort,
     private readonly installationId: string,
     private readonly authorityScopeId: string,
+    private readonly salesQueryTransactions?: SalesQueryTransactions,
   ) {
     if (!validUuid(installationId) || !validUuid(authorityScopeId))
       throw new IdentityError('invalid');
   }
 
-  private async transaction<T>(work: (tx: TransactionContext) => Promise<T>): Promise<T> {
+  private async transaction<T>(
+    work: (tx: TransactionContext) => Promise<T>,
+    sales?: {
+      readOnly?: boolean;
+      signal?: AbortSignal | undefined;
+    },
+  ): Promise<T> {
     let session: TransactionSession | undefined;
     try {
-      session = await this.transactions.begin();
+      session =
+        sales && this.salesQueryTransactions
+          ? await this.salesQueryTransactions.begin(
+              sales.readOnly ? 'read-snapshot' : 'write',
+              sales.signal,
+            )
+          : await this.transactions.begin();
       const active = session;
       const pending = (async () => {
         const result = await work(active.context);
@@ -391,6 +419,112 @@ export class IdentityService {
     customerScope?: string,
   ): Promise<ExecutionContext> {
     return (await this.contextAndSession(token, actorRole, customerScope)).actor;
+  }
+
+  async browserSelf(token: string): Promise<SelfSession> {
+    const tokenDigest = digest(token);
+    if (!this.store.browserGrants) throw new IdentityError('busy');
+    // Preserve existing session idle refresh and account-before-session locking.
+    return this.transaction(async (tx) => {
+      const session = await this.requireSession(tx, tokenDigest, true);
+      const projection = await this.store.browserGrants!(
+        this.installationId,
+        this.authorityScopeId,
+        session.accountId,
+        tx,
+      );
+      return {
+        accountId: session.accountId,
+        personId: session.personId,
+        username: session.username,
+        expiresAt: session.expiresAt,
+        grants: projection.grants,
+        hasCustomerSales: projection.hasCustomerSales,
+        installationId: this.installationId,
+        authorityScopeId: this.authorityScopeId,
+      };
+    });
+  }
+
+  async salesReader(token: string, signal?: AbortSignal): Promise<SalesBrowserPrincipal> {
+    const sessionDigest = digest(token);
+    if (!this.store.readSession) throw new IdentityError('busy');
+    // Renew accepted idle lifetime before the read-only data snapshot. Browser
+    // activity bounds use request-start time; a read must renew the server too.
+    const session = await this.transaction((tx) => this.requireSession(tx, sessionDigest, true), {
+      signal,
+    });
+    const principal = Object.freeze({
+      installationId: this.installationId,
+      authorityScopeId: this.authorityScopeId,
+      accountId: session.accountId,
+      personId: session.personId,
+      sessionDigest,
+    });
+    this.salesReaders.add(principal);
+    return principal;
+  }
+
+  async authorizeSalesReader(
+    principal: SalesBrowserPrincipal,
+    customers: readonly string[] = [],
+    tx?: TransactionContext,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    if (tx === undefined && this.salesQueryTransactions)
+      return this.transaction(
+        (inner) => this.authorizeSalesReader(principal, customers, inner, signal),
+        { readOnly: true, signal },
+      );
+    if (
+      !this.salesReaders.has(principal) ||
+      !this.store.salesAccess ||
+      customers.length > 51 ||
+      customers.some((id) => !validUuid(id))
+    )
+      throw new IdentityError('forbidden');
+    if (!this.store.readSession) throw new IdentityError('busy');
+    const session = await this.store.readSession(this.installationId, principal.sessionDigest, tx);
+    if (
+      !session ||
+      session.accountId !== principal.accountId ||
+      session.personId !== principal.personId
+    )
+      throw new IdentityError('unauthenticated');
+    if (
+      !(await this.store.salesAccess(
+        this.installationId,
+        this.authorityScopeId,
+        principal.sessionDigest,
+        principal.accountId,
+        principal.personId,
+        customers,
+        tx,
+      ))
+    )
+      throw new IdentityError('forbidden');
+  }
+
+  async salesContext(
+    principal: SalesBrowserPrincipal,
+    customerId: string,
+    signal?: AbortSignal,
+  ): Promise<ExecutionContext> {
+    await this.authorizeSalesReader(principal, [customerId], undefined, signal);
+    const context: ExecutionContext = Object.freeze({
+      installationId: this.installationId,
+      authorityScopeId: this.authorityScopeId,
+      principal: Object.freeze({
+        issuer: `local:${this.installationId}`,
+        subject: principal.personId,
+      }),
+      actorRole: 'ACT-SALES',
+      requestId: randomUUID(),
+      customerScope: customerId,
+    });
+    this.issued.set(context, { digest: principal.sessionDigest, accountId: principal.accountId });
+    authenticatedContexts.add(context);
+    return context;
   }
 
   async contextAndSession(

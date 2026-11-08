@@ -5,15 +5,24 @@ phase: 00-governance
 status: in_review
 version: 0.33.0
 owners: [chief-solution-architect]
-depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
-last_reviewed: 2026-11-07
+depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
+last_reviewed: 2026-11-08
 approval: null
 supersedes: null
 ---
 
 # Architecture Documentation Index
 
-## Current P4a acceptance and P4b discovery/design only (2026-11-07)
+## Current P4b bounded implementation (2026-11-08)
+
+- [APR-050 actual Owner implementation decisions and boundaries](00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
+- [P4b delivered behavior, verification and remaining Owner gates](12-implementation-planning/P4B_IMPLEMENTATION_STATUS.md)
+
+APR-050 supersedes the earlier design-only boundary below. P4b remains NOT
+ACCEPTED; numeric performance budgets and final acceptance require explicit Owner
+decisions. No new migration, adjacent slice, push, deployment or pilot is granted.
+
+## Earlier P4a acceptance and P4b discovery/design only (2026-11-07, historical)
 
 - [APR-049 formal P4a Owner acceptance, exact revision, evidence and limitations](00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
 - [Accepted P4a implementation and final clean verification](12-implementation-planning/P4A_IMPLEMENTATION_STATUS.md)

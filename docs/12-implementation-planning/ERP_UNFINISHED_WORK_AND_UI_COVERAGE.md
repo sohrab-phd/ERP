@@ -5,14 +5,26 @@ phase: 12-implementation-planning
 status: in_review
 version: 1.3.0
 owners: [delivery-lead, chief-solution-architect]
-depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, IMPL-P2-REMEDIATION-001]
-last_reviewed: 2026-11-07
+depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-043, PLAN-IMPLEMENTATION-BACKLOG-001, IMPL-P2-REMEDIATION-001]
+last_reviewed: 2026-11-08
 approval: null
 ---
 
 # ERP unfinished work and operator UI coverage — current alignment 2026-11-07
 
-## Current P4a acceptance and next workstream — 2026-11-07
+## Current P4b bounded implementation — 2026-11-08
+
+[APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
+now authorizes the bounded Sales UI implementation, superseding design-only text
+in earlier snapshots below. Customer roster/order/assessment reads, narrow
+Inventory-owned candidates and the six unchanged Sales commands are implemented
+under final verification. [Actual delivery status](P4B_IMPLEMENTATION_STATUS.md)
+owns current evidence and limitations. P4b is NOT ACCEPTED; numeric performance
+and product acceptance decisions remain with the Owner. No new migration, adjacent
+slice, factory pilot, deployment or remote push is authorized. P4a's representative
+pre-0019 migration-wide overhead measurement remains a separate deployment gate.
+
+## Earlier P4a acceptance and next workstream — 2026-11-07 (historical)
 
 [APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
 formally accepts P4a Warehouse Inventory Visibility at

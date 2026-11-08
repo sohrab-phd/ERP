@@ -29,6 +29,8 @@ const files = [
   'receipt-http',
   'sales',
   'sales-http',
+  'sales-browser',
+  'inventory-sales-discovery',
   'reservation',
   'reservation-http',
   'shipping',

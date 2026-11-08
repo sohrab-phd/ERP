@@ -12,6 +12,8 @@ const assets = new Map([
   ['/operator/display.js', ['display.js', 'text/javascript; charset=utf-8']],
   ['/operator/receiving.js', ['receiving.js', 'text/javascript; charset=utf-8']],
   ['/operator/inventory.js', ['inventory.js', 'text/javascript; charset=utf-8']],
+  ['/operator/sales.js', ['sales.js', 'text/javascript; charset=utf-8']],
+  ['/operator/sales-intent.js', ['sales-intent.js', 'text/javascript; charset=utf-8']],
   ['/operator/styles.css', ['styles.css', 'text/css; charset=utf-8']],
 ]);
 export function browserHeaders(response: ServerResponse, secure: boolean) {
@@ -31,7 +33,13 @@ export function browserHeaders(response: ServerResponse, secure: boolean) {
 /** No CORS or arbitrary proxy. Legacy routes still reject Origin and cannot use these cookies. */
 export function createBrowserHandler(
   config: BrowserConfig,
-  handlers: { identity: Handler; inbound: Handler; receiving: Handler; inventory?: Handler },
+  handlers: {
+    identity: Handler;
+    inbound: Handler;
+    receiving: Handler;
+    inventory?: Handler;
+    sales?: Handler;
+  },
 ) {
   return async (request: IncomingMessage, response: ServerResponse): Promise<boolean> => {
     const path = request.url ?? '';
@@ -75,7 +83,18 @@ export function createBrowserHandler(
           '/inventory/v1/units/detail',
           '/inventory/v1/lots/units/query',
         ].includes(route);
-      if (!identity && !inbound && !receiving && !inventory) {
+      const sales =
+        handlers.sales !== undefined &&
+        [
+          '/sales/v1/customers/query',
+          '/sales/v1/orders/query',
+          '/sales/v1/orders/detail',
+          '/sales/v1/assessments/query',
+          '/sales/v1/assessments/detail',
+          '/sales/v1/stock/query',
+          '/sales/v1/commands',
+        ].includes(route);
+      if (!identity && !inbound && !receiving && !inventory && !sales) {
         respond(response, 404, { error: 'not-found' });
         request.resume();
         return true;
@@ -94,7 +113,9 @@ export function createBrowserHandler(
             ? handlers.inbound
             : inventory
               ? handlers.inventory!
-              : handlers.receiving
+              : sales
+                ? handlers.sales!
+                : handlers.receiving
       )(request, response);
     } catch (error) {
       if (!response.headersSent) response.setHeader('connection', 'close');

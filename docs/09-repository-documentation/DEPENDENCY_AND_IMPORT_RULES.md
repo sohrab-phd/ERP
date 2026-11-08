@@ -3,15 +3,37 @@ id: REPO-DEP-001
 title: Dependency and Import Rules
 phase: 09-repository-documentation
 status: approved
-version: 0.4.0
+version: 0.5.0
 owners: [solution-architect]
-depends_on: [APR-048, APR-042, APP-MOD-001, REPO-LAY-001, DATA-TX-001, APR-010, APR-011]
-last_reviewed: 2026-11-05
+depends_on: [APR-050, APR-048, APR-042, APP-MOD-001, REPO-LAY-001, DATA-TX-001, APR-010, APR-011]
+last_reviewed: 2026-11-08
 approval: APR-011 historical rules; APR-042 bounded I2 owner-port reconciliation
 supersedes: null
 ---
 
 # Dependency and Import Rules
+
+## Bounded P4b owner read composition — APR-050
+
+[APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
+adds public Identity/Sales/Inventory read ports wired in composition. Identity
+mints a private branded Sales reader and bounded current-grant checks; Sales owns
+order/assessment facts and roster labels; Inventory owns candidate eligibility
+and exact source validation. Domain/transport import public indexes, not another
+module's private store or source implementation.
+
+The roster deliberately uses a read-only Identity account/session/grant EXISTS
+predicate inside the Sales adapter. This narrow composed SELECT restricts scope
+before labels, LIMIT and lookahead, without fetching unbounded grants or trimming
+broad pages in memory. It is not described as no cross-owner SQL: that Identity
+predicate must stay consistent with accepted Identity session/grant semantics.
+Identity validates the private principal; it never becomes a browser DTO. There
+are no cross-owner writes, views/migrations, grant-policy changes or generic query API.
+
+Inventory candidates reuse the SELECT-only Inventory discovery adapter and shared
+exact evidence verifier through a separate admitted Sales port. WH policy is
+unchanged; command availability is not called per row. Owner/IPS writer guards
+remain intact. [Actual implementation/review evidence](../12-implementation-planning/P4B_IMPLEMENTATION_STATUS.md).
 
 ## Bounded P4a Inventory read adapter — APR-048
 

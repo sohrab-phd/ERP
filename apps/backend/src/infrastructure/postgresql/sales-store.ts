@@ -7,8 +7,11 @@ import type {
   StockSelection,
   StockView,
   ReservationCompetitor,
+  SalesRosterPrincipal,
+  SalesReadInput,
 } from '../../modules/sales/index.js';
 import { transactionClient } from './transaction.js';
+import type { TransactionContext } from '@navard/shared-kernel';
 const scope = (ctx: SalesContext) => [
   ctx.actor.installationId,
   ctx.actor.authorityScopeId,
@@ -26,6 +29,79 @@ function record<T>(row: object | undefined): T | undefined {
 }
 /** All resource lookups bind installation, authority AND customer; only Sales writes these records. */
 export class PostgresSalesStore implements SalesStore {
+  /** Same-snapshot read-only intersection. Identity mints the private principal;
+   * SQL scopes current exact grants before Sales labels, ordering and LIMIT. */
+  async customers(
+    p: SalesRosterPrincipal,
+    tx: TransactionContext,
+    afterId: string | undefined,
+    take: number,
+  ) {
+    return (
+      await transactionClient(tx).query<{ customerId: string; displayName: string }>(
+        `SELECT c.customer_id AS "customerId",c.display_name AS "displayName" FROM sales.customer c
+       WHERE c.installation_id=$1 AND c.authority_scope=$2 AND ($6::uuid IS NULL OR c.customer_id>$6::uuid)
+       AND EXISTS(SELECT 1 FROM identity.role_grant g JOIN identity.account a USING(installation_id,account_id)
+         JOIN identity.session s USING(installation_id,account_id) WHERE g.installation_id=c.installation_id AND g.authority_scope_id=c.authority_scope
+         AND g.account_id=$3 AND a.person_id=$4 AND s.token_digest=$5 AND g.actor_role='ACT-SALES' AND g.customer_scope=c.customer_id::text
+         AND a.enabled AND s.revoked_at IS NULL AND s.expires_at>clock_timestamp() AND s.last_seen_at>clock_timestamp()-interval '30 minutes')
+       ORDER BY c.customer_id LIMIT $7`,
+        [
+          p.installationId,
+          p.authorityScopeId,
+          p.accountId,
+          p.personId,
+          p.sessionDigest,
+          afterId ?? null,
+          take,
+        ],
+      )
+    ).rows;
+  }
+  async orders(ctx: SalesContext, input: SalesReadInput, afterId?: string) {
+    const rows = await transactionClient(ctx.transaction).query<{
+      orderId: string;
+      customerId: string;
+      customerName: string;
+      state: string;
+      itemCount: number;
+      confirmedAt?: string;
+      confirmedAssessmentId?: string;
+    }>(
+      `SELECT order_id AS "orderId",customer_id AS "customerId",customer_name AS "customerName",state,jsonb_array_length(items) AS "itemCount",
+       confirmed_at AS "confirmedAt",confirmed_assessment_id AS "confirmedAssessmentId" FROM sales.sales_order
+       WHERE installation_id=$1 AND authority_scope=$2 AND customer_id=$3
+       AND ($4::uuid IS NULL OR order_id>$4::uuid) AND ($5::uuid IS NULL OR order_id=$5::uuid)
+       AND ($6::text IS NULL OR state=$6) AND ($7::text IS NULL OR EXISTS(SELECT 1 FROM jsonb_array_elements(items) i WHERE i->>'type'=$7))
+       ORDER BY order_id LIMIT $8`,
+      [
+        ...scope(ctx),
+        afterId ?? null,
+        input.filters.orderId ?? null,
+        input.filters.state ?? null,
+        input.filters.itemType ?? null,
+        input.limit + 1,
+      ],
+    );
+    return rows.rows.map((row) => record<typeof row>(row)!);
+  }
+  async assessments(ctx: SalesContext, orderId: string, limit: number, afterId?: string) {
+    const rows = await transactionClient(ctx.transaction).query<{
+      assessmentId: string;
+      orderId: string;
+      customerId: string;
+      state: string;
+      mode?: string;
+      observedAt?: string;
+    }>(
+      `SELECT assessment_id AS "assessmentId",order_id AS "orderId",customer_id AS "customerId",state,
+       CASE WHEN state='RECORDED' THEN fulfillment_mode END AS mode,observed_at AS "observedAt"
+       FROM sales.fulfillment_assessment WHERE installation_id=$1 AND authority_scope=$2 AND customer_id=$3 AND order_id=$4
+       AND ($5::uuid IS NULL OR assessment_id>$5::uuid) ORDER BY assessment_id LIMIT $6`,
+      [...scope(ctx), orderId, afterId ?? null, limit + 1],
+    );
+    return rows.rows.map((row) => record<typeof row>(row)!);
+  }
   async reservationOrder(
     ctx: SalesContext,
     id: string,

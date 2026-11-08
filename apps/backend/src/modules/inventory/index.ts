@@ -7,3 +7,4 @@ export * from './shipping.js';
 export * from './production.js';
 export * from './inbound-receiving.js';
 export * from './discovery.js';
+export * from './sales-discovery.js';

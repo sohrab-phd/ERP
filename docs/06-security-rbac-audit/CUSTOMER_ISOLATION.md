@@ -3,15 +3,45 @@ id: SEC-ISO-001
 title: Customer Isolation Policy
 phase: 06-security-rbac-audit
 status: in_review
-version: 0.5.1
+version: 0.6.0
 owners: [security-architect]
-depends_on: [APR-049, APR-048, SEC-RBAC-001, APP-QRY-001, APP-ENV-001, APR-007, APR-008]
-last_reviewed: 2026-11-07
+depends_on: [APR-050, APR-049, APR-048, SEC-RBAC-001, APP-QRY-001, APP-ENV-001, APR-007, APR-008]
+last_reviewed: 2026-11-08
 approval: null
 supersedes: null
 ---
 
 # Customer Isolation Policy
+
+## Bounded Sales browser disclosure — APR-050
+
+[APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
+authorizes exact-customer Sales browser reads and the existing command adapter;
+it does not broaden P4a's WH exception or organizational invoice-evidence policy.
+Bootstrap exposes a bounded capability marker, not a full customer/grant array.
+Roster is current exact grants intersected with configured Sales references,
+scoped before names/order/pagination, without an invented org Sales context.
+
+Every other Sales route requires one exact current customer selector. SQL scopes
+installation/authority/customer before lookup, predicates and lookahead. Foreign
+and missing objects are nondisclosing. Short RR snapshots release connections
+before fresh session/account/customer checks. Roster reauthorizes every returned
+and lookahead customer's grant; another surviving grant is insufficient.
+Revocation/expiry takes precedence over materialized data and private errors.
+
+Inventory-owned order/item candidate reads expose only unitId, internalCode,
+kind, AVAILABLE state and exact availableKg from eligible organization or
+same-customer stock. No ownership key, Lot/location/origin detail, commercial,
+competitor or production reference, or reservation total. Legacy/I2 code text
+has no established confidentiality-safe provenance; production has none. Codes
+are null and exact code filters cannot probe private values. Ledger/Balance/claim/
+issue disagreement fails closed; no allocation or changed command-time authority.
+
+Browser actor/customer/view generations guard late results and denials. Focus/
+pageshow revalidates the selected customer because an unchanged Sales marker does
+not prove that particular grant. Encrypted exact-context recovery never moves
+across customers/roles; one unresolved PROC/WH/Sales write blocks every new write
+in its tab. Closing recovery is not cancellation. [Delivery/evidence](../12-implementation-planning/P4B_IMPLEMENTATION_STATUS.md).
 
 ## P4a Inventory-only organizational Warehouse exception — APR-048
 

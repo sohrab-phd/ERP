@@ -45,6 +45,27 @@ export type SecurityEvent =
   | 'GRANT_CHANGED'
   | 'PASSWORD_CHANGED';
 export interface IdentityStore {
+  /** Nonlocking, bounded browser projection; never the full Sales grant roster. */
+  browserGrants?(
+    installation: string,
+    authority: string,
+    accountId: string,
+    tx?: TransactionContext,
+  ): Promise<{ grants: Grant[]; hasCustomerSales: boolean }>;
+  readSession?(
+    installation: string,
+    digest: string,
+    tx?: TransactionContext,
+  ): Promise<SessionRecord | undefined>;
+  salesAccess?(
+    installation: string,
+    authority: string,
+    digest: string,
+    accountId: string,
+    personId: string,
+    customers: readonly string[],
+    tx?: TransactionContext,
+  ): Promise<boolean>;
   currentGrant(
     installation: string,
     digest: string,

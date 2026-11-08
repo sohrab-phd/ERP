@@ -12,7 +12,9 @@ approval: null
 
 # Sales UI workflow and contract design
 
-**DESIGN PROPOSAL — IMPLEMENTATION NOT AUTHORIZED**
+**Current authority:** [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md) approves D1 B, D2 A, D3 A, D4 A, D5 A and conditional D6 A / D7 A. The proposal and OPEN wording below records the historical design baseline. Bounded implementation is now authorized; [current delivery evidence](P4B_IMPLEMENTATION_STATUS.md) records reality. Numeric performance and final acceptance remain Owner decisions.
+
+**HISTORICAL DESIGN PROPOSAL — superseded only within APR-050 bounds**
 
 The [capability matrix](P4B_SALES_EXISTING_CAPABILITIES_AND_GAP_MATRIX.md) owns
 current-source evidence. Every extension below is proposed, conditional on the

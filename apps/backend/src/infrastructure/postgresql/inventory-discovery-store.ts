@@ -5,6 +5,7 @@ import type {
   InventoryReadLedger,
   InventoryReadLinks,
   InventorySelection,
+  InventorySalesStockSelection,
 } from '../../modules/inventory/index.js';
 import { transactionClient } from './transaction.js';
 
@@ -13,6 +14,31 @@ export class PostgresInventoryDiscoveryStore implements InventoryDiscoveryStore 
   async candidates(
     context: InventoryReadContext,
     selection: InventorySelection,
+  ): Promise<readonly InventoryCandidate[]> {
+    return this.selectCandidates(context, selection);
+  }
+  async salesCandidates(
+    context: InventoryReadContext,
+    selection: InventorySalesStockSelection,
+  ): Promise<readonly InventoryCandidate[]> {
+    return this.selectCandidates(
+      context,
+      {
+        filters: {
+          kind: selection.kind,
+          ...(selection.unitId === undefined ? {} : { unitId: selection.unitId }),
+        },
+        states: ['AVAILABLE'],
+        ...(selection.afterId === undefined ? {} : { afterUnitId: selection.afterId }),
+        take: selection.take,
+      },
+      context.actor.customerScope,
+    );
+  }
+  private async selectCandidates(
+    context: InventoryReadContext,
+    selection: InventorySelection,
+    customerScope?: string,
   ): Promise<readonly InventoryCandidate[]> {
     const values: unknown[] = [
       context.actor.installationId,
@@ -30,6 +56,8 @@ export class PostgresInventoryDiscoveryStore implements InventoryDiscoveryStore 
       values.push(value);
       return '$' + values.length;
     };
+    if (customerScope !== undefined)
+      where.push(`(u.customer_scope='' OR u.customer_scope=${parameter(customerScope)})`);
     const f = selection.filters;
     if (f.unitId !== undefined) where.push('u.unit_id=' + parameter(f.unitId) + '::uuid');
     if (f.lotId !== undefined) where.push('u.lot_id=' + parameter(f.lotId) + '::uuid');

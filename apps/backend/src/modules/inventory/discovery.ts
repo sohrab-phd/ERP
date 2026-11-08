@@ -568,6 +568,29 @@ function project(
     source,
   };
 }
+/** Shared Inventory evidence verification; callers separately enforce admission and source scope. */
+export function verifyInventoryReadEvidence(
+  rows: readonly InventoryCandidate[],
+  ledger: readonly InventoryReadLedger[],
+  links: readonly InventoryReadLinks[],
+): InventoryUnitDetail[] {
+  const ids = rows.map((row) => row.unitId);
+  if (rows.length > 51 || new Set(ids).size !== ids.length) return incompatible();
+  if (ledger.length > 10000) throw new InventoryReadError(422, 'query-limit');
+  const totals = new Map(ids.map((unitId) => [unitId, { onHand: 0n, reserved: 0n }]));
+  for (const row of ledger) {
+    const total = totals.get(row.unitId);
+    if (!total) return incompatible();
+    total.onHand += scaled(row.onHandDelta);
+    total.reserved += scaled(row.reservedDelta);
+  }
+  const linkMap = new Map(links.map((row) => [row.unitId, row]));
+  if (links.length !== rows.length || linkMap.size !== rows.length) return incompatible();
+  return rows.map((row) =>
+    project(row, linkMap.get(row.unitId) ?? incompatible(), totals.get(row.unitId)!),
+  );
+}
+
 /** One bounded read projection. Composition privately admits the authentic actor/snapshot. */
 export class InventoryDiscoveryService {
   constructor(
@@ -601,19 +624,8 @@ export class InventoryDiscoveryService {
     if (selected.size !== ids.length) return incompatible();
     const ledger = await this.store.ledger(context, ids);
     if (ledger.length > 10000) throw new InventoryReadError(422, 'query-limit');
-    const totals = new Map(ids.map((unitId) => [unitId, { onHand: 0n, reserved: 0n }]));
-    for (const row of ledger) {
-      const total = totals.get(row.unitId);
-      if (!total) return incompatible();
-      total.onHand += scaled(row.onHandDelta);
-      total.reserved += scaled(row.reservedDelta);
-    }
-    const links = await this.store.links(context, ids),
-      linkMap = new Map(links.map((row) => [row.unitId, row]));
-    if (links.length !== rows.length || linkMap.size !== rows.length) return incompatible();
-    const projected = rows.map((row) =>
-      project(row, linkMap.get(row.unitId) ?? incompatible(), totals.get(row.unitId)!),
-    );
+    const links = await this.store.links(context, ids);
+    const projected = verifyInventoryReadEvidence(rows, ledger, links);
     if (query === 'GetInventoryUnitDetail') return { unit: projected[0]! };
     const items = projected.slice(0, input.limit).map((unit): InventoryUnitSummary => ({
       unitId: unit.unitId,

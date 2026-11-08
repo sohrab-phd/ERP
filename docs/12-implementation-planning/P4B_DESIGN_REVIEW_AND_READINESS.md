@@ -12,7 +12,9 @@ approval: null
 
 # P4b design review and readiness
 
-**DESIGN PROPOSAL — IMPLEMENTATION NOT AUTHORIZED**
+**Current authority:** [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md) approves D1 B, D2 A, D3 A, D4 A, D5 A and conditional D6 A / D7 A. The proposal and OPEN wording below records the historical design baseline. Bounded implementation is now authorized; [current delivery evidence](P4B_IMPLEMENTATION_STATUS.md) records reality. Numeric performance and final acceptance remain Owner decisions.
+
+**HISTORICAL DESIGN PROPOSAL — superseded only within APR-050 bounds**
 
 This package documents the actual Owner discovery/design-only grant, not a new
 product acceptance. Baseline `main` at `506dd000e87c331527445e8212656cfc2aefc756`,

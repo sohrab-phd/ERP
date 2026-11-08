@@ -5,15 +5,26 @@ phase: 12-implementation-planning
 status: in_review
 version: 0.23.0
 owners: [chief-solution-architect]
-depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
-last_reviewed: 2026-11-07
+depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
+last_reviewed: 2026-11-08
 approval: null
 supersedes: null
 ---
 
 # Implementation capability backlog
 
-## Current P4a acceptance and next proposed workstream — 2026-11-07
+## Current P4b bounded implementation — 2026-11-08
+
+[APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
+supersedes the earlier design-only boundary below. Operational Sales UI, exact
+personally granted customer discovery, six unchanged commands and narrow Inventory
+candidate reads are implemented in the current delivery under verification.
+[Implementation evidence and remaining gates](P4B_IMPLEMENTATION_STATUS.md).
+P4b is NOT ACCEPTED. Numeric performance budgets require explicit Owner approval;
+new indexes/migrations require a separate evidenced grant. No adjacent slice, P3,
+push, deployment or pilot is authorized. P4a's migration-wide overhead gate remains.
+
+## Earlier P4a acceptance and proposed workstream — 2026-11-07 (historical)
 
 [APR-049](../00-governance/approved-baselines/APR-049-p4a-owner-acceptance.md)
 formally accepts P4a Warehouse Inventory Visibility at exactly

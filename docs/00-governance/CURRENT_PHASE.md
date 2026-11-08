@@ -3,17 +3,37 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.72.0
+version: 0.73.0
 owners: [chief-solution-architect]
-depends_on: [TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
-last_reviewed: 2026-11-07
+depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+last_reviewed: 2026-11-08
 approval: null
 supersedes: null
 ---
 
 # Current Phase Authorization
 
-## Current P4b discovery and design authority — 2026-11-07
+## Current P4b bounded product implementation — 2026-11-07
+
+[APR-050](approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
+records the actual Owner's formal D1 B, D2 A, D3 A, D4 A, D5 A and conditional
+D6 A / D7 A decisions against approved design
+`e7e7cafab0b052b34b9fd58fa66269dd74792749` on clean `main`. P4b bounded product
+implementation is AUTHORIZED, NOT ACCEPTED. Seven exact browser routes, all six
+unchanged Sales commands, exact customer admission/roster, Sales discovery/detail,
+Inventory-owned minimal candidate reads, native Persian RTL UI, encrypted recovery
+and cross-role interlock, full real-PG/Chromium/regression evidence, independent
+implementation reviews, documentation and coherent local commits are in scope.
+
+New migrations/indexes need separate Owner approval with precise evidence before
+application/commit. Numeric performance budgets need separate Owner approval
+before performance acceptance. Internal codes require proven disclosure safety,
+otherwise null; filters cannot become an oracle. Preserve accepted commands/RBAC/
+bearer behavior/migration bytes and P1/P2/P4a. No P3/adjacent slice/push/deployment/
+pilot/product acceptance is authorized. Stop for actual performance/acceptance
+decisions; P4a's migration-wide write-overhead deployment gate remains open.
+
+## Earlier P4b discovery and design authority — 2026-11-07 (historical)
 
 The actual Owner **START P4b DISCOVERY AND DESIGN** directive in this chat
 authorizes Sales source/contract discovery, capability/gap matrices, proposed
@@ -45,8 +65,8 @@ independent review and one local tooling/governance commit from baseline
 documents the reproducible installation and validation. Existing APR acceptance
 records and the accepted P4a product revision retain their historical facts.
 At that tooling delivery, P4b discovery, design and implementation awaited separate
-Owner direction. The subsequent design-only authority above supersedes only the
-discovery/design boundary; implementation remains separately gated.
+Owner direction. APR-050 above supersedes that earlier design-only boundary within
+its exact scope; performance and product acceptance remain separately gated.
 
 ## Effective P4a acceptance and next workstream — 2026-11-07
 
@@ -58,8 +78,8 @@ unit tests passed 271/271 and actual Chromium passed 25/25. Independent review
 closed both final browser defects and all required findings.
 
 At P4a acceptance, P4b Sales UI was the next PROPOSED workstream, requiring
-separate discovery/design/implementation direction. Current design-only authority
-is recorded above; implementation remains unauthorized. The P4a Warehouse read exception
+separate discovery/design/implementation direction. Current bounded implementation
+authority is APR-050 above. The P4a Warehouse read exception
 does not grant Sales access or authorize P4b product work.
 
 The same-index 2.21% writer
