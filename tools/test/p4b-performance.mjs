@@ -3,6 +3,7 @@
 // $env:P4B_PERF_RUN='1'; pinned node --env-file=.env.local tools/test/p4b-performance.mjs
 // Optional P4B_PERF_TIER=small|representative|stress; defaults to all three.
 // P4B_PERF_PROFILE=internal20|internal20-history selects bounded paced measurements.
+// Only internal20 accepts P4B_PERF_ORDER=normal-peak|peak-normal (default normal-peak).
 // No index DDL, accepted migration changes, cluster restart or production data.
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
@@ -45,6 +46,12 @@ const profile = process.env.P4B_PERF_PROFILE ?? 'legacy';
 assert.ok(['legacy', 'internal20', 'internal20-history'].includes(profile), 'Unknown profile');
 assert.ok(profile === 'legacy' || !process.env.P4B_PERF_TIER, 'Profile defines its own dataset');
 const internal20 = profile !== 'legacy';
+const measurementOrder = process.env.P4B_PERF_ORDER ?? 'normal-peak';
+assert.ok(['normal-peak', 'peak-normal'].includes(measurementOrder), 'Unknown phase order');
+assert.ok(
+  !process.env.P4B_PERF_ORDER || profile === 'internal20',
+  'Phase order requires internal20',
+);
 const writerPeriodMs = 1000;
 const tierDefinitions = [
   {
@@ -130,6 +137,7 @@ const report = {
       P4B_PERF_TIER: process.env.P4B_PERF_TIER ?? 'all',
       P4B_PERF_SAMPLES: sampleCount,
       P4B_PERF_PROFILE: profile,
+      ...(profile === 'internal20' ? { P4B_PERF_ORDER: measurementOrder } : {}),
     },
   },
   revision: git('rev-parse', 'HEAD'),
@@ -179,6 +187,15 @@ if (internal20)
     historyGrowth:
       'internal20-history is a lightweight synthetic50,000-order/5-assessment-mix read/plan check only;200 stock Units and existing actual origin examples remain. It runs first observations, warm samples and plans, with no measured writers or paced load.',
   });
+if (profile === 'internal20') {
+  report.workload.phaseOrder = [
+    'writer-baseline-before',
+    ...measurementOrder.split('-'),
+    'writer-baseline-after',
+  ];
+  report.workload.diagnostics =
+    'Per-phase process CPU deltas (microseconds) and memory snapshots (bytes) describe this Node process, not PostgreSQL or machine CPU. Active-PID observer samples retain poll wake drift versus previous loop end+10ms; this includes OS/event-loop/timer scheduling and is not pure CPU delay. Activity queryClass is a static classification only; no query text or parameters are recorded.';
+}
 const save = () => {
   const json = JSON.stringify(report, null, 2);
   writeFileSync(`${output}/performance-${runId}.json`, json);
@@ -1024,6 +1041,8 @@ async function runTier(tier) {
       async function pacedWriterRound(name, durationMs, periodMs) {
         phase = name;
         const datasetStart = await readDataset();
+        const cpuStart = process.cpuUsage(),
+          memoryStart = process.memoryUsage();
         const intervals = {
           start: performance.now(),
           salesStart: 0,
@@ -1179,10 +1198,16 @@ async function runTier(tier) {
           ),
         );
         intervals.end = performance.now();
+        const processDiagnostics = {
+          cpuMicroseconds: process.cpuUsage(cpuStart),
+          memoryStartBytes: memoryStart,
+          memoryEndBytes: process.memoryUsage(),
+        };
         result.writerIntervals ??= [];
         result.writerIntervals.push({
           name,
           ...intervals,
+          processDiagnostics,
           datasetStart,
           datasetEnd: await readDataset(),
         });
@@ -1190,33 +1215,55 @@ async function runTier(tier) {
         if (failed) throw failed.reason;
       }
       const observer = async () => {
+        let scheduledWake = performance.now();
         while (monitor) {
+          const actualWake = performance.now();
           const reads = [...readPids],
-            writes = [...writerPids];
+            writes = [...writerPids],
+            pids = [...new Set([...reads, ...writes])];
           if (reads.length || writes.length) {
             const lockRows = (
               await db.runtime.query(
-                'SELECT pid,locktype,mode,granted,relation::regclass::text AS relation FROM pg_locks WHERE pid=ANY($1::integer[])',
-                [reads],
+                'SELECT pid,locktype,mode,granted,relation::regclass::text AS relation,transactionid,page,tuple FROM pg_locks WHERE pid=ANY($1::integer[])',
+                [pids],
               )
             ).rows;
-            const waits = (
+            const activity = (
               await db.runtime.query(
-                'SELECT pid,state,wait_event_type,wait_event,pg_blocking_pids(pid) AS blockers FROM pg_stat_activity WHERE pid=ANY($1::integer[])',
-                [writes],
+                `SELECT pid,state,wait_event_type,wait_event,pg_blocking_pids(pid) AS blockers,query_start,xact_start,
+                CASE WHEN position('identity.session' in query)>0 THEN 'identity.session'
+                  WHEN position('identity.account' in query)>0 THEN 'identity.account'
+                  WHEN position('identity.role_grant' in query)>0 THEN 'identity.role_grant'
+                  WHEN position('sales.' in query)>0 THEN 'sales'
+                  WHEN position('inventory.' in query)>0 THEN 'inventory'
+                  WHEN position('procurement.' in query)>0 THEN 'procurement'
+                  WHEN position('identity.' in query)>0 THEN 'identity.other'
+                  WHEN query ~* '^\\s*(BEGIN|COMMIT|ROLLBACK|SAVEPOINT|RELEASE)' THEN 'transaction-control'
+                  ELSE 'other-or-hidden' END AS "queryClass"
+                FROM pg_stat_activity WHERE pid=ANY($1::integer[])`,
+                [pids],
               )
             ).rows;
+            const waits = activity.filter((row) => writes.includes(row.pid));
+            const readLocks = lockRows.filter((row) => reads.includes(row.pid));
             assert.ok(
-              waits.every((row) => typeof row.state === 'string'),
-              'Writer activity is hidden from observer; absence of waits cannot be established',
+              activity.every((row) => typeof row.state === 'string'),
+              'Read or writer activity is hidden from observer; absence of waits cannot be established',
             );
             result.lockSamples.push({
               at: performance.now(),
               phase,
+              scheduledWake,
+              actualWake,
+              wakeDriftMs: actualWake - scheduledWake,
               readPids: reads,
               writerPids: writes,
+              readLocks,
+              writerLocks: lockRows.filter((row) => writes.includes(row.pid)),
+              readActivity: activity.filter((row) => reads.includes(row.pid)),
               missingWriterPids: writes.filter((pid) => !waits.some((row) => row.pid === pid)),
-              inventoryWriterLocks: lockRows.filter(
+              missingReadPids: reads.filter((pid) => !activity.some((row) => row.pid === pid)),
+              inventoryWriterLocks: readLocks.filter(
                 (row) =>
                   row.relation?.startsWith('inventory.') && !['AccessShareLock'].includes(row.mode),
               ),
@@ -1227,6 +1274,7 @@ async function runTier(tier) {
               writerWaits: waits,
             });
           }
+          scheduledWake = performance.now() + 10;
           await delay(10);
         }
       };
@@ -1234,8 +1282,13 @@ async function runTier(tier) {
       monitorTask = observer();
       if (internal20) {
         await pacedWriterRound('writer-baseline-before');
-        await pacedWriterRound('normal', 600000, 60000);
-        await pacedWriterRound('peak', 420000, 30000);
+        for (const name of measurementOrder.split('-')) {
+          await pacedWriterRound(
+            name,
+            name === 'normal' ? 600000 : 420000,
+            name === 'normal' ? 60000 : 30000,
+          );
+        }
         await pacedWriterRound('writer-baseline-after');
       } else {
         await writerRound('writer-baseline-before');
