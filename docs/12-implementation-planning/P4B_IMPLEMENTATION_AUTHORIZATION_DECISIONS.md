@@ -3,7 +3,7 @@ id: PLAN-P4B-DECISIONS-001
 title: P4b OPEN Owner implementation authorization decisions
 phase: 12-implementation-planning
 status: draft
-version: 0.2.0
+version: 0.3.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
 depends_on: [PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, APR-049, TOOL-UIUX-001]
 last_reviewed: 2026-11-08
@@ -21,6 +21,21 @@ in APR-050. The OPEN/NULL and design-only statements below are retained historic
 proposal text, superseded only by the actual Owner selections and added controls.
 
 ## Remaining conditional D7 decision — OPEN
+
+On2026-11-08 the actual Owner selected **"Review workload and budgets first
+(Recommended)"** in response to the numeric-performance question. Recorded outcome:
+REVIEW_FIRST. This requests evidence/workload review; it grants no numeric budget,
+normative peak, performance acceptance, implementation expansion or product acceptance.
+The [focused workload review](P4B_IMPLEMENTATION_STATUS.md#owner-requested-workload-and-budget-review)
+records the resulting assessment. Actual peak users/journey rates and customer/order
+volumes have been requested; unprovided inputs remain OPEN.
+
+The later actual Owner clarification supplies an approximately20employee internal
+ceiling, conservative20Sales-user test boundary and provisional1normal/2peak
+lookups per user per minute. [Workload authority and verification](P4B_INTERNAL_WORKLOAD_VERIFICATION.md)
+records these as planning assumptions and the bounded requested evaluation.
+Orders/customer and assessments/order remain UNKNOWN. Numeric budgets, writer
+allowance and performance acceptance are still OPEN; no thresholds were approved.
 
 **Owner approval: NULL.** The approved starting resource caps are not performance
 acceptance budgets. The [implementation measurement and proposal](P4B_IMPLEMENTATION_STATUS.md#performance-and-acceptance-gates)

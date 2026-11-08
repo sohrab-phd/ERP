@@ -2,6 +2,7 @@
 // Build first. With the exclusive verified test DB window:
 // $env:P4B_PERF_RUN='1'; pinned node --env-file=.env.local tools/test/p4b-performance.mjs
 // Optional P4B_PERF_TIER=small|representative|stress; defaults to all three.
+// P4B_PERF_PROFILE=internal20|internal20-history selects bounded paced measurements.
 // No index DDL, accepted migration changes, cluster restart or production data.
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
@@ -40,6 +41,11 @@ assert.equal(process.env.TEST_DATABASE_ACK, 'navard_i1_test');
 await validateTestDatabase();
 const sampleCount = Number(process.env.P4B_PERF_SAMPLES ?? 200);
 assert.ok(Number.isSafeInteger(sampleCount) && sampleCount >= 200 && sampleCount <= 1000);
+const profile = process.env.P4B_PERF_PROFILE ?? 'legacy';
+assert.ok(['legacy', 'internal20', 'internal20-history'].includes(profile), 'Unknown profile');
+assert.ok(profile === 'legacy' || !process.env.P4B_PERF_TIER, 'Profile defines its own dataset');
+const internal20 = profile !== 'legacy';
+const writerPeriodMs = 1000;
 const tierDefinitions = [
   {
     name: 'small',
@@ -66,9 +72,20 @@ const tierDefinitions = [
     units: 25000,
   },
 ];
-const tiers = process.env.P4B_PERF_TIER
-  ? tierDefinitions.filter((t) => t.name === process.env.P4B_PERF_TIER)
-  : tierDefinitions;
+const tiers = internal20
+  ? [
+      {
+        name: profile,
+        customers: profile === 'internal20-history' ? 256 : 64,
+        grants: 32,
+        orders: profile === 'internal20-history' ? 50000 : 10000,
+        assessmentsPerSelectedOrder: profile === 'internal20-history' ? 5 : 3,
+        units: 200,
+      },
+    ]
+  : process.env.P4B_PERF_TIER
+    ? tierDefinitions.filter((t) => t.name === process.env.P4B_PERF_TIER)
+    : tierDefinitions;
 assert.ok(tiers.length > 0, 'Unknown tier');
 const output = 'artifacts/tests/p4b-implementation';
 mkdirSync(output, { recursive: true });
@@ -112,6 +129,7 @@ const report = {
       P4B_PERF_RUN: process.env.P4B_PERF_RUN,
       P4B_PERF_TIER: process.env.P4B_PERF_TIER ?? 'all',
       P4B_PERF_SAMPLES: sampleCount,
+      P4B_PERF_PROFILE: profile,
     },
   },
   revision: git('rev-parse', 'HEAD'),
@@ -146,6 +164,21 @@ const report = {
   ownerNumericBudgets: 'PENDING EXPLICIT OWNER APPROVAL',
   p4aMigrationWideWriteOverhead: 'UNCHANGED OPEN DEPLOYMENT/OPERATIONAL GATE',
 };
+if (internal20)
+  Object.assign(report.workload, {
+    profile,
+    activeMeasurementPersons: profile === 'internal20-history' ? 1 : 20,
+    preparedMeasurementPersons: 20,
+    identity:
+      '20 personal accounts/sessions, all with32 exact-customer Sales grants; person0 also runs Sales writes and person19 also has organizational Warehouse role and runs receipts. Writers are included in20. History-only warm/plan observations use person0 only. Fixture seed accounts have no measured traffic.',
+    actualOperationalVolumes:
+      'Approximately20 total internal employees is Owner planning input;20 concurrent Sales users is conservative. Lookup rates, writer rates and all history/cardinality distributions are unmeasured engineering assumptions. Orders/customer and assessments/order remain UNKNOWN.',
+    lookup:
+      'Each lookup is exactly3 sequential authorized HTTP reads: exact UUID order query, order detail, assessment query for the same order/customer.20 sessions evenly staggered: normal1lookup/person/min (20/min), peak2/person/min (40/min). No extra roster/cursor requests in paced windows.',
+    writerSampling: `Conservative unmeasured engineering assumption: one accepted five-command Sales cycle alternating STOCK/MAKE and one PostGoodsReceipt every${writerPeriodMs}ms, identical before/during/after. Baselines at least202cycles/receipts each; normal600s (200lookups,10/person) and peak420s (280lookups,14/person). Both writers continue until reads settle and both minima finish. At least200 fully enclosed samples required per actual writer operation; no blended normal/peak percentiles.`,
+    historyGrowth:
+      'internal20-history is a lightweight synthetic50,000-order/5-assessment-mix read/plan check only;200 stock Units and existing actual origin examples remain. It runs first observations, warm samples and plans, with no measured writers or paced load.',
+  });
 const save = () => {
   const json = JSON.stringify(report, null, 2);
   writeFileSync(`${output}/performance-${runId}.json`, json);
@@ -570,7 +603,7 @@ async function runTier(tier) {
         }
       }
       const people = [];
-      for (let n = 0; n < 12; n++) {
+      for (let n = 0; n < (internal20 ? 20 : 12); n++) {
         const accountId = randomUUID(),
           personId = randomUUID(),
           username = `p4b.perf.${n}`;
@@ -578,13 +611,14 @@ async function runTier(tier) {
           "INSERT INTO identity.account(installation_id,account_id,person_id,username,password_hash) SELECT $1,$2,$3,$4,password_hash FROM identity.account WHERE installation_id=$1 AND username='sales.first'",
           [installation, accountId, personId, username],
         );
-        const granted = n === 11 ? [] : customerIds.slice(0, tier.grants);
-        if (n === 11)
+        const warehousePerson = n === (internal20 ? 19 : 11);
+        const granted = warehousePerson && !internal20 ? [] : customerIds.slice(0, tier.grants);
+        if (warehousePerson)
           await db.owner.query(
             "INSERT INTO identity.role_grant(installation_id,account_id,authority_scope_id,actor_role,customer_scope) VALUES($1,$2,$1,'ACT-WH','')",
             [installation, accountId],
           );
-        else
+        if (granted.length)
           await db.owner.query(
             "INSERT INTO identity.role_grant(installation_id,account_id,authority_scope_id,actor_role,customer_scope) SELECT $1,$2,$1,'ACT-SALES',id::text FROM unnest($3::uuid[])id",
             [installation, accountId, granted],
@@ -595,7 +629,9 @@ async function runTier(tier) {
           browser,
           accountId,
           personId,
-          actor: n === 11 ? await h.app.identity.context(browser.token, 'ACT-WH') : undefined,
+          actor: warehousePerson
+            ? await h.app.identity.context(browser.token, 'ACT-WH')
+            : undefined,
         });
       }
       for (const table of [
@@ -771,59 +807,98 @@ async function runTier(tier) {
         groups.set(entry.operation, group);
       }
       phase = 'first-observation';
-      for (const group of groups.values())
-        for (const entry of group) {
-          const { sample } = await timed(
-            people[0].browser,
-            entry.operation,
-            entry.name,
-            entry.route,
-            entry.input,
-            entry.customer,
-            entry.expected,
-          );
-          result.samples.push(sample);
+      const datasetPhase = async (name, action) => {
+        if (!internal20) return action();
+        const start = performance.now(),
+          datasetStart = await readDataset();
+        try {
+          return await action();
+        } finally {
+          result.datasetPhases ??= [];
+          result.datasetPhases.push({
+            name,
+            start,
+            end: performance.now(),
+            datasetStart,
+            datasetEnd: await readDataset(),
+          });
         }
+      };
+      await datasetPhase('first-observation', async () => {
+        for (const group of groups.values())
+          for (const entry of group) {
+            const { sample } = await timed(
+              people[0].browser,
+              entry.operation,
+              entry.name,
+              entry.route,
+              entry.input,
+              entry.customer,
+              entry.expected,
+            );
+            result.samples.push(sample);
+          }
+      });
       phase = 'warm-serial';
-      for (const [operation, cases] of groups)
-        for (let n = 0; n < sampleCount; n++) {
-          const entry = cases[n % cases.length];
-          const { sample } = await timed(
-            people[0].browser,
-            operation,
-            entry.name,
-            entry.route,
-            entry.input,
-            entry.customer,
-            entry.expected,
-          );
-          result.samples.push(sample);
-        }
+      await datasetPhase('warm-serial', async () => {
+        for (const [operation, cases] of groups)
+          for (let n = 0; n < sampleCount; n++) {
+            const entry = cases[n % cases.length];
+            const { sample } = await timed(
+              people[0].browser,
+              operation,
+              entry.name,
+              entry.route,
+              entry.input,
+              entry.customer,
+              entry.expected,
+            );
+            result.samples.push(sample);
+          }
+      });
       result.warmSerial = summaries(result.samples.filter((s) => s.phase === 'warm-serial'));
-      for (const value of captured.values()) {
-        let plan = (
-          await db.runtime.query(
-            'EXPLAIN (ANALYZE,BUFFERS,FORMAT JSON) ' + value.text,
-            value.values,
-          )
-        ).rows[0]['QUERY PLAN'][0];
-        let encoded = JSON.stringify(plan);
-        for (const digest of digests)
-          encoded = encoded.replaceAll(digest, '<redacted-session-digest>');
-        plan = JSON.parse(encoded);
-        result.plans.push({
-          key: value.key,
-          operation: value.operation,
-          case: value.case,
-          method: value.method,
-          sql: value.text,
-          parameters: 'Not logged: regenerated synthetic identities and private session digest',
-          plan,
-          rows: planRows(plan.Plan),
-        });
+      phase = 'plans';
+      await datasetPhase('plans', async () => {
+        for (const value of captured.values()) {
+          let plan = (
+            await db.runtime.query(
+              'EXPLAIN (ANALYZE,BUFFERS,FORMAT JSON) ' + value.text,
+              value.values,
+            )
+          ).rows[0]['QUERY PLAN'][0];
+          let encoded = JSON.stringify(plan);
+          for (const digest of digests)
+            encoded = encoded.replaceAll(digest, '<redacted-session-digest>');
+          plan = JSON.parse(encoded);
+          result.plans.push({
+            key: value.key,
+            operation: value.operation,
+            case: value.case,
+            method: value.method,
+            sql: value.text,
+            parameters: 'Not logged: regenerated synthetic identities and private session digest',
+            plan,
+            rows: planRows(plan.Plan),
+          });
+        }
+      });
+      if (profile === 'internal20-history') {
+        result.status = 'MEASURED_OWNER_NUMERIC_APPROVAL_PENDING';
+        result.historyComparison =
+          'Compare warmSerial and plans against internal20 initial warm/plan results; synthetic history-growth check only, no writer or operational capacity claim.';
+        save();
+        console.log(
+          JSON.stringify({
+            tier: tier.name,
+            dataset: result.dataset,
+            warmSerial: result.warmSerial,
+            historyComparison: result.historyComparison,
+          }),
+        );
+        return;
       }
-      const salesWriter = people[10].browser,
-        inventoryWriter = people[11];
+      const salesWriter = people[internal20 ? 0 : 10].browser,
+        inventoryWriter = people[internal20 ? 19 : 11];
       async function salesCycle(round, n) {
         const draft = salesCommand(own),
           itemId = draft.payload.items[0].id;
@@ -946,6 +1021,174 @@ async function runTier(tier) {
         const failed = outcomes.find((outcome) => outcome.status === 'rejected');
         if (failed) throw failed.reason;
       }
+      async function pacedWriterRound(name, durationMs, periodMs) {
+        phase = name;
+        const datasetStart = await readDataset();
+        const intervals = {
+          start: performance.now(),
+          salesStart: 0,
+          inventoryStart: 0,
+          salesEnd: 0,
+          inventoryEnd: 0,
+        };
+        const minimum = { sales: false, inventory: false, failed: false };
+        let readsDone = !durationMs;
+        const until = async (scheduled) => {
+          const remaining = scheduled - performance.now();
+          if (remaining > 0) await delay(remaining);
+        };
+        const writer = async (kind, action) => {
+          intervals[kind + 'Start'] = performance.now();
+          try {
+            for (
+              let n = 0;
+              !minimum.failed && (n < 202 || !readsDone || !minimum.sales || !minimum.inventory);
+              n++
+            ) {
+              const scheduled = intervals.start + n * writerPeriodMs;
+              await until(scheduled);
+              if (minimum.failed) break;
+              const start = performance.now();
+              let status = 'COMPLETED',
+                errorMessage;
+              try {
+                await action(name, n);
+              } catch (error) {
+                status = 'FAILED';
+                errorMessage = safeError(error);
+                throw error;
+              } finally {
+                result.writerSchedules ??= [];
+                result.writerSchedules.push({
+                  phase: name,
+                  writer: kind,
+                  sequence: n,
+                  scheduled,
+                  start,
+                  end: performance.now(),
+                  latenessMs: Math.max(0, start - scheduled),
+                  status,
+                  ...(errorMessage ? { error: errorMessage } : {}),
+                });
+              }
+              if (n + 1 >= 202) minimum[kind] = true;
+            }
+          } finally {
+            intervals[kind + 'End'] = performance.now();
+          }
+        };
+        const journeys = async () => {
+          const window = {
+            start: intervals.start,
+            scheduledEnd: intervals.start + durationMs,
+            end: 0,
+            maxInFlight: 0,
+            scheduledCount: 0,
+            completedCount: 0,
+            failedCount: 0,
+            periodPerPersonMs: periodMs,
+            globalSpacingMs: periodMs / 20,
+          };
+          result.journeyWindows ??= {};
+          result.journeyWindows[name] = window;
+          result.journeys ??= [];
+          let inFlight = 0;
+          // Schedule exactly the declared paced traffic; await every journey, including failures.
+          const jobs = [];
+          for (let n = 0; n * window.globalSpacingMs < durationMs; n++) {
+            window.scheduledCount++;
+            jobs.push(
+              (async () => {
+                const person = n % 20,
+                  scheduled = window.start + n * window.globalSpacingMs;
+                await until(scheduled);
+                const record = {
+                  phase: name,
+                  person,
+                  scheduled,
+                  start: performance.now(),
+                  end: 0,
+                  status: 'RUNNING',
+                };
+                record.latenessMs = Math.max(0, record.start - scheduled);
+                result.journeys.push(record);
+                window.maxInFlight = Math.max(window.maxInFlight, ++inFlight);
+                try {
+                  for (const [operation, route, input] of [
+                    ['order-discovery', 'orders/query', { filters: { orderId: mainOrder } }],
+                    ['order-detail', 'orders/detail', { orderId: mainOrder }],
+                    [
+                      'assessment-discovery',
+                      'assessments/query',
+                      { orderId: mainOrder, limit: 25 },
+                    ],
+                  ]) {
+                    const { sample } = await timed(
+                      people[person].browser,
+                      operation,
+                      'paced-exact-order-lookup',
+                      '/sales/v1/' + route,
+                      input,
+                      own,
+                    );
+                    result.samples.push(sample);
+                  }
+                  record.status = 'COMPLETED';
+                  window.completedCount++;
+                } catch (error) {
+                  record.status = 'FAILED';
+                  record.error = safeError(error);
+                  window.failedCount++;
+                  throw error;
+                } finally {
+                  record.end = performance.now();
+                  inFlight--;
+                }
+              })(),
+            );
+          }
+          const outcomes = await Promise.allSettled(jobs);
+          await until(window.scheduledEnd);
+          window.end = performance.now();
+          window.latenessMs = distribution(
+            result.journeys.filter((j) => j.phase === name).map((j) => j.latenessMs),
+          );
+          window.lateCount = result.journeys.filter(
+            (j) => j.phase === name && j.latenessMs > 0,
+          ).length;
+          window.moreThan10msLateCount = result.journeys.filter(
+            (j) => j.phase === name && j.latenessMs > 10,
+          ).length;
+          window.completedPerMinute = (60000 * window.completedCount) / (window.end - window.start);
+          const failed = outcomes.find((outcome) => outcome.status === 'rejected');
+          if (failed) throw failed.reason;
+        };
+        const jobs = [writer('sales', salesCycle), writer('inventory', inventoryWrite)];
+        if (durationMs)
+          jobs.push(
+            journeys().finally(() => {
+              readsDone = true;
+            }),
+          );
+        const outcomes = await Promise.allSettled(
+          jobs.map((job) =>
+            job.catch((error) => {
+              minimum.failed = true;
+              throw error;
+            }),
+          ),
+        );
+        intervals.end = performance.now();
+        result.writerIntervals ??= [];
+        result.writerIntervals.push({
+          name,
+          ...intervals,
+          datasetStart,
+          datasetEnd: await readDataset(),
+        });
+        const failed = outcomes.find((outcome) => outcome.status === 'rejected');
+        if (failed) throw failed.reason;
+      }
       const observer = async () => {
         while (monitor) {
           const reads = [...readPids],
@@ -989,145 +1232,260 @@ async function runTier(tier) {
       };
       monitor = true;
       monitorTask = observer();
-      await writerRound('writer-baseline-before');
-      const readerCases = await Promise.all(
-        people.slice(0, 10).map((person) => operations(person.browser)),
-      );
-      const perOperation = new Map([...groups.keys()].map((operation) => [operation, 0]));
-      let nextOperation = 0;
-      await writerRound('readers-and-writers', async (minimum) => {
-        const outcomes = await Promise.allSettled(
-          people
-            .slice(0, 10)
-            .map(async (person, worker) => {
-              const cases = readerCases[worker];
-              while (true) {
-                assert.ok(!minimum.failed, 'A writer or reader failed during overlap');
-                const keys = [...perOperation.keys()];
-                let operation;
-                for (let offset = 0; offset < keys.length; offset++) {
-                  const candidate = keys[nextOperation++ % keys.length];
-                  if (
-                    perOperation.get(candidate) < sampleCount ||
-                    !minimum.sales ||
-                    !minimum.inventory
-                  ) {
-                    operation = candidate;
-                    break;
-                  }
-                }
-                if (!operation) return;
-                const index = perOperation.get(operation);
-                perOperation.set(operation, index + 1);
-                const variants = cases.filter((entry) => entry.operation === operation),
-                  entry = variants[index % variants.length];
-                const { sample } = await timed(
-                  person.browser,
-                  operation,
-                  entry.name,
-                  entry.route,
-                  entry.input,
-                  entry.customer,
-                  entry.expected,
-                );
-                result.samples.push(sample);
-              }
-            })
-            .map((job) =>
-              job.catch((error) => {
-                minimum.failed = true;
-                throw error;
-              }),
-            ),
+      if (internal20) {
+        await pacedWriterRound('writer-baseline-before');
+        await pacedWriterRound('normal', 600000, 60000);
+        await pacedWriterRound('peak', 420000, 30000);
+        await pacedWriterRound('writer-baseline-after');
+      } else {
+        await writerRound('writer-baseline-before');
+        const readerCases = await Promise.all(
+          people.slice(0, 10).map((person) => operations(person.browser)),
         );
-        const failed = outcomes.find((outcome) => outcome.status === 'rejected');
-        if (failed) throw failed.reason;
-      });
-      await writerRound('writer-baseline-after');
+        const perOperation = new Map([...groups.keys()].map((operation) => [operation, 0]));
+        let nextOperation = 0;
+        await writerRound('readers-and-writers', async (minimum) => {
+          const outcomes = await Promise.allSettled(
+            people
+              .slice(0, 10)
+              .map(async (person, worker) => {
+                const cases = readerCases[worker];
+                while (true) {
+                  assert.ok(!minimum.failed, 'A writer or reader failed during overlap');
+                  const keys = [...perOperation.keys()];
+                  let operation;
+                  for (let offset = 0; offset < keys.length; offset++) {
+                    const candidate = keys[nextOperation++ % keys.length];
+                    if (
+                      perOperation.get(candidate) < sampleCount ||
+                      !minimum.sales ||
+                      !minimum.inventory
+                    ) {
+                      operation = candidate;
+                      break;
+                    }
+                  }
+                  if (!operation) return;
+                  const index = perOperation.get(operation);
+                  perOperation.set(operation, index + 1);
+                  const variants = cases.filter((entry) => entry.operation === operation),
+                    entry = variants[index % variants.length];
+                  const { sample } = await timed(
+                    person.browser,
+                    operation,
+                    entry.name,
+                    entry.route,
+                    entry.input,
+                    entry.customer,
+                    entry.expected,
+                  );
+                  result.samples.push(sample);
+                }
+              })
+              .map((job) =>
+                job.catch((error) => {
+                  minimum.failed = true;
+                  throw error;
+                }),
+              ),
+          );
+          const failed = outcomes.find((outcome) => outcome.status === 'rejected');
+          if (failed) throw failed.reason;
+        });
+        await writerRound('writer-baseline-after');
+      }
       monitor = false;
       await monitorTask;
-      result.concurrentReads = summaries(
-        result.samples.filter((s) => s.phase === 'readers-and-writers'),
-      );
-      const overlappingReads = result.samples.filter((s) => s.phase === 'readers-and-writers');
-      const readerWindow = {
-        start: overlappingReads.reduce((minimum, s) => Math.min(minimum, s.start), Infinity),
-        end: overlappingReads.reduce((maximum, s) => Math.max(maximum, s.end), -Infinity),
-      };
-      result.readerWindow = readerWindow;
-      const insideBaselineWriters = (sample) => {
-        if (sample.phase === 'readers-and-writers') return false;
-        const interval = result.writerIntervals.find((i) => i.name === sample.phase);
-        return (
-          sample.start >= Math.max(interval.salesStart, interval.inventoryStart) &&
-          sample.end <= Math.min(interval.salesEnd, interval.inventoryEnd)
+      function summarizeScenario(phaseName) {
+        const scenario = {};
+        scenario.concurrentReads = summaries(result.samples.filter((s) => s.phase === phaseName));
+        const overlappingReads = result.samples.filter((s) => s.phase === phaseName);
+        const pacedWindow = result.journeyWindows?.[phaseName];
+        const readerWindow = pacedWindow
+          ? { start: pacedWindow.start, end: pacedWindow.end }
+          : {
+              start: overlappingReads.reduce((minimum, s) => Math.min(minimum, s.start), Infinity),
+              end: overlappingReads.reduce((maximum, s) => Math.max(maximum, s.end), -Infinity),
+            };
+        scenario.readerWindow = readerWindow;
+        const insideBaselineWriters = (sample) => {
+          if (!['writer-baseline-before', 'writer-baseline-after'].includes(sample.phase))
+            return false;
+          const interval = result.writerIntervals.find((i) => i.name === sample.phase);
+          return (
+            sample.start >= Math.max(interval.salesStart, interval.inventoryStart) &&
+            sample.end <= Math.min(interval.salesEnd, interval.inventoryEnd)
+          );
+        };
+        scenario.writers = Object.fromEntries(
+          [...new Set(result.writerSamples.map((s) => s.operation))].map((operation) => {
+            const samples = result.writerSamples.filter((s) => s.operation === operation),
+              baseline = samples.filter(insideBaselineWriters),
+              overlap = samples.filter(
+                (s) =>
+                  s.phase === phaseName &&
+                  s.start >= readerWindow.start &&
+                  s.end <= readerWindow.end,
+              );
+            const b = distribution(baseline.map((s) => s.serverMs)),
+              o = distribution(overlap.map((s) => s.serverMs));
+            return [
+              operation,
+              {
+                before: distribution(
+                  baseline
+                    .filter((s) => s.phase === 'writer-baseline-before')
+                    .map((s) => s.serverMs),
+                ),
+                after: distribution(
+                  baseline
+                    .filter((s) => s.phase === 'writer-baseline-after')
+                    .map((s) => s.serverMs),
+                ),
+                sameSchemaBracketBaseline: b,
+                overlap: o,
+                overlapDefinition:
+                  'Complete writer sample interval inside active reader window; excludes startup and drain tail. Raw samples retain all phases.',
+                baselineDefinition:
+                  'Complete writer sample interval inside both co-writer workload intervals in each before/after control; same observer active, startup/drain excluded. Both writers continue until both minima finish.',
+                p95RegressionPercent: b.p95 ? 100 * (o.p95 / b.p95 - 1) : null,
+              },
+            ];
+          }),
         );
-      };
-      result.writers = Object.fromEntries(
-        [...new Set(result.writerSamples.map((s) => s.operation))].map((operation) => {
-          const samples = result.writerSamples.filter((s) => s.operation === operation),
-            baseline = samples.filter(insideBaselineWriters),
-            overlap = samples.filter(
-              (s) =>
-                s.phase === 'readers-and-writers' &&
-                s.start >= readerWindow.start &&
-                s.end <= readerWindow.end,
-            );
-          const b = distribution(baseline.map((s) => s.serverMs)),
-            o = distribution(overlap.map((s) => s.serverMs));
-          return [
-            operation,
-            {
-              before: distribution(
-                baseline.filter((s) => s.phase === 'writer-baseline-before').map((s) => s.serverMs),
-              ),
-              after: distribution(
-                baseline.filter((s) => s.phase === 'writer-baseline-after').map((s) => s.serverMs),
-              ),
-              sameSchemaBracketBaseline: b,
-              overlap: o,
-              overlapDefinition:
-                'Complete writer sample interval inside active reader window; excludes startup and drain tail. Raw samples retain all phases.',
-              baselineDefinition:
-                'Complete writer sample interval inside both co-writer workload intervals in each before/after control; same observer active, startup/drain excluded. Both writers continue until both minima finish.',
-              p95RegressionPercent: b.p95 ? 100 * (o.p95 / b.p95 - 1) : null,
-            },
-          ];
-        }),
-      );
-      for (const [operation, value] of Object.entries(result.writers)) {
-        assert.ok(
-          value.sameSchemaBracketBaseline.count >= 200,
-          'Insufficient baseline writer samples: ' + operation,
-        );
-        assert.ok(
-          value.overlap.count >= 200,
-          'Insufficient fully overlapping writer samples: ' + operation,
-        );
-      }
-      const concurrent = result.writerIntervals.find(
-          (interval) => interval.name === 'readers-and-writers',
-        ),
-        overlapStart = Math.max(concurrent.salesStart, concurrent.inventoryStart),
-        overlapEnd = Math.min(concurrent.salesEnd, concurrent.inventoryEnd);
-      result.actualBothWriterOverlap = {
-        start: overlapStart,
-        end: overlapEnd,
-        reads: result.samples.filter(
-          (s) => s.phase === 'readers-and-writers' && s.start < overlapEnd && s.end > overlapStart,
-        ).length,
-        observerSamples: result.lockSamples.filter(
-          (s) => s.at >= overlapStart && s.at <= overlapEnd,
-        ).length,
-        perOperation: summaries(
-          result.samples.filter(
-            (s) =>
-              s.phase === 'readers-and-writers' && s.start >= overlapStart && s.end <= overlapEnd,
+        for (const [operation, value] of Object.entries(scenario.writers)) {
+          assert.ok(
+            value.sameSchemaBracketBaseline.count >= 200,
+            'Insufficient baseline writer samples: ' + operation,
+          );
+          assert.ok(
+            value.overlap.count >= 200,
+            'Insufficient fully overlapping writer samples: ' + operation,
+          );
+        }
+        const concurrent = result.writerIntervals.find((interval) => interval.name === phaseName),
+          overlapStart = Math.max(concurrent.salesStart, concurrent.inventoryStart),
+          overlapEnd = Math.min(concurrent.salesEnd, concurrent.inventoryEnd);
+        scenario.actualBothWriterOverlap = {
+          start: overlapStart,
+          end: overlapEnd,
+          reads: result.samples.filter(
+            (s) => s.phase === phaseName && s.start < overlapEnd && s.end > overlapStart,
+          ).length,
+          observerSamples: result.lockSamples.filter(
+            (s) => s.at >= overlapStart && s.at <= overlapEnd,
+          ).length,
+          perOperation: summaries(
+            result.samples.filter(
+              (s) => s.phase === phaseName && s.start >= overlapStart && s.end <= overlapEnd,
+            ),
           ),
-        ),
-        definition:
-          'Per-operation values require the complete read interval inside both active writer workloads; finite minimum writer counts extend until all reads finish. Readers are scheduled round-robin across operations.',
-      };
+          definition: pacedWindow
+            ? 'Per-operation values require the complete read interval inside both active writer workloads; writers extend until all scheduled lookups settle and both minima finish. Each staggered lookup/person performs the same3 authorized HTTP reads sequentially: exact UUID order query, order detail, assessment query.'
+            : 'Per-operation values require the complete read interval inside both active writer workloads; finite minimum writer counts extend until all reads finish. Readers are scheduled round-robin across operations.',
+        };
+        if (pacedWindow) {
+          scenario.journeys = pacedWindow;
+          assert.equal(
+            pacedWindow.scheduledCount,
+            phaseName === 'normal' ? 200 : 280,
+            phaseName + ': unexpected scheduled journey count',
+          );
+          assert.equal(pacedWindow.failedCount, 0, phaseName + ': failed journeys');
+          assert.equal(
+            pacedWindow.completedCount,
+            pacedWindow.scheduledCount,
+            phaseName + ': incomplete journeys',
+          );
+          for (const operation of ['order-discovery', 'order-detail', 'assessment-discovery']) {
+            assert.equal(
+              scenario.concurrentReads[operation].serverMs.count,
+              pacedWindow.scheduledCount,
+              phaseName + ': incomplete ' + operation,
+            );
+            assert.ok(
+              scenario.concurrentReads[operation].serverMs.count >= 200,
+              phaseName + ': insufficient read tail samples',
+            );
+          }
+          scenario.readerWindow.definition =
+            'Entire declared paced scheduling window, including think-time gaps; extended only for actual journey drain. Raw scheduled/start/end times retained.';
+          for (const [operation, value] of Object.entries(scenario.writers)) {
+            value.p50RegressionPercent = value.sameSchemaBracketBaseline.p50
+              ? 100 * (value.overlap.p50 / value.sameSchemaBracketBaseline.p50 - 1)
+              : null;
+            value.p99RegressionPercent = value.sameSchemaBracketBaseline.p99
+              ? 100 * (value.overlap.p99 / value.sameSchemaBracketBaseline.p99 - 1)
+              : null;
+            const selected = result.writerSamples.filter((s) => s.operation === operation);
+            value.throughput = Object.fromEntries(
+              ['writer-baseline-before', phaseName, 'writer-baseline-after'].map((name) => {
+                const interval = result.writerIntervals.find((i) => i.name === name);
+                const count = selected.filter((s) => s.phase === name).length;
+                const elapsedMs = interval.end - interval.start;
+                return [name, { count, elapsedMs, completedPerSecond: (1000 * count) / elapsedMs }];
+              }),
+            );
+          }
+          scenario.poolAcquisition = distribution(
+            result.poolAcquisitionSamples.filter((s) => s.phase === phaseName).map((s) => s.ms),
+          );
+          scenario.requestFailures = result.requestFailures.filter((s) => s.phase === phaseName);
+          scenario.writerPacing = Object.fromEntries(
+            ['writer-baseline-before', phaseName, 'writer-baseline-after'].map((name) => [
+              name,
+              Object.fromEntries(
+                ['sales', 'inventory'].map((kind) => {
+                  const schedules = result.writerSchedules.filter(
+                    (s) => s.phase === name && s.writer === kind,
+                  );
+                  return [
+                    kind,
+                    {
+                      scheduledPeriodMs: writerPeriodMs,
+                      count: schedules.length,
+                      failedCount: schedules.filter((s) => s.status === 'FAILED').length,
+                      latenessMs: distribution(schedules.map((s) => s.latenessMs)),
+                      lateCount: schedules.filter((s) => s.latenessMs > 0).length,
+                      moreThan10msLateCount: schedules.filter((s) => s.latenessMs > 10).length,
+                    },
+                  ];
+                }),
+              ),
+            ]),
+          );
+          scenario.lockObservationCoverage = {
+            observerSamples: result.lockSamples.filter((s) => s.phase === phaseName).length,
+            readTransactionSamples: result.lockSamples.filter(
+              (s) => s.phase === phaseName && s.readPids.length > 0,
+            ).length,
+            visibleWriterRowsDuringBothWriterOverlap: result.lockSamples
+              .filter((s) => s.phase === phaseName && s.at >= overlapStart && s.at <= overlapEnd)
+              .reduce((n, s) => n + s.writerWaits.length, 0),
+            missingRequestedWriterPids: result.lockSamples
+              .filter((s) => s.phase === phaseName)
+              .reduce((n, s) => n + s.missingWriterPids.length, 0),
+          };
+          assert.ok(
+            scenario.lockObservationCoverage.readTransactionSamples > 0,
+            phaseName + ': no read transactions observed',
+          );
+          assert.ok(
+            scenario.lockObservationCoverage.visibleWriterRowsDuringBothWriterOverlap > 0,
+            phaseName + ': no visible writer activity during overlap',
+          );
+        }
+        return scenario;
+      }
+      if (internal20)
+        result.scenarios = Object.fromEntries(
+          ['normal', 'peak'].map((name) => [name, summarizeScenario(name)]),
+        );
+      else Object.assign(result, summarizeScenario('readers-and-writers'));
+      const overlapIntervals = internal20
+        ? Object.values(result.scenarios).map((s) => s.actualBothWriterOverlap)
+        : [result.actualBothWriterOverlap];
+      const inWriterOverlap = (at) => overlapIntervals.some((i) => at >= i.start && at <= i.end);
       result.observedInventoryWriterLocks = result.lockSamples.reduce(
         (sum, sample) => sum + sample.inventoryWriterLocks.length,
         0,
@@ -1141,7 +1499,7 @@ async function runTier(tier) {
         observerRole: 'same restricted runtime role as measured connections',
         readTransactionSamples: result.lockSamples.filter((s) => s.readPids.length > 0).length,
         visibleWriterRowsDuringBothWriterOverlap: result.lockSamples
-          .filter((s) => s.at >= overlapStart && s.at <= overlapEnd)
+          .filter((s) => inWriterOverlap(s.at))
           .reduce((n, s) => n + s.writerWaits.length, 0),
         missingRequestedWriterPids: result.lockSamples.reduce(
           (n, s) => n + s.missingWriterPids.length,
@@ -1176,6 +1534,7 @@ async function runTier(tier) {
           concurrentReads: result.concurrentReads,
           writers: result.writers,
           bothWriterOverlap: result.actualBothWriterOverlap,
+          ...(internal20 ? { scenarios: result.scenarios } : {}),
           inventoryWriterLocks: result.observedInventoryWriterLocks,
           attributableWriterWaits: result.observedAttributableWriterWaits,
         }),

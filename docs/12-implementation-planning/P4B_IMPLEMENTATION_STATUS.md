@@ -3,7 +3,7 @@ id: IMPL-P4B-001
 title: P4b Sales UI implementation and verification evidence
 phase: 12-implementation-planning
 status: in_review
-version: 0.2.0
+version: 0.3.0
 owners: [delivery-lead, sales-domain-owner, security-architect]
 depends_on: [APR-050, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-READINESS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-08
@@ -301,6 +301,67 @@ scope. Synthetic local engineering evidence is not operational UAT/capacity proo
 No numeric performance PASS is claimed. New indexes require evidence and separate
 Owner grant. P4a's pre-0019 migration-wide writer-overhead deployment/operational
 gate remains unresolved. APR-047's historical residual classification is preserved.
+
+## Owner-requested workload and budget review
+
+Actual Owner response on2026-11-08: **"Review workload and budgets first
+(Recommended)"**. This is a review-first direction; numeric/workload approval
+remains NULL. No new benchmark, product change or database restart is required
+to interpret the existing evidence.
+
+The measured10-reader closed loop completes roughly159–192Sales reads/second,
+about15.9–19.2requests/second per active reader. Each reader immediately starts
+another request. It measures sustained load from10concurrent readers on this workstation. The
+number of people alone does not define an operator workload: native refresh
+uses one Sales read; order lookup→detail→assessment list uses three; assessment
+detail→stock uses two. Think time, task mix, focus revalidation and write bursts
+must be included in an agreed peak profile.
+
+For workload planning, aggregate read RPS is the sum of
+`users × journeys/user/minute × reads/journey ÷ 60` across journey types.
+Arithmetic illustration only:10users performing two three-read lookups/minute
+generate1read/second. This is not a claimed factory rate. No source establishes
+actual peak Sales users, journey rates or normal per-customer volumes. Do not
+substitute the organizational personnel roster for active Sales-user evidence.
+
+The proposed read budgets have roughly40–62%p95 headroom over measured concurrent
+operation tails, with larger p99 allowances. UI budgets have roughly56–59%p95
+headroom on the measured small warm fixture. These are useful engineering
+proposals for the declared scenarios; they do not establish factory response
+targets,50-row load behavior or large/concurrent browser guarantees.
+
+The absolute writer proposal250/400ms has about30%p95/48%p99 headroom over the
+worst measured writer tails. Its separate20%relative allowance is unmet. Approving
+only absolute caps would accept a materially different tradeoff, permitting the
+observed several-fold p95 increase; this requires an explicit Owner policy choice.
+Retain both proposals as OPEN and do not call the current writer result acceptable.
+
+Warm EXPLAIN execution times are no greater than2ms in the retained plans. Runtime polling
+contains ClientRead/nonwaiting samples and some WAL/I/O observations, without
+attributable Inventory lock waits. These observations do not isolate the latency
+cause or justify an index. Do not bypass reauthorization, idle renewal, exact
+Inventory verification or transaction bounds to reduce the reported numbers.
+
+At the review-first snapshot, the recommended next decision sequence was to obtain peak users and journey rates/mix plus
+typical/maximum customer order and assessment volumes; agree normal-peak and stress
+profiles separately; then review numeric read/UI/writer budgets against those
+profiles. If the existing unthrottled profile is selected as normative with20%
+writer allowance, performance acceptance remains blocked by measured evidence.
+Any additional measurement or remediation needs its separately bounded Owner
+direction. No P4c, product optimization, index or factory pilot is started.
+
+### Subsequent Owner internal-workload clarification
+
+The actual Owner subsequently supplied an approximately20employee internal ERP
+ceiling and authorized a conservative20Sales-user evaluation: one lookup/user/minute
+normally and two at peak. These rates are Owner engineering assumptions, not
+measured factory usage. Customer-order and per-order assessment volumes remain
+UNKNOWN. The [bounded workload record](P4B_INTERNAL_WORKLOAD_VERIFICATION.md)
+supersedes the earlier missing-planning-input statements for those supplied values;
+it preserves original evidence and keeps numeric D7 acceptance OPEN. Only the
+specified normal/peak evaluation and one lightweight synthetic history-growth
+check are authorized. No portal, external login/API, new business capability,
+threshold waiver or index implementation follows.
 
 ## Independent review closure
 
