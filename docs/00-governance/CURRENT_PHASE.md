@@ -3,7 +3,7 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.73.0
+version: 0.74.0
 owners: [chief-solution-architect]
 depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-11-08
@@ -13,7 +13,7 @@ supersedes: null
 
 # Current Phase Authorization
 
-## Current P4b bounded product implementation — 2026-11-07
+## Current P4b bounded implementation and Owner gates — 2026-11-08
 
 [APR-050](approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
 records the actual Owner's formal D1 B, D2 A, D3 A, D4 A, D5 A and conditional
@@ -24,6 +24,14 @@ unchanged Sales commands, exact customer admission/roster, Sales discovery/detai
 Inventory-owned minimal candidate reads, native Persian RTL UI, encrypted recovery
 and cross-role interlock, full real-PG/Chromium/regression evidence, independent
 implementation reviews, documentation and coherent local commits are in scope.
+
+The bounded workflow is implemented at7f30a6f; subsequent commits correct standalone
+verification tooling without changing product or required PostgreSQL test sources.
+Correctness evidence is292unit,420complete real-PG and30Sales+25regression actual
+Chromium checks, all passing. [Delivery evidence and remaining decisions](../12-implementation-planning/P4B_IMPLEMENTATION_STATUS.md)
+owns exact revisions, commands, workload measurements, review closure and limits.
+P4b remains NOT ACCEPTED; no numeric performance budget is approved. Await explicit
+Owner performance/acceptance decisions before any further product or roadmap work.
 
 New migrations/indexes need separate Owner approval with precise evidence before
 application/commit. Numeric performance budgets need separate Owner approval

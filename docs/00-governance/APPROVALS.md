@@ -5,8 +5,8 @@ phase: 00-governance
 status: in_review
 version: 0.38.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
-last_reviewed: 2026-11-07
+depends_on: [APR-050, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+last_reviewed: 2026-11-08
 approval: null
 supersedes: null
 ---
@@ -25,7 +25,7 @@ are authorized. This is implementation authority, not acceptance. Additional
 internal-code confidentiality/roster fresh-authorization safeguards are binding.
 No migration automatically approved, push/deployment/pilot or adjacent-slice work.
 
-## Current P4b discovery/design-only Owner directive — 2026-11-07
+## Earlier P4b discovery/design-only Owner directive (historical) — 2026-11-07
 
 The actual Owner directive in this chat authorizes source/contract discovery,
 design/governance documents, pinned-skill Persian RTL workflow design, independent

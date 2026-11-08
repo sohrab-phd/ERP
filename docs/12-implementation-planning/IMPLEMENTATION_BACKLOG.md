@@ -3,7 +3,7 @@ id: PLAN-IMPLEMENTATION-BACKLOG-001
 title: Implementation Capability Backlog
 phase: 12-implementation-planning
 status: in_review
-version: 0.23.0
+version: 0.24.0
 owners: [chief-solution-architect]
 depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, ADR-0001, ADR-0006, ADR-0007, ADR-0011, GOV-QUESTIONS-001, GOV-SLICE-HOMES-001]
 last_reviewed: 2026-11-08
@@ -18,7 +18,7 @@ supersedes: null
 [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
 supersedes the earlier design-only boundary below. Operational Sales UI, exact
 personally granted customer discovery, six unchanged commands and narrow Inventory
-candidate reads are implemented in the current delivery under verification.
+candidate reads are implemented and correctness-verified in the current delivery.
 [Implementation evidence and remaining gates](P4B_IMPLEMENTATION_STATUS.md).
 P4b is NOT ACCEPTED. Numeric performance budgets require explicit Owner approval;
 new indexes/migrations require a separate evidenced grant. No adjacent slice, P3,

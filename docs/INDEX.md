@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.33.0
+version: 0.34.0
 owners: [chief-solution-architect]
 depends_on: [APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-11-08
@@ -21,6 +21,9 @@ supersedes: null
 APR-050 supersedes the earlier design-only boundary below. P4b remains NOT
 ACCEPTED; numeric performance budgets and final acceptance require explicit Owner
 decisions. No new migration, adjacent slice, push, deployment or pilot is granted.
+Correctness evidence:292unit,420complete real-PG,30Sales and25P4a regression actual
+Chromium checks. The delivery record distinguishes product revision, later test
+tooling corrections, measured workloads and unresolved performance decisions.
 
 ## Earlier P4a acceptance and P4b discovery/design only (2026-11-07, historical)
 

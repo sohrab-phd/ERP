@@ -3,10 +3,10 @@ id: PLAN-P4B-CAPABILITIES-001
 title: P4b Sales existing capabilities and gap matrix
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, sales-domain-owner, chief-solution-architect]
 depends_on: [APR-049, APR-022, APR-025, TOOL-UIUX-001, PLAN-IMPLEMENTATION-BACKLOG-001]
-last_reviewed: 2026-11-07
+last_reviewed: 2026-11-08
 approval: null
 ---
 

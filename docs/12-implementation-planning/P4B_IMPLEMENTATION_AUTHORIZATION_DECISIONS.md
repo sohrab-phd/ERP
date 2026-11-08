@@ -3,10 +3,10 @@ id: PLAN-P4B-DECISIONS-001
 title: P4b OPEN Owner implementation authorization decisions
 phase: 12-implementation-planning
 status: draft
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
 depends_on: [PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, APR-049, TOOL-UIUX-001]
-last_reviewed: 2026-11-07
+last_reviewed: 2026-11-08
 approval: null
 ---
 
@@ -19,6 +19,20 @@ Bounded implementation is authorized, not accepted. New index migrations and
 numeric performance thresholds still require the separate decisions specified
 in APR-050. The OPEN/NULL and design-only statements below are retained historical
 proposal text, superseded only by the actual Owner selections and added controls.
+
+## Remaining conditional D7 decision — OPEN
+
+**Owner approval: NULL.** The approved starting resource caps are not performance
+acceptance budgets. The [implementation measurement and proposal](P4B_IMPLEMENTATION_STATUS.md#performance-and-acceptance-gates)
+must be reviewed before approving per-operation server/browser p95/p99 budgets,
+the writer-p95 regression allowance and the workload/concurrency to which they
+apply. Synthetic tiers do not establish actual factory volumes or peak request
+rates. No numeric performance PASS or formal product acceptance follows from
+correctness tests, a completed benchmark or an implementation commit.
+
+D6 still requires a separate evidenced Owner grant before any new index/migration;
+none has been added. P4a's migration-wide overhead gate remains a distinct future
+deployment/operational prerequisite. No adjacent slice starts at this handoff.
 
 **DESIGN PROPOSAL — IMPLEMENTATION NOT AUTHORIZED**
 
