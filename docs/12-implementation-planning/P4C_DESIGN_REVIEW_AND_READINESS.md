@@ -3,7 +3,7 @@ id: PLAN-P4C-READINESS-001
 title: P4c discovery and design review and readiness
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
 depends_on: [PLAN-P4C-CAPABILITIES-001, PLAN-P4C-DESIGN-001, PLAN-P4C-DECISIONS-001, PLAN-DEV-WORKFLOW-001, GOV-CODEX-CONTEXT-001]
 last_reviewed: 2026-11-08
@@ -11,6 +11,14 @@ approval: null
 ---
 
 # P4c design review and readiness
+
+**Current authority:** [APR-053](../00-governance/approved-baselines/APR-053-p4c-reservation-ui-implementation-authorization.md)
+records actual bounded implementation approval against `797e8c03feb3a995085e6ef17c0e1fd0c52336ed`.
+The design review/validation below is historical at that revision, not fresh
+implementation evidence. Separate protected reconciliation is pending; product
+implementation/verification have not begun. The [execution plan](P4C_IMPLEMENTATION_PLAN.md)
+and [unapplied reconciliation proposal](P4C_GATE_RECONCILIATION_PROPOSAL.md) govern
+next work. Target is IMPLEMENTED AND VERIFIED — OWNER SOFTWARE ACCEPTANCE PENDING.
 
 Documentation/design only under the actual 2026-11-08 Owner authorization, from
 clean `main` `6ebd3eca11fced994e58a01b8fde354c1e957416`. No product code,

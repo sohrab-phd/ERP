@@ -3,7 +3,7 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.78.0
+version: 0.79.0
 owners: [chief-solution-architect]
 depends_on: [APR-052, APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-11-08
@@ -13,7 +13,31 @@ supersedes: null
 
 # Current Phase Authorization
 
-## Current P4c Reservation discovery and design only — 2026-11-08
+## Current P4c implementation authorization — protected reconciliation pending
+
+[APR-053](approved-baselines/APR-053-p4c-reservation-ui-implementation-authorization.md)
+records the actual Owner's attached **OWNER DIRECTIVE — P4c IMPLEMENTATION
+AUTHORIZATION**, approving design `797e8c03feb3a995085e6ef17c0e1fd0c52336ed`.
+D1–D5 A, D6 A conditional (no migration/index) and D7 A with explicit synthetic
+20/40journey workload and absolute targets are approved. Sales-only whole-Unit
+new requests and separate confirmed activation, four narrow reads plus fixed
+two-command adapter, encrypted recovery/interlock and all specified verification
+are in scope. Prior OPEN/NOT AUTHORIZED text below is historical.
+
+**IMPLEMENTATION AUTHORIZED; NOT IMPLEMENTED OR VERIFIED; OWNER SOFTWARE
+ACCEPTANCE PENDING.** Section6 requires separate Owner permission before protected
+gate/unlock reconciliation. Both controls still reference P4b/APR-050; no product
+writes may borrow that obsolete scope. The [exact two-control proposal](../12-implementation-planning/P4C_GATE_RECONCILIATION_PROPOSAL.md)
+is prepared but NOT APPLIED. [Execution/measurement plan](../12-implementation-planning/P4C_IMPLEMENTATION_PLAN.md).
+
+No migration/index/schema/cache, new business command/policy, WH browsing,
+Production/Shipping action, adjacent slice, push/deployment/pilot or formal
+software acceptance is authorized. P4a's migration-wide deployment gate stays
+OPEN; APR-051/052 and P1/P2/P4a/P4b acceptance remain unchanged. Prepare/validate
+authorized governance documentation, then obtain the separately required protected
+reconciliation approval before product implementation. No hook/control edit yet.
+
+## Earlier P4c Reservation discovery and design only — 2026-11-08 (historical)
 
 The actual Owner's **OWNER AUTHORIZATION — P4c RESERVATION UI DISCOVERY & DESIGN**
 directive in this chat authorizes capability discovery/gap analysis, Persian RTL

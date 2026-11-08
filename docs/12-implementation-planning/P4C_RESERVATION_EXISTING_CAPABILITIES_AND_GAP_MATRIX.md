@@ -3,7 +3,7 @@ id: PLAN-P4C-CAPABILITIES-001
 title: P4c Reservation existing capabilities and gap matrix
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, inventory-domain-owner, chief-solution-architect]
 depends_on: [APR-052, APR-049, APR-047, APR-045, APR-023, APR-024, ADR-0018, GOV-CODEX-CONTEXT-001]
 last_reviewed: 2026-11-08
@@ -11,6 +11,11 @@ approval: null
 ---
 
 # P4c discovery evidence
+
+**Current authority:** [APR-053](../00-governance/approved-baselines/APR-053-p4c-reservation-ui-implementation-authorization.md)
+approves bounded implementation at design revision `797e8c03feb3a995085e6ef17c0e1fd0c52336ed`.
+Separate protected reconciliation remains pending; no product implementation has
+begun. Earlier design-only/OPEN language below is retained historical evidence.
 
 The actual Owner's **OWNER AUTHORIZATION — P4c RESERVATION UI DISCOVERY &
 DESIGN** directive on 2026-11-08 authorizes this documentation/design package,

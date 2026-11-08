@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.38.0
+version: 0.39.0
 owners: [chief-solution-architect]
 depends_on: [APR-052, APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-11-08
@@ -17,7 +17,19 @@ supersedes: null
 
 - [Project-wide context efficiency policy](00-governance/CODEX_CONTEXT_EFFICIENCY_POLICY.md) — applies across all phases; preserves quality, security, evidence and Owner gates.
 
-## Current P4c Reservation discovery and design only (2026-11-08)
+## Current P4c implementation authorization — protected reconciliation pending
+
+- [APR-053 actual Owner D1–D7 decisions and numeric targets](00-governance/approved-baselines/APR-053-p4c-reservation-ui-implementation-authorization.md)
+- [Bounded implementation and measurement plan](12-implementation-planning/P4C_IMPLEMENTATION_PLAN.md)
+- [Exact protected gate/unlock reconciliation proposal — NOT APPLIED](12-implementation-planning/P4C_GATE_RECONCILIATION_PROPOSAL.md)
+- [Current scope and separate approval requirement](00-governance/CURRENT_PHASE.md)
+
+Implementation is authorized against design `797e8c03feb3a995085e6ef17c0e1fd0c52336ed`;
+not implemented/verified/accepted. Section6 requires separate approval for protected
+controls still at APR-050, before product edits. P4a's OPEN deployment gate and
+P4b APR-051/052 remain unchanged; no migration/index, push/deployment/pilot.
+
+## Earlier P4c Reservation discovery and design only (2026-11-08, historical)
 
 - [Existing capabilities and gap matrix](12-implementation-planning/P4C_RESERVATION_EXISTING_CAPABILITIES_AND_GAP_MATRIX.md)
 - [Persian RTL workflow and proposed contracts](12-implementation-planning/P4C_RESERVATION_UI_WORKFLOW_AND_CONTRACT_DESIGN.md)

@@ -3,7 +3,7 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.40.0
+version: 0.41.0
 owners: [project-sponsor, chief-solution-architect]
 depends_on: [APR-052, APR-051, APR-050, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-11-08
@@ -12,6 +12,23 @@ supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-053 — Bounded P4c Reservation UI implementation authorization
+
+[Actual Owner D1–D7 decisions](approved-baselines/APR-053-p4c-reservation-ui-implementation-authorization.md)
+approve A for D1–D5, conditional D6 A with no migration/index authority, and D7 A
+with explicit staggered20/40synthetic lookup workload and absolute read/browser/
+command targets, against design `797e8c03feb3a995085e6ef17c0e1fd0c52336ed`.
+Sales-only whole-Unit new requests, separate informed activation, narrow owner
+reads and encrypted cross-workspace recovery are authorized with full required
+verification/reviews. Existing irreversible/partial limits are acknowledged.
+
+**IMPLEMENTATION AUTHORIZED; NOT IMPLEMENTED/VERIFIED; OWNER SOFTWARE ACCEPTANCE
+PENDING.** Separate protected gate/unlock reconciliation approval is explicitly
+required by section6 and has not been given. The [exact proposal](../12-implementation-planning/P4C_GATE_RECONCILIATION_PROPOSAL.md)
+is unapplied; existing APR-050 controls remain unchanged. No migration, new
+business policy, adjacent slice, push/deployment/pilot or software acceptance.
+P4a's OPEN deployment gate and APR-051/052 remain unchanged.
 
 ## APR-052 — Formal P4b Sales UI software acceptance
 

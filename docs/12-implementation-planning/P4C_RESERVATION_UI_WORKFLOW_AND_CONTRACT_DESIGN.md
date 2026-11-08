@@ -3,7 +3,7 @@ id: PLAN-P4C-DESIGN-001
 title: P4c Reservation UI workflow and contract design
 phase: 12-implementation-planning
 status: in_review
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, inventory-domain-owner, chief-solution-architect, security-architect]
 depends_on: [PLAN-P4C-CAPABILITIES-001, APR-052, ADR-0018, TOOL-UIUX-001]
 last_reviewed: 2026-11-08
@@ -11,6 +11,12 @@ approval: null
 ---
 
 # Proposed Reservation workspace
+
+**Current authority:** [APR-053](../00-governance/approved-baselines/APR-053-p4c-reservation-ui-implementation-authorization.md)
+approves the recommended bounded design with D1–D5 A, conditional D6 A and D7 A
+including explicit workload/absolute targets. Historical proposal/OPEN wording
+below is superseded within those bounds. Section6's separate protected gate/unlock
+approval remains pending; [implementation plan](P4C_IMPLEMENTATION_PLAN.md).
 
 **DESIGN ONLY — every new surface below needs explicit implementation authority.**
 The [capability matrix](P4C_RESERVATION_EXISTING_CAPABILITIES_AND_GAP_MATRIX.md)

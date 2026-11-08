@@ -3,7 +3,7 @@ id: PLAN-P4C-DECISIONS-001
 title: P4c OPEN Owner implementation authorization decisions
 phase: 12-implementation-planning
 status: draft
-version: 0.1.0
+version: 0.2.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
 depends_on: [PLAN-P4C-CAPABILITIES-001, PLAN-P4C-DESIGN-001, APR-052]
 last_reviewed: 2026-11-08
@@ -11,6 +11,18 @@ approval: null
 ---
 
 # P4c Owner decision sheet
+
+**CURRENT OWNER DECISION:** [APR-053](../00-governance/approved-baselines/APR-053-p4c-reservation-ui-implementation-authorization.md)
+records actual approval of D1 A / D2 A / D3 A / D4 A / D5 A, D6 A conditionally
+(no migration/index), and D7 A with explicitly approved20/40synthetic journeys
+and absolute numeric targets. Irreversible/partial backend limits are expressly
+acknowledged. The OPEN/NULL alternatives below preserve the historical design
+at `797e8c03feb3a995085e6ef17c0e1fd0c52336ed`; they are superseded only within
+the actual directive's bounds. Product work awaits separately required protected
+[gate/unlock approval](P4C_GATE_RECONCILIATION_PROPOSAL.md). No implementation or
+software acceptance is claimed; the [plan](P4C_IMPLEMENTATION_PLAN.md) owns next work.
+
+## Historical design alternatives — current selections above
 
 **ALL D1–D7 OPEN; Owner selections/approval NULL.** Recommendations are proposals,
 not human approval. The actual 2026-11-08 authorization permits discovery/design,
