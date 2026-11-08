@@ -139,6 +139,8 @@ const report = {
       'Six browser HTTP read operations separately, per-subcase timing, composed-server and Node HTTP end-to-end durations; actual Chromium journey timings are a separate harness artifact. Same-schema before/overlap/after writer controls; no index-write-cost comparison or new index.',
     identity:
       '10 readers and2 writers use distinct personal accounts/sessions, avoiding artificial same-account renewal-lock contention',
+    writerSampling:
+      'Each control and overlap round runs at least400 Sales cycles (200 each STOCK/MAKE) and2000 Inventory writes. Readers continue round-robin until writer minima finish; require200 fully overlapping samples per writer operation. Identical observer runs throughout all three rounds; phase-tagged samples and dataset growth snapshots retained.',
   },
   tiers: [],
   ownerNumericBudgets: 'PENDING EXPLICIT OWNER APPROVAL',
@@ -610,11 +612,13 @@ async function runTier(tier) {
         'inventory.production_issue',
       ])
         await db.owner.query('ANALYZE ' + table);
-      result.dataset = (
-        await db.owner.query(
-          `SELECT (SELECT count(*) FROM sales.customer) AS customers,(SELECT count(*) FROM sales.sales_order) AS orders,(SELECT count(*) FROM sales.fulfillment_assessment) AS assessments,(SELECT count(*) FROM identity.role_grant WHERE actor_role='ACT-SALES') AS salesGrants,(SELECT count(*) FROM inventory.unit) AS units,(SELECT count(*) FROM inventory.ledger) AS ledger,(SELECT count(*) FROM inventory.material_lot) AS legacy,(SELECT count(*) FROM inventory.inbound_unit_origin) AS i2,(SELECT count(*) FROM inventory.production_origin) AS production`,
-        )
-      ).rows[0];
+      const readDataset = async () =>
+        (
+          await db.owner.query(
+            `SELECT (SELECT count(*) FROM sales.customer) AS customers,(SELECT count(*) FROM sales.sales_order) AS orders,(SELECT count(*) FROM sales.fulfillment_assessment) AS assessments,(SELECT count(*) FROM identity.role_grant WHERE actor_role='ACT-SALES') AS salesGrants,(SELECT count(*) FROM inventory.unit) AS units,(SELECT count(*) FROM inventory.ledger) AS ledger,(SELECT count(*) FROM inventory.material_lot) AS legacy,(SELECT count(*) FROM inventory.inbound_unit_origin) AS i2,(SELECT count(*) FROM inventory.production_origin) AS production`,
+          )
+        ).rows[0];
+      result.dataset = await readDataset();
       result.stateDistribution = (
         await db.owner.query(
           'SELECT state,count(*) AS n FROM sales.sales_order GROUP BY state ORDER BY state',
@@ -889,6 +893,8 @@ async function runTier(tier) {
       async function writerRound(name, reads) {
         phase = name;
         let readsDone = !reads;
+        const minimum = { sales: false, inventory: false, failed: false };
+        const datasetStart = await readDataset();
         const intervals = {
           start: performance.now(),
           salesStart: 0,
@@ -899,29 +905,44 @@ async function runTier(tier) {
         const jobs = [
           (async () => {
             intervals.salesStart = performance.now();
-            for (let n = 0; n < 25 || !readsDone; n++) await salesCycle(name, n);
+            for (let n = 0; (n < 400 || !readsDone || !minimum.inventory) && !minimum.failed; n++) {
+              await salesCycle(name, n);
+              if (n + 1 >= 400) minimum.sales = true;
+            }
             intervals.salesEnd = performance.now();
           })(),
           (async () => {
             intervals.inventoryStart = performance.now();
-            for (let n = 0; n < 125 || !readsDone; n++) await inventoryWrite(name);
+            for (let n = 0; (n < 2000 || !readsDone || !minimum.sales) && !minimum.failed; n++) {
+              await inventoryWrite(name);
+              if (n + 1 >= 2000) minimum.inventory = true;
+            }
             intervals.inventoryEnd = performance.now();
           })(),
-        ];
+        ].map((job) =>
+          job.catch((error) => {
+            minimum.failed = true;
+            throw error;
+          }),
+        );
         if (reads)
           jobs.push(
-            reads().finally(() => {
+            reads(minimum).finally(() => {
               readsDone = true;
             }),
           );
         const outcomes = await Promise.allSettled(jobs);
         intervals.end = performance.now();
         result.writerIntervals ??= [];
-        result.writerIntervals.push({ name, ...intervals });
+        result.writerIntervals.push({
+          name,
+          ...intervals,
+          datasetStart,
+          datasetEnd: await readDataset(),
+        });
         const failed = outcomes.find((outcome) => outcome.status === 'rejected');
         if (failed) throw failed.reason;
       }
-      await writerRound('writer-baseline-before');
       const observer = async () => {
         while (monitor) {
           const reads = [...readPids],
@@ -945,6 +966,7 @@ async function runTier(tier) {
             );
             result.lockSamples.push({
               at: performance.now(),
+              phase,
               readPids: reads,
               writerPids: writes,
               missingWriterPids: writes.filter((pid) => !waits.some((row) => row.pid === pid)),
@@ -964,47 +986,63 @@ async function runTier(tier) {
       };
       monitor = true;
       monitorTask = observer();
+      await writerRound('writer-baseline-before');
       const readerCases = await Promise.all(
         people.slice(0, 10).map((person) => operations(person.browser)),
       );
       const perOperation = new Map([...groups.keys()].map((operation) => [operation, 0]));
       let nextOperation = 0;
-      await writerRound('readers-and-writers', async () => {
-        await Promise.all(
-          people.slice(0, 10).map(async (person, worker) => {
-            const cases = readerCases[worker];
-            while (true) {
-              const keys = [...perOperation.keys()];
-              let operation;
-              for (let offset = 0; offset < keys.length; offset++) {
-                const candidate = keys[nextOperation++ % keys.length];
-                if (perOperation.get(candidate) < sampleCount) {
-                  operation = candidate;
-                  break;
+      await writerRound('readers-and-writers', async (minimum) => {
+        const outcomes = await Promise.allSettled(
+          people
+            .slice(0, 10)
+            .map(async (person, worker) => {
+              const cases = readerCases[worker];
+              while (true) {
+                assert.ok(!minimum.failed, 'A writer or reader failed during overlap');
+                const keys = [...perOperation.keys()];
+                let operation;
+                for (let offset = 0; offset < keys.length; offset++) {
+                  const candidate = keys[nextOperation++ % keys.length];
+                  if (
+                    perOperation.get(candidate) < sampleCount ||
+                    !minimum.sales ||
+                    !minimum.inventory
+                  ) {
+                    operation = candidate;
+                    break;
+                  }
                 }
+                if (!operation) return;
+                const index = perOperation.get(operation);
+                perOperation.set(operation, index + 1);
+                const variants = cases.filter((entry) => entry.operation === operation),
+                  entry = variants[index % variants.length];
+                const { sample } = await timed(
+                  person.browser,
+                  operation,
+                  entry.name,
+                  entry.route,
+                  entry.input,
+                  entry.customer,
+                  entry.expected,
+                );
+                result.samples.push(sample);
               }
-              if (!operation) return;
-              const index = perOperation.get(operation);
-              perOperation.set(operation, index + 1);
-              const variants = cases.filter((entry) => entry.operation === operation),
-                entry = variants[index % variants.length];
-              const { sample } = await timed(
-                person.browser,
-                operation,
-                entry.name,
-                entry.route,
-                entry.input,
-                entry.customer,
-                entry.expected,
-              );
-              result.samples.push(sample);
-            }
-          }),
+            })
+            .map((job) =>
+              job.catch((error) => {
+                minimum.failed = true;
+                throw error;
+              }),
+            ),
         );
+        const failed = outcomes.find((outcome) => outcome.status === 'rejected');
+        if (failed) throw failed.reason;
       });
+      await writerRound('writer-baseline-after');
       monitor = false;
       await monitorTask;
-      await writerRound('writer-baseline-after');
       result.concurrentReads = summaries(
         result.samples.filter((s) => s.phase === 'readers-and-writers'),
       );
@@ -1014,10 +1052,18 @@ async function runTier(tier) {
         end: Math.max(...overlappingReads.map((s) => s.end)),
       };
       result.readerWindow = readerWindow;
+      const insideBaselineWriters = (sample) => {
+        if (sample.phase === 'readers-and-writers') return false;
+        const interval = result.writerIntervals.find((i) => i.name === sample.phase);
+        return (
+          sample.start >= Math.max(interval.salesStart, interval.inventoryStart) &&
+          sample.end <= Math.min(interval.salesEnd, interval.inventoryEnd)
+        );
+      };
       result.writers = Object.fromEntries(
         [...new Set(result.writerSamples.map((s) => s.operation))].map((operation) => {
           const samples = result.writerSamples.filter((s) => s.operation === operation),
-            baseline = samples.filter((s) => s.phase !== 'readers-and-writers'),
+            baseline = samples.filter(insideBaselineWriters),
             overlap = samples.filter(
               (s) =>
                 s.phase === 'readers-and-writers' &&
@@ -1030,20 +1076,32 @@ async function runTier(tier) {
             operation,
             {
               before: distribution(
-                samples.filter((s) => s.phase === 'writer-baseline-before').map((s) => s.serverMs),
+                baseline.filter((s) => s.phase === 'writer-baseline-before').map((s) => s.serverMs),
               ),
               after: distribution(
-                samples.filter((s) => s.phase === 'writer-baseline-after').map((s) => s.serverMs),
+                baseline.filter((s) => s.phase === 'writer-baseline-after').map((s) => s.serverMs),
               ),
               sameSchemaBracketBaseline: b,
               overlap: o,
               overlapDefinition:
                 'Complete writer sample interval inside active reader window; excludes startup and drain tail. Raw samples retain all phases.',
+              baselineDefinition:
+                'Complete writer sample interval inside both co-writer workload intervals in each before/after control; same observer active, startup/drain excluded. Both writers continue until both minima finish.',
               p95RegressionPercent: b.p95 ? 100 * (o.p95 / b.p95 - 1) : null,
             },
           ];
         }),
       );
+      for (const [operation, value] of Object.entries(result.writers)) {
+        assert.ok(
+          value.sameSchemaBracketBaseline.count >= 200,
+          'Insufficient baseline writer samples: ' + operation,
+        );
+        assert.ok(
+          value.overlap.count >= 200,
+          'Insufficient fully overlapping writer samples: ' + operation,
+        );
+      }
       const concurrent = result.writerIntervals.find(
           (interval) => interval.name === 'readers-and-writers',
         ),
