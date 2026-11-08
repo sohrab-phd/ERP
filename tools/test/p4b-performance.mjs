@@ -928,21 +928,26 @@ async function runTier(tier) {
             writes = [...writerPids];
           if (reads.length || writes.length) {
             const lockRows = (
-              await db.owner.query(
+              await db.runtime.query(
                 'SELECT pid,locktype,mode,granted,relation::regclass::text AS relation FROM pg_locks WHERE pid=ANY($1::integer[])',
                 [reads],
               )
             ).rows;
             const waits = (
-              await db.owner.query(
-                'SELECT pid,wait_event_type,wait_event,pg_blocking_pids(pid) AS blockers FROM pg_stat_activity WHERE pid=ANY($1::integer[])',
+              await db.runtime.query(
+                'SELECT pid,state,wait_event_type,wait_event,pg_blocking_pids(pid) AS blockers FROM pg_stat_activity WHERE pid=ANY($1::integer[])',
                 [writes],
               )
             ).rows;
+            assert.ok(
+              waits.every((row) => typeof row.state === 'string'),
+              'Writer activity is hidden from observer; absence of waits cannot be established',
+            );
             result.lockSamples.push({
               at: performance.now(),
               readPids: reads,
               writerPids: writes,
+              missingWriterPids: writes.filter((pid) => !waits.some((row) => row.pid === pid)),
               inventoryWriterLocks: lockRows.filter(
                 (row) =>
                   row.relation?.startsWith('inventory.') && !['AccessShareLock'].includes(row.mode),
@@ -1069,6 +1074,28 @@ async function runTier(tier) {
       result.observedAttributableWriterWaits = result.lockSamples.reduce(
         (sum, sample) => sum + sample.attributableWriterWaits.length,
         0,
+      );
+      result.lockObservationCoverage = {
+        pollingTargetMs: 10,
+        observerRole: 'same restricted runtime role as measured connections',
+        readTransactionSamples: result.lockSamples.filter((s) => s.readPids.length > 0).length,
+        visibleWriterRowsDuringBothWriterOverlap: result.lockSamples
+          .filter((s) => s.at >= overlapStart && s.at <= overlapEnd)
+          .reduce((n, s) => n + s.writerWaits.length, 0),
+        missingRequestedWriterPids: result.lockSamples.reduce(
+          (n, s) => n + s.missingWriterPids.length,
+          0,
+        ),
+        limitation:
+          'No attributable waits observed is a sampled polling observation, not proof that no transient blocking occurred between polls.',
+      };
+      assert.ok(
+        result.lockObservationCoverage.readTransactionSamples > 0,
+        'No read transactions observed',
+      );
+      assert.ok(
+        result.lockObservationCoverage.visibleWriterRowsDuringBothWriterOverlap > 0,
+        'No visible writer activity during actual overlap',
       );
       result.poolAcquisitionSummary = {
         all: distribution(result.poolAcquisitionSamples.map((s) => s.ms)),

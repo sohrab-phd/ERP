@@ -215,10 +215,15 @@ async function order(id) {
     await waitFor('#sales-order-id');
   }
   await value('#sales-order-id', id);
+  const previousReads = await readCount('/orders/query');
   await clickText('جست‌وجو');
   await until(async () => {
     const r = await last('/orders/query');
-    return r?.input.filters?.orderId === id && r.status === 200;
+    return (
+      (await readCount('/orders/query')) > previousReads &&
+      r?.input.filters?.orderId === id &&
+      r.status === 200
+    );
   }, 'Exact order lookup did not finish');
   await until(
     () =>
