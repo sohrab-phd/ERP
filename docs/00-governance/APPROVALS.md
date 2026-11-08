@@ -3,15 +3,27 @@ id: GOV-APPROVALS-001
 title: Approval and Checkpoint Register
 phase: 00-governance
 status: in_review
-version: 0.39.0
+version: 0.40.0
 owners: [project-sponsor, chief-solution-architect]
-depends_on: [APR-051, APR-050, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
+depends_on: [APR-052, APR-051, APR-050, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-GATES-001]
 last_reviewed: 2026-11-08
 approval: null
 supersedes: null
 ---
 
 # Approval and Checkpoint Register
+
+## APR-052 — Formal P4b Sales UI software acceptance
+
+[Actual Owner software acceptance](approved-baselines/APR-052-p4b-owner-software-acceptance.md)
+accepts exactly `7f30a6f26b6e53c6152d6851f90d1f5ed844f69a`, with reviewed closure
+documentation `e16aab8271a9c3ec0e1b118f63245b767d1f0ca7`. The package/evidence
+were checked without material inconsistency:292unit,420complete real-PG,30Sales
+and25regression Chromium checks, required reviews closed and absolute budgets
+verified. D7 remains Owner accepted with the documented relative-writer-regression
+exception; original failures and UNKNOWN cause are retained, not relabelled PASS.
+**P4b — SOFTWARE ACCEPTED BY OWNER.** No deployment, push, pilot or further
+implementation is authorized. P4a's migration-wide deployment gate remains OPEN.
 
 ## APR-051 — P4b performance decision with documented exception
 

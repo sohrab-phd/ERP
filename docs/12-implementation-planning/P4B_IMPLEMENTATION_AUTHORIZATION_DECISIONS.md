@@ -3,9 +3,9 @@ id: PLAN-P4B-DECISIONS-001
 title: P4b OPEN Owner implementation authorization decisions
 phase: 12-implementation-planning
 status: draft
-version: 0.5.0
+version: 0.6.0
 owners: [delivery-lead, chief-solution-architect, security-architect]
-depends_on: [APR-051, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, APR-049, TOOL-UIUX-001]
+depends_on: [APR-052, APR-051, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, APR-049, TOOL-UIUX-001]
 last_reviewed: 2026-11-08
 approval: null
 ---
@@ -15,7 +15,7 @@ approval: null
 **Current Owner decision:** [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
 approves D1 B, D2 A, D3 A, D4 A, D5 A and conditionally D6 A / D7 A against this
 sheet's exact design baseline `e7e7cafab0b052b34b9fd58fa66269dd74792749`.
-Bounded implementation is authorized, not accepted. New index migrations and
+Bounded implementation is now software accepted by [APR-052](../00-governance/approved-baselines/APR-052-p4b-owner-software-acceptance.md). New index migrations and
 numeric performance thresholds originally required a separate decision; APR-051
 below now records that decision. New migrations remain separately gated. The OPEN/NULL and design-only statements below are retained historical
 proposal text, superseded only by the actual Owner selections and added controls.
@@ -29,7 +29,8 @@ criterion, explicitly accepting the first normal-run residual risk. The original
 relative rule did not pass; both complete runs and uncertain cause are retained.
 Existing evidence verifies all absolute operation budgets at their stated scopes.
 D7: **OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**.
-No further relative-only investigation. Formal product acceptance remains PENDING.
+No further relative-only investigation. Formal software acceptance is recorded
+by APR-052, with root cause UNKNOWN and all historical evidence retained.
 [Acceptance package](P4B_OWNER_ACCEPTANCE_PACKAGE.md).
 
 ## Earlier conditional D7 decision — historical OPEN snapshot

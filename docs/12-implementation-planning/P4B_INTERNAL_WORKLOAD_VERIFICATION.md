@@ -3,9 +3,9 @@ id: IMPL-P4B-WORKLOAD-001
 title: P4b Owner-bounded internal workload evaluation
 phase: 12-implementation-planning
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [delivery-lead, security-architect, data-architect, qa-lead]
-depends_on: [APR-051, APR-050, IMPL-P4B-001, PLAN-P4B-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-052, APR-051, APR-050, IMPL-P4B-001, PLAN-P4B-DECISIONS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-08
 approval: null
 ---
@@ -17,7 +17,8 @@ absolute budgets, removes the relative20%rule as a blocking P4b criterion and
 accepts its residual risk. Absolute verification is in the
 [acceptance package](P4B_OWNER_ACCEPTANCE_PACKAGE.md). D7 is
 **OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**.
-Formal product acceptance remains PENDING. All measurement values and historical
+Formal software acceptance is now recorded by [APR-052](../00-governance/approved-baselines/APR-052-p4b-owner-software-acceptance.md).
+The root cause remains UNKNOWN. All measurement values and historical
 OPEN/proposal wording below retain their original meaning; they are not altered
 to imply that the original relative criterion passed. No further performance
 experiment solely for that regression is authorized.

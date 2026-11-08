@@ -3,16 +3,16 @@ id: PLAN-P4B-READINESS-001
 title: P4b discovery and design review and readiness
 phase: 12-implementation-planning
 status: in_review
-version: 0.3.0
+version: 0.4.0
 owners: [delivery-lead, security-architect, data-architect, qa-lead]
-depends_on: [APR-051, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-DECISIONS-001, APR-049, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-052, APR-051, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-DECISIONS-001, APR-049, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-08
 approval: null
 ---
 
 # P4b design review and readiness
 
-**Current authority:** [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md) approves D1 B, D2 A, D3 A, D4 A, D5 A and conditional D6 A / D7 A. The proposal and OPEN wording below records the historical design baseline. Bounded implementation is delivered; [current delivery evidence](P4B_IMPLEMENTATION_STATUS.md) records reality. APR-051 above closes D7 with the explicit relative-writer exception; formal product acceptance remains an Owner decision.
+**Current authority:** [APR-050](../00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md) approves D1 B, D2 A, D3 A, D4 A, D5 A and conditional D6 A / D7 A. The proposal and OPEN wording below records the historical design baseline. Bounded implementation is delivered; [current delivery evidence](P4B_IMPLEMENTATION_STATUS.md) records reality. APR-051 above closes D7 with the explicit relative-writer exception; formal Owner software acceptance is now recorded in APR-052.
 
 **HISTORICAL DESIGN PROPOSAL — superseded only within APR-050 bounds**
 
@@ -24,17 +24,23 @@ is resolved by the baseline tooling commit. No existing APR is revised or new
 APR invented. [Current phase](../00-governance/CURRENT_PHASE.md) records the new
 limited authority, with no executable gate/unlock change.
 
-## Current P4b closure — 2026-11-08
+## Current P4b software acceptance — 2026-11-08
 
 [APR-051](../00-governance/approved-baselines/APR-051-p4b-performance-decision.md) records the actual Owner-approved workload, absolute budgets and
 relative-writer-regression exception. The original relative requirement did not
 pass; both results and causal uncertainty remain retained. Existing evidence
 verifies the absolute budgets at its documented scopes; no more relative-only
 investigation is authorized. [Final acceptance package](P4B_OWNER_ACCEPTANCE_PACKAGE.md).
-P4b is implemented and closure-complete, **NOT formally accepted**. Await explicit
-Owner software acceptance; no new product, migration/index, push, deployment,
-pilot, P3/P4c/P4d/P5 or other slice is authorized. P4a's migration-wide writer-cost
-deployment gate remains OPEN. Earlier snapshots below are historical.
+**P4b — SOFTWARE ACCEPTED BY OWNER**, recorded by [APR-052](../00-governance/approved-baselines/APR-052-p4b-owner-software-acceptance.md) at
+`7f30a6f26b6e53c6152d6851f90d1f5ed844f69a`, with closure documentation
+`e16aab8271a9c3ec0e1b118f63245b767d1f0ca7`. Original relative failures
+and UNKNOWN cause remain retained under APR-051. No new product, migration/index,
+push, deployment, pilot, P3/P4c/P4d/P5 or other slice is authorized. P4a's
+migration-wide writer-cost deployment gate remains OPEN; operational UAT,
+environment/security, backup/restore and training prerequisites remain. P4c
+Reservation UI is only the next proposed capability, awaiting separate explicit
+authorization. Software acceptance is not entire-ERP readiness. Earlier snapshots
+below are historical.
 
 ## Task execution and design Definition of Done
 

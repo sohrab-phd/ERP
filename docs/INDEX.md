@@ -3,9 +3,9 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.35.0
+version: 0.36.0
 owners: [chief-solution-architect]
-depends_on: [APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
+depends_on: [APR-052, APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-11-08
 approval: null
 supersedes: null
@@ -13,17 +13,20 @@ supersedes: null
 
 # Architecture Documentation Index
 
-## Current P4b bounded implementation (2026-11-08)
+## Current P4b Owner software acceptance (2026-11-08)
 
+- [APR-052 formal P4b Owner software acceptance](00-governance/approved-baselines/APR-052-p4b-owner-software-acceptance.md)
 - [APR-051 Owner performance decision and documented relative-writer exception](00-governance/approved-baselines/APR-051-p4b-performance-decision.md)
 - [P4b final Owner acceptance package and evidence index](12-implementation-planning/P4B_OWNER_ACCEPTANCE_PACKAGE.md)
 - [APR-050 actual Owner implementation decisions and boundaries](00-governance/approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
 - [P4b delivered behavior, verification and remaining Owner gates](12-implementation-planning/P4B_IMPLEMENTATION_STATUS.md)
 - [P4b Owner-bounded20-user workload, both runs, history check and Owner decision](12-implementation-planning/P4B_INTERNAL_WORKLOAD_VERIFICATION.md)
 
-APR-050 supersedes the earlier design-only boundary below. P4b remains NOT
-ACCEPTED. APR-051 approves workload/absolute budgets and closes D7 with the
-documented relative-writer-regression exception; formal acceptance remains pending. No new migration, adjacent slice, push, deployment or pilot is granted.
+**P4b — SOFTWARE ACCEPTED BY OWNER**, at product revision
+`7f30a6f26b6e53c6152d6851f90d1f5ed844f69a`, recorded by APR-052. APR-051
+approves workload/absolute budgets and closes D7 with the documented relative-writer
+exception. Original failures and UNKNOWN cause remain retained. No new migration,
+adjacent slice, push, deployment or pilot is granted; operational gates remain.
 Correctness evidence:292unit,420complete real-PG,30Sales and25P4a regression actual
 Chromium checks. The delivery record distinguishes product revision, later test
 tooling corrections, measured workloads and the recorded Owner performance exception.

@@ -2,25 +2,28 @@
 id: IMPL-P4B-ACCEPTANCE-001
 title: P4b final evidence and Owner acceptance package
 phase: 12-implementation-planning
-status: in_review
-version: 0.1.0
+status: approved
+version: 1.0.0
 owners: [delivery-lead, security-architect, data-architect, qa-lead]
-depends_on: [APR-051, APR-050, IMPL-P4B-001, IMPL-P4B-WORKLOAD-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-052, APR-051, APR-050, IMPL-P4B-001, IMPL-P4B-WORKLOAD-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-08
-approval: null
+approval: APR-052
 ---
 
-# P4b ready for explicit Owner software acceptance
+# P4b — SOFTWARE ACCEPTED BY OWNER
 
-**P4b is NOT formally accepted.** This package requests a separate Owner decision.
+[APR-052](../00-governance/approved-baselines/APR-052-p4b-owner-software-acceptance.md) records the actual Owner's formal software acceptance on2026-11-08,
+following review of this package at exact closure revision
+`e16aab8271a9c3ec0e1b118f63245b767d1f0ca7`. The historical evidence and
+measurement scopes are unchanged. Software acceptance grants no deployment authority.
 [APR-051](../00-governance/approved-baselines/APR-051-p4b-performance-decision.md)
 records approved workload/absolute budgets and the relative-writer exception.
 D7: **OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**.
 This is a changed acceptance criterion, not a PASS against the former 20% rule.
 
-## Exact proposed product and scope
+## Exact accepted product and scope
 
-Proposed product revision: **`7f30a6f26b6e53c6152d6851f90d1f5ed844f69a`** on `main`.
+Accepted product revision: **`7f30a6f26b6e53c6152d6851f90d1f5ed844f69a`** on `main`.
 Closure starts at clean repository revision
 `387af4b6ac2aa4486b4c8e495c2ed72eaab02212`. Subsequent standalone harness corrections
 and documentation commits do not change product, registered correctness tests,
@@ -162,10 +165,14 @@ Factory UAT, deployment, backup/restore, training and pilot are not approved her
 Unknown actual writer/history volumes and the stated sampling scopes are retained
 limitations, not silently claimed production capacity.
 
-## Requested Owner action and boundary
+## Recorded Owner decision and boundary
 
-Review and explicitly accept or return the exact product revision above within
-APR-050 scope, APR-051's performance criterion and these recorded limitations.
-**Formal P4b Owner acceptance: PENDING; approval: NULL.** No acceptance APR has
-been fabricated. No push, deployment, pilot or P3/P4c/P4d/P5 work occurs; P4c is
-only a later proposed roadmap slice requiring separate authorization.
+The Owner explicitly accepts the exact product revision above within APR-050
+scope, APR-051's performance criterion and these recorded limitations, through
+APR-052. **P4b — SOFTWARE ACCEPTED BY OWNER.** Original relative failures and
+the UNKNOWN root cause remain historical facts; the approved absolute limits
+remain applicable. No push, deployment, pilot or P3/P4c/P4d/P5 work occurs; P4c
+is only a later proposed roadmap slice requiring separate authorization.
+This documentation-only recording task verified the referenced commits, package,
+APR-051, retained outputs/hashes and review closure without material inconsistency.
+No successful product tests were repeated; no database restart was needed.

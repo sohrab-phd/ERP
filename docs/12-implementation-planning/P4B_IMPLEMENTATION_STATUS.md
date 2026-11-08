@@ -2,12 +2,12 @@
 id: IMPL-P4B-001
 title: P4b Sales UI implementation and verification evidence
 phase: 12-implementation-planning
-status: in_review
-version: 0.5.0
+status: approved
+version: 1.0.0
 owners: [delivery-lead, sales-domain-owner, security-architect]
-depends_on: [APR-051, APR-050, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-READINESS-001, PLAN-DEV-WORKFLOW-001]
+depends_on: [APR-052, APR-051, APR-050, PLAN-P4B-CAPABILITIES-001, PLAN-P4B-DESIGN-001, PLAN-P4B-READINESS-001, PLAN-DEV-WORKFLOW-001]
 last_reviewed: 2026-11-08
-approval: null
+approval: APR-052
 ---
 
 # P4b bounded implementation
@@ -16,7 +16,10 @@ Authority: actual Owner [APR-050](../00-governance/approved-baselines/APR-050-p4
 Starting `main`: `e7e7cafab0b052b34b9fd58fa66269dd74792749`, clean. Accepted
 P4a `6c0fbbbed05eeb81ccf7564b2bbd7cfc7caebf10` / APR-049 and pinned tooling
 `506dd000e87c331527445e8212656cfc2aefc756` verified ancestors; skill integrity75files
-passes. **AUTHORIZED FOR BOUNDED IMPLEMENTATION — NOT ACCEPTED.**
+passes. **P4b — SOFTWARE ACCEPTED BY OWNER** at `7f30a6f26b6e53c6152d6851f90d1f5ed844f69a`.
+[APR-052](../00-governance/approved-baselines/APR-052-p4b-owner-software-acceptance.md) records actual formal acceptance with closure documentation
+`e16aab8271a9c3ec0e1b118f63245b767d1f0ca7`. Scope/evidence/limitations below
+remain binding; software acceptance is not deployment or entire-ERP readiness.
 
 Current D7 follow-up: the Owner supplied an approximately20employee internal-user
 ceiling and provisional20Sales-user test profile at1normal/2peak lookups per user
@@ -28,7 +31,8 @@ Owner decision [APR-051](../00-governance/approved-baselines/APR-051-p4b-perform
 relative20%rule as a blocking criterion, accepting its residual risk. D7 is
 **OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**.
 [Final Owner acceptance package and evidence index](P4B_OWNER_ACCEPTANCE_PACKAGE.md).
-The original relative rule is unmet; formal P4b product acceptance remains PENDING.
+The original relative rule is unmet and its root cause remains UNKNOWN. Formal
+software acceptance is now recorded by APR-052, preserving that exception.
 Earlier unthrottled measurements below remain retained, with their original scope.
 
 ## Execution plan and Definition of Done
@@ -400,17 +404,19 @@ Owner performance decision with an explicit relative-regression exception, witho
 claiming that engineering resolved the uncertain cause or the former criterion
 passed. Independent closure review recomputed retained absolute percentiles and
 verified source manifests; no new DB/browser/performance execution was needed.
-Formal product acceptance remains with the Owner.
+Formal Owner software acceptance is recorded by APR-052.
 
-No push, deployment, pilot, adjacent roadmap work or formal product acceptance
-has occurred. After verification, the exact disposable18.6cluster returned to its
+No push, deployment, pilot or adjacent roadmap work has occurred. Formal P4b
+software acceptance is recorded separately in APR-052. After verification, the exact disposable18.6cluster returned to its
 original stopped state: stop exit0, pg_ctl status3/no server, pg_isready2/no response
 at127.0.0.1:55438. `cluster-final-state.json` records exact paths/version/time;
 unrelated services and production settings were untouched.
 The later Owner-bounded evaluations likewise restored that original stopped state;
 `internal20-cluster-final-state.json` records their final verification.
 
-**P4b CLOSURE COMPLETE — READY FOR EXPLICIT OWNER SOFTWARE ACCEPTANCE.**
-D7 is Owner accepted with the documented relative-writer-regression exception;
-formal product acceptance remains PENDING. This is not factory deployment
-readiness, remote push authority or permission to start the next slice.
+**P4b — SOFTWARE ACCEPTED BY OWNER.**
+D7 retains its documented relative-writer-regression exception and UNKNOWN cause.
+P4a's migration-wide deployment gate and all operational/pilot gates remain.
+P4c Reservation UI is only proposed; await separate explicit authorization.
+No product code, migration/index or other roadmap implementation changes occur
+in this acceptance-recording task; no tests are repeated or database restarted.

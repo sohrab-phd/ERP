@@ -3,9 +3,9 @@ id: GOV-CURRENT-001
 title: Current Phase Authorization
 phase: 12-implementation-planning
 status: in_review
-version: 0.76.0
+version: 0.77.0
 owners: [chief-solution-architect]
-depends_on: [APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
+depends_on: [APR-052, APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037, GOV-CHARTER-001, GOV-GATES-001, APR-014, APR-028, APR-029, APR-030, APR-031, APR-032, APR-033, APR-034, APR-035, APR-036, SRC-004, SRC-005, SRC-006, CHK-0013, ASM-015, ASM-016, ASM-017, ASM-018, ASM-019, ASM-020, ASM-021, ASM-022, ASM-023, ASM-024, ASM-025, GOV-SLICE-HOMES-001, ADR-0006, ADR-0007]
 last_reviewed: 2026-11-08
 approval: null
 supersedes: null
@@ -13,7 +13,28 @@ supersedes: null
 
 # Current Phase Authorization
 
-## Current P4b bounded implementation and Owner gates — 2026-11-08
+## Current P4b Owner software acceptance — 2026-11-08
+
+[APR-052](approved-baselines/APR-052-p4b-owner-software-acceptance.md) records the
+actual Owner's formal software acceptance of P4b Sales UI at
+`7f30a6f26b6e53c6152d6851f90d1f5ed844f69a`, within the final acceptance package
+at closure revision `e16aab8271a9c3ec0e1b118f63245b767d1f0ca7`.
+**P4b — SOFTWARE ACCEPTED BY OWNER.** P1, P2 and P4a remain accepted in their
+bounded scopes. All required reviews/correctness evidence are complete. D7 is
+**OWNER-ACCEPTED WITH DOCUMENTED RELATIVE-WRITER-REGRESSION EXCEPTION**; the old
+relative criterion failed and its root cause remains UNKNOWN. Both runs and
+approved absolute budgets are retained. No further relative-only investigation.
+
+This directive permits only formal acceptance documentation/governance and one
+local commit. No product/security/command/gate/unlock, migration/index, push,
+deployment, production cutover, pilot, P3 execution or subsequent-slice work is
+authorized. P4a's pre-0019 migration-wide writer-overhead deployment gate remains
+OPEN; operational UAT, environment/security, backup/restore and training gates
+remain. P4b acceptance does not establish entire-ERP readiness. P4c Reservation UI
+is the next proposed roadmap capability and awaits separate explicit authorization.
+[Accepted package/evidence](../12-implementation-planning/P4B_OWNER_ACCEPTANCE_PACKAGE.md).
+
+## Earlier P4b implementation and Owner gates — 2026-11-08 (historical)
 
 [APR-050](approved-baselines/APR-050-p4b-sales-ui-implementation-authorization.md)
 records the actual Owner's formal D1 B, D2 A, D3 A, D4 A, D5 A and conditional
