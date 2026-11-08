@@ -3,7 +3,7 @@ id: GOV-INDEX-001
 title: Architecture Documentation Index
 phase: 00-governance
 status: in_review
-version: 0.37.0
+version: 0.38.0
 owners: [chief-solution-architect]
 depends_on: [APR-052, APR-051, APR-050, TOOL-UIUX-001, APR-049, APR-048, APR-047, APR-046, APR-045, APR-044, APR-043, APR-042, APR-041, APR-040, APR-039, APR-038, APR-037]
 last_reviewed: 2026-11-08
@@ -16,6 +16,19 @@ supersedes: null
 ## Permanent Codex operating policy
 
 - [Project-wide context efficiency policy](00-governance/CODEX_CONTEXT_EFFICIENCY_POLICY.md) — applies across all phases; preserves quality, security, evidence and Owner gates.
+
+## Current P4c Reservation discovery and design only (2026-11-08)
+
+- [Existing capabilities and gap matrix](12-implementation-planning/P4C_RESERVATION_EXISTING_CAPABILITIES_AND_GAP_MATRIX.md)
+- [Persian RTL workflow and proposed contracts](12-implementation-planning/P4C_RESERVATION_UI_WORKFLOW_AND_CONTRACT_DESIGN.md)
+- [OPEN Owner implementation decisions](12-implementation-planning/P4C_IMPLEMENTATION_AUTHORIZATION_DECISIONS.md)
+- [Independent design review and readiness](12-implementation-planning/P4C_DESIGN_REVIEW_AND_READINESS.md)
+- [Current authority and strict boundaries](00-governance/CURRENT_PHASE.md)
+
+Owner authorization covers design, reviews and documentation commits only.
+P4c implementation is NOT AUTHORIZED; all D1–D7 selections remain NULL.
+P1/P2/P4a/P4b acceptance, P4a's OPEN migration-wide deployment gate and P4b's
+documented D7 exception remain unchanged. Stop for explicit implementation authority.
 
 ## Current P4b Owner software acceptance (2026-11-08)
 
